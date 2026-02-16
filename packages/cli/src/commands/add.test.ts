@@ -1,19 +1,28 @@
 import path from 'node:path';
-import { ValidationError, componentNameSchema } from '@pdfx/shared';
+import { componentNameSchema } from '@pdfx/shared';
 import { describe, expect, it } from 'vitest';
+import { isPathWithinDirectory, safePath } from '../utils/file-system.js';
 import { resolveThemeImport } from './add.js';
 
-// Inline safePath for testing since it's a private function in add.ts
-function safePath(targetDir: string, fileName: string): string {
-  const resolved = path.resolve(targetDir, fileName);
-  const normalizedTarget = path.resolve(targetDir);
+describe('isPathWithinDirectory', () => {
+  it('should return true when paths are equal', () => {
+    expect(isPathWithinDirectory('/tmp/components', '/tmp/components')).toBe(true);
+  });
 
-  if (!resolved.startsWith(normalizedTarget + path.sep) && resolved !== normalizedTarget) {
-    throw new ValidationError(`Path traversal detected: "${fileName}" escapes target directory`);
-  }
+  it('should return true when resolved is a child of target', () => {
+    expect(isPathWithinDirectory('/tmp/components/heading.tsx', '/tmp/components')).toBe(true);
+    expect(isPathWithinDirectory('/tmp/components/sub/heading.tsx', '/tmp/components')).toBe(true);
+  });
 
-  return resolved;
-}
+  it('should return false when resolved escapes target', () => {
+    expect(isPathWithinDirectory('/etc/passwd', '/tmp/components')).toBe(false);
+    expect(isPathWithinDirectory('/tmp/components/../etc/passwd', '/tmp/components')).toBe(false);
+  });
+
+  it('should return false when resolved is a sibling (prefix confusion)', () => {
+    expect(isPathWithinDirectory('/tmp/components-bar/file.tsx', '/tmp/components')).toBe(false);
+  });
+});
 
 describe('safePath', () => {
   it('should allow normal filenames', () => {

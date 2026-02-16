@@ -1,12 +1,14 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { type Registry, registrySchema } from '@pdfx/shared';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 interface RegistryFile {
   path: string;
+  content: string;
   type: string;
 }
 
@@ -19,25 +21,14 @@ interface RegistryItem {
   dependencies?: string[];
 }
 
-interface Registry {
-  $schema: string;
-  name: string;
-  homepage: string;
-  items: RegistryItem[];
-}
+// interface Registry {
+//   $schema: string;
+//   name: string;
+//   homepage: string;
+//   items: RegistryItem[];
+// }
 
-function ensureWithinDir(baseDir: string, targetPath: string): string {
-  const resolved = path.resolve(baseDir, targetPath);
-  const normalizedBase = path.resolve(baseDir);
-
-  if (!resolved.startsWith(normalizedBase + path.sep) && resolved !== normalizedBase) {
-    throw new Error(`Path "${targetPath}" escapes base directory "${normalizedBase}"`);
-  }
-
-  return resolved;
-}
-
-async function fileExists(filePath: string): Promise<boolean> {
+async function fileExistsAsync(filePath: string): Promise<boolean> {
   try {
     await fs.access(filePath);
     return true;
@@ -60,6 +51,8 @@ function transformForRegistry(content: string): { content: string; usesTheme: bo
 
   // Remove @pdfx/shared type-only imports
   result = result.replace(/import\s+type\s+\{[^}]*\}\s+from\s+['"]@pdfx\/shared['"];?\n?/g, '');
+  result = result.replace(/extends PDFComponentProps\s*\{\s*\}/g, '...');
+  result = result.replace(/\(t:\s*PdfxTheme\)/g, '(t: any)');
 
   // If the component extended PDFComponentProps, replace with an inline interface
   // using @react-pdf/types Style
@@ -114,7 +107,7 @@ async function processItem(
       // check is used for output paths only.
       const filePath = path.resolve(registryBaseDir, file.path);
 
-      if (!(await fileExists(filePath))) {
+      if (!(await fileExistsAsync(filePath))) {
         throw new Error(`Missing source file: ${file.path}`);
       }
 
@@ -158,15 +151,19 @@ async function buildRegistry() {
 
   const registryPath = path.join(__dirname, '../registry/index.json');
 
-  if (!(await fileExists(registryPath))) {
+  if (!(await fileExistsAsync(registryPath))) {
     throw new Error(`Registry index not found at ${registryPath}`);
   }
 
   let registry: Registry;
   try {
     const raw = await fs.readFile(registryPath, 'utf-8');
-    registry = JSON.parse(raw);
-  } catch (error) {
+    const result = registrySchema.safeParse(JSON.parse(raw));
+    if (!result.success) {
+      throw new Error(`Invalid registry schema: ${result.error.message}`);
+    }
+    registry = result.data;
+  } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     throw new Error(`Failed to parse registry index: ${message}`);
   }

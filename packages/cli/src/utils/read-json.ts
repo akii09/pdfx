@@ -9,7 +9,8 @@ export function readJsonFile(filePath: string): unknown {
 
   try {
     return JSON.parse(raw);
-  } catch {
-    throw new ConfigError(`Invalid JSON in ${filePath}`);
+  } catch (error: unknown) {
+    const details = error instanceof Error ? error.message : String(error);
+    throw new ConfigError(`Invalid JSON in ${filePath}: ${details}`);
   }
 }

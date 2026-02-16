@@ -10,13 +10,13 @@ import {
 } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
-import { fileExists, safePath } from '../utils/file-system.js';
+import { checkFileExists, safePath } from '../utils/file-system.js';
 import { readJsonFile } from '../utils/read-json.js';
 
 export async function diff(components: string[]) {
   const configPath = path.join(process.cwd(), 'pdfx.json');
 
-  if (!fileExists(configPath)) {
+  if (!checkFileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
     console.log(chalk.yellow('Run: pdfx init'));
     process.exit(1);
@@ -70,7 +70,7 @@ export async function diff(components: string[]) {
         const fileName = path.basename(file.path);
         const localPath = safePath(targetDir, fileName);
 
-        if (!fileExists(localPath)) {
+        if (!checkFileExists(localPath)) {
           console.log(chalk.yellow(`  ${fileName}: not installed locally`));
           continue;
         }

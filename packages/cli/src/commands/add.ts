@@ -13,7 +13,7 @@ import {
 import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
-import { ensureDir, fileExists, writeFile } from '../utils/file-system.js';
+import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { readJsonFile } from '../utils/read-json.js';
 
 function readConfig(configPath: string): Config {
@@ -29,17 +29,6 @@ function readConfig(configPath: string): Config {
   }
 
   return result.data;
-}
-
-function safePath(targetDir: string, fileName: string): string {
-  const resolved = path.resolve(targetDir, fileName);
-  const normalizedTarget = path.resolve(targetDir);
-
-  if (!resolved.startsWith(normalizedTarget + path.sep) && resolved !== normalizedTarget) {
-    throw new ValidationError(`Path traversal detected: "${fileName}" escapes target directory`);
-  }
-
-  return resolved;
 }
 
 async function fetchComponent(name: string, registryUrl: string): Promise<RegistryItem> {
@@ -125,7 +114,7 @@ async function installComponent(name: string, config: Config, force: boolean): P
 
   // Check for existing files (overwrite protection)
   if (!force) {
-    const existing = filesToWrite.filter((f) => fileExists(f.filePath));
+    const existing = filesToWrite.filter((f) => checkFileExists(f.filePath));
     if (existing.length > 0) {
       const fileNames = existing.map((f) => path.basename(f.filePath)).join(', ');
       const { overwrite } = await prompts({
@@ -151,7 +140,7 @@ async function installComponent(name: string, config: Config, force: boolean): P
 export async function add(components: string[], options: { force?: boolean } = {}) {
   const configPath = path.join(process.cwd(), 'pdfx.json');
 
-  if (!fileExists(configPath)) {
+  if (!checkFileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
     console.log(chalk.yellow('Run: pdfx init'));
     process.exit(1);
