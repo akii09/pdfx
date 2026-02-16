@@ -1,3 +1,130 @@
-# pdf-x
+# PDFX
 
-## Stop manually styling PDFs. Copy-paste beautiful document templates for React.
+**Stop manually styling PDFs. Copy-paste beautiful document templates for React.**
+
+A professional React PDF component library built on [@react-pdf/renderer](https://react-pdf.org/). PDFX provides pre-built, themeable components and a CLI to add them to your project—inspired by [shadcn/ui](https://ui.shadcn.com/).
+
+## Features
+
+- **Copy-paste components** — Add components directly to your codebase; no runtime dependency on PDFX
+- **Theme system** — Typography, spacing, colors, and page settings via a single theme config
+- **Theme presets** — Professional, Modern, and Minimal presets out of the box
+- **CLI** — `pdfx add`, `pdfx init`, `pdfx theme switch` for fast setup
+- **TypeScript** — Full type safety with Zod validation
+
+## Prerequisites
+
+- **Node.js** ≥ 24.0.0
+- **pnpm** ≥ 10.0.0
+
+## Installation
+
+```bash
+# Install the CLI globally
+pnpm add -g @pdfx/cli
+
+# Or use npx
+npx @pdfx/cli init
+```
+
+## Quick Start
+
+1. **Initialize PDFX** in your React + @react-pdf/renderer project:
+
+   ```bash
+   pdfx init
+   ```
+
+2. **Add components** from the registry:
+
+   ```bash
+   pdfx add text heading
+   ```
+
+3. **Use components** in your PDF document:
+
+   ```tsx
+   import { Document, Page } from '@react-pdf/renderer';
+   import { Text, Heading } from './components/pdfx';
+
+   export default () => (
+     <Document>
+       <Page>
+         <Heading level={1}>Hello PDFX</Heading>
+         <Text>Beautiful PDFs with minimal effort.</Text>
+       </Page>
+     </Document>
+   );
+   ```
+
+## CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `pdfx init` | Initialize PDFX in your project |
+| `pdfx add <components...>` | Add components (e.g. `pdfx add text heading`) |
+| `pdfx add <components...> --force` | Overwrite existing files |
+| `pdfx list` | List available components from registry |
+| `pdfx diff <components...>` | Compare local components with registry |
+| `pdfx theme init` | Initialize or replace the theme file |
+| `pdfx theme switch <preset>` | Switch theme (professional, modern, minimal) |
+| `pdfx theme validate` | Validate your theme file |
+
+## Theme Presets
+
+| Preset | Use case |
+|--------|----------|
+| **Professional** | Business documents, reports, formal content |
+| **Modern** | Tech-forward docs, vibrant colors |
+| **Minimal** | Clean documentation, literary manuscripts |
+
+## Project Structure (Monorepo)
+
+```
+pdfx/
+├── apps/
+│   ├── www/          # Documentation site
+│   └── playground/   # Component playground
+├── packages/
+│   ├── ui/           # PDF components (Text, Heading, etc.)
+│   ├── shared/       # Types, schemas, theme system
+│   └── cli/          # pdfx CLI
+├── configs/          # Shared configs
+└── turbo.json        # Turborepo config
+```
+
+## Development
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run all apps in dev mode
+pnpm dev
+
+# Run docs site only
+pnpm dev:www
+
+# Run playground only
+pnpm dev:playground
+
+# Build all packages
+pnpm build
+
+# Run tests
+pnpm test
+
+# Lint & format
+pnpm lint
+pnpm format
+```
+
+## Contributing
+
+We welcome contributions from everyone. Whether you're fixing a bug, adding a component, improving docs, or suggesting an idea—your help makes PDFX better for everyone.
+
+See **[CONTRIBUTING.md](./CONTRIBUTING.md)** for a detailed guide on how to get started.
+
+## License
+
+MIT © [Akii](https://github.com/akii09)
