@@ -3,7 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Professional React PDF component library. Copy, paste, and customize beautiful PDF components built on @react-pdf/renderer." />
+    <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="PDFX - Professional PDF Components" />
+    <meta property="og:description" content="Professional React PDF component library. Copy, paste, and customize beautiful PDF components built on @react-pdf/renderer." />
+    <meta property="og:url" content="https://pdfx.dev" />
+    <meta property="og:site_name" content="PDFX" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PDFX - Professional PDF Components" />
+    <meta name="twitter:description" content="Professional React PDF component library. Copy, paste, and customize." />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href="https://pdfx.dev" />
     <title>PDFX - Professional PDF Components</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "PDFX",
+        "applicationCategory": "DeveloperApplication",
+        "description": "Professional React PDF component library. Copy, paste, and customize beautiful PDF components built on @react-pdf/renderer.",
+        "url": "https://pdfx.dev",
+        "license": "https://opensource.org/licenses/MIT",
+        "operatingSystem": "Any",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+    <script>
+      // Prevent dark mode flash — runs before any rendering
+      (function () {
+        var stored = localStorage.getItem('pdfx-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (stored === 'dark' || (!stored && prefersDark) || (stored === 'system' && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

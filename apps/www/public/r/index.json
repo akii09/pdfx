@@ -14,9 +14,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "text",
@@ -29,9 +27,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     }
   ]
 }

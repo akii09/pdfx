@@ -21,6 +21,9 @@
     "@react-pdf/renderer": "catalog:",
     "react": "catalog:"
   },
+  "dependencies": {
+    "@pdfx/shared": "workspace:*"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@react-pdf/renderer": "catalog:",

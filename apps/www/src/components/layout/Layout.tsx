@@ -1,41 +1,34 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
+import { CommandPalette } from '../command-palette';
+import { PageTransition } from '../page-transition';
+import { Footer } from './footer';
+import { Header } from './header';
+import { Sidebar } from './sidebar';
 
 export default function Layout() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold">
-            PDFX
-          </Link>
-          <nav className="flex gap-6">
-            <Link to="/docs" className="hover:underline">
-              Docs
-            </Link>
-            <Link to="/components/heading" className="hover:underline">
-              Components
-            </Link>
-            <a
-              href="https://github.com/akii09/pdfx"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              GitHub
-            </a>
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      {/* Skip-to-content link for keyboard/screen reader users (M9) */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground focus:text-sm focus:font-medium"
+      >
+        Skip to main content
+      </a>
 
-      <main className="flex-1">
-        <Outlet />
-      </main>
+      <Header />
+      <CommandPalette />
 
-      <footer className="border-t py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-gray-600">
-          Built with React + Vite. Inspired by shadcn/ui.
-        </div>
-      </footer>
+      <div className="flex-1 flex container mx-auto px-4 lg:px-8">
+        <Sidebar />
+        <main id="main-content" className="flex-1 min-w-0 lg:pl-8">
+          <PageTransition>
+            <Outlet />
+          </PageTransition>
+        </main>
+      </div>
+
+      <Footer />
     </div>
   );
 }

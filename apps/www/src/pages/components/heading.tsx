@@ -1,29 +1,48 @@
 import { Heading } from '@pdfx/ui';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
+import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';
+import { useDocumentTitle } from '../../hooks/use-document-title';
 
 const styles = StyleSheet.create({
   page: { padding: 30 },
 });
 
+const usageCode = `import { Heading } from '@/components/pdfx/pdfx-heading';
+
+<Heading level={1}>Main Title</Heading>
+<Heading level={2}>Subtitle</Heading>
+<Heading level={3} style={{ color: 'navy' }}>Custom Styled</Heading>`;
+
+const headingProps = [
+  {
+    name: 'level',
+    type: '1 | 2 | 3 | 4 | 5 | 6',
+    defaultValue: '1',
+    description: 'Heading level corresponding to h1-h6 sizing',
+  },
+  {
+    name: 'children',
+    type: 'React.ReactNode',
+    description: 'The heading text content',
+    required: true,
+  },
+  {
+    name: 'style',
+    type: 'Style',
+    description: 'Custom @react-pdf/renderer styles to merge with defaults',
+  },
+];
+
 export default function HeadingComponentPage() {
+  useDocumentTitle('Heading Component');
+
   return (
-    <div className="container mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold mb-2">Heading</h1>
-      <p className="text-gray-600 mb-8">PDF heading component with 6 levels</p>
-
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Installation</h2>
-        <p className="text-gray-600 mb-2">
-          Installs to <code>src/components/pdfx/pdfx-heading.tsx</code> (default path from pdfx init).
-        </p>
-        <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg">
-          <code>npx @pdfx/cli add heading</code>
-        </pre>
-      </div>
-
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Preview</h2>
+    <ComponentPage
+      title="Heading"
+      description="PDF heading component with 6 levels. Uses browser-standard heading sizes (32px for h1 down to 10.72px for h6)."
+      installCommand="npx @pdfx/cli add heading"
+      preview={
         <PDFPreview>
           <Document>
             <Page size="A4" style={styles.page}>
@@ -36,65 +55,9 @@ export default function HeadingComponentPage() {
             </Page>
           </Document>
         </PDFPreview>
-      </div>
-
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Usage</h2>
-        <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
-          <code>{`import { Heading } from '@/components/pdfx/pdfx-heading';
-
-<Heading level={1}>Main Title</Heading>
-<Heading level={2}>Subtitle</Heading>`}</code>
-        </pre>
-      </div>
-
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Props</h2>
-        <table className="w-full border-collapse border">
-          <thead>
-            <tr className="bg-gray-50">
-              <th className="border p-2 text-left">Prop</th>
-              <th className="border p-2 text-left">Type</th>
-              <th className="border p-2 text-left">Default</th>
-              <th className="border p-2 text-left">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="border p-2">
-                <code>level</code>
-              </td>
-              <td className="border p-2">
-                <code>1 | 2 | 3 | 4 | 5 | 6</code>
-              </td>
-              <td className="border p-2">
-                <code>1</code>
-              </td>
-              <td className="border p-2">Heading level</td>
-            </tr>
-            <tr>
-              <td className="border p-2">
-                <code>children</code>
-              </td>
-              <td className="border p-2">
-                <code>string</code>
-              </td>
-              <td className="border p-2">-</td>
-              <td className="border p-2">Heading text</td>
-            </tr>
-            <tr>
-              <td className="border p-2">
-                <code>style</code>
-              </td>
-              <td className="border p-2">
-                <code>Style</code>
-              </td>
-              <td className="border p-2">-</td>
-              <td className="border p-2">Custom styles</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      }
+      usageCode={usageCode}
+      props={headingProps}
+    />
   );
 }

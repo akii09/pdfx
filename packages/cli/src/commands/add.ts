@@ -1,59 +1,226 @@
-import fs from 'node:fs';
 import path from 'node:path';
+import {
+  type Config,
+  ConfigError,
+  NetworkError,
+  RegistryError,
+  type RegistryItem,
+  ValidationError,
+  componentNameSchema,
+  configSchema,
+  registryItemSchema,
+} from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
-import type { Config, RegistryItem } from '../types.js';
+import prompts from 'prompts';
+import { ensureDir, fileExists, writeFile } from '../utils/file-system.js';
+import { readJsonFile } from '../utils/read-json.js';
 
-export async function add(components: string[]) {
-  // Read config
+function readConfig(configPath: string): Config {
+  const raw = readJsonFile(configPath);
+  const result = configSchema.safeParse(raw);
+
+  if (!result.success) {
+    const issues = result.error.issues.map((i) => i.message).join(', ');
+    throw new ConfigError(
+      `Invalid pdfx.json: ${issues}`,
+      `Fix the config or re-run ${chalk.cyan('pdfx init')}`
+    );
+  }
+
+  return result.data;
+}
+
+function safePath(targetDir: string, fileName: string): string {
+  const resolved = path.resolve(targetDir, fileName);
+  const normalizedTarget = path.resolve(targetDir);
+
+  if (!resolved.startsWith(normalizedTarget + path.sep) && resolved !== normalizedTarget) {
+    throw new ValidationError(`Path traversal detected: "${fileName}" escapes target directory`);
+  }
+
+  return resolved;
+}
+
+async function fetchComponent(name: string, registryUrl: string): Promise<RegistryItem> {
+  const url = `${registryUrl}/${name}.json`;
+
+  let response: Response;
+  try {
+    response = await fetch(url);
+  } catch {
+    throw new NetworkError(`Could not reach ${registryUrl}`);
+  }
+
+  if (!response.ok) {
+    throw new RegistryError(
+      response.status === 404
+        ? `Component "${name}" not found in registry`
+        : `Registry returned HTTP ${response.status}`
+    );
+  }
+
+  let data: unknown;
+  try {
+    data = await response.json();
+  } catch {
+    throw new RegistryError(`Invalid response for "${name}": not valid JSON`);
+  }
+
+  const result = registryItemSchema.safeParse(data);
+  if (!result.success) {
+    throw new RegistryError(
+      `Invalid registry entry for "${name}": ${result.error.issues[0]?.message}`
+    );
+  }
+
+  return result.data;
+}
+
+/**
+ * Resolves the theme import path for a component.
+ * Computes the relative path from componentDir to the theme file and rewrites
+ * the default `../lib/pdfx-theme` import with the correct relative path.
+ */
+export function resolveThemeImport(
+  componentDir: string,
+  themePath: string,
+  fileContent: string
+): string {
+  const absComponentDir = path.resolve(process.cwd(), componentDir);
+  const absThemePath = path.resolve(process.cwd(), themePath);
+
+  // Strip .ts/.tsx extension for the import specifier
+  const themeImportTarget = absThemePath.replace(/\.tsx?$/, '');
+
+  let relativePath = path.relative(absComponentDir, themeImportTarget);
+
+  // Ensure the path starts with ./ or ../
+  if (!relativePath.startsWith('.')) {
+    relativePath = `./${relativePath}`;
+  }
+
+  return fileContent.replace(/from\s+['"]\.\.\/lib\/pdfx-theme['"]/g, `from '${relativePath}'`);
+}
+
+async function installComponent(name: string, config: Config, force: boolean): Promise<void> {
+  const component = await fetchComponent(name, config.registry);
+  const targetDir = path.resolve(process.cwd(), config.componentDir);
+
+  ensureDir(targetDir);
+
+  // Collect and validate file paths, rewriting theme imports if needed
+  const filesToWrite: Array<{ filePath: string; content: string }> = [];
+  for (const file of component.files) {
+    const fileName = path.basename(file.path);
+    const filePath = safePath(targetDir, fileName);
+
+    let content = file.content;
+    if (config.theme && content.includes('pdfx-theme')) {
+      content = resolveThemeImport(config.componentDir, config.theme, content);
+    }
+
+    filesToWrite.push({ filePath, content });
+  }
+
+  // Check for existing files (overwrite protection)
+  if (!force) {
+    const existing = filesToWrite.filter((f) => fileExists(f.filePath));
+    if (existing.length > 0) {
+      const fileNames = existing.map((f) => path.basename(f.filePath)).join(', ');
+      const { overwrite } = await prompts({
+        type: 'confirm',
+        name: 'overwrite',
+        message: `${fileNames} already exist(s). Overwrite?`,
+        initial: false,
+      });
+      if (!overwrite) {
+        throw new ValidationError(`Skipped ${name}: user declined overwrite`);
+      }
+    }
+  }
+
+  // Write all files
+  for (const file of filesToWrite) {
+    writeFile(file.filePath, file.content);
+  }
+
+  return;
+}
+
+export async function add(components: string[], options: { force?: boolean } = {}) {
   const configPath = path.join(process.cwd(), 'pdfx.json');
-  if (!fs.existsSync(configPath)) {
+
+  if (!fileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
     console.log(chalk.yellow('Run: pdfx init'));
     process.exit(1);
   }
 
-  const config: Config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  let config: Config;
+  try {
+    config = readConfig(configPath);
+  } catch (error: unknown) {
+    if (error instanceof ConfigError) {
+      console.error(chalk.red(error.message));
+      if (error.suggestion) console.log(chalk.yellow(`  Hint: ${error.suggestion}`));
+    } else {
+      console.error(chalk.red((error as Error).message));
+    }
+    process.exit(1);
+  }
+
+  const force = options.force ?? false;
+  const failed: string[] = [];
 
   for (const componentName of components) {
+    // Validate component name
+    const nameResult = componentNameSchema.safeParse(componentName);
+    if (!nameResult.success) {
+      console.error(chalk.red(`Invalid component name: "${componentName}"`));
+      console.log(
+        chalk.dim('  Names must be lowercase alphanumeric with hyphens (e.g., "data-table")')
+      );
+      failed.push(componentName);
+      continue;
+    }
+
     const spinner = ora(`Adding ${componentName}...`).start();
 
     try {
-      // Fetch from registry
-      const url = `${config.registry}/${componentName}.json`;
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        spinner.fail(`Component ${componentName} not found`);
-        continue;
-      }
-
-      const component = (await response.json()) as RegistryItem;
-
-      // Create target directory
-      const targetDir = path.join(process.cwd(), config.componentDir);
-      fs.mkdirSync(targetDir, { recursive: true });
-
-      // Write files
-      for (const file of component.files) {
-        const fileName = path.basename(file.path);
-        const filePath = path.join(targetDir, fileName);
-        fs.writeFileSync(filePath, file.content);
-      }
-
+      await installComponent(componentName, config, force);
       spinner.succeed(`Added ${componentName}`);
-
-      // Show dependencies
-      if (component.dependencies && component.dependencies.length > 0) {
-        console.log(chalk.dim(`  Dependencies: ${component.dependencies.join(', ')}`));
+    } catch (error: unknown) {
+      if (error instanceof ValidationError && error.message.includes('Skipped')) {
+        spinner.info(error.message);
+      } else if (
+        error instanceof NetworkError ||
+        error instanceof RegistryError ||
+        error instanceof ValidationError
+      ) {
+        spinner.fail(error.message);
+        if (error.suggestion) {
+          console.log(chalk.dim(`  Hint: ${error.suggestion}`));
+        }
+      } else {
+        spinner.fail(`Failed to add ${componentName}`);
+        console.error(chalk.dim(`  ${(error as Error).message}`));
       }
-    } catch (error) {
-      spinner.fail(`Failed to add ${componentName}`);
-      console.error(error);
+      failed.push(componentName);
     }
   }
 
-  const resolvedDir = path.resolve(process.cwd(), config.componentDir);
-  console.log(chalk.green('\n✨ Done!'));
-  console.log(chalk.dim(`  Components installed to: ${resolvedDir}\n`));
+  console.log();
+  if (failed.length > 0) {
+    console.log(chalk.yellow(`Failed to add: ${failed.join(', ')}`));
+  }
+  if (failed.length < components.length) {
+    const resolvedDir = path.resolve(process.cwd(), config.componentDir);
+    console.log(chalk.green('Done!'));
+    console.log(chalk.dim(`Components installed to: ${resolvedDir}\n`));
+  }
+
+  if (failed.length > 0) {
+    process.exit(1);
+  }
 }

@@ -16,13 +16,17 @@
     "@pdfx/ui": "workspace:*",
     "@react-pdf/renderer": "catalog:",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "framer-motion": "^12.34.0",
+    "lucide-react": "^0.564.0",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router-dom": "^7.1.3"
+    "react-router-dom": "^7.1.3",
+    "tailwind-merge": "^3.4.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.18",
     "@react-pdf/types": "^2.9.2",
+    "@tailwindcss/postcss": "^4.1.18",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^4.3.4",

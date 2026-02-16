@@ -7,11 +7,10 @@
   "files": [
     {
       "path": "components/pdfx/pdfx-text.tsx",
-      "content": "import { Text as PDFText, StyleSheet } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\nexport interface TextProps {\n  children: string | React.ReactNode;\n  style?: Style;\n}\n\nconst styles = StyleSheet.create({\n  text: {\n    fontSize: 12,\n    lineHeight: 1.5,\n    marginBottom: 8,\n  },\n});\n\nexport function Text({ children, style }: TextProps) {\n  return <PDFText style={style ? [styles.text, style] : styles.text}>{children}</PDFText>;\n}\n",
+      "content": "import { Text as PDFText, StyleSheet } from '@react-pdf/renderer';\nimport { theme } from '../lib/pdfx-theme';\nimport type { Style } from '@react-pdf/types';\n\n/**\n * Props for the Text component.\n *\n * @example\n * ```tsx\n * <Text>Hello, world!</Text>\n * ```\n */\nexport interface TextProps {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Text content to render */\n  children: React.ReactNode;\n}\n\n/** Creates text styles from theme tokens. Zero hardcoded values. */\nfunction createTextStyles(t: any) {\n  return StyleSheet.create({\n    text: {\n      fontFamily: t.typography.body.fontFamily,\n      fontSize: t.typography.body.fontSize,\n      lineHeight: t.typography.body.lineHeight,\n      color: t.colors.foreground,\n      marginBottom: t.spacing.paragraphGap,\n    },\n  });\n}\n\nconst styles = createTextStyles(theme);\n\n/**\n * PDF text component for body paragraphs.\n * Uses theme tokens for font family, size, line height, color, and spacing.\n *\n * @example\n * ```tsx\n * <Text>A paragraph of body text in your PDF document.</Text>\n * <Text style={{ fontSize: 14, color: 'gray' }}>Custom styled text.</Text>\n * ```\n */\nexport function Text({ children, style }: TextProps) {\n  return <PDFText style={style ? [styles.text, style] : styles.text}>{children}</PDFText>;\n}\n",
       "type": "registry:component"
     }
   ],
-  "dependencies": [
-    "@react-pdf/renderer"
-  ]
+  "dependencies": ["@react-pdf/renderer"],
+  "registryDependencies": ["theme"]
 }
