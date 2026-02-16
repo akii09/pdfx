@@ -1,0 +1,37 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "pdfx",
+  "homepage": "https://pdfx.com",
+  "items": [
+    {
+      "name": "heading",
+      "type": "registry:ui",
+      "title": "Heading",
+      "description": "PDF heading component with 6 levels (h1-h6)",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/heading.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "text",
+      "type": "registry:ui",
+      "title": "Text",
+      "description": "PDF text component for paragraphs",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/text.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    }
+  ]
+}

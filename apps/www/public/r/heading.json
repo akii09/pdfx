@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "heading",
+  "type": "registry:ui",
+  "title": "Heading",
+  "description": "PDF heading component with 6 levels (h1-h6)",
+  "files": [
+    {
+      "path": "components/pdfx/pdfx-heading.tsx",
+      "content": "import { StyleSheet, Text } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\nexport interface HeadingProps {\n  level?: 1 | 2 | 3 | 4 | 5 | 6;\n  children: string;\n  style?: Style;\n}\n\nconst styles = StyleSheet.create({\n  h1: { fontSize: 32, fontWeight: 'bold', marginBottom: 16 },\n  h2: { fontSize: 24, fontWeight: 'bold', marginBottom: 14 },\n  h3: { fontSize: 18.72, fontWeight: 'bold', marginBottom: 12 },\n  h4: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },\n  h5: { fontSize: 13.28, fontWeight: 'bold', marginBottom: 8 },\n  h6: { fontSize: 10.72, fontWeight: 'bold', marginBottom: 6 },\n});\n\nexport function Heading({ level = 1, children, style }: HeadingProps) {\n  const headingStyle = styles[`h${level}` as keyof typeof styles];\n\n  return <Text style={style ? [headingStyle, style] : headingStyle}>{children}</Text>;\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "dependencies": [
+    "@react-pdf/renderer"
+  ]
+}

@@ -1,0 +1,15 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'configs'
+
+# pnpm 10 catalogs for centralized dependency management
+catalog:
+  react: ^19.0.0
+  react-dom: ^19.0.0
+  '@react-pdf/renderer': ^4.1.4
+  typescript: ^5.9.3
+  vite: ^6.0.5
+  vitest: ^2.1.8
+  '@types/react': ^19.0.8
+  '@types/react-dom': ^19.0.8

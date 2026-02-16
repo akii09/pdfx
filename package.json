@@ -1,0 +1,45 @@
+{
+  "name": "pdfx",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Professional React PDF component library",
+  "type": "module",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "dev": "turbo dev",
+    "dev:www": "turbo dev --filter=www",
+    "dev:playground": "turbo dev --filter=playground",
+    "build": "turbo build",
+    "build:registry": "turbo build:registry",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "typecheck": "turbo run typecheck",
+    "format": "biome format --write .",
+    "format:check": "biome check .",
+    "clean": "turbo clean && rm -rf node_modules",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=24.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.12",
+    "@changesets/changelog-github": "^0.5.0",
+    "@biomejs/biome": "^1.9.4",
+    "turbo": "^2.8.7",
+    "typescript": "^5.9.3",
+    "rimraf": "^6.0.1",
+    "only-allow": "^1.2.1"
+  },
+  "keywords": ["react", "pdf", "components", "ui-library", "react-pdf", "registry", "shadcn"],
+  "author": "Akii (akii09)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akii09/pdfx.git"
+  }
+}

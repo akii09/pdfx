@@ -1,0 +1,12 @@
+{
+  "buildCommand": "pnpm build && pnpm build:registry",
+  "outputDirectory": "apps/www/dist",
+  "installCommand": "pnpm install",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/r/:path*",
+      "destination": "/r/:path*"
+    }
+  ]
+}

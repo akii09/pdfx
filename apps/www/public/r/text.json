@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "text",
+  "type": "registry:ui",
+  "title": "Text",
+  "description": "PDF text component for paragraphs",
+  "files": [
+    {
+      "path": "components/pdfx/pdfx-text.tsx",
+      "content": "import { Text as PDFText, StyleSheet } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\nexport interface TextProps {\n  children: string | React.ReactNode;\n  style?: Style;\n}\n\nconst styles = StyleSheet.create({\n  text: {\n    fontSize: 12,\n    lineHeight: 1.5,\n    marginBottom: 8,\n  },\n});\n\nexport function Text({ children, style }: TextProps) {\n  return <PDFText style={style ? [styles.text, style] : styles.text}>{children}</PDFText>;\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "dependencies": [
+    "@react-pdf/renderer"
+  ]
+}
