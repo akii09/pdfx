@@ -1,8 +1,14 @@
-import { useState } from "react";
-import { CodeBlock } from "@/components/code-block";
-import { PackageManagerTabs } from "@/components/package-manager-tabs";
-import { cn } from "@/lib/utils";
-import { manualStep1Deps, manualStep2Pdfxjson, manualStep3Theme, manualStep4Structure, manualStep5AddComponent } from "@/constants/docs.constant";
+import { CodeBlock } from '@/components/code-block';
+import { PackageManagerTabs } from '@/components/package-manager-tabs';
+import {
+  manualStep1Deps,
+  manualStep2Pdfxjson,
+  manualStep3Theme,
+  manualStep4Structure,
+  manualStep5AddComponent,
+} from '@/constants/docs.constant';
+import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 export default function Installation() {
   const [installTab, setInstallTab] = useState<'cli' | 'manual'>('cli');
@@ -14,8 +20,7 @@ export default function Installation() {
           Installation
         </h2>
         <p className="text-muted-foreground mb-4">
-          Set up PDFX in your project using the CLI or manually configure your
-          project.
+          Set up PDFX in your project using the CLI or manually configure your project.
         </p>
 
         {/* Installation Tabs */}
@@ -23,24 +28,24 @@ export default function Installation() {
           <div className="flex items-center gap-0 border-b bg-muted/40 px-1 pt-1">
             <button
               type="button"
-              onClick={() => setInstallTab("cli")}
+              onClick={() => setInstallTab('cli')}
               className={cn(
-                "relative px-4 py-2 text-sm font-medium rounded-t-md transition-all",
-                installTab === "cli"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
+                'relative px-4 py-2 text-sm font-medium rounded-t-md transition-all',
+                installTab === 'cli'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               Using CLI
             </button>
             <button
               type="button"
-              onClick={() => setInstallTab("manual")}
+              onClick={() => setInstallTab('manual')}
               className={cn(
-                "relative px-4 py-2 text-sm font-medium rounded-t-md transition-all",
-                installTab === "manual"
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground",
+                'relative px-4 py-2 text-sm font-medium rounded-t-md transition-all',
+                installTab === 'manual'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
             >
               Manual
@@ -48,14 +53,14 @@ export default function Installation() {
           </div>
 
           {/* CLI Tab Content */}
-          {installTab === "cli" && (
+          {installTab === 'cli' && (
             <div className="p-4 bg-background space-y-4">
               <div>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Initialize PDFX in your project. Components are installed to{" "}
+                  Initialize PDFX in your project. Components are installed to{' '}
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                     ./src/components/pdfx/
-                  </code>{" "}
+                  </code>{' '}
                   by default (configurable during init).
                 </p>
                 <PackageManagerTabs
@@ -76,11 +81,11 @@ export default function Installation() {
           )}
 
           {/* Manual Tab Content */}
-          {installTab === "manual" && (
+          {installTab === 'manual' && (
             <div className="p-6 bg-background space-y-6">
               <p className="text-sm text-muted-foreground">
-                If you prefer not to use the CLI, follow these steps to
-                configure your project manually.
+                If you prefer not to use the CLI, follow these steps to configure your project
+                manually.
               </p>
 
               {/* Step 1 */}
@@ -92,7 +97,7 @@ export default function Installation() {
                   Install dependencies
                 </h3>
                 <p className="text-sm text-muted-foreground pl-8">
-                  PDFX components are built on{" "}
+                  PDFX components are built on{' '}
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                     @react-pdf/renderer
                   </code>
@@ -115,18 +120,14 @@ export default function Installation() {
                   Create pdfx.json
                 </h3>
                 <p className="text-sm text-muted-foreground pl-8">
-                  Create a{" "}
+                  Create a{' '}
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                     pdfx.json
-                  </code>{" "}
+                  </code>{' '}
                   file in your project root.
                 </p>
                 <div className="pl-8">
-                  <CodeBlock
-                    code={manualStep2Pdfxjson}
-                    language="json"
-                    filename="pdfx.json"
-                  />
+                  <CodeBlock code={manualStep2Pdfxjson} language="json" filename="pdfx.json" />
                 </div>
               </div>
 
@@ -139,12 +140,11 @@ export default function Installation() {
                   Add the theme file
                 </h3>
                 <p className="text-sm text-muted-foreground pl-8">
-                  Create{" "}
+                  Create{' '}
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                     src/lib/pdfx-theme.ts
                   </code>
-                  . All PDFX components import their design tokens from this
-                  file.
+                  . All PDFX components import their design tokens from this file.
                 </p>
                 <div className="pl-8">
                   <CodeBlock
@@ -164,7 +164,7 @@ export default function Installation() {
                   Create component directory
                 </h3>
                 <p className="text-sm text-muted-foreground pl-8">
-                  Create{" "}
+                  Create{' '}
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                     src/components/pdfx/
                   </code>
@@ -188,26 +188,21 @@ export default function Installation() {
                   Add components
                 </h3>
                 <p className="text-sm text-muted-foreground pl-8">
-                  Go to any component page and switch to the{" "}
-                  <strong>Manual</strong> tab to copy the component code.
+                  Go to any component page and switch to the <strong>Manual</strong> tab to copy the
+                  component code.
                 </p>
                 <div className="pl-8">
-                  <CodeBlock
-                    code={manualStep5AddComponent}
-                    language="bash"
-                    filename="terminal"
-                  />
+                  <CodeBlock code={manualStep5AddComponent} language="bash" filename="terminal" />
                 </div>
               </div>
 
               <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 text-sm text-muted-foreground leading-relaxed">
-                <strong className="text-foreground">Note:</strong> Components
-                import the theme from{" "}
+                <strong className="text-foreground">Note:</strong> Components import the theme from{' '}
                 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                   ../lib/pdfx-theme
                 </code>
-                . If your theme file is in a different location, update the
-                import path in each component.
+                . If your theme file is in a different location, update the import path in each
+                component.
               </div>
             </div>
           )}

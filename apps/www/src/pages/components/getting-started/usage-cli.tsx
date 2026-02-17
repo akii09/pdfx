@@ -10,14 +10,10 @@ export default function usageAndCli() {
           Usage
         </h2>
         <p className="text-muted-foreground mb-4">
-          Import components from your local pdfx directory and use them inside a
-          @react-pdf/renderer Document:
+          Import components from your local pdfx directory and use them inside a @react-pdf/renderer
+          Document:
         </p>
-        <CodeBlock
-          code={usageExample}
-          language="tsx"
-          filename="my-document.tsx"
-        />
+        <CodeBlock code={usageExample} language="tsx" filename="my-document.tsx" />
       </section>
 
       <section id="cli-commands" className="mb-14 scroll-mt-20">

@@ -1,9 +1,9 @@
+import { dataTableProps, dataTableUsageCode, users } from '@/constants/data-table.constant';
 import { DataTable, Heading } from '@pdfx/ui';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';
 import { useDocumentTitle } from '../../hooks/use-document-title';
-import { usageCode, dataTableProps, users } from '@/constants/data-table.constant';
 
 const styles = StyleSheet.create({
   page: { padding: 40 },
@@ -42,7 +42,7 @@ export default function DataTableComponentPage() {
           {previewDocument}
         </PDFPreview>
       }
-      usageCode={usageCode}
+      usageCode={dataTableUsageCode}
       usageFilename="src/components/pdfx/pdfx-data-table.tsx"
       props={dataTableProps}
     />

@@ -1,4 +1,4 @@
-export const usageCode = `import { Document, Page } from '@react-pdf/renderer';
+export const dataTableUsageCode = `import { Document, Page } from '@react-pdf/renderer';
 import { DataTable } from '@/components/pdfx/pdfx-data-table';
 import { Heading } from '@/components/pdfx/pdfx-heading';
 
@@ -37,7 +37,7 @@ export const users = [
   { id: 6, name: 'Frank Chen', dept: 'Support', status: 'Active' },
   { id: 7, name: 'Grace Kim', dept: 'Product', status: 'Active' },
   { id: 8, name: 'Hank Davis', dept: 'Marketing', status: 'Inactive' },
-];  
+];
 
 export const dataTableProps = [
   {

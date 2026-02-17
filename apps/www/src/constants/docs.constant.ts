@@ -1,4 +1,3 @@
-
 /**
  * This file contains constants used across the documentation pages.
  * It includes table of contents items, code snippets for examples, and CLI commands.

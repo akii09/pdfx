@@ -1,3 +1,4 @@
+import { linkProps, linkUsageCode } from '@/constants';
 import { Link } from '@pdfx/ui';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
@@ -7,20 +8,6 @@ import { useDocumentTitle } from '../../hooks/use-document-title';
 const styles = StyleSheet.create({
   page: { padding: 30 },
 });
-
-const usageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { Link } from '@/components/pdfx/pdfx-link';
-
-export function MyDocument() {
-  return (
-    <Document>
-      <Page size="A4" style={{ padding: 30 }}>
-        <Link href="https://pdfx.akashpise.dev">Documentation</Link>
-        <Link href="#section-1" color="primary">Internal link</Link>
-      </Page>
-    </Document>
-  );
-}`;
 
 const previewDocument = (
   <Document title="PDFX Link Preview">
@@ -32,38 +19,6 @@ const previewDocument = (
     </Page>
   </Document>
 );
-
-const linkProps = [
-  {
-    name: 'href',
-    type: 'string',
-    description:
-      'URL or anchor ID (prefix with # for internal links). Maps to @react-pdf Link src.',
-    required: true,
-  },
-  {
-    name: 'align',
-    type: "'left' | 'center' | 'right'",
-    description: 'Text alignment. Maps to textAlign.',
-  },
-  {
-    name: 'color',
-    type: 'string',
-    description:
-      "Text color. Use theme token ('primary', 'accent', etc.) or any CSS color. Defaults to primary.",
-  },
-  {
-    name: 'children',
-    type: 'React.ReactNode',
-    description: 'The link text content',
-    required: true,
-  },
-  {
-    name: 'style',
-    type: 'Style',
-    description: 'Custom @react-pdf/renderer styles to merge with defaults',
-  },
-];
 
 export default function LinkComponentPage() {
   useDocumentTitle('Link Component');
@@ -79,7 +34,7 @@ export default function LinkComponentPage() {
           {previewDocument}
         </PDFPreview>
       }
-      usageCode={usageCode}
+      usageCode={linkUsageCode}
       usageFilename="src/components/pdfx/pdfx-link.tsx"
       props={linkProps}
     />
