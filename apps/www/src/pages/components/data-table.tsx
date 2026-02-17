@@ -9,13 +9,15 @@ const styles = StyleSheet.create({
   page: { padding: 40 },
 });
 
-const previewDocument = (
+type DataTableVariant = 'line' | 'grid' | 'minimal' | 'striped';
+
+const renderPreviewDocument = (variant: DataTableVariant) => (
   <Document title="PDFX DataTable Preview">
     <Page size="A4" style={styles.page}>
       <Heading level={3}>Team Directory</Heading>
       <DataTable
         size="compact"
-        variant="striped"
+        variant={variant}
         columns={[
           { key: 'id', header: 'ID', align: 'center' },
           { key: 'name', header: 'Name' },
@@ -28,6 +30,13 @@ const previewDocument = (
   </Document>
 );
 
+const variantOptions = [
+  { value: 'line' as DataTableVariant, label: 'Line' },
+  { value: 'grid' as DataTableVariant, label: 'Grid' },
+  { value: 'minimal' as DataTableVariant, label: 'Minimal' },
+  { value: 'striped' as DataTableVariant, label: 'Striped' },
+];
+
 export default function DataTableComponentPage() {
   useDocumentTitle('DataTable Component');
 
@@ -38,8 +47,17 @@ export default function DataTableComponentPage() {
       installCommand="npx @pdfx/cli add data-table"
       componentName="data-table"
       preview={
-        <PDFPreview title="Preview" downloadFilename="data-table-preview.pdf">
-          {previewDocument}
+        <PDFPreview
+          title="Preview"
+          downloadFilename="data-table-preview.pdf"
+          variants={{
+            options: variantOptions,
+            defaultValue: 'striped' as DataTableVariant,
+            label: 'Variant',
+          }}
+        >
+          {/* biome-ignore lint/suspicious/noExplicitAny: Generic type workaround for React JSX components */}
+          {renderPreviewDocument as any}
         </PDFPreview>
       }
       usageCode={dataTableUsageCode}

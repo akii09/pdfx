@@ -1,10 +1,11 @@
 import { usePDF } from '@react-pdf/renderer';
 import { Download } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { cn } from '../lib/utils';
+import DropDown, { type DropDownOption } from './drop-down';
 
-interface PDFPreviewProps {
-  children: React.ReactElement;
+interface PDFPreviewProps<T = string> {
+  children: React.ReactElement | ((variant: T) => React.ReactElement);
   /** Label shown in the preview header (e.g. "Preview") */
   title?: string;
   /** Filename when downloading (e.g. "heading-preview.pdf") */
@@ -12,25 +13,40 @@ interface PDFPreviewProps {
   height?: string;
   showDownload?: boolean;
   className?: string;
+  /** Optional variants configuration */
+  variants?: {
+    options: DropDownOption<T>[];
+    defaultValue: T;
+    label?: string;
+  };
 }
 
-export const PDFPreview = memo(function PDFPreview({
+export const PDFPreview = memo(function PDFPreview<T = string>({
   children,
   title = 'Preview',
   downloadFilename = 'preview.pdf',
   height = 'h-[600px]',
   showDownload = true,
   className,
-}: PDFPreviewProps) {
+  variants,
+}: PDFPreviewProps<T>) {
+  const [selectedVariant, setSelectedVariant] = useState<T>(variants?.defaultValue as T);
+
+  // Memoize the document to prevent infinite loops
+  const document = useMemo(
+    () => (typeof children === 'function' ? children(selectedVariant) : children),
+    [children, selectedVariant]
+  );
+
   const [instance, updateInstance] = usePDF({
-    document: children as React.ReactElement<import('@react-pdf/renderer').DocumentProps>,
+    document: document as React.ReactElement<import('@react-pdf/renderer').DocumentProps>,
   });
   const [key, setKey] = useState(0);
 
   useEffect(() => {
-    updateInstance(children as React.ReactElement<import('@react-pdf/renderer').DocumentProps>);
+    updateInstance(document as React.ReactElement<import('@react-pdf/renderer').DocumentProps>);
     setKey((k) => k + 1);
-  }, [children, updateInstance]);
+  }, [document, updateInstance]);
 
   if (instance.loading) {
     return (
@@ -63,8 +79,20 @@ export const PDFPreview = memo(function PDFPreview({
 
   return (
     <div className={cn('rounded-lg border border-border overflow-hidden', className)}>
-      <div className="border-b border-border bg-muted/50 px-4 py-2.5">
+      <div className="border-b border-border bg-muted/50 px-4 py-2.5 flex items-center justify-between">
         <span className="text-sm text-muted-foreground font-medium">{title}</span>
+        {variants && (
+          <div className="flex items-center gap-2">
+            {variants.label && (
+              <span className="text-xs text-muted-foreground">{variants.label}:</span>
+            )}
+            <DropDown
+              options={variants.options}
+              value={selectedVariant}
+              onChange={(value) => setSelectedVariant(value as T)}
+            />
+          </div>
+        )}
       </div>
       <iframe
         key={key}
