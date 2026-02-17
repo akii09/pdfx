@@ -11,17 +11,11 @@ import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from 
 export type DataTableSize = 'default' | 'compact';
 
 export interface DataTableColumn<T = Record<string, unknown>> {
-  /** Key in the row data object. */
   key: keyof T & string;
-  /** Header label. */
   header: string;
-  /** Cell alignment. */
   align?: 'left' | 'center' | 'right';
-  /** Optional width (e.g. '20%', '150'). */
   width?: string | number;
-  /** Custom cell renderer. Receives row value and full row. */
   render?: (value: unknown, row: T) => React.ReactNode;
-  /** Custom footer cell renderer. Receives the footer value. */
   renderFooter?: (value: unknown) => React.ReactNode;
 }
 

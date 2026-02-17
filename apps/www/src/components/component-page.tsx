@@ -17,6 +17,8 @@ interface ComponentPageProps {
   /** Path where the usage file lives after install (e.g. src/components/pdfx/pdfx-heading.tsx) */
   usageFilename: string;
   props: PropDefinition[];
+  /** Optional additional information section (requirements, notes, etc.) */
+  additionalInfo?: ReactNode;
 }
 
 export function ComponentPage({
@@ -28,15 +30,17 @@ export function ComponentPage({
   usageCode,
   usageFilename,
   props,
+  additionalInfo,
 }: ComponentPageProps) {
   const tocItems = useMemo<TocItem[]>(
     () => [
       { id: 'installation', title: 'Installation', level: 2 },
+      ...(additionalInfo ? [{ id: 'requirements', title: 'Requirements', level: 2 }] : []),
       { id: 'usage', title: 'Usage', level: 2 },
       { id: 'preview', title: 'Preview', level: 2 },
       { id: 'props', title: 'Props', level: 2 },
     ],
-    []
+    [additionalInfo]
   );
 
   return (
@@ -55,6 +59,13 @@ export function ComponentPage({
             usageFilename={usageFilename}
           />
         </section>
+
+        {additionalInfo && (
+          <section id="requirements" className="mb-10 scroll-mt-20">
+            <h2 className="text-lg font-semibold tracking-tight mb-3">Requirements</h2>
+            {additionalInfo}
+          </section>
+        )}
 
         <section id="usage" className="mb-10 scroll-mt-20">
           <h2 className="text-lg font-semibold tracking-tight mb-3">Usage</h2>

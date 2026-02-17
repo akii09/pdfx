@@ -34,6 +34,7 @@ export function InstallationTabs({
 }: InstallationTabsProps) {
   const [activeTab, setActiveTab] = useState<InstallMethod>('command');
   const [manualCode, setManualCode] = useState<string | null>(null);
+  const [registryData, setRegistryData] = useState<RegistryItem | null>(null);
   const [isLoadingManual, setIsLoadingManual] = useState(false);
   const [manualError, setManualError] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -46,6 +47,7 @@ export function InstallationTabs({
       const res = await fetch(`/r/${componentName}.json`);
       if (!res.ok) throw new Error('Failed to fetch');
       const data = (await res.json()) as RegistryItem;
+      setRegistryData(data);
       const firstFile = data.files?.[0];
       if (!firstFile?.content) throw new Error('No content');
       setManualCode(firstFile.content);
@@ -100,6 +102,48 @@ export function InstallationTabs({
         />
       ) : (
         <div className="p-4 bg-background space-y-4">
+          {registryData?.registryDependencies && registryData.registryDependencies.length > 0 && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/20 p-4">
+              <div className="flex items-start gap-3">
+                <svg
+                  className="h-5 w-5 text-amber-600 dark:text-amber-500 shrink-0 mt-0.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-label="Warning icon"
+                  role="img"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
+                    Dependencies Required
+                  </p>
+                  <p className="text-sm text-amber-800 dark:text-amber-300">
+                    This component requires:{' '}
+                    {registryData.registryDependencies.map((dep, idx) => (
+                      <span key={dep}>
+                        <code className="rounded bg-amber-100 dark:bg-amber-900/40 px-1.5 py-0.5 font-mono text-xs font-semibold">
+                          {dep}
+                        </code>
+                        {idx < (registryData.registryDependencies?.length ?? 0) - 1 && ', '}
+                      </span>
+                    ))}
+                  </p>
+                  <p className="text-xs text-amber-700 dark:text-amber-400">
+                    Using CLI? Dependencies are installed automatically. Manual install? Copy all
+                    required components.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <p className="text-sm text-muted-foreground">
             Copy and paste the following code into{' '}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
