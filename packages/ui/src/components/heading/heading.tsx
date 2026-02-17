@@ -8,6 +8,9 @@ import { resolveColor } from '../../lib/resolve-color.js';
 /** Font weight options for Heading. */
 export type HeadingWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 
+/** Letter spacing / tracking options for Heading. */
+export type HeadingTracking = 'tighter' | 'tight' | 'normal' | 'wide' | 'wider';
+
 /**
  * Props for the Heading component.
  *
@@ -16,6 +19,8 @@ export type HeadingWeight = 'normal' | 'medium' | 'semibold' | 'bold';
  * <Heading level={2}>Chapter Title</Heading>
  * <Heading align="center" color="primary">Section Header</Heading>
  * <Heading level={3} weight="medium">Lighter Heading</Heading>
+ * <Heading level={4} tracking="tight" noMargin>Compact Heading</Heading>
+ * <Heading level={1} color="primary" tracking="tighter">Hero Title</Heading>
  * ```
  */
 export interface HeadingProps extends PDFComponentProps {
@@ -29,6 +34,10 @@ export interface HeadingProps extends PDFComponentProps {
   transform?: 'uppercase' | 'lowercase' | 'capitalize' | 'none';
   /** Font weight override. Defaults to theme heading weight. */
   weight?: HeadingWeight;
+  /** Letter spacing / tracking. 'tight' is ideal for large display headings. */
+  tracking?: HeadingTracking;
+  /** Remove all margins (top and bottom). Useful inside Stack or tight layouts. */
+  noMargin?: boolean;
 }
 
 /** Creates heading styles from theme tokens. Zero hardcoded values. */
@@ -91,6 +100,14 @@ function createHeadingStyles(t: PdfxTheme) {
     uppercase: { textTransform: 'uppercase', letterSpacing: letterSpacing.wider * 10 },
     lowercase: { textTransform: 'lowercase' },
     capitalize: { textTransform: 'capitalize' },
+    // Tracking (letter spacing)
+    trackingTighter: { letterSpacing: letterSpacing.tight * 15 },
+    trackingTight: { letterSpacing: letterSpacing.tight * 10 },
+    trackingNormal: { letterSpacing: letterSpacing.normal },
+    trackingWide: { letterSpacing: letterSpacing.wide * 10 },
+    trackingWider: { letterSpacing: letterSpacing.wider * 10 },
+    // No margin
+    noMargin: { marginTop: 0, marginBottom: 0 },
   });
 }
 
@@ -103,6 +120,14 @@ const weightMap = {
   bold: styles.weightBold,
 } as const;
 
+const trackingMap = {
+  tighter: styles.trackingTighter,
+  tight: styles.trackingTight,
+  normal: styles.trackingNormal,
+  wide: styles.trackingWide,
+  wider: styles.trackingWider,
+} as const;
+
 /**
  * PDF heading component that renders h1-h6 equivalents.
  * Uses theme tokens for all typography, color, and spacing values.
@@ -110,8 +135,11 @@ const weightMap = {
  * @example
  * ```tsx
  * <Heading level={1}>Main Title</Heading>
+ * <Heading level={2} tracking="tight">Tight Display Heading</Heading>
  * <Heading level={3} align="center" color="primary">Section</Heading>
  * <Heading level={4} weight="medium">Lighter Subheading</Heading>
+ * <Heading level={5} noMargin>No-margin heading in Stack</Heading>
+ * <Heading level={6} transform="uppercase" tracking="wider">Label</Heading>
  * <Heading style={{ color: 'navy' }}>Custom style overrides</Heading>
  * ```
  */
@@ -121,6 +149,8 @@ export function Heading({
   color,
   transform,
   weight,
+  tracking,
+  noMargin,
   children,
   style,
 }: HeadingProps) {
@@ -132,6 +162,11 @@ export function Heading({
     styleArray.push(weightMap[weight]);
   }
 
+  // Apply tracking (letter spacing)
+  if (tracking && tracking in trackingMap) {
+    styleArray.push(trackingMap[tracking]);
+  }
+
   // Apply transform styles
   if (transform) {
     if (transform === 'uppercase') {
@@ -141,6 +176,11 @@ export function Heading({
     } else if (transform === 'capitalize') {
       styleArray.push(styles.capitalize);
     }
+  }
+
+  // Remove margins if requested
+  if (noMargin) {
+    styleArray.push(styles.noMargin);
   }
 
   // Apply semantic overrides

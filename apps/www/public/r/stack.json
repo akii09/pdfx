@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
   "name": "stack",
   "type": "registry:ui",
   "title": "Stack",

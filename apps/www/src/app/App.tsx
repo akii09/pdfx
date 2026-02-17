@@ -4,6 +4,7 @@ import Layout from '../components/layout/Layout';
 
 const HomePage = lazy(() => import('../pages/home'));
 const DocsPage = lazy(() => import('../pages/docs'));
+const NotFoundPage = lazy(() => import('../pages/404'));
 const ComponentsIndexPage = lazy(() => import('../pages/components/index'));
 const HeadingPage = lazy(() => import('../pages/components/heading'));
 const TextPage = lazy(() => import('../pages/components/text'));
@@ -125,6 +126,14 @@ export default function App() {
             }
           />
         </Route>
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <NotFoundPage />
+            </Suspense>
+          }
+        />
       </Route>
     </Routes>
   );

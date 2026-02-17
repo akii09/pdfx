@@ -11,6 +11,9 @@ export type SectionSpacing = 'none' | 'sm' | 'md' | 'lg' | 'xl';
 /** Padding size for Section. */
 export type SectionPadding = 'none' | 'sm' | 'md' | 'lg';
 
+/** Section visual variant. */
+export type SectionVariant = 'default' | 'callout' | 'highlight' | 'card';
+
 /**
  * Props for the Section component.
  *
@@ -20,8 +23,15 @@ export type SectionPadding = 'none' | 'sm' | 'md' | 'lg';
  *   <Heading level={2}>Chapter 1</Heading>
  *   <Text>Content...</Text>
  * </Section>
- * <Section background="muted" padding="md" border>
- *   <Text>Highlighted content</Text>
+ * <Section variant="callout" accentColor="info">
+ *   <Text weight="semibold">Note</Text>
+ *   <Text>Important information...</Text>
+ * </Section>
+ * <Section variant="card">
+ *   <Text>Card-style content box</Text>
+ * </Section>
+ * <Section variant="highlight" accentColor="warning">
+ *   <Text>Warning highlight</Text>
  * </Section>
  * ```
  */
@@ -34,6 +44,10 @@ export interface SectionProps extends PDFComponentProps {
   background?: string;
   /** Add a border around the section. */
   border?: boolean;
+  /** Section visual variant. 'callout' adds left accent border. 'highlight' adds muted bg. 'card' adds border + rounded. */
+  variant?: SectionVariant;
+  /** Accent color for callout/highlight left border. Use theme token or CSS color. Defaults to 'primary'. */
+  accentColor?: string;
 }
 
 /** Creates section styles from theme tokens. Zero hardcoded values. */
@@ -62,6 +76,34 @@ function createSectionStyles(t: PdfxTheme) {
       borderStyle: 'solid',
       borderRadius: borderRadius.md,
     },
+    // ─── Variant: Callout ──────────────────────────────────────────────
+    // Left accent border with padding — like a blockquote or note callout
+    callout: {
+      borderLeftWidth: spacing[1],
+      borderLeftColor: t.colors.primary,
+      borderLeftStyle: 'solid',
+      paddingLeft: spacing[4],
+      paddingVertical: spacing[2],
+    },
+    // ─── Variant: Highlight ────────────────────────────────────────────
+    // Muted background with left accent — attention-drawing panel
+    highlight: {
+      backgroundColor: t.colors.muted,
+      borderLeftWidth: spacing[1],
+      borderLeftColor: t.colors.primary,
+      borderLeftStyle: 'solid',
+      padding: spacing[4],
+      borderRadius: borderRadius.sm,
+    },
+    // ─── Variant: Card ─────────────────────────────────────────────────
+    // Bordered rounded box — clean card-like container
+    card: {
+      borderWidth: spacing[0.5],
+      borderColor: t.colors.border,
+      borderStyle: 'solid',
+      borderRadius: borderRadius.md,
+      padding: spacing[4],
+    },
   });
 }
 
@@ -82,9 +124,17 @@ const paddingMap = {
   lg: styles.paddingLg,
 } as const;
 
+const variantMap = {
+  default: null,
+  callout: styles.callout,
+  highlight: styles.highlight,
+  card: styles.card,
+} as const;
+
 /**
  * PDF layout component — logical section with theme-based vertical spacing.
- * Supports background colors, padding, and borders for highlighted content areas.
+ * Supports background colors, padding, borders, and semantic variants
+ * for highlighted content areas, callouts, and cards.
  *
  * @example
  * ```tsx
@@ -92,12 +142,20 @@ const paddingMap = {
  *   <Heading level={2}>Introduction</Heading>
  *   <Text>This is the intro...</Text>
  * </Section>
- * <Section spacing="md" background="muted" padding="md">
- *   <Heading level={3}>Note</Heading>
- *   <Text>Important information...</Text>
+ * <Section variant="callout" accentColor="info">
+ *   <Text weight="semibold">Note</Text>
+ *   <Text>This is an informational callout.</Text>
  * </Section>
- * <Section border padding="md">
- *   <Text>Bordered content box</Text>
+ * <Section variant="highlight" accentColor="warning">
+ *   <Text weight="semibold">Warning</Text>
+ *   <Text>Please review before proceeding.</Text>
+ * </Section>
+ * <Section variant="card">
+ *   <Heading level={3} noMargin>Summary</Heading>
+ *   <Text>A clean bordered card container.</Text>
+ * </Section>
+ * <Section background="muted" padding="md" border>
+ *   <Text>Custom styled section</Text>
  * </Section>
  * ```
  */
@@ -106,23 +164,38 @@ export function Section({
   padding,
   background,
   border,
+  variant = 'default',
+  accentColor,
   children,
   style,
 }: SectionProps) {
   const spacingStyle = spacingMap[spacing];
   const styleArray: Style[] = [styles.base, spacingStyle];
 
-  // Apply padding
+  // Apply variant styles
+  const variantStyle = variantMap[variant];
+  if (variantStyle) {
+    styleArray.push(variantStyle);
+  }
+
+  // Apply accent color override for callout/highlight variants
+  if (accentColor && (variant === 'callout' || variant === 'highlight')) {
+    styleArray.push({
+      borderLeftColor: resolveColor(accentColor, theme.colors),
+    });
+  }
+
+  // Apply padding (overrides variant padding if set)
   if (padding && padding in paddingMap) {
     styleArray.push(paddingMap[padding]);
   }
 
-  // Apply border
-  if (border) {
+  // Apply border (for default variant or as an override)
+  if (border && variant === 'default') {
     styleArray.push(styles.border);
   }
 
-  // Apply background color
+  // Apply background color (overrides variant background if set)
   if (background) {
     styleArray.push({ backgroundColor: resolveColor(background, theme.colors) });
   }

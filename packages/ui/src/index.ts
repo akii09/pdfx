@@ -1,14 +1,26 @@
 export type { PDFComponentProps } from '@pdfx/shared';
-export { Heading, type HeadingProps, type HeadingWeight } from './components/heading';
+export {
+  Heading,
+  type HeadingProps,
+  type HeadingWeight,
+  type HeadingTracking,
+} from './components/heading';
 export {
   Divider,
   type DividerProps,
   type DividerVariant,
   type DividerThickness,
+  type DividerSpacing,
 } from './components/divider';
 export { PageBreak, type PageBreakProps } from './components/page-break';
 export { Link, type LinkProps, type LinkVariant, type LinkUnderline } from './components/link';
-export { Text, type TextProps, type TextVariant, type TextWeight } from './components/text';
+export {
+  Text,
+  type TextProps,
+  type TextVariant,
+  type TextWeight,
+  type TextDecoration,
+} from './components/text';
 export {
   Stack,
   type StackProps,
@@ -22,6 +34,7 @@ export {
   type SectionProps,
   type SectionSpacing,
   type SectionPadding,
+  type SectionVariant,
 } from './components/section';
 export {
   Table,
@@ -40,4 +53,5 @@ export {
   DataTable,
   type DataTableProps,
   type DataTableColumn,
+  type DataTableSize,
 } from './components/data-table';

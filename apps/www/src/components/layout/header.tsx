@@ -1,11 +1,18 @@
 import { FileText, Github, Menu, Search, X } from 'lucide-react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../theme-toggle';
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  // Close mobile menu on route change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally reset on pathname change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">

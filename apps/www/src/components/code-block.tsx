@@ -6,6 +6,8 @@ import { CopyButton } from './copy-button';
 
 interface CodeBlockProps {
   code: string;
+  /** If provided, the copy button copies this value instead of the displayed code */
+  copyValue?: string;
   language?: string;
   filename?: string;
   className?: string;
@@ -13,7 +15,13 @@ interface CodeBlockProps {
 
 const theme = themes.oneDark;
 
-export function CodeBlock({ code, language = 'tsx', filename, className }: CodeBlockProps) {
+export function CodeBlock({
+  code,
+  copyValue,
+  language = 'tsx',
+  filename,
+  className,
+}: CodeBlockProps) {
   const lang = useMemo(() => {
     if (language === 'bash' || language === 'sh' || language === 'shell') return 'bash';
     if (language === 'ts' || language === 'typescript') return 'typescript';
@@ -32,7 +40,7 @@ export function CodeBlock({ code, language = 'tsx', filename, className }: CodeB
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5 bg-black/30">
           <span className="text-sm text-zinc-400 font-mono">{filename}</span>
           <CopyButton
-            value={code}
+            value={copyValue ?? code}
             className="text-zinc-400 hover:text-zinc-100 hover:bg-white/10 rounded-md p-1.5 transition-colors"
           />
         </div>
@@ -40,7 +48,7 @@ export function CodeBlock({ code, language = 'tsx', filename, className }: CodeB
       <div className="relative">
         {!filename && (
           <CopyButton
-            value={code}
+            value={copyValue ?? code}
             className="absolute right-3 top-3 z-10 text-zinc-400 hover:text-zinc-100 hover:bg-white/10 rounded-md p-1.5 transition-colors"
           />
         )}

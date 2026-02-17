@@ -1,4 +1,4 @@
-import { DataTable } from '@pdfx/ui';
+import { DataTable, Heading } from '@pdfx/ui';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';
@@ -10,52 +10,62 @@ const styles = StyleSheet.create({
 
 const usageCode = `import { Document, Page } from '@react-pdf/renderer';
 import { DataTable } from '@/components/pdfx/pdfx-data-table';
+import { Heading } from '@/components/pdfx/pdfx-heading';
 
-const lineItems = [
-  { item: 'Design', qty: 1, price: '$150', total: '$150' },
-  { item: 'Development', qty: 1, price: '$2,500', total: '$2,500' },
+const users = [
+  { id: 1, name: 'Alice Johnson', dept: 'Engineering', status: 'Active' },
+  { id: 2, name: 'Bob Smith', dept: 'Marketing', status: 'Active' },
+  { id: 3, name: 'Carol Lee', dept: 'Design', status: 'Inactive' },
 ];
 
 export function MyDocument() {
   return (
     <Document>
       <Page size="A4" style={{ padding: 40 }}>
+        <Heading level={3}>Team Directory</Heading>
         <DataTable
+          size="compact"
+          variant="striped"
           columns={[
-            { key: 'item', header: 'Item' },
-            { key: 'qty', header: 'Qty', align: 'center' },
-            { key: 'price', header: 'Price', align: 'right' },
-            { key: 'total', header: 'Total', align: 'right' },
+            { key: 'id', header: 'ID', align: 'center' },
+            { key: 'name', header: 'Name' },
+            { key: 'dept', header: 'Department' },
+            { key: 'status', header: 'Status', align: 'center' },
           ]}
-          data={lineItems}
-          footer={{ item: 'Total', total: '$2,650' }}
-          variant="line"
-          stripe
+          data={users}
         />
       </Page>
     </Document>
   );
 }`;
 
-const lineItems = [
-  { item: 'Design', qty: 1, price: '$150', total: '$150' },
-  { item: 'Development', qty: 1, price: '$2,500', total: '$2,500' },
+// ── Preview data: simplified for better layout ──────────────
+
+const users = [
+  { id: 1, name: 'Alice Johnson', dept: 'Engineering', status: 'Active' },
+  { id: 2, name: 'Bob Smith', dept: 'Marketing', status: 'Active' },
+  { id: 3, name: 'Carol Lee', dept: 'Design', status: 'Inactive' },
+  { id: 4, name: 'Dan Wilson', dept: 'Engineering', status: 'Active' },
+  { id: 5, name: 'Eve Brown', dept: 'Sales', status: 'Active' },
+  { id: 6, name: 'Frank Chen', dept: 'Support', status: 'Active' },
+  { id: 7, name: 'Grace Kim', dept: 'Product', status: 'Active' },
+  { id: 8, name: 'Hank Davis', dept: 'Marketing', status: 'Inactive' },
 ];
 
 const previewDocument = (
   <Document title="PDFX DataTable Preview">
     <Page size="A4" style={styles.page}>
+      <Heading level={3}>Team Directory</Heading>
       <DataTable
+        size="compact"
+        variant="striped"
         columns={[
-          { key: 'item', header: 'Item' },
-          { key: 'qty', header: 'Qty', align: 'center' },
-          { key: 'price', header: 'Price', align: 'right' },
-          { key: 'total', header: 'Total', align: 'right' },
+          { key: 'id', header: 'ID', align: 'center' },
+          { key: 'name', header: 'Name' },
+          { key: 'dept', header: 'Department' },
+          { key: 'status', header: 'Status', align: 'center' },
         ]}
-        data={lineItems}
-        footer={{ item: 'Total', total: '$2,650' }}
-        variant="line"
-        stripe
+        data={users}
       />
     </Page>
   </Document>
@@ -66,7 +76,7 @@ const dataTableProps = [
     name: 'columns',
     type: 'DataTableColumn[]',
     required: true,
-    description: 'Column definitions with key, header, align, and optional render function.',
+    description: 'Column definitions with key, header, align, width, and optional render function.',
   },
   {
     name: 'data',
@@ -75,8 +85,14 @@ const dataTableProps = [
     description: 'Array of row objects. Keys should match column keys.',
   },
   {
+    name: 'size',
+    type: "'default' | 'compact'",
+    defaultValue: "'default'",
+    description: 'Table density. "compact" reduces padding and font size for data-dense views.',
+  },
+  {
     name: 'variant',
-    type: "'line' | 'grid' | 'minimal'",
+    type: "'line' | 'grid' | 'minimal' | 'striped'",
     defaultValue: "'line'",
     description: 'Visual style. Same as Table component.',
   },
@@ -84,7 +100,7 @@ const dataTableProps = [
     name: 'stripe',
     type: 'boolean',
     defaultValue: 'false',
-    description: 'Alternating row background colors.',
+    description: 'Alternating row background colors (auto-enabled for "striped" variant).',
   },
   {
     name: 'footer',
@@ -111,6 +127,12 @@ const dataTableProps = [
     description: 'Column text alignment.',
   },
   {
+    name: 'Column.width',
+    type: 'string | number',
+    defaultValue: '-',
+    description: 'Column width. Use % for proportional (e.g. "25%") or number for fixed pts.',
+  },
+  {
     name: 'Column.render',
     type: '(value, row) => ReactNode',
     defaultValue: '-',
@@ -124,7 +146,7 @@ export default function DataTableComponentPage() {
   return (
     <ComponentPage
       title="DataTable"
-      description="Data-driven table API. Pass columns definition and data array for automatic rendering. Built on Table primitives."
+      description="Data-driven table API for displaying large datasets. Pass columns + data array for automatic rendering. Use compact mode for data-dense views with many columns and rows."
       installCommand="npx @pdfx/cli add data-table"
       componentName="data-table"
       preview={

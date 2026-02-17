@@ -1,7 +1,7 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "$schema": "https://pdfx.akashpise.dev/schema/registry.json",
   "name": "pdfx",
-  "homepage": "https://pdfx.com",
+  "homepage": "https://pdfx.akashpise.dev",
   "items": [
     {
       "name": "heading",
@@ -10,7 +10,7 @@
       "description": "PDF heading component with 6 levels (h1-h6)",
       "files": [
         {
-          "path": "../../../../packages/ui/src/heading.tsx",
+          "path": "../../../../packages/ui/src/components/heading/heading.tsx",
           "type": "registry:component"
         }
       ],
@@ -25,7 +25,7 @@
       "description": "PDF text component for paragraphs",
       "files": [
         {
-          "path": "../../../../packages/ui/src/text.tsx",
+          "path": "../../../../packages/ui/src/components/text/text.tsx",
           "type": "registry:component"
         }
       ],
@@ -40,7 +40,7 @@
       "description": "PDF link component for hyperlinks",
       "files": [
         {
-          "path": "../../../../packages/ui/src/link.tsx",
+          "path": "../../../../packages/ui/src/components/link/link.tsx",
           "type": "registry:component"
         }
       ],
@@ -55,7 +55,7 @@
       "description": "Horizontal rule with theme-based spacing",
       "files": [
         {
-          "path": "../../../../packages/ui/src/divider.tsx",
+          "path": "../../../../packages/ui/src/components/divider/divider.tsx",
           "type": "registry:component"
         }
       ],
@@ -70,7 +70,7 @@
       "description": "Forces content after it to start on a new page",
       "files": [
         {
-          "path": "../../../../packages/ui/src/page-break.tsx",
+          "path": "../../../../packages/ui/src/components/page-break/page-break.tsx",
           "type": "registry:component"
         }
       ],
@@ -85,7 +85,7 @@
       "description": "Vertical layout with theme-based gap",
       "files": [
         {
-          "path": "../../../../packages/ui/src/stack.tsx",
+          "path": "../../../../packages/ui/src/components/stack/stack.tsx",
           "type": "registry:component"
         }
       ],
@@ -100,7 +100,7 @@
       "description": "Logical section with theme-based spacing",
       "files": [
         {
-          "path": "../../../../packages/ui/src/section.tsx",
+          "path": "../../../../packages/ui/src/components/section/section.tsx",
           "type": "registry:component"
         }
       ],
@@ -115,7 +115,7 @@
       "description": "Composable table with Table, TableRow, TableCell",
       "files": [
         {
-          "path": "../../../../packages/ui/src/table.tsx",
+          "path": "../../../../packages/ui/src/components/table/table.tsx",
           "type": "registry:component"
         }
       ],
@@ -130,7 +130,7 @@
       "description": "Convenience API: columns + data array. Uses Table/TableRow/TableCell internally.",
       "files": [
         {
-          "path": "../../../../packages/ui/src/data-table.tsx",
+          "path": "../../../../packages/ui/src/components/data-table/data-table.tsx",
           "type": "registry:component"
         }
       ],

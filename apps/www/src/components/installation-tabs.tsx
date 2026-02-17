@@ -1,5 +1,6 @@
 import { ChevronDown } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import { CodeBlock } from './code-block';
 import { PackageManagerTabs } from './package-manager-tabs';
@@ -11,6 +12,7 @@ type InstallMethod = 'command' | 'manual';
 interface RegistryItem {
   files: Array<{ path: string; content: string }>;
   dependencies?: string[];
+  registryDependencies?: string[];
 }
 
 interface InstallationTabsProps {
@@ -48,7 +50,7 @@ export function InstallationTabs({
       if (!firstFile?.content) throw new Error('No content');
       setManualCode(firstFile.content);
     } catch {
-      setManualError('Could not load manual installation code.');
+      setManualError('Could not load component code from the registry.');
     } finally {
       setIsLoadingManual(false);
     }
@@ -75,7 +77,7 @@ export function InstallationTabs({
               : 'text-muted-foreground hover:text-foreground'
           )}
         >
-          Command
+          CLI
         </button>
         <button
           type="button"
@@ -97,18 +99,21 @@ export function InstallationTabs({
           className="border-0 rounded-none shadow-none"
         />
       ) : (
-        <div className="p-4 bg-background">
-          <p className="text-sm text-muted-foreground mb-3">
-            Copy and paste the following code into your project. Update the import paths to match
-            your project setup.
+        <div className="p-4 bg-background space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Copy and paste the following code into{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+              {usageFilename}
+            </code>
           </p>
+
           <div className="overflow-hidden rounded-lg border">
             {isLoadingManual ? (
               <div className="flex items-center justify-center p-8 text-sm text-muted-foreground">
                 Loading...
               </div>
             ) : manualError ? (
-              <div className="p-4 text-sm text-destructive">{manualError}</div>
+              <div className="p-4 text-sm text-muted-foreground">{manualError}</div>
             ) : manualCode ? (
               <>
                 <div
@@ -119,6 +124,7 @@ export function InstallationTabs({
                 >
                   <CodeBlock
                     code={isExpanded ? manualCode : getCodePreview(manualCode, PREVIEW_LINES)}
+                    copyValue={manualCode}
                     language="tsx"
                     filename={usageFilename}
                     className="border-0 rounded-none"
@@ -151,6 +157,14 @@ export function InstallationTabs({
               </>
             ) : null}
           </div>
+
+          <p className="text-xs text-muted-foreground">
+            Not set up yet?{' '}
+            <Link to="/docs#installation" className="text-foreground underline font-medium">
+              Follow the installation guide
+            </Link>{' '}
+            to configure your project first.
+          </p>
         </div>
       )}
     </div>

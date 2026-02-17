@@ -6,6 +6,23 @@ import { type Registry, registrySchema } from '@pdfx/shared';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Input types: what we read from registry/index.json (no content yet)
+interface SourceRegistryFile {
+  path: string;
+  type: string;
+}
+
+interface SourceRegistryItem {
+  name: string;
+  type: string;
+  title: string;
+  description: string;
+  files: SourceRegistryFile[];
+  dependencies?: string[];
+  registryDependencies?: string[];
+}
+
+// Output types: what we generate (with content)
 interface RegistryFile {
   path: string;
   content: string;
@@ -19,6 +36,7 @@ interface RegistryItem {
   description: string;
   files: RegistryFile[];
   dependencies?: string[];
+  registryDependencies?: string[];
 }
 
 // interface Registry {
@@ -84,11 +102,15 @@ function transformForRegistry(content: string): { content: string; usesTheme: bo
   // Strip PdfxTheme type annotation — use structural typing for self-contained components
   result = result.replace(/\(t:\s*PdfxTheme\)/g, '(t: any)');
 
-  // Normalize theme import: ./lib/pdfx-theme → ../lib/pdfx-theme
-  result = result.replace(/from\s+['"]\.\/lib\/pdfx-theme['"]/g, "from '../lib/pdfx-theme'");
+  // Normalize theme import: ../../lib/pdfx-theme or ./lib/pdfx-theme → ../lib/pdfx-theme
+  result = result.replace(
+    /from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/pdfx-theme['"]/g,
+    "from '../lib/pdfx-theme'"
+  );
 
   // For data-table: table is emitted as pdfx-table.tsx, so fix the import path
-  result = result.replace(/from\s+['"]\.\/table['"]/g, "from './pdfx-table'");
+  // Handles both '../table' (subdirectory layout) and './table' (flat layout)
+  result = result.replace(/from\s+['"](?:\.\.\/|\.\/)table['"]/g, "from './pdfx-table'");
 
   // Inline resolveColor and remove the import (avoids separate lib file in distributed components)
   const resolveColorInline = `const THEME_COLOR_KEYS = ['foreground','muted','mutedForeground','primary','primaryForeground','accent','destructive','success','warning','info'] as const;
@@ -97,8 +119,9 @@ function resolveColor(value: string, colors: Record<string, string>): string {
 }
 `;
   if (result.includes('resolve-color')) {
+    // Handle both ../../lib/resolve-color.js (subdirectory) and ./lib/resolve-color.js (flat)
     result = result.replace(
-      /import\s+\{[^}]*resolveColor[^}]*\}\s+from\s+['"]\.\/lib\/resolve-color\.js['"];?\n?/g,
+      /import\s+\{[^}]*resolveColor[^}]*\}\s+from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/resolve-color\.js['"];?\n?/g,
       ''
     );
     result = result.replace(/(\n)(function create\w+Styles)/, `$1${resolveColorInline}$2`);
@@ -108,7 +131,7 @@ function resolveColor(value: string, colors: Record<string, string>): string {
 }
 
 async function processItem(
-  item: RegistryItem,
+  item: SourceRegistryItem,
   registryBaseDir: string,
   outputDir: string
 ): Promise<void> {
@@ -143,7 +166,7 @@ async function processItem(
   );
 
   const output: Record<string, unknown> = {
-    $schema: 'https://ui.shadcn.com/schema/registry-item.json',
+    $schema: 'https://pdfx.akashpise.dev/schema/registry-item.json',
     name: item.name,
     type: item.type,
     title: item.title,

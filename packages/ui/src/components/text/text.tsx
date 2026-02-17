@@ -11,6 +11,9 @@ export type TextVariant = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl';
 /** Font weight options for Text. */
 export type TextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 
+/** Text decoration options. */
+export type TextDecoration = 'underline' | 'line-through' | 'none';
+
 /**
  * Props for the Text component.
  *
@@ -20,6 +23,9 @@ export type TextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
  * <Text variant="xs" color="muted">Caption</Text>
  * <Text variant="lg" weight="semibold">Important text</Text>
  * <Text italic>Emphasized text</Text>
+ * <Text decoration="line-through" color="destructive">$99.00</Text>
+ * <Text noMargin>Tight text (no paragraph gap)</Text>
+ * <Text transform="uppercase" variant="xs" weight="semibold">Label</Text>
  * ```
  */
 export interface TextProps extends PDFComponentProps {
@@ -33,11 +39,17 @@ export interface TextProps extends PDFComponentProps {
   weight?: TextWeight;
   /** Render text in italic style. */
   italic?: boolean;
+  /** Text decoration. 'line-through' is useful for strikethrough pricing. */
+  decoration?: TextDecoration;
+  /** Text transform (uppercase, lowercase, capitalize). */
+  transform?: 'uppercase' | 'lowercase' | 'capitalize';
+  /** Remove paragraph gap margin. Useful inside Stack or tight layouts. */
+  noMargin?: boolean;
 }
 
 /** Creates text styles from theme tokens. Zero hardcoded values. */
 function createTextStyles(t: PdfxTheme) {
-  const { fontWeights } = t.primitives;
+  const { fontWeights, letterSpacing } = t.primitives;
   const base = {
     fontFamily: t.typography.body.fontFamily,
     lineHeight: t.typography.body.lineHeight,
@@ -61,6 +73,16 @@ function createTextStyles(t: PdfxTheme) {
     weightBold: { fontWeight: fontWeights.bold },
     // Style modifiers
     italic: { fontStyle: 'italic' },
+    // Decoration modifiers
+    underline: { textDecoration: 'underline' },
+    lineThrough: { textDecoration: 'line-through' },
+    decorationNone: { textDecoration: 'none' },
+    // Transform modifiers
+    uppercase: { textTransform: 'uppercase', letterSpacing: letterSpacing.wider * 10 },
+    lowercase: { textTransform: 'lowercase' },
+    capitalize: { textTransform: 'capitalize' },
+    // Margin removal
+    noMargin: { marginBottom: 0, marginTop: 0 },
   });
 }
 
@@ -73,6 +95,18 @@ const weightMap = {
   bold: styles.weightBold,
 } as const;
 
+const decorationMap = {
+  underline: styles.underline,
+  'line-through': styles.lineThrough,
+  none: styles.decorationNone,
+} as const;
+
+const transformMap = {
+  uppercase: styles.uppercase,
+  lowercase: styles.lowercase,
+  capitalize: styles.capitalize,
+} as const;
+
 /**
  * PDF text component for body paragraphs.
  * Uses theme tokens for font family, size, line height, color, and spacing.
@@ -83,10 +117,24 @@ const weightMap = {
  * <Text align="center" color="muted">Caption text</Text>
  * <Text weight="semibold">Bold text</Text>
  * <Text italic color="primary">Emphasized and colored</Text>
+ * <Text decoration="line-through" color="destructive">$99.00</Text>
+ * <Text transform="uppercase" variant="xs" weight="semibold" color="mutedForeground">Section Label</Text>
+ * <Text noMargin>Text without paragraph gap below</Text>
  * <Text style={{ fontSize: 14, color: 'gray' }}>Custom styled text.</Text>
  * ```
  */
-export function Text({ variant, align, color, weight, italic, children, style }: TextProps) {
+export function Text({
+  variant,
+  align,
+  color,
+  weight,
+  italic,
+  decoration,
+  transform,
+  noMargin,
+  children,
+  style,
+}: TextProps) {
   const baseStyle = variant ? styles[variant] : styles.text;
   const styleArray: Style[] = [baseStyle];
 
@@ -98,6 +146,21 @@ export function Text({ variant, align, color, weight, italic, children, style }:
   // Apply italic style
   if (italic) {
     styleArray.push(styles.italic);
+  }
+
+  // Apply text decoration
+  if (decoration && decoration in decorationMap) {
+    styleArray.push(decorationMap[decoration]);
+  }
+
+  // Apply text transform
+  if (transform && transform in transformMap) {
+    styleArray.push(transformMap[transform]);
+  }
+
+  // Remove margins if requested
+  if (noMargin) {
+    styleArray.push(styles.noMargin);
   }
 
   // Apply semantic overrides
