@@ -216,6 +216,9 @@ export async function themeValidate() {
       'border',
       'accent',
       'destructive',
+      'success',
+      'warning',
+      'info',
     ];
     const missingColors = requiredColors.filter((key) => !content.includes(`${key}:`));
 

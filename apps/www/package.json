@@ -13,12 +13,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@pdfx/shared": "workspace:*",
     "@pdfx/ui": "workspace:*",
     "@react-pdf/renderer": "catalog:",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.564.0",
+    "prism-react-renderer": "^2.4.1",
+    "prismjs": "^1.30.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-router-dom": "^7.1.3",

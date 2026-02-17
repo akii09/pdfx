@@ -21,6 +21,13 @@ const sections: SidebarSection[] = [
     links: [
       { title: 'Heading', href: '/components/heading' },
       { title: 'Text', href: '/components/text' },
+      { title: 'Link', href: '/components/link' },
+      { title: 'Divider', href: '/components/divider' },
+      { title: 'PageBreak', href: '/components/page-break' },
+      { title: 'Stack', href: '/components/stack' },
+      { title: 'Section', href: '/components/section' },
+      { title: 'Table', href: '/components/table' },
+      { title: 'DataTable', href: '/components/data-table' },
     ],
   },
 ];

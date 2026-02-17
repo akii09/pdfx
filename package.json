@@ -35,15 +35,7 @@
     "rimraf": "^6.0.1",
     "only-allow": "^1.2.1"
   },
-  "keywords": [
-    "react",
-    "pdf",
-    "components",
-    "ui-library",
-    "react-pdf",
-    "registry",
-    "shadcn"
-  ],
+  "keywords": ["react", "pdf", "components", "ui-library", "react-pdf", "registry", "shadcn"],
   "author": "Akii (akii09)",
   "license": "MIT",
   "repository": {

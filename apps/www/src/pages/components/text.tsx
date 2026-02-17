@@ -8,12 +8,52 @@ const styles = StyleSheet.create({
   page: { padding: 30 },
 });
 
-const usageCode = `import { Text } from '@/components/pdfx/pdfx-text';
+const usageCode = `import { Document, Page } from '@react-pdf/renderer';
+import { Text } from '@/components/pdfx/pdfx-text';
 
-<Text>A paragraph of body text in your PDF document.</Text>
-<Text style={{ fontSize: 14, color: 'gray' }}>Custom styled text.</Text>`;
+export function MyDocument() {
+  return (
+    <Document>
+      <Page size="A4" style={{ padding: 30 }}>
+        <Text>A paragraph of body text in your PDF document.</Text>
+        <Text variant="xs" color="mutedForeground">Caption text</Text>
+        <Text variant="lg">Lead paragraph</Text>
+      </Page>
+    </Document>
+  );
+}`;
+
+/** Preview matches the usage code exactly */
+const previewDocument = (
+  <Document title="PDFX Text Preview">
+    <Page size="A4" style={styles.page}>
+      <Text>A paragraph of body text in your PDF document.</Text>
+      <Text variant="xs" color="mutedForeground">
+        Caption text
+      </Text>
+      <Text variant="lg">Lead paragraph</Text>
+    </Page>
+  </Document>
+);
 
 const textProps = [
+  {
+    name: 'variant',
+    type: "'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl'",
+    description:
+      'Typography scale. Default (undefined) uses typography.body. Maps to primitives.typography.',
+  },
+  {
+    name: 'align',
+    type: "'left' | 'center' | 'right'",
+    description: 'Text alignment. Maps to textAlign.',
+  },
+  {
+    name: 'color',
+    type: 'string',
+    description:
+      "Text color. Use theme token ('primary', 'muted', 'accent', etc.) or any CSS color.",
+  },
   {
     name: 'children',
     type: 'React.ReactNode',
@@ -35,26 +75,14 @@ export default function TextComponentPage() {
       title="Text"
       description="PDF text component for body paragraphs. Renders text at 12px with 1.5 line height and 8px bottom margin."
       installCommand="npx @pdfx/cli add text"
+      componentName="text"
       preview={
-        <PDFPreview>
-          <Document>
-            <Page size="A4" style={styles.page}>
-              <Text>
-                This is a paragraph of body text rendered using the PDFX Text component. It uses
-                12px font size with 1.5 line height for comfortable reading.
-              </Text>
-              <Text>
-                Multiple Text components stack vertically with an 8px bottom margin between each
-                paragraph, creating clean document layouts.
-              </Text>
-              <Text style={{ color: 'gray', fontSize: 10 }}>
-                Text components support custom styles for fine-grained control over typography.
-              </Text>
-            </Page>
-          </Document>
+        <PDFPreview title="Preview" downloadFilename="text-preview.pdf">
+          {previewDocument}
         </PDFPreview>
       }
       usageCode={usageCode}
+      usageFilename="src/components/pdfx/pdfx-text.tsx"
       props={textProps}
     />
   );

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "divider",
+  "type": "registry:ui",
+  "title": "Divider",
+  "description": "Horizontal rule with theme-based spacing",
+  "files": [
+    {
+      "path": "components/pdfx/pdfx-divider.tsx",
+      "content": "import { StyleSheet, View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\nimport { theme } from '../lib/pdfx-theme';\n\n/** Divider line variant. */\nexport type DividerVariant = 'solid' | 'dashed' | 'dotted';\n\n/** Divider thickness. */\nexport type DividerThickness = 'thin' | 'medium' | 'thick';\n\n/**\n * Props for the Divider component.\n *\n * @example\n * ```tsx\n * <Divider />\n * <Divider spacing=\"md\" />\n * <Divider variant=\"dashed\" color=\"muted\" />\n * <Divider thickness=\"thick\" />\n * ```\n */\nexport interface DividerProps extends { style?: Style } {\n  /** Vertical spacing above and below. Maps to theme spacing scale. */\n  spacing?: 'none' | 'sm' | 'md' | 'lg';\n  /** Line style variant. */\n  variant?: DividerVariant;\n  /** Line color. Use theme token (e.g. 'border', 'muted', 'primary') or any CSS color. */\n  color?: string;\n  /** Line thickness. */\n  thickness?: DividerThickness;\n}\n\n/** Creates divider styles from theme tokens. Zero hardcoded values. */\nconst THEME_COLOR_KEYS = ['foreground','muted','mutedForeground','primary','primaryForeground','accent','destructive','success','warning','info'] as const;\nfunction resolveColor(value: string, colors: Record<string, string>): string {\n  return THEME_COLOR_KEYS.includes(value as (typeof THEME_COLOR_KEYS)[number]) ? colors[value] : value;\n}\nfunction createDividerStyles(t: any) {\n  const { spacing } = t.primitives;\n  return StyleSheet.create({\n    base: {\n      borderBottomColor: t.colors.border,\n      borderBottomStyle: 'solid',\n    },\n    // Spacing\n    spacingNone: { marginVertical: spacing[0] },\n    spacingSm: { marginVertical: spacing[3] },\n    spacingMd: { marginVertical: spacing[5] },\n    spacingLg: { marginVertical: spacing[8] },\n    // Variants\n    solid: { borderBottomStyle: 'solid' },\n    dashed: { borderBottomStyle: 'dashed' },\n    dotted: { borderBottomStyle: 'dotted' },\n    // Thickness\n    thin: { borderBottomWidth: spacing[0.5] },\n    medium: { borderBottomWidth: spacing[1] },\n    thick: { borderBottomWidth: spacing[2] },\n  });\n}\n\nconst styles = createDividerStyles(theme);\n\nconst spacingMap = {\n  none: styles.spacingNone,\n  sm: styles.spacingSm,\n  md: styles.spacingMd,\n  lg: styles.spacingLg,\n} as const;\n\nconst variantMap = {\n  solid: styles.solid,\n  dashed: styles.dashed,\n  dotted: styles.dotted,\n} as const;\n\nconst thicknessMap = {\n  thin: styles.thin,\n  medium: styles.medium,\n  thick: styles.thick,\n} as const;\n\n/**\n * PDF divider component — a horizontal rule.\n * Uses theme tokens for border color, spacing, and thickness.\n *\n * @example\n * ```tsx\n * <Divider />\n * <Divider spacing=\"lg\" />\n * <Divider variant=\"dashed\" />\n * <Divider color=\"primary\" thickness=\"thick\" />\n * <Divider style={{ borderBottomColor: 'navy' }} />\n * ```\n */\nexport function Divider({\n  spacing = 'md',\n  variant = 'solid',\n  color,\n  thickness = 'thin',\n  style,\n}: DividerProps) {\n  const spacingStyle = spacingMap[spacing];\n  const variantStyle = variantMap[variant];\n  const thicknessStyle = thicknessMap[thickness];\n  const styleArray: Style[] = [styles.base, spacingStyle, variantStyle, thicknessStyle];\n\n  // Apply custom color\n  if (color) {\n    styleArray.push({ borderBottomColor: resolveColor(color, theme.colors) });\n  }\n\n  // Apply custom style last\n  if (style) {\n    styleArray.push(style);\n  }\n\n  return <View style={styleArray} />;\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "dependencies": [
+    "@react-pdf/renderer"
+  ],
+  "registryDependencies": [
+    "theme"
+  ]
+}

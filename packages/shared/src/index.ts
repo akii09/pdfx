@@ -29,6 +29,7 @@ export {
   type Config,
   type RegistryItem,
   type RegistryFile,
+  type Registry,
 } from './schemas.js';
 
 export {

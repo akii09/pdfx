@@ -9,10 +9,7 @@
       "title": "Heading",
       "description": "PDF heading component with 6 levels (h1-h6)",
       "files": [
-        {
-          "path": "../../../../packages/ui/src/heading.tsx",
-          "type": "registry:component"
-        }
+        { "path": "../../../../packages/ui/src/heading.tsx", "type": "registry:component" }
       ],
       "dependencies": ["@react-pdf/renderer"]
     },
@@ -21,13 +18,73 @@
       "type": "registry:ui",
       "title": "Text",
       "description": "PDF text component for paragraphs",
+      "files": [{ "path": "../../../../packages/ui/src/text.tsx", "type": "registry:component" }],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "link",
+      "type": "registry:ui",
+      "title": "Link",
+      "description": "PDF link component for hyperlinks",
+      "files": [{ "path": "../../../../packages/ui/src/link.tsx", "type": "registry:component" }],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "divider",
+      "type": "registry:ui",
+      "title": "Divider",
+      "description": "Horizontal rule with theme-based spacing",
       "files": [
-        {
-          "path": "../../../../packages/ui/src/text.tsx",
-          "type": "registry:component"
-        }
+        { "path": "../../../../packages/ui/src/divider.tsx", "type": "registry:component" }
       ],
       "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "page-break",
+      "type": "registry:ui",
+      "title": "PageBreak",
+      "description": "Forces content after it to start on a new page",
+      "files": [
+        { "path": "../../../../packages/ui/src/page-break.tsx", "type": "registry:component" }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "stack",
+      "type": "registry:ui",
+      "title": "Stack",
+      "description": "Vertical layout with theme-based gap",
+      "files": [{ "path": "../../../../packages/ui/src/stack.tsx", "type": "registry:component" }],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "section",
+      "type": "registry:ui",
+      "title": "Section",
+      "description": "Logical section with theme-based spacing",
+      "files": [
+        { "path": "../../../../packages/ui/src/section.tsx", "type": "registry:component" }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Composable table with Table, TableRow, TableCell",
+      "files": [{ "path": "../../../../packages/ui/src/table.tsx", "type": "registry:component" }],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "DataTable",
+      "description": "Convenience API: columns + data array. Uses Table/TableRow/TableCell internally.",
+      "files": [
+        { "path": "../../../../packages/ui/src/data-table.tsx", "type": "registry:component" }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "registryDependencies": ["table"]
     }
   ]
 }

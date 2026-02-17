@@ -8,11 +8,35 @@ const styles = StyleSheet.create({
   page: { padding: 30 },
 });
 
-const usageCode = `import { Heading } from '@/components/pdfx/pdfx-heading';
+const usageCode = `import { Document, Page } from '@react-pdf/renderer';
+import { Heading } from '@/components/pdfx/pdfx-heading';
 
-<Heading level={1}>Main Title</Heading>
-<Heading level={2}>Subtitle</Heading>
-<Heading level={3} style={{ color: 'navy' }}>Custom Styled</Heading>`;
+export function MyDocument() {
+  return (
+    <Document>
+      <Page size="A4" style={{ padding: 30 }}>
+        <Heading level={1}>Main Title</Heading>
+        <Heading level={2} align="center" color="primary">Subtitle</Heading>
+        <Heading level={3} style={{ color: 'navy' }}>Custom Styled</Heading>
+      </Page>
+    </Document>
+  );
+}`;
+
+/** Preview matches the usage code exactly */
+const previewDocument = (
+  <Document title="PDFX Heading Preview">
+    <Page size="A4" style={styles.page}>
+      <Heading level={1}>Main Title</Heading>
+      <Heading level={2} align="center" color="primary">
+        Subtitle
+      </Heading>
+      <Heading level={3} style={{ color: 'navy' }}>
+        Custom Styled
+      </Heading>
+    </Page>
+  </Document>
+);
 
 const headingProps = [
   {
@@ -20,6 +44,22 @@ const headingProps = [
     type: '1 | 2 | 3 | 4 | 5 | 6',
     defaultValue: '1',
     description: 'Heading level corresponding to h1-h6 sizing',
+  },
+  {
+    name: 'align',
+    type: "'left' | 'center' | 'right'",
+    description: 'Text alignment. Maps to textAlign.',
+  },
+  {
+    name: 'color',
+    type: 'string',
+    description:
+      "Text color. Use theme token ('primary', 'muted', 'accent', etc.) or any CSS color.",
+  },
+  {
+    name: 'transform',
+    type: "'uppercase' | 'lowercase' | 'capitalize' | 'none'",
+    description: 'Text transform. Common for section headers.',
   },
   {
     name: 'children',
@@ -42,21 +82,14 @@ export default function HeadingComponentPage() {
       title="Heading"
       description="PDF heading component with 6 levels. Uses browser-standard heading sizes (32px for h1 down to 10.72px for h6)."
       installCommand="npx @pdfx/cli add heading"
+      componentName="heading"
       preview={
-        <PDFPreview>
-          <Document>
-            <Page size="A4" style={styles.page}>
-              <Heading level={1}>Heading 1</Heading>
-              <Heading level={2}>Heading 2</Heading>
-              <Heading level={3}>Heading 3</Heading>
-              <Heading level={4}>Heading 4</Heading>
-              <Heading level={5}>Heading 5</Heading>
-              <Heading level={6}>Heading 6</Heading>
-            </Page>
-          </Document>
+        <PDFPreview title="Preview" downloadFilename="heading-preview.pdf">
+          {previewDocument}
         </PDFPreview>
       }
       usageCode={usageCode}
+      usageFilename="src/components/pdfx/pdfx-heading.tsx"
       props={headingProps}
     />
   );

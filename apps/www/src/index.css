@@ -1,27 +1,27 @@
 @import "tailwindcss";
 
-/* ─── Light theme (default) ─── */
+/* ─── Light theme (default) — shadcn-inspired zinc palette ─── */
 :root {
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0.015 285);
-  --muted: oklch(0.965 0.005 285);
-  --muted-foreground: oklch(0.556 0.01 285);
+  --foreground: oklch(0.141 0.005 285);
+  --muted: oklch(0.968 0.003 285);
+  --muted-foreground: oklch(0.552 0.016 285);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0.015 285);
+  --popover-foreground: oklch(0.141 0.005 285);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0.015 285);
-  --border: oklch(0.922 0.005 285);
-  --input: oklch(0.922 0.005 285);
-  --primary: oklch(0.205 0.015 285);
+  --card-foreground: oklch(0.141 0.005 285);
+  --border: oklch(0.92 0.006 285);
+  --input: oklch(0.92 0.006 285);
+  --primary: oklch(0.141 0.005 285);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.965 0.005 285);
-  --secondary-foreground: oklch(0.205 0.015 285);
-  --accent: oklch(0.965 0.005 285);
-  --accent-foreground: oklch(0.205 0.015 285);
+  --secondary: oklch(0.968 0.003 285);
+  --secondary-foreground: oklch(0.141 0.005 285);
+  --accent: oklch(0.968 0.003 285);
+  --accent-foreground: oklch(0.141 0.005 285);
   --destructive: oklch(0.577 0.245 27);
   --destructive-foreground: oklch(0.985 0 0);
-  --ring: oklch(0.708 0.01 285);
-  --radius: 0.625rem;
+  --ring: oklch(0.552 0.016 285);
+  --radius: 0.5rem;
 }
 
 /* ─── Dark theme ─── */

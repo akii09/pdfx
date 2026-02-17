@@ -4,39 +4,42 @@ import { defaultPrimitives } from './primitives.js';
 /**
  * Minimal theme preset.
  *
- * Character: Courier headings for a typewriter feel, stark black primary,
- * maximum whitespace with wide margins, restrained color palette.
- * Ideal for clean documentation, technical specs, and literary manuscripts.
+ * Character: Courier headings, zinc neutrals, maximum whitespace.
+ * shadcn-inspired restrained palette. Ideal for clean documentation,
+ * technical specs, and literary manuscripts.
  */
 export const minimalTheme: PdfxTheme = {
   name: 'minimal',
   primitives: defaultPrimitives,
   colors: {
-    foreground: '#171717',
+    foreground: '#18181b',
     background: '#ffffff',
     muted: '#fafafa',
-    mutedForeground: '#a3a3a3',
-    primary: '#171717',
+    mutedForeground: '#a1a1aa',
+    primary: '#18181b',
     primaryForeground: '#ffffff',
-    border: '#e5e5e5',
-    accent: '#525252',
+    border: '#e4e4e7',
+    accent: '#71717a',
     destructive: '#b91c1c',
+    success: '#15803d',
+    warning: '#a16207',
+    info: '#0369a1',
   },
   typography: {
     body: {
       fontFamily: 'Helvetica',
       fontSize: 11,
-      lineHeight: 1.6,
+      lineHeight: 1.65,
     },
     heading: {
       fontFamily: 'Courier',
-      fontWeight: 700,
-      lineHeight: 1.2,
+      fontWeight: 600,
+      lineHeight: 1.25,
       fontSize: {
-        h1: 28,
-        h2: 22,
-        h3: 18,
-        h4: 15,
+        h1: 24,
+        h2: 20,
+        h3: 16,
+        h4: 14,
         h5: 12,
         h6: 10,
       },
@@ -44,14 +47,14 @@ export const minimalTheme: PdfxTheme = {
   },
   spacing: {
     page: {
-      marginTop: 64,
-      marginRight: 64,
-      marginBottom: 64,
-      marginLeft: 64,
+      marginTop: 72,
+      marginRight: 56,
+      marginBottom: 72,
+      marginLeft: 56,
     },
-    sectionGap: 32,
-    paragraphGap: 12,
-    componentGap: 16,
+    sectionGap: 36,
+    paragraphGap: 14,
+    componentGap: 18,
   },
   page: {
     size: 'A4',
