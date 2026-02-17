@@ -5,69 +5,32 @@ import type { Style } from '@react-pdf/types';
 import React from 'react';
 import { theme as defaultTheme } from '../../lib/pdfx-theme';
 
-/**
- * Table visual variant.
- * - `line`: Horizontal dividers only (Stripe-style). Best for invoices, receipts, quotes.
- * - `grid`: Full borders on all sides. Best for reports, data sheets, comparison tables.
- * - `minimal`: No borders. Structure via spacing/typography. Best for certificates, elegant reports.
- * - `striped`: Alternating row backgrounds with subtle borders. Modern, easy to scan.
- */
 export type TableVariant = 'line' | 'grid' | 'minimal' | 'striped';
 
-/**
- * Props for the Table component.
- *
- * @example
- * ```tsx
- * <Table variant="line">
- *   <TableHeader>
- *     <TableRow header>...</TableRow>
- *   </TableHeader>
- *   <TableBody>
- *     <TableRow>...</TableRow>
- *   </TableBody>
- * </Table>
- * ```
- */
 export interface TableProps extends PDFComponentProps {
-  /** Visual variant. line = horizontal dividers. grid = full borders. minimal = borderless. striped = alternating rows. */
   variant?: TableVariant;
-  /** Enable automatic zebra striping on body rows (auto-enabled for 'striped' variant). */
   zebraStripe?: boolean;
 }
 
 /** Props for semantic table section wrappers. */
 export interface TableSectionProps extends PDFComponentProps {}
 
-/** Props for the TableRow component. */
 export interface TableRowProps extends PDFComponentProps {
-  /** Header row — uses distinct background, semibold text, and semantic separator. */
   header?: boolean;
-  /** Footer row — top border, bold text for totals/summaries. */
   footer?: boolean;
-  /** Alternating stripe background (applied automatically when using zebraStripe). */
   stripe?: boolean;
-  /** Override table variant (default from parent Table). */
   variant?: TableVariant;
 }
 
-/** Props for the TableCell component. */
 export interface TableCellProps extends PDFComponentProps {
-  /** Header cell styling. */
   header?: boolean;
-  /** Footer cell styling (bold). */
   footer?: boolean;
-  /** Text alignment. Use 'right' for amounts/numbers. */
   align?: 'left' | 'center' | 'right';
-  /** Column width. String ('50%') or number (pts). Omit for equal-width flex. */
   width?: string | number;
-  /** Override table variant (default from parent TableRow). */
   variant?: TableVariant;
-  /** Internal: omit right border (last cell in row). */
   _last?: boolean;
 }
 
-// ─── Theme Caching ────────────────────────────────────────────────────────────
 let cachedTheme: PdfxTheme | null = null;
 let cachedStyles: ReturnType<typeof createTableStyles> | null = null;
 
@@ -79,14 +42,13 @@ function getStyles(t: PdfxTheme) {
   return cachedStyles;
 }
 
-/** Creates table styles from theme tokens. Zero hardcoded values. */
+/** Derives all styles from theme tokens. Zero hardcoded values. */
 function createTableStyles(t: PdfxTheme) {
   const { spacing, borderRadius, letterSpacing, fontWeights, typography } = t.primitives;
   const borderWidth = spacing[0.5];
   const borderColor = t.colors.border;
 
   return StyleSheet.create({
-    // ─── Container ─────────────────────────────────────────────────────────
     table: {
       display: 'flex',
       flexDirection: 'column',
@@ -119,8 +81,6 @@ function createTableStyles(t: PdfxTheme) {
       borderBottomColor: borderColor,
       borderBottomStyle: 'solid',
     },
-
-    // ─── Rows ─────────────────────────────────────────────────────────────
     row: {
       flexDirection: 'row',
       display: 'flex',
@@ -173,8 +133,6 @@ function createTableStyles(t: PdfxTheme) {
     rowStripe: {
       backgroundColor: t.colors.muted,
     },
-
-    // ─── Cells ─────────────────────────────────────────────────────────────
     cell: {
       flex: 1,
       paddingVertical: spacing[3],
@@ -196,8 +154,6 @@ function createTableStyles(t: PdfxTheme) {
       paddingVertical: spacing[2],
       paddingHorizontal: spacing[4],
     },
-
-    // ─── Cell Text Styles ──────────────────────────────────────────────────
     cellText: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
@@ -244,7 +200,10 @@ function createTableStyles(t: PdfxTheme) {
   });
 }
 
-// ─── Helper: Process children and propagate variant ───────────────────────────
+/**
+ * Propagates variant and zebra striping to child rows.
+ * Prevents prop drilling while maintaining semantic JSX structure.
+ */
 function processTableChildren(
   children: React.ReactNode,
   variant: TableVariant,
@@ -288,71 +247,22 @@ function processTableChildren(
 
 // ─── Components ───────────────────────────────────────────────────────────────
 
-/**
- * Semantic wrapper for table header rows.
- *
- * @example
- * ```tsx
- * <TableHeader>
- *   <TableRow header>
- *     <TableCell>Name</TableCell>
- *     <TableCell>Price</TableCell>
- *   </TableRow>
- * </TableHeader>
- * ```
- */
+/** Semantic wrapper for table header rows. */
 export function TableHeader({ children, style }: TableSectionProps) {
   return <View style={style}>{children}</View>;
 }
 
-/**
- * Semantic wrapper for table body rows.
- *
- * @example
- * ```tsx
- * <TableBody>
- *   <TableRow><TableCell>Item 1</TableCell></TableRow>
- * </TableBody>
- * ```
- */
+/** Semantic wrapper for table body rows. */
 export function TableBody({ children, style }: TableSectionProps) {
   return <View style={style}>{children}</View>;
 }
 
-/**
- * Semantic wrapper for table footer rows.
- *
- * @example
- * ```tsx
- * <TableFooter>
- *   <TableRow footer><TableCell>Total</TableCell></TableRow>
- * </TableFooter>
- * ```
- */
+/** Semantic wrapper for table footer rows. */
 export function TableFooter({ children, style }: TableSectionProps) {
   return <View style={style}>{children}</View>;
 }
 
-/**
- * PDF table container component.
- * Supports four visual variants: line, grid, minimal, and striped.
- * All styling is theme-driven.
- *
- * @example
- * ```tsx
- * <Table variant="striped">
- *   <TableHeader>
- *     <TableRow header>
- *       <TableCell width="50%">Description</TableCell>
- *       <TableCell width="25%" align="right">Amount</TableCell>
- *     </TableRow>
- *   </TableHeader>
- *   <TableBody>
- *     <TableRow><TableCell width="50%">Design</TableCell><TableCell width="25%" align="right">$2,000</TableCell></TableRow>
- *   </TableBody>
- * </Table>
- * ```
- */
+/** PDF table container. All styling is theme-driven. */
 export function Table({ children, style, variant = 'line', zebraStripe = false }: TableProps) {
   const styles = getStyles(defaultTheme);
   const tableStyles: Style[] = [styles.table];
@@ -374,17 +284,7 @@ export function Table({ children, style, variant = 'line', zebraStripe = false }
   return <View style={styleArray}>{processedChildren}</View>;
 }
 
-/**
- * PDF table row component.
- *
- * @example
- * ```tsx
- * <TableRow header>
- *   <TableCell>Column 1</TableCell>
- *   <TableCell>Column 2</TableCell>
- * </TableRow>
- * ```
- */
+/** PDF table row component. */
 export function TableRow({
   header,
   footer,
@@ -439,15 +339,7 @@ export function TableRow({
   return <View style={styleArray}>{processedChildren}</View>;
 }
 
-/**
- * PDF table cell component.
- *
- * @example
- * ```tsx
- * <TableCell width="50%" align="left">Description</TableCell>
- * <TableCell width="25%" align="right">$1,000</TableCell>
- * ```
- */
+/** PDF table cell component. */
 export function TableCell({
   header,
   footer,

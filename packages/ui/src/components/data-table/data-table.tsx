@@ -8,10 +8,8 @@ import { theme } from '../../lib/pdfx-theme';
 import type { TableVariant } from '../table';
 import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from '../table';
 
-/** DataTable density. 'compact' reduces padding and font size for data-dense views. */
 export type DataTableSize = 'default' | 'compact';
 
-/** Column definition for DataTable. */
 export interface DataTableColumn<T = Record<string, unknown>> {
   /** Key in the row data object. */
   key: keyof T & string;
@@ -27,56 +25,16 @@ export interface DataTableColumn<T = Record<string, unknown>> {
   renderFooter?: (value: unknown) => React.ReactNode;
 }
 
-/**
- * Props for the DataTable component.
- * Convenience API for tabular data: columns + data array.
- *
- * @example
- * ```tsx
- * // Compact data-dense table — ideal for user lists, logs, reports
- * <DataTable
- *   size="compact"
- *   variant="striped"
- *   columns={[
- *     { key: 'id', header: 'ID', width: '8%', align: 'center' },
- *     { key: 'name', header: 'Name', width: '22%' },
- *     { key: 'email', header: 'Email', width: '28%' },
- *     { key: 'role', header: 'Role', width: '14%' },
- *     { key: 'dept', header: 'Dept', width: '14%' },
- *     { key: 'status', header: 'Status', width: '14%', align: 'center' },
- *   ]}
- *   data={users}
- * />
- *
- * // Default size — ideal for invoices, summaries
- * <DataTable
- *   variant="line"
- *   columns={[
- *     { key: 'item', header: 'Item', width: '50%' },
- *     { key: 'amount', header: 'Amount', align: 'right', width: '50%' },
- *   ]}
- *   data={lineItems}
- *   footer={{ item: 'Total', amount: '$2,650' }}
- * />
- * ```
- */
 export interface DataTableProps<T = Record<string, unknown>>
   extends Omit<PDFComponentProps, 'children'> {
-  /** Column definitions. */
   columns: DataTableColumn<T>[];
-  /** Row data. Each object keys should match column keys. */
   data: T[];
-  /** Visual variant. Defaults to 'line'. */
   variant?: TableVariant;
-  /** Optional footer row (totals). Keys match column keys. */
   footer?: Partial<Record<keyof T & string, string | number>>;
-  /** Alternating row stripe (auto-enabled for 'striped' variant). */
   stripe?: boolean;
-  /** Table density. 'compact' reduces padding and font size for data-dense views. Defaults to 'default'. */
   size?: DataTableSize;
 }
 
-/** Creates compact override styles from theme. */
 function createCompactStyles(t: PdfxTheme) {
   const { spacing, fontWeights } = t.primitives;
   return StyleSheet.create({
@@ -109,30 +67,7 @@ function createCompactStyles(t: PdfxTheme) {
 
 const compact = createCompactStyles(theme);
 
-/**
- * DataTable - convenience API for data-driven tables.
- * Accepts `columns` + `data`, renders using composable Table primitives with
- * proper semantic wrappers (TableHeader, TableBody, TableFooter).
- *
- * Use `size="compact"` for data-dense views with many columns and rows
- * (user lists, logs, reports). Use default size for invoices and summaries.
- *
- * @example
- * ```tsx
- * <DataTable
- *   size="compact"
- *   variant="striped"
- *   columns={[
- *     { key: 'name', header: 'Name', width: '25%' },
- *     { key: 'email', header: 'Email', width: '30%' },
- *     { key: 'role', header: 'Role', width: '15%' },
- *     { key: 'status', header: 'Status', width: '15%', align: 'center' },
- *     { key: 'joined', header: 'Joined', width: '15%', align: 'right' },
- *   ]}
- *   data={users}
- * />
- * ```
- */
+/** Convenience API for data-driven tables using composable Table primitives. */
 export function DataTable<T extends Record<string, unknown>>({
   columns,
   data,
