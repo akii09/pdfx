@@ -1,6 +1,7 @@
 {
   "extends": "../../configs/tsconfig.base.json",
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
     "baseUrl": ".",
