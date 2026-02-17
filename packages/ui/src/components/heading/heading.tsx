@@ -5,24 +5,10 @@ import type { Style } from '@react-pdf/types';
 import { theme } from '../../lib/pdfx-theme';
 import { resolveColor } from '../../lib/resolve-color.js';
 
-/** Font weight options for Heading. */
 export type HeadingWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 
-/** Letter spacing / tracking options for Heading. */
 export type HeadingTracking = 'tighter' | 'tight' | 'normal' | 'wide' | 'wider';
 
-/**
- * Props for the Heading component.
- *
- * @example
- * ```tsx
- * <Heading level={2}>Chapter Title</Heading>
- * <Heading align="center" color="primary">Section Header</Heading>
- * <Heading level={3} weight="medium">Lighter Heading</Heading>
- * <Heading level={4} tracking="tight" noMargin>Compact Heading</Heading>
- * <Heading level={1} color="primary" tracking="tighter">Hero Title</Heading>
- * ```
- */
 export interface HeadingProps extends PDFComponentProps {
   /** Heading level (1-6). Corresponds to h1-h6 sizing. Defaults to 1. */
   level?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -40,13 +26,11 @@ export interface HeadingProps extends PDFComponentProps {
   noMargin?: boolean;
 }
 
-/** Creates heading styles from theme tokens. Zero hardcoded values. */
 function createHeadingStyles(t: PdfxTheme) {
   const { heading } = t.typography;
   const { foreground } = t.colors;
   const { spacing, fontWeights, letterSpacing } = t.primitives;
 
-  // Base style properties shared across all heading levels
   const baseStyle = {
     fontFamily: heading.fontFamily,
     fontWeight: fontWeights.bold,
@@ -91,22 +75,18 @@ function createHeadingStyles(t: PdfxTheme) {
       marginTop: spacing[2],
       marginBottom: spacing[1],
     },
-    // Weight modifiers
     weightNormal: { fontWeight: fontWeights.regular },
     weightMedium: { fontWeight: fontWeights.medium },
     weightSemibold: { fontWeight: fontWeights.semibold },
     weightBold: { fontWeight: fontWeights.bold },
-    // Transform with letter spacing for uppercase
     uppercase: { textTransform: 'uppercase', letterSpacing: letterSpacing.wider * 10 },
     lowercase: { textTransform: 'lowercase' },
     capitalize: { textTransform: 'capitalize' },
-    // Tracking (letter spacing)
     trackingTighter: { letterSpacing: letterSpacing.tight * 15 },
     trackingTight: { letterSpacing: letterSpacing.tight * 10 },
     trackingNormal: { letterSpacing: letterSpacing.normal },
     trackingWide: { letterSpacing: letterSpacing.wide * 10 },
     trackingWider: { letterSpacing: letterSpacing.wider * 10 },
-    // No margin
     noMargin: { marginTop: 0, marginBottom: 0 },
   });
 }
@@ -128,21 +108,6 @@ const trackingMap = {
   wider: styles.trackingWider,
 } as const;
 
-/**
- * PDF heading component that renders h1-h6 equivalents.
- * Uses theme tokens for all typography, color, and spacing values.
- *
- * @example
- * ```tsx
- * <Heading level={1}>Main Title</Heading>
- * <Heading level={2} tracking="tight">Tight Display Heading</Heading>
- * <Heading level={3} align="center" color="primary">Section</Heading>
- * <Heading level={4} weight="medium">Lighter Subheading</Heading>
- * <Heading level={5} noMargin>No-margin heading in Stack</Heading>
- * <Heading level={6} transform="uppercase" tracking="wider">Label</Heading>
- * <Heading style={{ color: 'navy' }}>Custom style overrides</Heading>
- * ```
- */
 export function Heading({
   level = 1,
   align,
@@ -157,17 +122,14 @@ export function Heading({
   const headingStyle = styles[`h${level}` as keyof typeof styles];
   const styleArray: Style[] = [headingStyle as Style];
 
-  // Apply weight modifier
   if (weight && weight in weightMap) {
     styleArray.push(weightMap[weight]);
   }
 
-  // Apply tracking (letter spacing)
   if (tracking && tracking in trackingMap) {
     styleArray.push(trackingMap[tracking]);
   }
 
-  // Apply transform styles
   if (transform) {
     if (transform === 'uppercase') {
       styleArray.push(styles.uppercase);
@@ -178,12 +140,10 @@ export function Heading({
     }
   }
 
-  // Remove margins if requested
   if (noMargin) {
     styleArray.push(styles.noMargin);
   }
 
-  // Apply semantic overrides
   const semanticStyle = {} as Style;
   if (align) semanticStyle.textAlign = align;
   if (color) semanticStyle.color = resolveColor(color, theme.colors);
@@ -191,7 +151,6 @@ export function Heading({
     styleArray.push(semanticStyle);
   }
 
-  // Apply custom style last
   if (style) {
     styleArray.push(style);
   }

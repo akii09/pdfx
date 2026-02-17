@@ -5,29 +5,12 @@ import type { Style } from '@react-pdf/types';
 import { theme } from '../../lib/pdfx-theme';
 import { resolveColor } from '../../lib/resolve-color.js';
 
-/** Divider line variant. */
 export type DividerVariant = 'solid' | 'dashed' | 'dotted';
 
-/** Divider thickness. */
 export type DividerThickness = 'thin' | 'medium' | 'thick';
 
-/** Divider spacing. */
 export type DividerSpacing = 'none' | 'sm' | 'md' | 'lg';
 
-/**
- * Props for the Divider component.
- *
- * @example
- * ```tsx
- * <Divider />
- * <Divider spacing="md" />
- * <Divider variant="dashed" color="muted" />
- * <Divider thickness="thick" />
- * <Divider label="OR" />
- * <Divider label="Section Break" color="primary" />
- * <Divider width="60%" align="center" />
- * ```
- */
 export interface DividerProps extends Omit<PDFComponentProps, 'children'> {
   /** Vertical spacing above and below. Maps to theme spacing scale. */
   spacing?: DividerSpacing;
@@ -45,7 +28,6 @@ export interface DividerProps extends Omit<PDFComponentProps, 'children'> {
   align?: 'left' | 'center' | 'right';
 }
 
-/** Creates divider styles from theme tokens. Zero hardcoded values. */
 function createDividerStyles(t: PdfxTheme) {
   const { spacing, fontWeights } = t.primitives;
   return StyleSheet.create({
@@ -53,20 +35,16 @@ function createDividerStyles(t: PdfxTheme) {
       borderBottomColor: t.colors.border,
       borderBottomStyle: 'solid',
     },
-    // Spacing
     spacingNone: { marginVertical: spacing[0] },
     spacingSm: { marginVertical: spacing[3] },
     spacingMd: { marginVertical: spacing[5] },
     spacingLg: { marginVertical: spacing[8] },
-    // Variants
     solid: { borderBottomStyle: 'solid' },
     dashed: { borderBottomStyle: 'dashed' },
     dotted: { borderBottomStyle: 'dotted' },
-    // Thickness
     thin: { borderBottomWidth: spacing[0.5] },
     medium: { borderBottomWidth: spacing[1] },
     thick: { borderBottomWidth: spacing[2] },
-    // Label container (horizontal flex with lines and text)
     labelContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -86,7 +64,6 @@ function createDividerStyles(t: PdfxTheme) {
       textTransform: 'uppercase',
       letterSpacing: t.primitives.letterSpacing.wider * 10,
     },
-    // Alignment wrappers
     alignLeft: { alignSelf: 'flex-start' },
     alignCenter: { alignSelf: 'center' },
     alignRight: { alignSelf: 'flex-end' },
@@ -120,23 +97,6 @@ const alignMap = {
   right: styles.alignRight,
 } as const;
 
-/**
- * PDF divider component — a horizontal rule.
- * Uses theme tokens for border color, spacing, and thickness.
- * Supports an optional centered text label (e.g. "OR", "Section Break").
- *
- * @example
- * ```tsx
- * <Divider />
- * <Divider spacing="lg" />
- * <Divider variant="dashed" />
- * <Divider color="primary" thickness="thick" />
- * <Divider label="OR" />
- * <Divider label="Section 2" variant="dashed" color="mutedForeground" />
- * <Divider width="50%" align="center" />
- * <Divider style={{ borderBottomColor: 'navy' }} />
- * ```
- */
 export function Divider({
   spacing = 'md',
   variant = 'solid',
@@ -149,7 +109,6 @@ export function Divider({
 }: DividerProps) {
   const spacingStyle = spacingMap[spacing];
 
-  // ─── Label variant: two lines with text in between ──────────────────────
   if (label) {
     const lineStyle: Style[] = [styles.labelLine, thicknessMap[thickness], variantMap[variant]];
     if (color) {
@@ -182,7 +141,6 @@ export function Divider({
     );
   }
 
-  // ─── Standard line divider ──────────────────────────────────────────────
   const styleArray: Style[] = [
     styles.base,
     spacingStyle,
@@ -190,22 +148,18 @@ export function Divider({
     thicknessMap[thickness],
   ];
 
-  // Apply custom color
   if (color) {
     styleArray.push({ borderBottomColor: resolveColor(color, theme.colors) });
   }
 
-  // Apply width
   if (width !== undefined) {
     styleArray.push({ width } as Style);
   }
 
-  // Apply alignment
   if (align && align in alignMap) {
     styleArray.push(alignMap[align]);
   }
 
-  // Apply custom style last
   if (style) {
     styleArray.push(style);
   }

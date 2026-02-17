@@ -12,7 +12,6 @@ export interface TableProps extends PDFComponentProps {
   zebraStripe?: boolean;
 }
 
-/** Props for semantic table section wrappers. */
 export interface TableSectionProps extends PDFComponentProps {}
 
 export interface TableRowProps extends PDFComponentProps {
@@ -200,10 +199,6 @@ function createTableStyles(t: PdfxTheme) {
   });
 }
 
-/**
- * Propagates variant and zebra striping to child rows.
- * Prevents prop drilling while maintaining semantic JSX structure.
- */
 function processTableChildren(
   children: React.ReactNode,
   variant: TableVariant,
@@ -245,24 +240,18 @@ function processTableChildren(
   });
 }
 
-// ─── Components ───────────────────────────────────────────────────────────────
-
-/** Semantic wrapper for table header rows. */
 export function TableHeader({ children, style }: TableSectionProps) {
   return <View style={style}>{children}</View>;
 }
 
-/** Semantic wrapper for table body rows. */
 export function TableBody({ children, style }: TableSectionProps) {
   return <View style={style}>{children}</View>;
 }
 
-/** Semantic wrapper for table footer rows. */
 export function TableFooter({ children, style }: TableSectionProps) {
   return <View style={style}>{children}</View>;
 }
 
-/** PDF table container. All styling is theme-driven. */
 export function Table({ children, style, variant = 'line', zebraStripe = false }: TableProps) {
   const styles = getStyles(defaultTheme);
   const tableStyles: Style[] = [styles.table];
@@ -284,7 +273,6 @@ export function Table({ children, style, variant = 'line', zebraStripe = false }
   return <View style={styleArray}>{processedChildren}</View>;
 }
 
-/** PDF table row component. */
 export function TableRow({
   header,
   footer,
@@ -339,7 +327,6 @@ export function TableRow({
   return <View style={styleArray}>{processedChildren}</View>;
 }
 
-/** PDF table cell component. */
 export function TableCell({
   header,
   footer,

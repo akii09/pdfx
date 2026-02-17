@@ -61,7 +61,6 @@ function createCompactStyles(t: PdfxTheme) {
 
 const compact = createCompactStyles(theme);
 
-/** Convenience API for data-driven tables using composable Table primitives. */
 export function DataTable<T extends Record<string, unknown>>({
   columns,
   data,

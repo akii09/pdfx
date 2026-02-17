@@ -5,22 +5,10 @@ import type { Style } from '@react-pdf/types';
 import { theme } from '../../lib/pdfx-theme';
 import { resolveColor } from '../../lib/resolve-color.js';
 
-/** Link visual variant. */
 export type LinkVariant = 'default' | 'muted' | 'primary';
 
-/** Underline style for Link. */
 export type LinkUnderline = 'always' | 'none';
 
-/**
- * Props for the Link component.
- *
- * @example
- * ```tsx
- * <Link href="https://example.com">Visit our site</Link>
- * <Link href="#section-1" variant="primary">Jump to section</Link>
- * <Link href="https://docs.example.com" underline="none">Docs</Link>
- * ```
- */
 export interface LinkProps extends PDFComponentProps {
   /** URL or anchor ID (prefix with # for internal links). Maps to @react-pdf Link src. */
   href: string;
@@ -34,7 +22,6 @@ export interface LinkProps extends PDFComponentProps {
   underline?: LinkUnderline;
 }
 
-/** Creates link styles from theme tokens. Zero hardcoded values. */
 function createLinkStyles(t: PdfxTheme) {
   const { fontWeights } = t.primitives;
   const baseStyle = {
@@ -45,7 +32,6 @@ function createLinkStyles(t: PdfxTheme) {
   };
 
   return StyleSheet.create({
-    // Variants
     default: {
       ...baseStyle,
       color: t.colors.accent,
@@ -64,7 +50,6 @@ function createLinkStyles(t: PdfxTheme) {
       fontWeight: fontWeights.semibold,
       textDecoration: 'underline',
     },
-    // Underline modifiers
     underlineAlways: { textDecoration: 'underline' },
     underlineNone: { textDecoration: 'none' },
   });
@@ -83,17 +68,6 @@ const underlineMap = {
   none: styles.underlineNone,
 } as const;
 
-/**
- * PDF link component for hyperlinks.
- * Uses theme tokens for typography and color. Renders as clickable link in PDF viewers.
- *
- * @example
- * ```tsx
- * <Link href="https://pdfx.akashpise.dev">Documentation</Link>
- * <Link href="#chapter-2" variant="primary">Chapter 2</Link>
- * <Link href="https://github.com" variant="muted" underline="none">GitHub</Link>
- * ```
- */
 export function Link({
   href,
   align,
@@ -106,12 +80,10 @@ export function Link({
   const variantStyle = variantMap[variant];
   const styleArray: Style[] = [variantStyle];
 
-  // Apply underline modifier (overrides variant default)
   if (underline && underline in underlineMap) {
     styleArray.push(underlineMap[underline]);
   }
 
-  // Apply semantic overrides
   const semanticStyle = {} as Style;
   if (align) semanticStyle.textAlign = align;
   if (color) semanticStyle.color = resolveColor(color, theme.colors);
@@ -119,7 +91,6 @@ export function Link({
     styleArray.push(semanticStyle);
   }
 
-  // Apply custom style last
   if (style) {
     styleArray.push(style);
   }

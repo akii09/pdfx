@@ -7,7 +7,7 @@
   "files": [
     {
       "path": "components/pdfx/pdfx-page-break.tsx",
-      "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\n/**\n * Props for the PageBreak component.\n *\n * @example\n * ```tsx\n * <PageBreak />\n * ```\n */\nexport interface PageBreakProps extends { style?: Style } {\n  /** Optional children (page break typically has none) */\n  children?: never;\n}\n\n/**\n * PDF page break component — forces content after it to start on a new page.\n * Wraps @react-pdf/renderer's View with the break prop.\n *\n * @example\n * ```tsx\n * <Heading level={1}>Section 1</Heading>\n * <Text>Content...</Text>\n * <PageBreak />\n * <Heading level={1}>Section 2</Heading>\n * ```\n */\nexport function PageBreak(_props: PageBreakProps) {\n  return <View break />;\n}\n",
+      "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\nexport interface PageBreakProps extends { style?: Style } {\n  children?: never;\n}\n\nexport function PageBreak(_props: PageBreakProps) {\n  return <View break />;\n}\n",
       "type": "registry:component"
     }
   ],
