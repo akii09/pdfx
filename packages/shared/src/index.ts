@@ -11,6 +11,8 @@ export type {
   SpacingScale,
   FontWeights,
   LineHeights,
+  BorderRadiusScale,
+  LetterSpacingScale,
 } from './theme.js';
 
 export {

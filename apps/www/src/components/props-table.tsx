@@ -15,10 +15,10 @@ export function PropsTable({ props }: PropsTableProps) {
     <div className="overflow-x-auto rounded-lg border">
       <table className="w-full min-w-[640px] text-sm">
         <colgroup>
-          <col className="w-[160px]" />
-          <col className="w-[200px]" />
-          <col className="w-[80px]" />
-          <col />
+          <col className="w-[140px]" />
+          <col className="w-auto" />
+          <col className="w-[100px]" />
+          <col className="w-[40%]" />
         </colgroup>
         <thead>
           <tr className="border-b bg-muted/50">
@@ -38,7 +38,7 @@ export function PropsTable({ props }: PropsTableProps) {
                 </code>
               </td>
               <td className="px-4 py-3 align-top">
-                <code className="text-xs font-mono text-muted-foreground whitespace-nowrap">
+                <code className="text-xs font-mono text-muted-foreground break-words">
                   {prop.type}
                 </code>
               </td>

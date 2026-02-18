@@ -9,12 +9,19 @@ const styles = StyleSheet.create({
   page: { padding: 40 },
 });
 
-type TableVariant = 'line' | 'grid' | 'minimal';
+type TableVariant =
+  | 'line'
+  | 'grid'
+  | 'minimal'
+  | 'striped'
+  | 'compact'
+  | 'bordered'
+  | 'primary-header';
 
 const renderPreviewDocument = (variant: TableVariant) => (
   <Document title="PDFX Table Preview">
     <Page size="A4" style={styles.page}>
-      <Table variant={variant} zebraStripe>
+      <Table variant={variant} zebraStripe={variant === 'striped'}>
         <TableHeader>
           <TableRow header>
             <TableCell>Item</TableCell>
@@ -36,13 +43,19 @@ const renderPreviewDocument = (variant: TableVariant) => (
             <TableCell align="right">$2,500</TableCell>
             <TableCell align="right">$2,500</TableCell>
           </TableRow>
+          <TableRow>
+            <TableCell>Testing</TableCell>
+            <TableCell align="center">1</TableCell>
+            <TableCell align="right">$800</TableCell>
+            <TableCell align="right">$800</TableCell>
+          </TableRow>
         </TableBody>
         <TableFooter>
           <TableRow footer>
             <TableCell>Total</TableCell>
             <TableCell>{''}</TableCell>
             <TableCell>{''}</TableCell>
-            <TableCell align="right">$2,650</TableCell>
+            <TableCell align="right">$3,450</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
@@ -54,6 +67,10 @@ const variantOptions = [
   { value: 'line' as TableVariant, label: 'Line' },
   { value: 'grid' as TableVariant, label: 'Grid' },
   { value: 'minimal' as TableVariant, label: 'Minimal' },
+  { value: 'striped' as TableVariant, label: 'Striped' },
+  { value: 'compact' as TableVariant, label: 'Compact' },
+  { value: 'bordered' as TableVariant, label: 'Bordered' },
+  { value: 'primary-header' as TableVariant, label: 'Primary Header' },
 ];
 
 export default function TableComponentPage() {
@@ -62,7 +79,7 @@ export default function TableComponentPage() {
   return (
     <ComponentPage
       title="Table"
-      description="Composable Table with TableHeader, TableBody, TableFooter, TableRow, and TableCell. Supports line/grid/minimal variants, zebra striping, and alignment."
+      description="Composable Table with TableHeader, TableBody, TableFooter, TableRow, and TableCell. Supports 7 visual variants, zebra striping, and alignment."
       installCommand="npx @pdfx/cli add table"
       componentName="table"
       preview={
@@ -177,9 +194,10 @@ export default function TableComponentPage() {
               <li className="flex gap-2">
                 <span className="text-foreground">•</span>
                 <span>
-                  <strong className="text-foreground">Four visual variants:</strong> line
+                  <strong className="text-foreground">Seven visual variants:</strong> line
                   (horizontal dividers), grid (full borders), minimal (borderless), striped
-                  (alternating backgrounds)
+                  (alternating backgrounds), compact (dense rows), bordered (thick borders),
+                  primary-header (colored header)
                 </span>
               </li>
               <li className="flex gap-2">

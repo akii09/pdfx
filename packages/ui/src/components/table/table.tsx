@@ -5,7 +5,14 @@ import type { Style } from '@react-pdf/types';
 import React from 'react';
 import { theme as defaultTheme } from '../../lib/pdfx-theme';
 
-export type TableVariant = 'line' | 'grid' | 'minimal' | 'striped';
+export type TableVariant =
+  | 'line'
+  | 'grid'
+  | 'minimal'
+  | 'striped'
+  | 'compact'
+  | 'bordered'
+  | 'primary-header';
 
 export interface TableProps extends PDFComponentProps {
   variant?: TableVariant;
@@ -80,6 +87,21 @@ function createTableStyles(t: PdfxTheme) {
       borderBottomColor: borderColor,
       borderBottomStyle: 'solid',
     },
+    tableCompact: {
+      borderBottomWidth: borderWidth,
+      borderBottomColor: borderColor,
+      borderBottomStyle: 'solid',
+    },
+    tableBordered: {
+      borderWidth: borderWidth * 2,
+      borderColor: borderColor,
+      borderStyle: 'solid',
+    },
+    tablePrimaryHeader: {
+      borderBottomWidth: borderWidth,
+      borderBottomColor: borderColor,
+      borderBottomStyle: 'solid',
+    },
     row: {
       flexDirection: 'row',
       display: 'flex',
@@ -96,6 +118,39 @@ function createTableStyles(t: PdfxTheme) {
       paddingVertical: spacing[1],
     },
     rowStriped: {},
+    rowCompact: {
+      borderBottomWidth: borderWidth,
+      borderBottomColor: borderColor,
+      borderBottomStyle: 'solid',
+    },
+    rowBordered: {
+      borderBottomWidth: borderWidth * 2,
+      borderBottomColor: borderColor,
+      borderBottomStyle: 'solid',
+    },
+    rowPrimaryHeader: {
+      borderBottomWidth: borderWidth,
+      borderBottomColor: borderColor,
+      borderBottomStyle: 'solid',
+    },
+    rowHeaderCompact: {
+      backgroundColor: t.colors.muted,
+      borderBottomWidth: borderWidth * 2,
+      borderBottomColor: borderColor,
+      borderBottomStyle: 'solid',
+    },
+    rowHeaderBordered: {
+      backgroundColor: t.colors.muted,
+      borderBottomWidth: borderWidth * 2,
+      borderBottomColor: borderColor,
+      borderBottomStyle: 'solid',
+    },
+    rowHeaderPrimaryHeader: {
+      backgroundColor: t.colors.primary,
+      borderBottomWidth: borderWidth * 2,
+      borderBottomColor: t.colors.primary,
+      borderBottomStyle: 'solid',
+    },
     rowHeaderGrid: {
       backgroundColor: t.colors.muted,
       borderBottomWidth: borderWidth * 2,
@@ -153,6 +208,23 @@ function createTableStyles(t: PdfxTheme) {
       paddingVertical: spacing[2],
       paddingHorizontal: spacing[4],
     },
+    cellCompact: {
+      paddingVertical: spacing[0.5],
+      paddingHorizontal: spacing[3],
+    },
+    cellBordered: {
+      paddingVertical: spacing[3],
+      paddingHorizontal: spacing[4],
+    },
+    cellBorderedBorder: {
+      borderRightWidth: borderWidth * 2,
+      borderRightColor: borderColor,
+      borderRightStyle: 'solid',
+    },
+    cellPrimaryHeader: {
+      paddingVertical: spacing[3],
+      paddingHorizontal: spacing[4],
+    },
     cellText: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
@@ -188,6 +260,37 @@ function createTableStyles(t: PdfxTheme) {
       lineHeight: t.typography.body.lineHeight,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
+    },
+    cellTextHeaderCompact: {
+      fontFamily: t.typography.body.fontFamily,
+      fontSize: typography.xs,
+      lineHeight: t.typography.body.lineHeight,
+      color: t.colors.foreground,
+      fontWeight: fontWeights.semibold,
+      textTransform: 'uppercase',
+      letterSpacing: letterSpacing.wider * 10,
+    },
+    cellTextHeaderBordered: {
+      fontFamily: t.typography.body.fontFamily,
+      fontSize: t.typography.body.fontSize,
+      lineHeight: t.typography.body.lineHeight,
+      color: t.colors.foreground,
+      fontWeight: fontWeights.bold,
+    },
+    cellTextHeaderPrimaryHeader: {
+      fontFamily: t.typography.body.fontFamily,
+      fontSize: typography.xs,
+      lineHeight: t.typography.body.lineHeight,
+      color: t.colors.primaryForeground,
+      fontWeight: fontWeights.semibold,
+      textTransform: 'uppercase',
+      letterSpacing: letterSpacing.wide * 10,
+    },
+    cellTextCompact: {
+      fontFamily: t.typography.body.fontFamily,
+      fontSize: typography.xs,
+      lineHeight: t.typography.body.lineHeight,
+      color: t.colors.foreground,
     },
     cellTextFooter: {
       fontFamily: t.typography.body.fontFamily,
@@ -265,6 +368,12 @@ export function Table({ children, style, variant = 'line', zebraStripe = false }
     tableStyles.push(styles.tableMinimal);
   } else if (variant === 'striped') {
     tableStyles.push(styles.tableStriped);
+  } else if (variant === 'compact') {
+    tableStyles.push(styles.tableCompact);
+  } else if (variant === 'bordered') {
+    tableStyles.push(styles.tableBordered);
+  } else if (variant === 'primary-header') {
+    tableStyles.push(styles.tablePrimaryHeader);
   }
 
   const styleArray = style ? [...tableStyles, style] : tableStyles;
@@ -292,12 +401,21 @@ export function TableRow({
     rowStyles.push(styles.rowMinimal);
   } else if (variant === 'striped') {
     rowStyles.push(styles.rowStriped);
+  } else if (variant === 'compact') {
+    rowStyles.push(styles.rowCompact);
+  } else if (variant === 'bordered') {
+    rowStyles.push(styles.rowBordered);
+  } else if (variant === 'primary-header') {
+    rowStyles.push(styles.rowPrimaryHeader);
   }
 
   if (header) {
     if (variant === 'line') rowStyles.push(styles.rowHeaderLine);
     else if (variant === 'minimal') rowStyles.push(styles.rowHeaderMinimal);
     else if (variant === 'striped') rowStyles.push(styles.rowHeaderStriped);
+    else if (variant === 'compact') rowStyles.push(styles.rowHeaderCompact);
+    else if (variant === 'bordered') rowStyles.push(styles.rowHeaderBordered);
+    else if (variant === 'primary-header') rowStyles.push(styles.rowHeaderPrimaryHeader);
     else rowStyles.push(styles.rowHeaderGrid);
   }
 
@@ -349,10 +467,18 @@ export function TableCell({
     cellStyles.push(styles.cellMinimal);
   } else if (variant === 'striped') {
     cellStyles.push(styles.cellStriped);
+  } else if (variant === 'compact') {
+    cellStyles.push(styles.cellCompact);
+  } else if (variant === 'bordered') {
+    cellStyles.push(styles.cellBordered);
+  } else if (variant === 'primary-header') {
+    cellStyles.push(styles.cellPrimaryHeader);
   }
 
   if (variant === 'grid' && !_last) {
     cellStyles.push(styles.cellGridBorder);
+  } else if (variant === 'bordered' && !_last) {
+    cellStyles.push(styles.cellBorderedBorder);
   }
 
   if (align) {
@@ -366,9 +492,14 @@ export function TableCell({
     if (variant === 'line') textStyle = styles.cellTextHeaderLine;
     else if (variant === 'minimal') textStyle = styles.cellTextHeaderMinimal;
     else if (variant === 'striped') textStyle = styles.cellTextHeaderStriped;
+    else if (variant === 'compact') textStyle = styles.cellTextHeaderCompact;
+    else if (variant === 'bordered') textStyle = styles.cellTextHeaderBordered;
+    else if (variant === 'primary-header') textStyle = styles.cellTextHeaderPrimaryHeader;
     else textStyle = styles.cellTextHeaderGrid;
   } else if (footer) {
     textStyle = styles.cellTextFooter;
+  } else if (variant === 'compact') {
+    textStyle = styles.cellTextCompact;
   }
 
   const content =

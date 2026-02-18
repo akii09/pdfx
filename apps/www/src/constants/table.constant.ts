@@ -1,11 +1,11 @@
 export const tableUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableFooter, 
-  TableRow, 
-  TableCell 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableRow,
+  TableCell
 } from '@/components/pdfx/pdfx-table';
 
 export function MyDocument() {
@@ -53,10 +53,10 @@ export const tableProps = [
   // Table props
   {
     name: 'variant',
-    type: "'line' | 'grid' | 'minimal'",
+    type: "'line' | 'grid' | 'minimal' | 'striped' | 'compact' | 'bordered' | 'primary-header'",
     defaultValue: "'line'",
     description:
-      'Visual style. line = horizontal dividers. grid = full borders. minimal = no borders.',
+      'Visual style. line = horizontal dividers. grid = full borders. minimal = no borders. striped = alternating row backgrounds. compact = dense rows with small font. bordered = thick outer border with cell dividers. primary-header = colored header row using primary theme color.',
   },
   {
     name: 'zebraStripe',

@@ -15,6 +15,10 @@ const StackPage = lazy(() => import('../pages/components/stack'));
 const SectionPage = lazy(() => import('../pages/components/section'));
 const TablePage = lazy(() => import('../pages/components/table'));
 const DataTablePage = lazy(() => import('../pages/components/data-table'));
+const ListPage = lazy(() => import('../pages/components/list'));
+const CardPage = lazy(() => import('../pages/components/card'));
+const FormPage = lazy(() => import('../pages/components/form'));
+const SignaturePage = lazy(() => import('../pages/components/signature'));
 
 function PageLoader() {
   return (
@@ -122,6 +126,38 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader />}>
                 <DataTablePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="list"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ListPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="card"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <CardPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="form"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <FormPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="signature"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <SignaturePage />
               </Suspense>
             }
           />

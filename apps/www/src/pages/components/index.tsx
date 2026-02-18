@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  ClipboardList,
   FileStack,
   FileText,
   Heading as HeadingIcon,
@@ -7,7 +8,9 @@ import {
   Link as LinkIcon,
   Minus,
   PanelTop,
+  PenLine,
   Search,
+  Square,
   Table,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -77,6 +80,34 @@ const components = [
     href: '/components/data-table',
     icon: Table,
     install: 'npx @pdfx/cli add data-table',
+  },
+  {
+    name: 'List',
+    description: 'Bullet, numbered, checklist, icon, multi-level, and descriptive variants.',
+    href: '/components/list',
+    icon: ClipboardList,
+    install: 'npx @pdfx/cli add list',
+  },
+  {
+    name: 'Card',
+    description: 'Content container with default, bordered, and muted variants.',
+    href: '/components/card',
+    icon: Square,
+    install: 'npx @pdfx/cli add card',
+  },
+  {
+    name: 'Form',
+    description: 'Label-value form section with single, two-column, and three-column layouts.',
+    href: '/components/form',
+    icon: LayoutList,
+    install: 'npx @pdfx/cli add form',
+  },
+  {
+    name: 'Signature',
+    description: 'Signature block with single, double, and inline variants.',
+    href: '/components/signature',
+    icon: PenLine,
+    install: 'npx @pdfx/cli add signature',
   },
 ];
 

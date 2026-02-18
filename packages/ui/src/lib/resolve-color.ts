@@ -3,10 +3,12 @@ import type { ColorTokens } from '@pdfx/shared';
 /** Theme color token keys that can be used for the color prop */
 export const THEME_COLOR_KEYS = [
   'foreground',
+  'background',
   'muted',
   'mutedForeground',
   'primary',
   'primaryForeground',
+  'border',
   'accent',
   'destructive',
   'success',
