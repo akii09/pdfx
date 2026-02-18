@@ -33,7 +33,8 @@ pnpm-debug.log*
 coverage/
 
 # Misc
-.tsbuildinfo
+*.tsbuildinfo
+package-lock.json
 
 # Other
 docs
