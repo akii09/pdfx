@@ -12,3 +12,5 @@ export * from './list.constant.js';
 export * from './card.constant.js';
 export * from './form.constant.js';
 export * from './signature.constant.js';
+export * from './page-header.constant.js';
+export * from './page-footer.constant.js';

@@ -137,6 +137,42 @@
       "dependencies": [
         "@react-pdf/renderer"
       ]
+    },
+    {
+      "name": "page-header",
+      "type": "registry:ui",
+      "title": "PageHeader",
+      "description": "Document header band with title, subtitle, and optional right metadata",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/page-header/page-header.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
+    },
+    {
+      "name": "page-footer",
+      "type": "registry:ui",
+      "title": "PageFooter",
+      "description": "Document footer band with left, center, and right text slots",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/page-footer/page-footer.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "theme"
+      ]
     }
   ]
 }

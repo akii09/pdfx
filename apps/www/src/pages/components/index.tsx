@@ -7,6 +7,7 @@ import {
   LayoutList,
   Link as LinkIcon,
   Minus,
+  PanelBottom,
   PanelTop,
   PenLine,
   Search,
@@ -108,6 +109,20 @@ const components = [
     href: '/components/signature',
     icon: PenLine,
     install: 'npx @pdfx/cli add signature',
+  },
+  {
+    name: 'PageHeader',
+    description: 'Document header band with title, subtitle, and optional right metadata.',
+    href: '/components/page-header',
+    icon: PanelTop,
+    install: 'npx @pdfx/cli add page-header',
+  },
+  {
+    name: 'PageFooter',
+    description: 'Document footer band with left, center, and right text slots.',
+    href: '/components/page-footer',
+    icon: PanelBottom,
+    install: 'npx @pdfx/cli add page-footer',
   },
 ];
 

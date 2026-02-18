@@ -19,6 +19,8 @@ const ListPage = lazy(() => import('../pages/components/list'));
 const CardPage = lazy(() => import('../pages/components/card'));
 const FormPage = lazy(() => import('../pages/components/form'));
 const SignaturePage = lazy(() => import('../pages/components/signature'));
+const PageHeaderPage = lazy(() => import('../pages/components/page-header'));
+const PageFooterPage = lazy(() => import('../pages/components/page-footer'));
 
 function PageLoader() {
   return (
@@ -158,6 +160,22 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader />}>
                 <SignaturePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="page-header"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <PageHeaderPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="page-footer"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <PageFooterPage />
               </Suspense>
             }
           />
