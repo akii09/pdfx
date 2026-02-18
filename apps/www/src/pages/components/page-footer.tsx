@@ -22,27 +22,15 @@ const previewDocument = (
 
       <Heading level={2}>Centered</Heading>
       <Text>All text centered — great for formal documents.</Text>
-      <PageFooter
-        leftText="© 2026 Acme Corp"
-        rightText="Page 1 of 1"
-        variant="centered"
-      />
+      <PageFooter leftText="© 2026 Acme Corp" rightText="Page 1 of 1" variant="centered" />
 
       <Heading level={2}>Minimal</Heading>
       <Text>Subtle muted text with a thin top border.</Text>
-      <PageFooter
-        leftText="confidential@acme.com"
-        rightText="1"
-        variant="minimal"
-      />
+      <PageFooter leftText="confidential@acme.com" rightText="1" variant="minimal" />
 
       <Heading level={2}>Branded</Heading>
       <Text>Solid primary-color band with white text.</Text>
-      <PageFooter
-        leftText="Acme Corp"
-        rightText="Page 1"
-        variant="branded"
-      />
+      <PageFooter leftText="Acme Corp" rightText="Page 1" variant="branded" />
     </Page>
   </Document>
 );

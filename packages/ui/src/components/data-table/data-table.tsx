@@ -30,7 +30,7 @@ export interface DataTableProps<T = Record<string, unknown>>
 }
 
 function createCompactStyles(t: PdfxTheme) {
-  const { spacing, fontWeights } = t.primitives;
+  const { spacing, fontWeights, lineHeights } = t.primitives;
   return StyleSheet.create({
     cell: {
       paddingVertical: spacing[0.5],
@@ -39,20 +39,20 @@ function createCompactStyles(t: PdfxTheme) {
     text: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.primitives.typography.xs,
-      lineHeight: 1.4,
+      lineHeight: lineHeights.normal,
       color: t.colors.foreground,
     },
     headerText: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.primitives.typography.xs,
-      lineHeight: 1.4,
+      lineHeight: lineHeights.normal,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
     footerText: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.primitives.typography.xs,
-      lineHeight: 1.4,
+      lineHeight: lineHeights.normal,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },

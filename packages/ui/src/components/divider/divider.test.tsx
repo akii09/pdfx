@@ -19,7 +19,7 @@ describe('Divider', () => {
   it('applies spacing prop', () => {
     const result = Divider({ spacing: 'lg' });
     const spacingStyle = result.props.style[1];
-    expect(spacingStyle.marginVertical).toBe(32); // primitives.spacing[8]
+    expect(spacingStyle.marginVertical).toBe(28); // theme.spacing.sectionGap (professional)
   });
 
   it('applies style override', () => {
@@ -101,6 +101,6 @@ describe('Divider', () => {
   it('applies spacing sm', () => {
     const result = Divider({ spacing: 'sm' });
     const styles = result.props.style as Array<{ marginVertical?: number }>;
-    expect(styles.some((s) => s.marginVertical === 12)).toBe(true); // spacing[3]
+    expect(styles.some((s) => s.marginVertical === 10)).toBe(true); // theme.spacing.paragraphGap (professional)
   });
 });

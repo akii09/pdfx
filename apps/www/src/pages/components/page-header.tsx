@@ -25,11 +25,7 @@ const previewDocument = (
       <Heading level={2}>Centered</Heading>
       <Text>Title and subtitle centered — great for certificates.</Text>
 
-      <PageHeader
-        title="Minimal Header"
-        rightText="Page 1"
-        variant="minimal"
-      />
+      <PageHeader title="Minimal Header" rightText="Page 1" variant="minimal" />
       <Heading level={2}>Minimal</Heading>
       <Text>Primary accent border with title and optional right text.</Text>
 

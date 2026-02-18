@@ -30,6 +30,8 @@ function createHeadingStyles(t: PdfxTheme) {
   const { heading } = t.typography;
   const { foreground } = t.colors;
   const { spacing, fontWeights, letterSpacing } = t.primitives;
+  // Semantic spacing tokens — adapt across Minimal / Modern / Professional themes
+  const { sectionGap, componentGap, paragraphGap } = t.spacing;
 
   const baseStyle = {
     fontFamily: heading.fontFamily,
@@ -43,36 +45,36 @@ function createHeadingStyles(t: PdfxTheme) {
       ...baseStyle,
       fontSize: heading.fontSize.h1,
       marginTop: spacing[0],
-      marginBottom: spacing[4],
+      marginBottom: paragraphGap,
     },
     h2: {
       ...baseStyle,
       fontSize: heading.fontSize.h2,
-      marginTop: spacing[6],
-      marginBottom: spacing[3],
+      marginTop: sectionGap,
+      marginBottom: paragraphGap,
     },
     h3: {
       ...baseStyle,
       fontSize: heading.fontSize.h3,
-      marginTop: spacing[4],
-      marginBottom: spacing[2],
+      marginTop: componentGap,
+      marginBottom: paragraphGap,
     },
     h4: {
       ...baseStyle,
       fontSize: heading.fontSize.h4,
-      marginTop: spacing[3],
-      marginBottom: spacing[2],
+      marginTop: paragraphGap,
+      marginBottom: paragraphGap,
     },
     h5: {
       ...baseStyle,
       fontSize: heading.fontSize.h5,
-      marginTop: spacing[2],
+      marginTop: paragraphGap,
       marginBottom: spacing[1],
     },
     h6: {
       ...baseStyle,
       fontSize: heading.fontSize.h6,
-      marginTop: spacing[2],
+      marginTop: paragraphGap,
       marginBottom: spacing[1],
     },
     weightNormal: { fontWeight: fontWeights.regular },

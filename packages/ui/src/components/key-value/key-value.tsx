@@ -85,7 +85,7 @@ function createKeyValueStyles(t: PdfxTheme) {
     rowVertical: {
       display: 'flex',
       flexDirection: 'column',
-      marginBottom: spacing[3],
+      marginBottom: t.spacing.paragraphGap,
     },
 
     // ── Divider line between rows ────────────────────────────────────────
