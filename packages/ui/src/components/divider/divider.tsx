@@ -12,20 +12,12 @@ export type DividerThickness = 'thin' | 'medium' | 'thick';
 export type DividerSpacing = 'none' | 'sm' | 'md' | 'lg';
 
 export interface DividerProps extends Omit<PDFComponentProps, 'children'> {
-  /** Vertical spacing above and below. Maps to theme spacing scale. */
   spacing?: DividerSpacing;
-  /** Line style variant. */
   variant?: DividerVariant;
-  /** Line color. Use theme token (e.g. 'border', 'muted', 'primary') or any CSS color. */
   color?: string;
-  /** Line thickness. */
   thickness?: DividerThickness;
-  /** Optional text label displayed in the center of the divider. Common for "OR", "Section N", etc. */
   label?: string;
-  /** Width of the divider line. Use a percentage string (e.g. '60%') or number (pts). Defaults to '100%'. */
   width?: string | number;
-  /** Horizontal alignment when width is less than 100%. */
-  align?: 'left' | 'center' | 'right';
 }
 
 function createDividerStyles(t: PdfxTheme) {
@@ -91,12 +83,6 @@ const thicknessMap = {
   thick: styles.thick,
 } as const;
 
-const alignMap = {
-  left: styles.alignLeft,
-  center: styles.alignCenter,
-  right: styles.alignRight,
-} as const;
-
 export function Divider({
   spacing = 'md',
   variant = 'solid',
@@ -104,7 +90,6 @@ export function Divider({
   thickness = 'thin',
   label,
   width,
-  align,
   style,
 }: DividerProps) {
   const spacingStyle = spacingMap[spacing];
@@ -120,9 +105,7 @@ export function Divider({
     if (width !== undefined) {
       containerStyles.push({ width } as Style);
     }
-    if (align && align in alignMap) {
-      containerStyles.push(alignMap[align]);
-    }
+    
     if (style) {
       containerStyles.push(style);
     }
@@ -154,10 +137,6 @@ export function Divider({
 
   if (width !== undefined) {
     styleArray.push({ width } as Style);
-  }
-
-  if (align && align in alignMap) {
-    styleArray.push(alignMap[align]);
   }
 
   if (style) {

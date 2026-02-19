@@ -5,17 +5,6 @@ import type { Style } from '@react-pdf/types';
 import { theme } from '../../lib/pdfx-theme';
 import { resolveColor } from '../../lib/resolve-color.js';
 
-/**
- * Badge visual variant.
- *
- * - `default`     — Neutral badge using muted background + foreground text
- * - `primary`     — Brand-colored badge (primary bg + primaryForeground text)
- * - `success`     — Green status badge (success color on muted bg)
- * - `warning`     — Amber status badge (warning color on muted bg)
- * - `destructive` — Red error/alert badge (destructive color on muted bg)
- * - `info`        — Blue informational badge (info color on muted bg)
- * - `outline`     — Transparent fill with border + foreground text
- */
 export type BadgeVariant =
   | 'default'
   | 'primary'
