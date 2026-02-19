@@ -6,6 +6,7 @@ import {
   Heading as HeadingIcon,
   LayoutList,
   Link as LinkIcon,
+  List,
   Minus,
   PanelBottom,
   PanelTop,
@@ -13,6 +14,7 @@ import {
   Search,
   Square,
   Table,
+  Tag,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -123,6 +125,20 @@ const components = [
     href: '/components/page-footer',
     icon: PanelBottom,
     install: 'npx @pdfx/cli add page-footer',
+  },
+  {
+    name: 'Badge',
+    description: 'Compact status label with semantic color variants for PDF documents.',
+    href: '/components/badge',
+    icon: Tag,
+    install: 'npx @pdfx/cli add badge',
+  },
+  {
+    name: 'KeyValue',
+    description: 'Labeled key-value pairs with horizontal and vertical layouts.',
+    href: '/components/key-value',
+    icon: List,
+    install: 'npx @pdfx/cli add key-value',
   },
 ];
 

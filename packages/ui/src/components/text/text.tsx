@@ -15,7 +15,7 @@ export interface TextProps extends PDFComponentProps {
   /** Typography scale variant. Maps to primitives.typography. Default (undefined) uses typography.body. */
   variant?: TextVariant;
   /** Text alignment. Maps to textAlign. */
-  align?: 'left' | 'center' | 'right';
+  align?: 'left' | 'center' | 'right' | 'justify';
   /** Text color. Use theme token (e.g. 'primary', 'muted') or any CSS color. */
   color?: string;
   /** Font weight override. */

@@ -1,6 +1,7 @@
 import { pageHeaderProps, pageHeaderUsageCode } from '@/constants';
-import { Heading, PageHeader, Text } from '@pdfx/ui';
-import { Document, Page, StyleSheet } from '@react-pdf/renderer';
+import { type PageHeaderVariant, Text } from '@pdfx/ui';
+import { PageHeader } from '@pdfx/ui';
+import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';
 import { useDocumentTitle } from '../../hooks/use-document-title';
@@ -9,7 +10,7 @@ const styles = StyleSheet.create({
   page: { padding: 30 },
 });
 
-const previewDocument = (
+const renderPreviewDocument = (variant: PageHeaderVariant) => (
   <Document title="PDFX PageHeader Preview">
     <Page size="A4" style={styles.page}>
       <PageHeader
@@ -17,24 +18,30 @@ const previewDocument = (
         subtitle="Acme Corp"
         rightText="March 2026"
         rightSubText="Due: 2026-03-31"
+        variant={variant}
+        logo={
+          variant === 'logo-left' || variant === 'logo-right' ? (
+            <View style={{ width: 48, height: 48, backgroundColor: '#e4e4e7', borderRadius: 4 }} />
+          ) : undefined
+        }
+        address={variant === 'two-column' ? '123 Main St, City, ST 12345' : undefined}
+        phone={variant === 'two-column' ? '+1 (555) 000-0000' : undefined}
+        email={variant === 'two-column' ? 'hello@acme.com' : undefined}
       />
-      <Heading level={2}>Simple (default)</Heading>
-      <Text>Left title with subtitle and right metadata.</Text>
-
-      <PageHeader title="Centered Header" subtitle="All content centered" variant="centered" />
-      <Heading level={2}>Centered</Heading>
-      <Text>Title and subtitle centered — great for certificates.</Text>
-
-      <PageHeader title="Minimal Header" rightText="Page 1" variant="minimal" />
-      <Heading level={2}>Minimal</Heading>
-      <Text>Primary accent border with title and optional right text.</Text>
-
-      <PageHeader title="Branded Header" subtitle="Strong brand presence" variant="branded" />
-      <Heading level={2}>Branded</Heading>
-      <Text>Solid primary-color background with white text.</Text>
+      <Text>Document body content continues below the header.</Text>
     </Page>
   </Document>
 );
+
+const variantOptions = [
+  { value: 'simple' as PageHeaderVariant, label: 'Simple' },
+  { value: 'centered' as PageHeaderVariant, label: 'Centered' },
+  { value: 'minimal' as PageHeaderVariant, label: 'Minimal' },
+  { value: 'branded' as PageHeaderVariant, label: 'Branded' },
+  { value: 'logo-left' as PageHeaderVariant, label: 'Logo Left' },
+  { value: 'logo-right' as PageHeaderVariant, label: 'Logo Right' },
+  { value: 'two-column' as PageHeaderVariant, label: 'Two Column' },
+];
 
 export default function PageHeaderComponentPage() {
   useDocumentTitle('PageHeader Component');
@@ -42,12 +49,21 @@ export default function PageHeaderComponentPage() {
   return (
     <ComponentPage
       title="PageHeader"
-      description="Document header band with title, subtitle, and optional right metadata. Supports simple, centered, minimal, and branded variants."
+      description="Document header band with title, subtitle, and optional right metadata. Supports seven layout variants: simple, centered, minimal, branded, logo-left, logo-right, and two-column."
       installCommand="npx @pdfx/cli add page-header"
       componentName="page-header"
       preview={
-        <PDFPreview title="Preview" downloadFilename="page-header-preview.pdf">
-          {previewDocument}
+        <PDFPreview
+          title="Preview"
+          downloadFilename="page-header-preview.pdf"
+          variants={{
+            options: variantOptions,
+            defaultValue: 'simple' as PageHeaderVariant,
+            label: 'Variant',
+          }}
+        >
+          {/* biome-ignore lint/suspicious/noExplicitAny: Generic type workaround for React JSX components */}
+          {renderPreviewDocument as any}
         </PDFPreview>
       }
       usageCode={pageHeaderUsageCode}

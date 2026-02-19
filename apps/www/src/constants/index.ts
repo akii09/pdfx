@@ -14,3 +14,6 @@ export * from './form.constant.js';
 export * from './signature.constant.js';
 export * from './page-header.constant.js';
 export * from './page-footer.constant.js';
+
+export * from './badge.constant.js';
+export * from './key-value.constant.js';

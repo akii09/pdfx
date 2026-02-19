@@ -22,13 +22,13 @@ export const pageFooterProps = [
     name: 'leftText',
     type: 'string',
     description:
-      'Left-aligned footer text (or center text in centered variant). Common use: company name, copyright notice.',
+      'Left-aligned footer text (or center text in centered variant). Common use: company name, copyright notice. In the detailed variant, used as the company name (bold).',
   },
   {
     name: 'rightText',
     type: 'string',
     description:
-      'Right-aligned footer text. Common use: page numbers, document reference. Ignored in centered variant.',
+      'Right-aligned footer text. Common use: page numbers, document reference. Ignored in centered variant. In the detailed variant, shown centered at the bottom as the page number.',
   },
   {
     name: 'centerText',
@@ -38,10 +38,10 @@ export const pageFooterProps = [
   },
   {
     name: 'variant',
-    type: "'simple' | 'centered' | 'branded' | 'minimal'",
+    type: "'simple' | 'centered' | 'branded' | 'minimal' | 'three-column' | 'detailed'",
     defaultValue: "'simple'",
     description:
-      'Visual layout variant. simple shows left/center/right columns with a top border. centered stacks text centered. branded uses a solid primary background. minimal uses a subtle muted style.',
+      'Visual layout variant. simple = left/center/right columns with a top border. centered = text stacked centered. branded = solid primary background. minimal = subtle muted style. three-column = company left, contact info center, page number right. detailed = two-row layout with company + contact info on top and page number centered below.',
   },
   {
     name: 'background',
@@ -59,6 +59,30 @@ export const pageFooterProps = [
     type: 'number',
     description:
       'Top margin above the footer (space between content and footer). Defaults to theme sectionGap.',
+  },
+  {
+    name: 'address',
+    type: 'string',
+    description:
+      'Company address for three-column and detailed variants. Shown below the company name in the left column.',
+  },
+  {
+    name: 'phone',
+    type: 'string',
+    description:
+      'Phone number for three-column and detailed variants. Shown in the center (three-column) or right (detailed) column.',
+  },
+  {
+    name: 'email',
+    type: 'string',
+    description:
+      'Email address for three-column and detailed variants. Shown in the center (three-column) or right (detailed) column.',
+  },
+  {
+    name: 'website',
+    type: 'string',
+    description:
+      'Website URL for three-column and detailed variants. Shown in the center (three-column) or right (detailed) column.',
   },
   {
     name: 'style',

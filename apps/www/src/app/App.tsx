@@ -21,6 +21,8 @@ const FormPage = lazy(() => import('../pages/components/form'));
 const SignaturePage = lazy(() => import('../pages/components/signature'));
 const PageHeaderPage = lazy(() => import('../pages/components/page-header'));
 const PageFooterPage = lazy(() => import('../pages/components/page-footer'));
+const BadgePage = lazy(() => import('../pages/components/badge'));
+const KeyValuePage = lazy(() => import('../pages/components/key-value'));
 
 function PageLoader() {
   return (
@@ -176,6 +178,22 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader />}>
                 <PageFooterPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="badge"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <BadgePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="key-value"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <KeyValuePage />
               </Suspense>
             }
           />
