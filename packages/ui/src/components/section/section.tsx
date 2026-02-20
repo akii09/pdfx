@@ -61,7 +61,6 @@ function createSectionStyles(t: PdfxTheme) {
       borderLeftColor: t.colors.primary,
       borderLeftStyle: 'solid',
       padding: spacing[4],
-      borderRadius: borderRadius.sm,
     },
     card: {
       borderWidth: spacing[0.5],
