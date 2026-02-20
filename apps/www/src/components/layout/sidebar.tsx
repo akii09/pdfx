@@ -40,6 +40,9 @@ const sections: SidebarSection[] = [
       { title: 'PageFooter', href: '/components/page-footer' },
       { title: 'Badge', href: '/components/badge' },
       { title: 'KeyValue', href: '/components/key-value' },
+      { title: 'KeepTogether', href: '/components/keep-together' },
+      { title: 'PdfImage', href: '/components/pdf-image' },
+      { title: 'Graph', href: '/components/graph' },
     ],
   },
 ];
@@ -56,7 +59,7 @@ export function Sidebar() {
 
   return (
     <aside className="hidden lg:block w-52 shrink-0 border-r">
-      <nav className="sticky top-16 space-y-5 py-6 pr-4">
+      <nav className="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto overflow-x-hidden space-y-5 py-6 pr-4 scrollbar-hide">
         {sections.map((section) => {
           // On the components index page, show a condensed components section
           // since the main content already displays the full component browser
