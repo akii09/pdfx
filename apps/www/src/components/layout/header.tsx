@@ -1,4 +1,4 @@
-import { FileText, Github, Menu, Search, X } from 'lucide-react';
+import { Github, Menu, Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
@@ -18,8 +18,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl">
-          <FileText className="h-5 w-5" />
-          PDFx
+          <img src="/pdfx.png" alt="PDFx" className="h-20 w-auto dark:invert dark:brightness-0" />
         </Link>
 
         {/* Desktop nav */}
