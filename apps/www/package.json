@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@react-pdf/types": "^2.9.2",
-    "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/postcss": "^4.2.0",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^4.3.4",
