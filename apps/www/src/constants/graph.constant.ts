@@ -16,6 +16,8 @@ export function MyDocument() {
             { label: 'Feb', value: 38000 },
             { label: 'Mar', value: 55000 },
             { label: 'Apr', value: 61000 },
+            { label: 'May', value: 49000 },
+            { label: 'Jun', value: 72000 },
           ]}
           showValues
         />
@@ -23,11 +25,14 @@ export function MyDocument() {
         {/* Line chart */}
         <PdfGraph
           variant="line"
-          title="User Growth"
+          title="Monthly Revenue Trend"
           data={[
-            { label: 'Jan', value: 1200 },
-            { label: 'Feb', value: 1800 },
-            { label: 'Mar', value: 2400 },
+            { label: 'Jan', value: 42000 },
+            { label: 'Feb', value: 38000 },
+            { label: 'Mar', value: 55000 },
+            { label: 'Apr', value: 61000 },
+            { label: 'May', value: 49000 },
+            { label: 'Jun', value: 72000 },
           ]}
           smooth
         />
@@ -38,8 +43,9 @@ export function MyDocument() {
           title="Market Share"
           data={[
             { label: 'Product A', value: 45 },
-            { label: 'Product B', value: 30 },
-            { label: 'Other', value: 25 },
+            { label: 'Product B', value: 28 },
+            { label: 'Product C', value: 17 },
+            { label: 'Other', value: 10 },
           ]}
           centerLabel="$1.2M"
         />
