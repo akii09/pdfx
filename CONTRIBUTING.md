@@ -101,6 +101,10 @@ PDFX uses [Changesets](https://github.com/changesets/changesets) for versioning 
 
 > **Note**: Only maintainers can merge the version PR and trigger a publish.
 
+## Git Workflows
+
+For common git operations like **cherry-picking commits**, rebasing, and resolving conflicts, see the **[Git Workflows Guide](./.github/GIT_WORKFLOWS.md)**.
+
 ## Questions?
 
 Open a [Discussion](https://github.com/akii09/pdfx/discussions) or comment on an existing issue.
