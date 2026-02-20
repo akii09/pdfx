@@ -14,15 +14,11 @@ interface SidebarSection {
 const sections: SidebarSection[] = [
   {
     title: 'Getting Started',
-    links: [
-      { title: 'Introduction', href: '/docs' },
-    ],
+    links: [{ title: 'Introduction', href: '/docs' }],
   },
   {
     title: 'Installation',
-    links: [
-      { title: 'Installation', href: '/installation' },
-    ],
+    links: [{ title: 'Installation', href: '/installation' }],
   },
   {
     title: 'Components',
@@ -51,7 +47,9 @@ const sections: SidebarSection[] = [
 export function Sidebar() {
   const location = useLocation();
   const showSidebar =
-    location.pathname.startsWith('/docs') || location.pathname.startsWith('/components') || location.pathname.startsWith('/installation');
+    location.pathname.startsWith('/docs') ||
+    location.pathname.startsWith('/components') ||
+    location.pathname.startsWith('/installation');
   const isComponentsIndex = location.pathname === '/components';
 
   if (!showSidebar) return null;

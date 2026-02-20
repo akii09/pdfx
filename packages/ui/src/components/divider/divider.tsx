@@ -105,7 +105,7 @@ export function Divider({
     if (width !== undefined) {
       containerStyles.push({ width } as Style);
     }
-    
+
     if (style) {
       containerStyles.push(style);
     }

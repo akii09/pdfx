@@ -3,7 +3,6 @@ import { TableOfContents } from '../components/table-of-contents';
 import { useDocumentTitle } from '../hooks/use-document-title';
 import HowItWorks from './components/getting-started/how-it-works';
 import Installation from './components/getting-started/installation';
-import Intro from './components/getting-started/intro';
 import Theming from './components/getting-started/theming';
 import UsageAndCli from './components/getting-started/usage-cli';
 

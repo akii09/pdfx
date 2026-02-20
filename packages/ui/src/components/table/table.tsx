@@ -159,7 +159,7 @@ function createTableStyles(t: PdfxTheme) {
       borderBottomStyle: 'solid',
     },
     rowHeaderLine: {
-      borderBottomWidth: borderWidth * 2,
+      borderBottomWidth: borderWidth,
       borderBottomColor: borderColor,
       borderBottomStyle: 'solid',
     },
@@ -175,7 +175,7 @@ function createTableStyles(t: PdfxTheme) {
       borderBottomStyle: 'solid',
     },
     rowFooter: {
-      borderTopWidth: borderWidth * 2,
+      borderTopWidth: borderWidth,
       borderTopColor: borderColor,
       borderTopStyle: 'solid',
     },

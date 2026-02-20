@@ -17,13 +17,13 @@ const previewDocument = (
       <Divider />
       <Heading level={2}>Section 2</Heading>
       <Text>More content.</Text>
-      <Divider variant='dashed'/>
+      <Divider variant="dashed" />
       <Heading level={2}>Section 3</Heading>
       <Text>More content.</Text>
-      <Divider variant='dotted'/>
+      <Divider variant="dotted" />
       <Heading level={2}>Section 4</Heading>
       <Text>More content.</Text>
-      <Divider label='Section Divider' />
+      <Divider label="Section Divider" />
       <Heading level={2}>Section 5</Heading>
       <Text>More content.</Text>
     </Page>

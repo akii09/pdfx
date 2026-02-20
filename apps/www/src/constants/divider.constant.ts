@@ -27,12 +27,14 @@ export const dividerProps = [
   {
     name: 'label',
     type: 'string',
-    description: 'Optional text label displayed in the center of the divider. Common for "OR", "Section N", etc.',
+    description:
+      'Optional text label displayed in the center of the divider. Common for "OR", "Section N", etc.',
   },
   {
     name: 'color',
     type: 'string',
-    description: 'Line color. Use theme token (e.g. "border", "muted", "primary") or any CSS color.',
+    description:
+      'Line color. Use theme token (e.g. "border", "muted", "primary") or any CSS color.',
   },
   {
     name: 'variant',
@@ -54,7 +56,8 @@ export const dividerProps = [
   {
     name: 'width',
     type: 'string | number',
-    description: 'Width of the divider line. Use a percentage string (e.g. "60%") or number (pts). Defaults to "100%".',
+    description:
+      'Width of the divider line. Use a percentage string (e.g. "60%") or number (pts). Defaults to "100%".',
   },
   {
     name: 'style',
