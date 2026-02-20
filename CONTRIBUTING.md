@@ -37,10 +37,17 @@ This project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUC
 | `fix/<name>` | Bug fixes (e.g. `fix/heading-margin`) |
 | `docs/<name>` | Documentation-only changes |
 | `chore/<name>` | Maintenance, dependencies, tooling |
+| `ci/<name>` | CI/CD changes |
+| `refactor/<name>` | Code refactoring |
+| `test/<name>` | Test-only changes |
+| `release/<name>` | Release preparation |
 
 - **Never commit directly to `main`**. All changes must come in via a PR.
 - Branch names should be lowercase and hyphen-separated.
 - Keep branches short-lived — open a PR as soon as the work is ready for review.
+- The `main` branch is protected: **1 approval required**, CI must pass, and conversations must be resolved before merging.
+
+> **Repository admins**: See [`.github/BRANCH_PROTECTION.md`](./.github/BRANCH_PROTECTION.md) for a step-by-step guide to setting up branch protection rulesets and the importable JSON files.
 
 ## Development Setup
 
