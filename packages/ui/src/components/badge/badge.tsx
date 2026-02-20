@@ -58,7 +58,7 @@ function createBadgeStyles(t: PdfxTheme) {
     },
     variantPrimary: {
       backgroundColor: c.primary,
-      borderWidth: 0,
+      borderWidth: spacing[0.5],
     },
     variantSuccess: {
       backgroundColor: c.muted,
