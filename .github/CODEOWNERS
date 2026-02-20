@@ -1,0 +1,29 @@
+# CODEOWNERS — define who reviews changes to specific parts of the codebase.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global fallback — the maintainer reviews everything by default
+*                          @akii09
+
+# CLI package
+/packages/cli/             @akii09
+
+# UI component library
+/packages/ui/              @akii09
+
+# Shared types and theme system
+/packages/shared/          @akii09
+
+# Documentation site
+/apps/www/                 @akii09
+
+# Playground app
+/apps/playground/          @akii09
+
+# CI / GitHub configuration
+/.github/                  @akii09
+
+# Root config files
+/package.json              @akii09
+/pnpm-workspace.yaml       @akii09
+/turbo.json                @akii09
+/biome.json                @akii09

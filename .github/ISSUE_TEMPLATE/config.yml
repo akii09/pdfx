@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Ask a Question / Start a Discussion
+    url: https://github.com/akii09/pdfx/discussions
+    about: Use Discussions for questions, ideas, and community conversation.
+  - name: 📖 Documentation
+    url: https://github.com/akii09/pdfx#readme
+    about: Check the README for usage instructions and API reference.
