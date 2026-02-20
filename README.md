@@ -1,8 +1,13 @@
 # PDFx
 
+![Alpha](https://img.shields.io/badge/status-alpha-orange?style=flat-square) ![License](https://img.shields.io/github/license/akii09/pdfx?style=flat-square)
+
 **Stop manually styling PDFs. Copy-paste beautiful document templates for React.**
 
 A professional React PDF component library built on [@react-pdf/renderer](https://react-pdf.org/). PDFx provides pre-built, themeable components and a CLI to add them to your project—inspired by [shadcn/ui](https://ui.shadcn.com/).
+
+> [!WARNING]
+> **PDFx is currently in alpha.** The API, component structure, and theme system are actively evolving. Breaking changes may occur between releases. Not recommended for production use yet — but we'd love your feedback and contributions!
 
 ## Features
 
