@@ -15,7 +15,7 @@ Thank you for your interest in contributing to PDFx. This guide covers everythin
 
 ## Code of Conduct
 
-Be respectful and constructive. We aim for a welcoming environment for everyone.
+This project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you agree to uphold it. Please report unacceptable behavior to **akashpise588@gmail.com**.
 
 ---
 
@@ -500,6 +500,25 @@ Use [Conventional Commits](https://www.conventionalcommits.org/):
 - `test: add logo-right variant tests for PageHeader`
 
 ---
+
+## Release Process
+
+PDFX uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+1. After merging your PR, add a changeset if your change affects a published package:
+   ```bash
+   pnpm changeset
+   ```
+2. Follow the prompts to select the affected packages and bump type (`patch`, `minor`, `major`).
+3. Commit the generated changeset file with your PR.
+4. When changes are merged to `main`, the **Release** workflow will open a "Version Packages" PR automatically.
+5. Merging that PR triggers a publish to npm.
+
+> **Note**: Only maintainers can merge the version PR and trigger a publish.
+
+## Git Workflows
+
+For common git operations like **cherry-picking commits**, rebasing, and resolving conflicts, see the **[Git Workflows Guide](./.github/GIT_WORKFLOWS.md)**.
 
 ## Questions?
 

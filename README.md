@@ -125,6 +125,14 @@ We welcome contributions from everyone. Whether you're fixing a bug, adding a co
 
 See **[CONTRIBUTING.md](./CONTRIBUTING.md)** for a detailed guide on how to get started.
 
+## Security
+
+If you discover a security vulnerability, please **do not** open a public issue. Instead, see our **[Security Policy](./SECURITY.md)** for responsible disclosure instructions.
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you agree to uphold it.
+
 ## License
 
 MIT © [Akii](https://github.com/akii09)

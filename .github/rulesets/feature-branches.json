@@ -1,0 +1,23 @@
+{
+  "name": "Enforce branch naming conventions",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["~ALL"],
+      "exclude": ["refs/heads/main"]
+    }
+  },
+  "rules": [
+    {
+      "type": "branch_name_pattern",
+      "parameters": {
+        "name": "Branch naming convention",
+        "negate": false,
+        "operator": "regex",
+        "pattern": "^(feat|fix|docs|chore|release|refactor|test|ci|copilot)/.+"
+      }
+    }
+  ],
+  "bypass_actors": []
+}
