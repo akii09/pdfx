@@ -15,7 +15,7 @@ Thank you for your interest in contributing to PDFx. This guide covers everythin
 
 ## Code of Conduct
 
-This project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you agree to uphold it. Please report unacceptable behavior to **akashpise588@gmail.com**.
+This project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you agree to uphold it. Please report unacceptable behavior via [GitHub Discussions](https://github.com/akii09/pdfx/discussions).
 
 ---
 

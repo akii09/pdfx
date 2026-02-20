@@ -13,9 +13,7 @@ The following versions of PDFX currently receive security updates:
 
 **Please do not report security vulnerabilities through public GitHub Issues.**
 
-If you discover a security vulnerability in PDFX, please report it responsibly by emailing:
-
-📧 **akashpise588@gmail.com**
+If you discover a security vulnerability in PDFX, please report it responsibly by opening a [GitHub Discussion](https://github.com/akii09/pdfx/discussions) using the **Security** category, or by opening a private security advisory via the GitHub Security tab.
 
 Please include the following in your report:
 
