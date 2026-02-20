@@ -25,6 +25,10 @@
     {
       "source": "/r/:path*",
       "destination": "/r/:path*"
+    },
+    {
+      "source": "/((?!r/).*)",
+      "destination": "/index.html"
     }
   ]
 }

@@ -4,54 +4,57 @@ import { defaultPrimitives } from './primitives.js';
 /**
  * Professional theme preset.
  *
- * Character: Serif headings (Times-Roman), conservative navy primary,
- * generous margins, formal document feel. Ideal for business documents,
- * reports, and official correspondence.
+ * Character: Serif headings (Times-Roman), refined zinc/slate palette,
+ * generous margins, formal document feel. shadcn-inspired minimal aesthetic.
+ * Ideal for business documents, reports, and official correspondence.
  */
 export const professionalTheme: PdfxTheme = {
   name: 'professional',
   primitives: defaultPrimitives,
   colors: {
-    foreground: '#1a1a1a',
+    foreground: '#18181b',
     background: '#ffffff',
-    muted: '#f5f5f5',
-    mutedForeground: '#6b7280',
-    primary: '#1e3a5f',
+    muted: '#f4f4f5',
+    mutedForeground: '#71717a',
+    primary: '#18181b',
     primaryForeground: '#ffffff',
-    border: '#d1d5db',
-    accent: '#2563eb',
+    border: '#e4e4e7',
+    accent: '#3b82f6',
     destructive: '#dc2626',
+    success: '#16a34a',
+    warning: '#d97706',
+    info: '#0ea5e9',
   },
   typography: {
     body: {
       fontFamily: 'Helvetica',
-      fontSize: 12,
-      lineHeight: 1.4,
+      fontSize: 11,
+      lineHeight: 1.6,
     },
     heading: {
       fontFamily: 'Times-Roman',
       fontWeight: 700,
-      lineHeight: 1.2,
+      lineHeight: 1.25,
       fontSize: {
-        h1: 36,
-        h2: 28,
-        h3: 22,
-        h4: 18,
-        h5: 15,
+        h1: 32,
+        h2: 24,
+        h3: 20,
+        h4: 16,
+        h5: 14,
         h6: 12,
       },
     },
   },
   spacing: {
     page: {
-      marginTop: 48,
+      marginTop: 56,
       marginRight: 48,
-      marginBottom: 48,
+      marginBottom: 56,
       marginLeft: 48,
     },
-    sectionGap: 24,
-    paragraphGap: 8,
-    componentGap: 12,
+    sectionGap: 28,
+    paragraphGap: 10,
+    componentGap: 14,
   },
   page: {
     size: 'A4',

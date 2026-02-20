@@ -1,18 +1,24 @@
-import { FileText, Github, Menu, Search, X } from 'lucide-react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Github, Menu, Search, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../theme-toggle';
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  // Close mobile menu on route change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally reset on pathname change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl">
-          <FileText className="h-5 w-5" />
-          PDFX
+          <img src="/pdfx.png" alt="PDFx" className="h-20 w-auto dark:invert dark:brightness-0" />
         </Link>
 
         {/* Desktop nav */}
@@ -47,7 +53,7 @@ export function Header() {
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="View PDFX on GitHub"
+            aria-label="View PDFx on GitHub"
           >
             <Github className="h-5 w-5" aria-hidden="true" />
           </a>

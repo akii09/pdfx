@@ -13,6 +13,9 @@ export const colorTokensSchema = z.object({
   border: z.string().min(1),
   accent: z.string().min(1),
   destructive: z.string().min(1),
+  success: z.string().min(1),
+  warning: z.string().min(1),
+  info: z.string().min(1),
 });
 
 /** Schema for heading font size map */
@@ -73,6 +76,19 @@ export const primitiveTokensSchema = z.object({
     tight: z.number(),
     normal: z.number(),
     relaxed: z.number(),
+  }),
+  borderRadius: z.object({
+    none: z.number(),
+    sm: z.number(),
+    md: z.number(),
+    lg: z.number(),
+    full: z.number(),
+  }),
+  letterSpacing: z.object({
+    tight: z.number(),
+    normal: z.number(),
+    wide: z.number(),
+    wider: z.number(),
   }),
 });
 
@@ -152,3 +168,4 @@ export const componentNameSchema = z
 export type Config = z.infer<typeof configSchema>;
 export type RegistryItem = z.infer<typeof registryItemSchema>;
 export type RegistryFile = z.infer<typeof registryFileSchema>;
+export type Registry = z.infer<typeof registrySchema>;

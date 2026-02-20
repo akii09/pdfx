@@ -59,10 +59,10 @@ describe('generateThemeFile', () => {
     expect(modern).toContain("fontFamily: 'Helvetica'");
     expect(minimal).toContain("fontFamily: 'Courier'");
 
-    // And different primary colors
-    expect(professional).toContain('#1e3a5f');
-    expect(modern).toContain('#6d28d9');
-    expect(minimal).toContain('#171717');
+    // And theme-specific colors (shadcn-inspired palettes)
+    expect(professional).toContain('#18181b');
+    expect(modern).toContain('#334155');
+    expect(minimal).toContain('#18181b');
   });
 
   it('should generate self-contained file with no external imports', () => {

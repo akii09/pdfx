@@ -14,7 +14,7 @@ import { readJsonFile } from '../utils/read-json.js';
  * Prompts for preset selection and theme file path, then scaffolds the theme file.
  */
 export async function themeInit() {
-  console.log(chalk.bold.cyan('\n  PDFX Theme Setup\n'));
+  console.log(chalk.bold.cyan('\n  PDFx Theme Setup\n'));
 
   const answers = await prompts(
     [
@@ -216,6 +216,9 @@ export async function themeValidate() {
       'border',
       'accent',
       'destructive',
+      'success',
+      'warning',
+      'info',
     ];
     const missingColors = requiredColors.filter((key) => !content.includes(`${key}:`));
 

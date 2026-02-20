@@ -6,6 +6,23 @@ import { type Registry, registrySchema } from '@pdfx/shared';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Input types: what we read from registry/index.json (no content yet)
+interface SourceRegistryFile {
+  path: string;
+  type: string;
+}
+
+interface SourceRegistryItem {
+  name: string;
+  type: string;
+  title: string;
+  description: string;
+  files: SourceRegistryFile[];
+  dependencies?: string[];
+  registryDependencies?: string[];
+}
+
+// Output types: what we generate (with content)
 interface RegistryFile {
   path: string;
   content: string;
@@ -19,6 +36,7 @@ interface RegistryItem {
   description: string;
   files: RegistryFile[];
   dependencies?: string[];
+  registryDependencies?: string[];
 }
 
 // interface Registry {
@@ -40,7 +58,7 @@ async function fileExistsAsync(filePath: string): Promise<boolean> {
 /**
  * Transforms component source code for registry distribution.
  * - Removes @pdfx/shared type imports (workspace-only package)
- * - Inlines the PDFComponentProps interface
+ * - Inlines the PDFComponentProps interface with style and children
  * - Strips PdfxTheme type annotation (uses structural typing)
  * - Normalizes theme import path to '../lib/pdfx-theme'
  * - Adds @react-pdf/types import for Style type
@@ -51,47 +69,69 @@ function transformForRegistry(content: string): { content: string; usesTheme: bo
 
   // Remove @pdfx/shared type-only imports
   result = result.replace(/import\s+type\s+\{[^}]*\}\s+from\s+['"]@pdfx\/shared['"];?\n?/g, '');
-  result = result.replace(/extends PDFComponentProps\s*\{\s*\}/g, '...');
-  result = result.replace(/\(t:\s*PdfxTheme\)/g, '(t: any)');
 
-  // If the component extended PDFComponentProps, replace with an inline interface
-  // using @react-pdf/types Style
-  if (result.includes('extends PDFComponentProps')) {
+  // Handle PDFComponentProps: inline the interface with both style and children
+  if (result.includes('PDFComponentProps')) {
     // Add Style import from @react-pdf/types if not already present
     if (!result.includes("from '@react-pdf/types'")) {
-      // Insert after the last import statement
       result = result.replace(
         /(import\s+.*from\s+['"][^'"]+['"];?\n)(?!import)/,
         "$1import type { Style } from '@react-pdf/types';\n"
       );
     }
 
+    // Handle Omit<PDFComponentProps, 'children'> (e.g., Divider, PageBreak)
+    result = result.replace(
+      /extends\s+Omit<PDFComponentProps,\s*['"]children['"]>/g,
+      'extends { style?: Style }'
+    );
+
     // Replace `extends PDFComponentProps {}` (empty body) with inlined props
     result = result.replace(
       /export\s+interface\s+(\w+)\s+extends\s+PDFComponentProps\s*\{\s*\}/g,
-      'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Text content to render */\n  children: React.ReactNode;\n}'
+      'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Content to render */\n  children: React.ReactNode;\n}'
     );
 
     // Replace `extends PDFComponentProps {` (non-empty body) with inlined props
     result = result.replace(
       /export\s+interface\s+(\w+)\s+extends\s+PDFComponentProps\s*\{/g,
-      'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Text content to render */\n  children: React.ReactNode;'
+      'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Content to render */\n  children: React.ReactNode;'
     );
   }
 
   // Strip PdfxTheme type annotation — use structural typing for self-contained components
   result = result.replace(/\(t:\s*PdfxTheme\)/g, '(t: any)');
 
-  // Normalize theme import: ./lib/pdfx-theme → ../lib/pdfx-theme
-  // (source files import from ./lib/pdfx-theme relative to packages/ui/src,
-  //  but distributed components live in components/pdfx/ so they need ../lib/pdfx-theme)
-  result = result.replace(/from\s+['"]\.\/lib\/pdfx-theme['"]/g, "from '../lib/pdfx-theme'");
+  // Normalize theme import: ../../lib/pdfx-theme or ./lib/pdfx-theme → ../lib/pdfx-theme
+  result = result.replace(
+    /from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/pdfx-theme['"]/g,
+    "from '../lib/pdfx-theme'"
+  );
+
+  // For data-table: table is emitted as pdfx-table.tsx, so fix the import path
+  // Handles both '../table' (subdirectory layout) and './table' (flat layout)
+  result = result.replace(/from\s+['"](?:\.\.\/|\.\/)table['"]/g, "from './pdfx-table'");
+
+  // Inline resolveColor and remove the import (avoids separate lib file in distributed components)
+  const resolveColorInline = `const THEME_COLOR_KEYS = ['foreground','muted','mutedForeground','primary','primaryForeground','accent','destructive','success','warning','info'] as const;
+function resolveColor(value: string, colors: Record<string, string>): string {
+  return THEME_COLOR_KEYS.includes(value as (typeof THEME_COLOR_KEYS)[number]) ? colors[value] : value;
+}
+`;
+  if (result.includes('resolve-color')) {
+    // Handle both ../../lib/resolve-color.js (subdirectory) and ./lib/resolve-color.js (flat)
+    result = result.replace(
+      /import\s+\{[^}]*resolveColor[^}]*\}\s+from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/resolve-color\.js['"];?\n?/g,
+      ''
+    );
+    result = result.replace(/(\n)(function create\w+Styles)/, `$1${resolveColorInline}$2`);
+  }
 
   return { content: result, usesTheme };
 }
 
 async function processItem(
-  item: RegistryItem,
+  item: SourceRegistryItem,
   registryBaseDir: string,
   outputDir: string
 ): Promise<void> {
@@ -126,7 +166,7 @@ async function processItem(
   );
 
   const output: Record<string, unknown> = {
-    $schema: 'https://ui.shadcn.com/schema/registry-item.json',
+    $schema: 'https://pdfx.akashpise.dev/schema/registry-item.json',
     name: item.name,
     type: item.type,
     title: item.title,

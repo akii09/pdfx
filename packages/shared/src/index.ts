@@ -11,6 +11,8 @@ export type {
   SpacingScale,
   FontWeights,
   LineHeights,
+  BorderRadiusScale,
+  LetterSpacingScale,
 } from './theme.js';
 
 export {
@@ -29,6 +31,7 @@ export {
   type Config,
   type RegistryItem,
   type RegistryFile,
+  type Registry,
 } from './schemas.js';
 
 export {

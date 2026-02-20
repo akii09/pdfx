@@ -1,4 +1,4 @@
-/** Base error class for all PDFX errors */
+/** Base error class for all PDFx errors */
 export class PdfxError extends Error {
   constructor(
     message: string,

@@ -21,7 +21,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
-    console.error('[PDFX] Uncaught error:', error, info.componentStack);
+    console.error('[PDFx] Uncaught error:', error, info.componentStack);
   }
 
   render() {

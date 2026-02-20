@@ -33,6 +33,9 @@ interface PdfxTheme {
     border: string;
     accent: string;
     destructive: string;
+    success: string;
+    warning: string;
+    info: string;
   };
   typography: {
     body: { fontFamily: string; fontSize: number; lineHeight: number };
@@ -115,6 +118,9 @@ function serializeTheme(t: PdfxTheme): string {
     border: '${t.colors.border}',
     accent: '${t.colors.accent}',
     destructive: '${t.colors.destructive}',
+    success: '${t.colors.success}',
+    warning: '${t.colors.warning}',
+    info: '${t.colors.info}',
   },
 
   // Typography — font families, sizes, weights, line heights

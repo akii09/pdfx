@@ -10,6 +10,8 @@ import type { PrimitiveTokens } from '../theme.js';
  * - Spacing: 4pt grid system
  * - Font weights: 400–700
  * - Line heights: 1.2–1.6
+ * - Border radius: 0–8pt (plus full for pills)
+ * - Letter spacing: -0.025 to 0.05 (em-like ratios for PDF points)
  */
 export const defaultPrimitives: PrimitiveTokens = {
   typography: {
@@ -45,5 +47,18 @@ export const defaultPrimitives: PrimitiveTokens = {
     tight: 1.2,
     normal: 1.4,
     relaxed: 1.6,
+  },
+  borderRadius: {
+    none: 0,
+    sm: 2,
+    md: 4,
+    lg: 8,
+    full: 9999,
+  },
+  letterSpacing: {
+    tight: -0.025,
+    normal: 0,
+    wide: 0.025,
+    wider: 0.05,
   },
 };

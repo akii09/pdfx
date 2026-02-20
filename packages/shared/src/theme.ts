@@ -1,7 +1,7 @@
 /**
- * PDFX Theme System — Type Definitions
+ * PDFx Theme System — Type Definitions
  *
- * Defines the complete type hierarchy for the PDFX PDF theme system.
+ * Defines the complete type hierarchy for the PDFx PDF theme system.
  * All PDF components consume these tokens instead of hardcoding style values.
  *
  * Architecture:
@@ -95,12 +95,40 @@ export interface LineHeights {
   relaxed: number;
 }
 
+/** Border radius scale for rounded corners */
+export interface BorderRadiusScale {
+  /** 0pt — Sharp corners */
+  none: number;
+  /** 2pt — Subtle rounding */
+  sm: number;
+  /** 4pt — Standard rounding */
+  md: number;
+  /** 8pt — Pronounced rounding */
+  lg: number;
+  /** 9999pt — Pill/circle shape */
+  full: number;
+}
+
+/** Letter spacing scale for typography adjustments */
+export interface LetterSpacingScale {
+  /** -0.025em — Tighter spacing */
+  tight: number;
+  /** 0em — Normal spacing */
+  normal: number;
+  /** 0.025em — Slightly wider spacing */
+  wide: number;
+  /** 0.05em — Much wider spacing (for uppercase) */
+  wider: number;
+}
+
 /** Raw design scales shared across themes */
 export interface PrimitiveTokens {
   typography: TypographyScale;
   spacing: SpacingScale;
   fontWeights: FontWeights;
   lineHeights: LineHeights;
+  borderRadius: BorderRadiusScale;
+  letterSpacing: LetterSpacingScale;
 }
 
 // ─── Semantic Tokens ────────────────────────────────────────────────────────
@@ -130,6 +158,12 @@ export interface ColorTokens {
   accent: string;
   /** Error text, warning indicators */
   destructive: string;
+  /** Success states (e.g., badges, confirmations) */
+  success: string;
+  /** Warning states (e.g., badges, alerts) */
+  warning: string;
+  /** Info states (e.g., badges, informational alerts) */
+  info: string;
 }
 
 /** Typography semantic tokens — what fonts and sizes to use where */
@@ -191,7 +225,7 @@ export interface PageTokens {
 // ─── Full Theme ─────────────────────────────────────────────────────────────
 
 /**
- * The complete PDFX theme object.
+ * The complete PDFx theme object.
  *
  * Components import this and use its tokens for all style values.
  * Since React Context doesn't work in @react-pdf/renderer,

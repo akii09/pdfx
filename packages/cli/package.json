@@ -1,7 +1,7 @@
 {
   "name": "@pdfx/cli",
   "version": "0.1.0",
-  "description": "CLI for PDFX components",
+  "description": "CLI for PDFx components",
   "type": "module",
   "bin": {
     "pdfx": "./dist/index.js"

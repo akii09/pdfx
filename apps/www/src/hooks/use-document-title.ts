@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const SITE_NAME = 'PDFX';
+const SITE_NAME = 'PDFx';
 
 /** Sets document.title on mount and restores the default on unmount. */
 export function useDocumentTitle(title: string) {

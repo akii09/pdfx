@@ -19,6 +19,7 @@ public/r/
 .idea/
 *.swp
 *.swo
+.qoder
 
 # OS
 .DS_Store
@@ -37,3 +38,4 @@ coverage/
 
 # Other
 docs
+PDFx-DESIGN-SYSTEM
