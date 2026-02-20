@@ -10,19 +10,12 @@ export type HeadingWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 export type HeadingTracking = 'tighter' | 'tight' | 'normal' | 'wide' | 'wider';
 
 export interface HeadingProps extends PDFComponentProps {
-  /** Heading level (1-6). Corresponds to h1-h6 sizing. Defaults to 1. */
   level?: 1 | 2 | 3 | 4 | 5 | 6;
-  /** Text alignment. Maps to textAlign. */
   align?: 'left' | 'center' | 'right';
-  /** Text color. Use theme token (e.g. 'primary', 'muted') or any CSS color. */
   color?: string;
-  /** Text transform. Common for section headers. */
   transform?: 'uppercase' | 'lowercase' | 'capitalize' | 'none';
-  /** Font weight override. Defaults to theme heading weight. */
   weight?: HeadingWeight;
-  /** Letter spacing / tracking. 'tight' is ideal for large display headings. */
   tracking?: HeadingTracking;
-  /** Remove all margins (top and bottom). Useful inside Stack or tight layouts. */
   noMargin?: boolean;
 }
 
