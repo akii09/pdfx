@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 });
 
 const previewDocument = (
-  <Document title="PDFX PageBreak Preview">
+  <Document title="PDFx PageBreak Preview">
     <Page size="A4" style={styles.page}>
       <Heading level={1}>Section 1</Heading>
       <Text>Content on first page.</Text>

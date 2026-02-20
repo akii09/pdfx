@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 });
 
 const previewDocument = (
-  <Document title="PDFX Divider Preview">
+  <Document title="PDFx Divider Preview">
     <Page size="A4" style={styles.page}>
       <Heading level={2}>Section 1</Heading>
       <Text>Content here.</Text>

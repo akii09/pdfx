@@ -23,6 +23,7 @@ const PageHeaderPage = lazy(() => import('../pages/components/page-header'));
 const PageFooterPage = lazy(() => import('../pages/components/page-footer'));
 const BadgePage = lazy(() => import('../pages/components/badge'));
 const KeyValuePage = lazy(() => import('../pages/components/key-value'));
+const InstallationPage = lazy(() => import('../pages/installation'));
 
 function PageLoader() {
   return (
@@ -49,6 +50,14 @@ export default function App() {
           element={
             <Suspense fallback={<PageLoader />}>
               <DocsPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="installation"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <InstallationPage />
             </Suspense>
           }
         />

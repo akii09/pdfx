@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 
 /** Preview matches the usage code exactly */
 const previewDocument = (
-  <Document title="PDFX Heading Preview">
+  <Document title="PDFx Heading Preview">
     <Page size="A4" style={styles.page}>
       <Heading level={1}>Main Title</Heading>
       <Heading level={2} align="center" color="primary">

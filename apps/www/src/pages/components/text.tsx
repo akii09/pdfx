@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 
 /** Preview matches the usage code exactly */
 const previewDocument = (
-  <Document title="PDFX Text Preview">
+  <Document title="PDFx Text Preview">
     <Page size="A4" style={styles.page}>
       <Text>A paragraph of body text in your PDF document.</Text>
       <Text variant="xs" color="mutedForeground">

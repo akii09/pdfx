@@ -1,7 +1,7 @@
 /**
- * PDFX Theme System — Type Definitions
+ * PDFx Theme System — Type Definitions
  *
- * Defines the complete type hierarchy for the PDFX PDF theme system.
+ * Defines the complete type hierarchy for the PDFx PDF theme system.
  * All PDF components consume these tokens instead of hardcoding style values.
  *
  * Architecture:
@@ -225,7 +225,7 @@ export interface PageTokens {
 // ─── Full Theme ─────────────────────────────────────────────────────────────
 
 /**
- * The complete PDFX theme object.
+ * The complete PDFx theme object.
  *
  * Components import this and use its tokens for all style values.
  * Since React Context doesn't work in @react-pdf/renderer,

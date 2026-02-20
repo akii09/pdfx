@@ -19,7 +19,7 @@ type TableVariant =
   | 'primary-header';
 
 const renderPreviewDocument = (variant: TableVariant) => (
-  <Document title="PDFX Table Preview">
+  <Document title="PDFx Table Preview">
     <Page size="A4" style={styles.page}>
       <Table variant={variant} zebraStripe={variant === 'striped'}>
         <TableHeader>

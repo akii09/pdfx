@@ -49,7 +49,7 @@ function NewVariantsDemo() {
           </Text>
         </Section>
 
-        <PageFooter leftText="© 2026 PDFX" rightText="Page 1 of 3" variant="simple" />
+        <PageFooter leftText="© 2026 PDFx" rightText="Page 1 of 3" variant="simple" />
       </Page>
 
       {/* ═══════════════════════════════════════════════════════════════════
@@ -83,7 +83,7 @@ function NewVariantsDemo() {
 />`}
         </Text>
 
-        <PageFooter leftText="© 2026 PDFX" rightText="Page 2 of 3" variant="simple" />
+        <PageFooter leftText="© 2026 PDFx" rightText="Page 2 of 3" variant="simple" />
       </Page>
 
       {/* ═══════════════════════════════════════════════════════════════════

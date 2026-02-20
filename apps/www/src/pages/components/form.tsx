@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 type FormLayout = 'single' | 'two-column' | 'three-column';
 
 const renderPreviewDocument = (layout: FormLayout) => (
-  <Document title="PDFX Form Preview">
+  <Document title="PDFx Form Preview">
     <Page size="A4" style={styles.page}>
       <PdfFormSection
         title={

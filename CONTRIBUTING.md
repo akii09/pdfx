@@ -1,6 +1,6 @@
-# Contributing to PDFX
+# Contributing to PDFx
 
-Thank you for your interest in contributing to PDFX. This guide covers everything you need to get started, including the full step-by-step process for adding new components.
+Thank you for your interest in contributing to PDFx. This guide covers everything you need to get started, including the full step-by-step process for adding new components.
 
 ## Table of Contents
 
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
 });
 
 const renderPreviewDocument = (variant: MyWidgetVariant) => (
-  <Document title="PDFX MyWidget Preview">
+  <Document title="PDFx MyWidget Preview">
     <Page size="A4" style={styles.page}>
       <MyWidget label="Example Widget" variant={variant} />
     </Page>

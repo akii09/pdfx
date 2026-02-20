@@ -16,7 +16,12 @@ const sections: SidebarSection[] = [
     title: 'Getting Started',
     links: [
       { title: 'Introduction', href: '/docs' },
-      { title: 'Installation', href: '/docs#installation' },
+    ],
+  },
+  {
+    title: 'Installation',
+    links: [
+      { title: 'Installation', href: '/installation' },
     ],
   },
   {
@@ -44,7 +49,7 @@ const sections: SidebarSection[] = [
 export function Sidebar() {
   const location = useLocation();
   const showSidebar =
-    location.pathname.startsWith('/docs') || location.pathname.startsWith('/components');
+    location.pathname.startsWith('/docs') || location.pathname.startsWith('/components') || location.pathname.startsWith('/installation');
   const isComponentsIndex = location.pathname === '/components';
 
   if (!showSidebar) return null;

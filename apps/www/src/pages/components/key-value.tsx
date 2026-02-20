@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 });
 
 const renderPreviewDocument = (direction: KeyValueDirection) => (
-  <Document title="PDFX KeyValue Preview">
+  <Document title="PDFx KeyValue Preview">
     <Page size="A4" style={styles.page}>
       <KeyValue
         direction={direction}

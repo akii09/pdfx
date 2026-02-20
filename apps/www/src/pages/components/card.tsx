@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 type CardVariant = 'default' | 'bordered' | 'muted';
 
 const renderPreviewDocument = (variant: CardVariant) => (
-  <Document title="PDFX Card Preview">
+  <Document title="PDFx Card Preview">
     <Page size="A4" style={styles.page}>
       <PdfCard title="Project Summary" variant={variant} padding="md">
         <Text noMargin>

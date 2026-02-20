@@ -10,7 +10,7 @@ export default function Theming() {
           Theming
         </h2>
         <p className="text-muted-foreground mb-6">
-          PDFX includes a comprehensive theme system. During{' '}
+          PDFx includes a comprehensive theme system. During{' '}
           <code className="rounded bg-muted px-1.5 py-0.5 text-sm font-mono">pdfx init</code>, you
           choose from three preset themes:
         </p>

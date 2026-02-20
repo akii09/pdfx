@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 });
 
 const renderPreviewDocument = (variant: BadgeVariant) => (
-  <Document title="PDFX Badge Preview">
+  <Document title="PDFx Badge Preview">
     <Page size="A4" style={styles.page}>
       <View style={styles.row}>
         <Badge label="Small" variant={variant} size="sm" />

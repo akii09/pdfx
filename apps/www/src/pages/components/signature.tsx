@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 type SignatureVariant = 'single' | 'double' | 'inline';
 
 const renderPreviewDocument = (variant: SignatureVariant) => (
-  <Document title="PDFX Signature Preview">
+  <Document title="PDFx Signature Preview">
     <Page size="A4" style={styles.page}>
       {variant === 'double' ? (
         <PdfSignatureBlock

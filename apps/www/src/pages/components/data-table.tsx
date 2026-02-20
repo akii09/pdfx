@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 type DataTableVariant = 'line' | 'grid' | 'minimal' | 'striped';
 
 const renderPreviewDocument = (variant: DataTableVariant) => (
-  <Document title="PDFX DataTable Preview">
+  <Document title="PDFx DataTable Preview">
     <Page size="A4" style={styles.page}>
       <Heading level={3}>Team Directory</Heading>
       <DataTable

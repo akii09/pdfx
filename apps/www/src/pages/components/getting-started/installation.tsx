@@ -20,7 +20,7 @@ export default function Installation() {
           Installation
         </h2>
         <p className="text-muted-foreground mb-4">
-          Set up PDFX in your project using the CLI or manually configure your project.
+          Set up PDFx in your project using the CLI or manually configure your project.
         </p>
 
         {/* Installation Tabs */}
@@ -57,7 +57,7 @@ export default function Installation() {
             <div className="p-4 bg-background space-y-4">
               <div>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Initialize PDFX in your project. Components are installed to{' '}
+                  Initialize PDFx in your project. Components are installed to{' '}
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                     ./src/components/pdfx/
                   </code>{' '}
@@ -97,7 +97,7 @@ export default function Installation() {
                   Install dependencies
                 </h3>
                 <p className="text-sm text-muted-foreground pl-8">
-                  PDFX components are built on{' '}
+                  PDFx components are built on{' '}
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                     @react-pdf/renderer
                   </code>
@@ -144,7 +144,7 @@ export default function Installation() {
                   <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                     src/lib/pdfx-theme.ts
                   </code>
-                  . All PDFX components import their design tokens from this file.
+                  . All PDFx components import their design tokens from this file.
                 </p>
                 <div className="pl-8">
                   <CodeBlock

@@ -162,7 +162,7 @@ export default function ComponentsIndexPage() {
       <div className="mb-8">
         <h1 className="text-4xl font-bold tracking-tight mb-3">Components</h1>
         <p className="text-lg text-muted-foreground leading-relaxed">
-          Browse all available PDFX components. Each component is copied into your project — you own
+          Browse all available PDFx components. Each component is copied into your project — you own
           the code.
         </p>
       </div>

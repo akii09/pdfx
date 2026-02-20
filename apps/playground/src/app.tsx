@@ -5,6 +5,7 @@ import {
   Divider,
   Heading,
   KeyValue,
+  PageBreak,
   PageFooter,
   PageHeader,
   PdfCard,
@@ -67,7 +68,7 @@ function ThemeShowcasePage({ theme }: { theme: PdfxTheme }) {
       {/* ── Page Header ─────────────────────────────────────────────── */}
       <PageHeader
         title={`${theme.name} Theme`}
-        subtitle="PDFX Component Library"
+        subtitle="PDFx Component Library"
         rightText="Preview"
         variant="simple"
       />
@@ -181,7 +182,7 @@ function ThemeShowcasePage({ theme }: { theme: PdfxTheme }) {
 
       {/* ── Page Footer ───────────────────────────────────────────────── */}
       <PageFooter
-        leftText="© 2026 PDFX Component Library"
+        leftText="© 2026 PDFx Component Library"
         centerText="For evaluation purposes only"
         rightText="Page 1"
       />
@@ -212,6 +213,7 @@ function ComponentShowcasePage({ theme }: { theme: PdfxTheme }) {
 
       <Divider spacing="sm" />
 
+      <PageBreak />
       {/* ── PageHeader Variants ───────────────────────────────────────── */}
       <Heading level={2}>PageHeader — simple</Heading>
       <PageHeader
@@ -311,7 +313,7 @@ function ComponentShowcasePage({ theme }: { theme: PdfxTheme }) {
         marginTop={8}
       />
       <PageFooter
-        leftText="branded: PDFX Component Library"
+        leftText="branded: PDFx Component Library"
         rightText="v1.0.0"
         variant="branded"
         marginTop={8}
@@ -376,7 +378,7 @@ function TableShowcasePage({ theme }: { theme: PdfxTheme }) {
 
   return (
     <Page size={theme.page.size} style={s.page}>
-      <PageHeader title="Table Variants" subtitle="PDFX Component Library" variant="simple" />
+      <PageHeader title="Table Variants" subtitle="PDFx Component Library" variant="simple" />
 
       <Heading level={2}>Line (default)</Heading>
       <Table variant="line">{tableRows}</Table>
@@ -401,7 +403,7 @@ function TableShowcasePage({ theme }: { theme: PdfxTheme }) {
       <Heading level={2}>Primary-Header</Heading>
       <Table variant="primary-header">{tableRows}</Table>
 
-      <PageFooter leftText="© 2026 PDFX Component Library" rightText="Table Variants" />
+      <PageFooter leftText="© 2026 PDFx Component Library" rightText="Table Variants" />
     </Page>
   );
 }
@@ -453,7 +455,7 @@ function ListShowcasePage({ theme }: { theme: PdfxTheme }) {
 
   return (
     <Page size={theme.page.size} style={s.page}>
-      <PageHeader title="List Variants" subtitle="PDFX Component Library" variant="simple" />
+      <PageHeader title="List Variants" subtitle="PDFx Component Library" variant="simple" />
 
       <Stack direction="horizontal" gap="md">
         <View style={{ flex: 1 }}>
@@ -478,7 +480,7 @@ function ListShowcasePage({ theme }: { theme: PdfxTheme }) {
       <Heading level={2}>Descriptive</Heading>
       <PdfList items={descriptiveItems} variant="descriptive" />
 
-      <PageFooter leftText="© 2026 PDFX Component Library" rightText="List Variants" />
+      <PageFooter leftText="© 2026 PDFx Component Library" rightText="List Variants" />
     </Page>
   );
 }
@@ -501,7 +503,7 @@ function CardFormSignaturePage({ theme }: { theme: PdfxTheme }) {
     <Page size={theme.page.size} style={s.page}>
       <PageHeader
         title="Card · Form · Signature"
-        subtitle="PDFX Component Library"
+        subtitle="PDFx Component Library"
         variant="simple"
       />
 
@@ -588,7 +590,7 @@ function CardFormSignaturePage({ theme }: { theme: PdfxTheme }) {
         date="15 February 2026"
       />
 
-      <PageFooter leftText="© 2026 PDFX Component Library" rightText="Card · Form · Signature" />
+      <PageFooter leftText="© 2026 PDFx Component Library" rightText="Card · Form · Signature" />
     </Page>
   );
 }

@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
 });
 
 const previewDocument = (
-  <Document title="PDFX Stack Preview">
+  <Document title="PDFx Stack Preview">
     <Page size="A4" style={styles.page}>
       <Stack gap="md">
         <Heading level={2}>Section</Heading>

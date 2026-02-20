@@ -19,7 +19,7 @@ export function Header() {
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl">
           <FileText className="h-5 w-5" />
-          PDFX
+          PDFx
         </Link>
 
         {/* Desktop nav */}
@@ -54,7 +54,7 @@ export function Header() {
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="View PDFX on GitHub"
+            aria-label="View PDFx on GitHub"
           >
             <Github className="h-5 w-5" aria-hidden="true" />
           </a>

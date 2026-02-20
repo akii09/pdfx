@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 });
 
 const renderPreviewDocument = (variant: PageFooterVariant) => (
-  <Document title="PDFX PageFooter Preview">
+  <Document title="PDFx PageFooter Preview">
     <Page size="A4" style={styles.page}>
       <Text>Document body content goes here.</Text>
       <PageFooter

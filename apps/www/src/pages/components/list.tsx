@@ -35,7 +35,7 @@ const nestedItems = [
 ];
 
 const renderPreviewDocument = (variant: ListVariant) => (
-  <Document title="PDFX List Preview">
+  <Document title="PDFx List Preview">
     <Page size="A4" style={styles.page}>
       <PdfList
         variant={variant}

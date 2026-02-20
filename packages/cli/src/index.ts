@@ -7,7 +7,7 @@ import { themeInit, themeSwitch, themeValidate } from './commands/theme.js';
 
 const program = new Command();
 
-program.name('pdfx').description('CLI for PDFX components').version('0.1.0');
+program.name('pdfx').description('CLI for PDFx components').version('0.1.0');
 
 program.command('init').description('Initialize pdfx in your project').action(init);
 

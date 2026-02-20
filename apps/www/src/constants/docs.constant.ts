@@ -64,7 +64,7 @@ export function MyDocument() {
   );
 }`;
 
-export const cliCommands = `# Initialize PDFX in your project (includes theme setup)
+export const cliCommands = `# Initialize PDFx in your project (includes theme setup)
 npx @pdfx/cli init
 
 # Add components
@@ -85,7 +85,7 @@ export const manualStep2Pdfxjson = `{
 }`;
 
 export const manualStep3Theme = `// src/lib/pdfx-theme.ts
-// This is the theme file all PDFX components import from.
+// This is the theme file all PDFx components import from.
 // You own this file — customize colors, fonts, spacing to match your brand.
 
 export const theme = {

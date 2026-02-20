@@ -2,7 +2,7 @@ import type { Style } from '@react-pdf/types';
 import type { ReactNode } from 'react';
 
 /**
- * Base props shared by all PDFX PDF components.
+ * Base props shared by all PDFx PDF components.
  * Every component in the library should extend this interface.
  */
 export interface PDFComponentProps {

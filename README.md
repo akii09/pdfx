@@ -1,12 +1,12 @@
-# PDFX
+# PDFx
 
 **Stop manually styling PDFs. Copy-paste beautiful document templates for React.**
 
-A professional React PDF component library built on [@react-pdf/renderer](https://react-pdf.org/). PDFX provides pre-built, themeable components and a CLI to add them to your project—inspired by [shadcn/ui](https://ui.shadcn.com/).
+A professional React PDF component library built on [@react-pdf/renderer](https://react-pdf.org/). PDFx provides pre-built, themeable components and a CLI to add them to your project—inspired by [shadcn/ui](https://ui.shadcn.com/).
 
 ## Features
 
-- **Copy-paste components** — Add components directly to your codebase; no runtime dependency on PDFX
+- **Copy-paste components** — Add components directly to your codebase; no runtime dependency on PDFx
 - **Theme system** — Typography, spacing, colors, and page settings via a single theme config
 - **Theme presets** — Professional, Modern, and Minimal presets out of the box
 - **CLI** — `pdfx add`, `pdfx init`, `pdfx theme switch` for fast setup
@@ -29,7 +29,7 @@ npx @pdfx/cli init
 
 ## Quick Start
 
-1. **Initialize PDFX** in your React + @react-pdf/renderer project:
+1. **Initialize PDFx** in your React + @react-pdf/renderer project:
 
    ```bash
    pdfx init
@@ -50,7 +50,7 @@ npx @pdfx/cli init
    export default () => (
      <Document>
        <Page>
-         <Heading level={1}>Hello PDFX</Heading>
+         <Heading level={1}>Hello PDFx</Heading>
          <Text>Beautiful PDFs with minimal effort.</Text>
        </Page>
      </Document>
@@ -61,7 +61,7 @@ npx @pdfx/cli init
 
 | Command | Description |
 |---------|-------------|
-| `pdfx init` | Initialize PDFX in your project |
+| `pdfx init` | Initialize PDFx in your project |
 | `pdfx add <components...>` | Add components (e.g. `pdfx add text heading`) |
 | `pdfx add <components...> --force` | Overwrite existing files |
 | `pdfx list` | List available components from registry |
@@ -121,7 +121,7 @@ pnpm format
 
 ## Contributing
 
-We welcome contributions from everyone. Whether you're fixing a bug, adding a component, improving docs, or suggesting an idea—your help makes PDFX better for everyone.
+We welcome contributions from everyone. Whether you're fixing a bug, adding a component, improving docs, or suggesting an idea—your help makes PDFx better for everyone.
 
 See **[CONTRIBUTING.md](./CONTRIBUTING.md)** for a detailed guide on how to get started.
 

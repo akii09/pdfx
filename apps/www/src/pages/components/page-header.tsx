@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 });
 
 const renderPreviewDocument = (variant: PageHeaderVariant) => (
-  <Document title="PDFX PageHeader Preview">
+  <Document title="PDFx PageHeader Preview">
     <Page size="A4" style={styles.page}>
       <PageHeader
         title="Invoice #1042"
