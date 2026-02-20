@@ -103,10 +103,10 @@ export function InstallationTabs({
       ) : (
         <div className="p-4 bg-background space-y-4">
           {registryData?.registryDependencies && registryData.registryDependencies.length > 0 && (
-            <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/20 p-4">
+            <div className="rounded-lg border border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/20 p-4">
               <div className="flex items-start gap-3">
                 <svg
-                  className="h-5 w-5 text-amber-600 dark:text-amber-500 shrink-0 mt-0.5"
+                  className="h-5 w-5 text-amber-700 dark:text-amber-500 shrink-0 mt-0.5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -120,22 +120,22 @@ export function InstallationTabs({
                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
                   />
                 </svg>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
+                <div className="space-y-1.5">
+                  <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
                     Dependencies Required
                   </p>
-                  <p className="text-sm text-amber-800 dark:text-amber-300">
+                  <p className="text-sm text-amber-900 dark:text-amber-300">
                     This component requires:{' '}
                     {registryData.registryDependencies.map((dep, idx) => (
                       <span key={dep}>
-                        <code className="rounded bg-amber-100 dark:bg-amber-900/40 px-1.5 py-0.5 font-mono text-xs font-semibold">
+                        <code className="rounded bg-amber-200/60 dark:bg-amber-900/40 px-1.5 py-0.5 font-mono text-xs font-semibold text-amber-950 dark:text-amber-100">
                           {dep}
                         </code>
                         {idx < (registryData.registryDependencies?.length ?? 0) - 1 && ', '}
                       </span>
                     ))}
                   </p>
-                  <p className="text-xs text-amber-700 dark:text-amber-400">
+                  <p className="text-xs text-amber-800 dark:text-amber-400">
                     Using CLI? Dependencies are installed automatically. Manual install? Copy all
                     required components.
                   </p>
