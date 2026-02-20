@@ -1,0 +1,20 @@
+{
+  "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
+  "name": "card",
+  "type": "registry:ui",
+  "title": "PdfCard",
+  "description": "Bordered container card with title, 3 variants and padding control",
+  "files": [
+    {
+      "path": "components/pdfx/pdfx-card.tsx",
+      "content": "import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\nimport type { ReactNode } from 'react';\nimport { theme as defaultTheme } from '../lib/pdfx-theme';\n\nexport type CardVariant = 'default' | 'bordered' | 'muted';\n\nexport interface PdfCardProps {\n  /** Optional title displayed at the top of the card with a separator line. */\n  title?: string;\n  /** Card body content. */\n  children?: ReactNode;\n  /** Visual style of the card. @default 'default' */\n  variant?: CardVariant;\n  /** Internal padding size. @default 'md' */\n  padding?: 'sm' | 'md' | 'lg';\n  /**\n   * Allow the card to split across page boundaries.\n   * @default false — cards are kept on one page by default.\n   * Set wrap={true} only for tall cards whose content must span pages.\n   */\n  wrap?: boolean;\n  /** Custom style override. */\n  style?: Style;\n}\n\n// ─── Style cache ──────────────────────────────────────────────────────────────\n\nlet cachedTheme: PdfxTheme | null = null;\nlet cachedStyles: ReturnType<typeof createCardStyles> | null = null;\n\nfunction getStyles(t: any) {\n  if (cachedTheme !== t || !cachedStyles) {\n    cachedStyles = createCardStyles(t);\n    cachedTheme = t;\n  }\n  return cachedStyles;\n}\n\nfunction createCardStyles(t: any) {\n  const { spacing, borderRadius, fontWeights } = t.primitives;\n  const borderColor = t.colors.border;\n\n  return StyleSheet.create({\n    card: {\n      borderWidth: 1,\n      borderColor: borderColor,\n      borderStyle: 'solid',\n      borderRadius: borderRadius.sm,\n      backgroundColor: t.colors.background,\n      marginBottom: t.spacing.componentGap,\n    },\n    cardBordered: {\n      borderWidth: 2,\n    },\n    cardMuted: {\n      backgroundColor: t.colors.muted,\n    },\n    paddingSm: {\n      padding: spacing[2],\n    },\n    paddingMd: {\n      padding: spacing[3],\n    },\n    paddingLg: {\n      padding: spacing[4],\n    },\n    title: {\n      fontFamily: t.typography.heading.fontFamily,\n      fontSize: t.primitives.typography.base,\n      lineHeight: t.typography.heading.lineHeight,\n      color: t.colors.foreground,\n      fontWeight: fontWeights.semibold,\n      marginBottom: spacing[2],\n      paddingBottom: spacing[1] + 2,\n      borderBottomWidth: 1,\n      borderBottomColor: borderColor,\n      borderBottomStyle: 'solid',\n    },\n    body: {\n      fontFamily: t.typography.body.fontFamily,\n      fontSize: t.typography.body.fontSize,\n      lineHeight: t.typography.body.lineHeight,\n      color: t.colors.foreground,\n    },\n  });\n}\n\n// ─── PdfCard ──────────────────────────────────────────────────────────────────\n\nexport function PdfCard({\n  title,\n  children,\n  variant = 'default',\n  padding = 'md',\n  wrap = false,\n  style,\n}: PdfCardProps) {\n  const styles = getStyles(defaultTheme);\n\n  const cardStyles: Style[] = [styles.card];\n  if (variant === 'bordered') cardStyles.push(styles.cardBordered);\n  if (variant === 'muted') cardStyles.push(styles.cardMuted);\n\n  const paddingStyle =\n    padding === 'sm' ? styles.paddingSm : padding === 'lg' ? styles.paddingLg : styles.paddingMd;\n  cardStyles.push(paddingStyle);\n\n  const styleArray = style ? [...cardStyles, style] : cardStyles;\n\n  const bodyContent =\n    typeof children === 'string' ? <PDFText style={styles.body}>{children}</PDFText> : children;\n\n  return (\n    <View wrap={wrap} style={styleArray}>\n      {title ? <PDFText style={styles.title}>{title}</PDFText> : null}\n      {bodyContent}\n    </View>\n  );\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "dependencies": [
+    "@react-pdf/renderer"
+  ],
+  "registryDependencies": [
+    "theme"
+  ]
+}

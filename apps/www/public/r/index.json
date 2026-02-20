@@ -142,7 +142,7 @@
       "name": "page-header",
       "type": "registry:ui",
       "title": "PageHeader",
-      "description": "Document header band with title, subtitle, and optional right metadata",
+      "description": "Fixed or inline page header with 7 layout variants including logo support",
       "files": [
         {
           "path": "../../../../packages/ui/src/components/page-header/page-header.tsx",
@@ -151,16 +151,13 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
-      ],
-      "registryDependencies": [
-        "theme"
       ]
     },
     {
       "name": "page-footer",
       "type": "registry:ui",
       "title": "PageFooter",
-      "description": "Document footer band with left, center, and right text slots",
+      "description": "Fixed or inline page footer with 6 layout variants and contact info support",
       "files": [
         {
           "path": "../../../../packages/ui/src/components/page-footer/page-footer.tsx",
@@ -169,9 +166,141 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Inline status badge with 7 color variants and 3 sizes",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/badge/badge.tsx",
+          "type": "registry:component"
+        }
       ],
-      "registryDependencies": [
-        "theme"
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "key-value",
+      "type": "registry:ui",
+      "title": "KeyValue",
+      "description": "Label-value pair display with horizontal/vertical layout and dividers",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/key-value/key-value.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "list",
+      "type": "registry:ui",
+      "title": "PdfList",
+      "description": "List component with bullet, numbered, checklist, icon, multi-level, and descriptive variants",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/list/list.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "PdfCard",
+      "description": "Bordered container card with title, 3 variants and padding control",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/card/card.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "form",
+      "type": "registry:ui",
+      "title": "PdfFormSection",
+      "description": "Form layout with labeled fields in single, two-column, or three-column layouts",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/form/form.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "signature",
+      "type": "registry:ui",
+      "title": "PdfSignatureBlock",
+      "description": "Signature block with single, double, and inline variants",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/signature/signature.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "keep-together",
+      "type": "registry:ui",
+      "title": "KeepTogether",
+      "description": "Prevents page breaks within wrapped content",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/keep-together/keep-together.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "pdf-image",
+      "type": "registry:ui",
+      "title": "PdfImage",
+      "description": "Image component with 7 display variants, fit modes, and optional captions",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/pdf-image/pdf-image.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "graph",
+      "type": "registry:ui",
+      "title": "PdfGraph",
+      "description": "SVG chart component with bar, line, area, pie, donut, and horizontal-bar variants",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/graph/graph.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
       ]
     }
   ]

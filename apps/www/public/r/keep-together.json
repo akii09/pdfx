@@ -1,0 +1,17 @@
+{
+  "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
+  "name": "keep-together",
+  "type": "registry:ui",
+  "title": "KeepTogether",
+  "description": "Prevents page breaks within wrapped content",
+  "files": [
+    {
+      "path": "components/pdfx/pdfx-keep-together.tsx",
+      "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\nimport type { ReactNode } from 'react';\n\nexport interface KeepTogetherProps {\n  /**\n   * Content to keep on the same page.\n   * The outer View is rendered with wrap={false} so the engine treats this subtree as atomic.\n   * If the content is taller than one full page it will overflow (not split), so only use\n   * this for content that is guaranteed to fit on a single page.\n   */\n  children?: ReactNode;\n  /**\n   * If provided, moves the entire block to the next page when fewer than\n   * this many PDF points remain on the current page.\n   * Useful as a softer alternative to wrap={false} for headings/labels with following content.\n   */\n  minPresenceAhead?: number;\n  /** Custom style override applied to the wrapping View. */\n  style?: Style;\n}\n\n/**\n * KeepTogether — prevents its children from being split across page boundaries.\n *\n * Wraps children in a `<View wrap={false}>` which tells react-pdf's layout engine\n * to treat the entire subtree as atomic: either the whole block fits on the current\n * page, or the whole block moves to the next page.\n *\n * @example\n * // Prevent a heading + table from being separated\n * <KeepTogether>\n *   <Heading level={2}>Quarterly Financials</Heading>\n *   <Table>...</Table>\n * </KeepTogether>\n *\n * @example\n * // Softer version: move to next page only if < 100pt remain\n * <KeepTogether minPresenceAhead={100}>\n *   <Heading level={3}>Summary</Heading>\n *   <Text>Short paragraph that should stay with its heading.</Text>\n * </KeepTogether>\n */\nexport function KeepTogether({ children, minPresenceAhead, style }: KeepTogetherProps) {\n  return (\n    <View wrap={false} minPresenceAhead={minPresenceAhead} style={style}>\n      {children}\n    </View>\n  );\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "dependencies": [
+    "@react-pdf/renderer"
+  ]
+}
