@@ -20,28 +20,29 @@ const styles = StyleSheet.create({
   label: { fontSize: 8, color: '#888', marginBottom: 4 },
 });
 
-// A 1×1 px blue PNG in base64 — safe placeholder that renders in react-pdf
-const SAMPLE_PNG =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+// PDFx logo & favicon URLs
+const PDFX_LOGO = '/pdfx.png';
+const FAVICON = '/favicon.png';
+const PDFX_JPEG = '/pdfx.jpeg';
 
 const renderPreviewDocument = (variant: PdfImageVariant) => (
   <Document title="PDFx PdfImage Preview">
     <Page size="A4" style={styles.page}>
       {/* Active variant */}
       <PdfImage
-        src={SAMPLE_PNG}
+        src={variant === 'avatar' ? FAVICON : PDFX_LOGO}
         variant={variant}
         height={variant === 'default' ? 120 : undefined}
         width={variant === 'default' ? 200 : undefined}
         caption={`Variant: ${variant}`}
       />
 
-      {/* Row of small fixed-size variants */}
+      {/* Row of different variants */}
       <View style={styles.row}>
-        <PdfImage src={SAMPLE_PNG} variant="thumbnail" caption="thumbnail" />
-        <PdfImage src={SAMPLE_PNG} variant="avatar" caption="avatar" />
-        <PdfImage src={SAMPLE_PNG} variant="rounded" width={80} height={80} caption="rounded" />
-        <PdfImage src={SAMPLE_PNG} variant="bordered" width={80} height={80} caption="bordered" />
+        <PdfImage src={PDFX_JPEG} variant="thumbnail" caption="thumbnail" />
+        <PdfImage src={FAVICON} variant="avatar" caption="avatar" />
+        <PdfImage src={PDFX_LOGO} variant="rounded" width={80} height={80} caption="rounded" />
+        <PdfImage src={FAVICON} variant="bordered" width={80} height={80} caption="bordered" />
       </View>
     </Page>
   </Document>

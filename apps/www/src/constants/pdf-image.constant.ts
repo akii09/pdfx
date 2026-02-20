@@ -1,37 +1,64 @@
-export const pdfImageUsageCode = `import { Document, Page, StyleSheet } from '@react-pdf/renderer';
+export const pdfImageUsageCode = `import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
 import { PdfImage } from '@/components/pdfx/pdfx-pdf-image';
 
 const styles = StyleSheet.create({ page: { padding: 40 } });
+
+// Logo as base64 data URI (best for reliability)
+const LOGO_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
+// Avatar as base64 data URI
+const AVATAR_BASE64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAA...';
 
 export function MyDocument() {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* Full-width banner */}
+        {/* Full-width banner - base64 encoded PNG */}
         <PdfImage
-          src="data:image/png;base64,..."
+          src={LOGO_BASE64}
           variant="cover"
-          caption="Company Headquarters"
+          caption="PDFx Logo Banner"
         />
 
-        {/* Avatar (circle-clipped) */}
+        {/* Avatar (circle-clipped) - base64 for profiles */}
         <PdfImage
-          src="https://example.com/avatar.png"
+          src={AVATAR_BASE64}
           variant="avatar"
+          caption="Team Avatar"
         />
 
-        {/* Thumbnail */}
+        {/* Thumbnail - compact image preview */}
         <PdfImage
-          src="data:image/jpeg;base64,..."
+          src={LOGO_BASE64}
           variant="thumbnail"
+          caption="Project Thumbnail"
         />
 
-        {/* Explicit dimensions with aspect ratio */}
+        {/* Multiple avatars in a row */}
+        <View style={{ flexDirection: 'row', gap: 12, marginTop: 12 }}>
+          <PdfImage
+            src={AVATAR_BASE64}
+            variant="avatar"
+            caption="User 1"
+          />
+          <PdfImage
+            src={AVATAR_BASE64}
+            variant="avatar"
+            caption="User 2"
+          />
+          <PdfImage
+            src={AVATAR_BASE64}
+            variant="avatar"
+            caption="User 3"
+          />
+        </View>
+
+        {/* Custom sized image with aspect ratio */}
         <PdfImage
-          src="data:image/png;base64,..."
-          width={400}
+          src={LOGO_BASE64}
+          width={300}
           aspectRatio={16 / 9}
-          caption="Q1 2025 Chart"
+          caption="Custom sized image"
         />
       </Page>
     </Document>
