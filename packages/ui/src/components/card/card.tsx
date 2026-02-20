@@ -15,6 +15,12 @@ export interface PdfCardProps {
   variant?: CardVariant;
   /** Internal padding size. @default 'md' */
   padding?: 'sm' | 'md' | 'lg';
+  /**
+   * Allow the card to split across page boundaries.
+   * @default false — cards are kept on one page by default.
+   * Set wrap={true} only for tall cards whose content must span pages.
+   */
+  wrap?: boolean;
   /** Custom style override. */
   style?: Style;
 }
@@ -88,6 +94,7 @@ export function PdfCard({
   children,
   variant = 'default',
   padding = 'md',
+  wrap = false,
   style,
 }: PdfCardProps) {
   const styles = getStyles(defaultTheme);
@@ -106,7 +113,7 @@ export function PdfCard({
     typeof children === 'string' ? <PDFText style={styles.body}>{children}</PDFText> : children;
 
   return (
-    <View style={styleArray}>
+    <View wrap={wrap} style={styleArray}>
       {title ? <PDFText style={styles.title}>{title}</PDFText> : null}
       {bodyContent}
     </View>

@@ -79,6 +79,13 @@ export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
    * Displayed in center column with other contact info.
    */
   website?: string;
+  /**
+   * Render this footer on every page of the document.
+   * Uses react-pdf's built-in `fixed` prop on the outer View.
+   * When true, ensure the page content has enough bottom padding to avoid overlapping with the fixed footer.
+   * @default false
+   */
+  fixed?: boolean;
 }
 
 function createPageFooterStyles(t: PdfxTheme) {
@@ -266,6 +273,7 @@ export function PageFooter({
   phone,
   email,
   website,
+  fixed = false,
   style,
 }: PageFooterProps) {
   const mt = marginTop ?? theme.spacing.sectionGap;
@@ -287,7 +295,7 @@ export function PageFooter({
     }
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
         {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
       </View>
@@ -306,7 +314,7 @@ export function PageFooter({
     if (resolvedTextColor) tStyle.push({ color: resolvedTextColor });
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         {leftText && <PDFText style={tStyle}>{leftText}</PDFText>}
         {rightText && <PDFText style={tStyle}>{rightText}</PDFText>}
       </View>
@@ -331,7 +339,7 @@ export function PageFooter({
     }
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         <View style={styles.threeColumnLeft}>
           {leftText && <PDFText style={leftStyle}>{leftText}</PDFText>}
           {address && <PDFText style={styles.textLeft}>{address}</PDFText>}
@@ -368,7 +376,7 @@ export function PageFooter({
     }
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         <View style={styles.detailedTopRow}>
           <View style={styles.detailedLeft}>
             {leftText && <PDFText style={companyStyle}>{leftText}</PDFText>}
@@ -403,7 +411,7 @@ export function PageFooter({
     }
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
         {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
         {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
@@ -428,7 +436,7 @@ export function PageFooter({
   }
 
   return (
-    <View style={containerStyles}>
+    <View fixed={fixed} style={containerStyles}>
       {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
       {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
       {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}

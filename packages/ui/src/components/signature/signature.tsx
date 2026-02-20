@@ -138,7 +138,8 @@ export function PdfSignatureBlock({
 
   if (variant === 'inline') {
     return (
-      <View style={styleArray}>
+      // wrap={false}: inline signature lines must never be split across pages
+      <View wrap={false} style={styleArray}>
         <View style={styles.inlineRow}>
           <PDFText style={styles.inlineLabel}>{`${label}:`}</PDFText>
           <View style={styles.inlineLine} />
@@ -151,7 +152,8 @@ export function PdfSignatureBlock({
   if (variant === 'double') {
     const [first, second] = signers ?? DEFAULT_SIGNERS;
     return (
-      <View style={styleArray}>
+      // wrap={false}: double-signer block must never be split across pages
+      <View wrap={false} style={styleArray}>
         <View style={styles.doubleRow}>
           {renderSignerBlock(first, styles)}
           {renderSignerBlock(second, styles)}
@@ -160,5 +162,10 @@ export function PdfSignatureBlock({
     );
   }
 
-  return <View style={styleArray}>{renderSignerBlock({ label, name, title, date }, styles)}</View>;
+  // wrap={false}: single signer block must never be split across pages
+  return (
+    <View wrap={false} style={styleArray}>
+      {renderSignerBlock({ label, name, title, date }, styles)}
+    </View>
+  );
 }

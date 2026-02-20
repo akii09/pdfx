@@ -83,6 +83,13 @@ export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
    * Displayed in right column with address and phone.
    */
   email?: string;
+  /**
+   * Render this header on every page of the document.
+   * Uses react-pdf's built-in `fixed` prop on the outer View.
+   * When true, ensure the page content has enough top padding to avoid overlapping with the fixed header.
+   * @default false
+   */
+  fixed?: boolean;
 }
 
 function createPageHeaderStyles(t: PdfxTheme) {
@@ -291,6 +298,7 @@ export function PageHeader({
   address,
   phone,
   email,
+  fixed = false,
   style,
 }: PageHeaderProps) {
   const mb = marginBottom ?? theme.spacing.sectionGap;
@@ -307,7 +315,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         <PDFText style={titleStyles}>{title}</PDFText>
         {subtitle && (
           <PDFText style={[styles.subtitle, styles.subtitleBranded]}>{subtitle}</PDFText>
@@ -328,7 +336,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         <PDFText style={titleStyles}>{title}</PDFText>
         {subtitle && (
           <PDFText style={[styles.subtitle, styles.subtitleCentered]}>{subtitle}</PDFText>
@@ -349,7 +357,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         <View style={styles.logoRightContent}>
           <PDFText style={titleStyles}>{title}</PDFText>
           {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
@@ -371,7 +379,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         {logo && <View style={styles.logoContainer}>{logo}</View>}
         <View style={styles.logoContent}>
           <PDFText style={titleStyles}>{title}</PDFText>
@@ -393,7 +401,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         <View style={styles.twoColumnLeft}>
           <PDFText style={titleStyles}>{title}</PDFText>
           {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
@@ -421,7 +429,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View fixed={fixed} style={containerStyles}>
         <View style={styles.minimalLeft}>
           <PDFText style={titleStyles}>{title}</PDFText>
           {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
@@ -447,7 +455,7 @@ export function PageHeader({
   if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
   return (
-    <View style={containerStyles}>
+    <View fixed={fixed} style={containerStyles}>
       <View style={styles.simpleLeft}>
         <PDFText style={titleStyles}>{title}</PDFText>
         {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}

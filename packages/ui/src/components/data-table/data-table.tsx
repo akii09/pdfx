@@ -27,6 +27,8 @@ export interface DataTableProps<T = Record<string, unknown>>
   footer?: Partial<Record<keyof T & string, string | number>>;
   stripe?: boolean;
   size?: DataTableSize;
+  /** Prevent the entire table from splitting across pages. Use for short tables that fit on one page. */
+  noWrap?: boolean;
 }
 
 function createCompactStyles(t: PdfxTheme) {
@@ -68,12 +70,13 @@ export function DataTable<T extends Record<string, unknown>>({
   footer,
   stripe = false,
   size = 'default',
+  noWrap = false,
   style,
 }: DataTableProps<T>) {
   const isCompact = size === 'compact';
 
   return (
-    <Table variant={variant} zebraStripe={stripe} style={style}>
+    <Table variant={variant} zebraStripe={stripe} noWrap={noWrap} style={style}>
       <TableHeader>
         <TableRow header>
           {columns.map((col) => (

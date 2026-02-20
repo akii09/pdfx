@@ -17,6 +17,7 @@ export type TableVariant =
 export interface TableProps extends PDFComponentProps {
   variant?: TableVariant;
   zebraStripe?: boolean;
+  noWrap?: boolean;
 }
 
 export interface TableSectionProps extends PDFComponentProps {}
@@ -343,7 +344,13 @@ function processTableChildren(
 }
 
 export function TableHeader({ children, style }: TableSectionProps) {
-  return <View style={style}>{children}</View>;
+  // minPresenceAhead: if < 60pt remain on the page, move the header to the next page
+  // so the header is never stranded alone at the bottom without any body rows.
+  return (
+    <View minPresenceAhead={60} style={style}>
+      {children}
+    </View>
+  );
 }
 
 export function TableBody({ children, style }: TableSectionProps) {
@@ -354,7 +361,13 @@ export function TableFooter({ children, style }: TableSectionProps) {
   return <View style={style}>{children}</View>;
 }
 
-export function Table({ children, style, variant = 'line', zebraStripe = false }: TableProps) {
+export function Table({
+  children,
+  style,
+  variant = 'line',
+  zebraStripe = false,
+  noWrap = false,
+}: TableProps) {
   const styles = getStyles(defaultTheme);
   const tableStyles: Style[] = [styles.table];
   const effectiveZebra = variant === 'striped' ? true : zebraStripe;
@@ -378,7 +391,8 @@ export function Table({ children, style, variant = 'line', zebraStripe = false }
   const styleArray = style ? [...tableStyles, style] : tableStyles;
   const processedChildren = processTableChildren(children, variant, effectiveZebra);
 
-  return <View style={styleArray}>{processedChildren}</View>;
+  const inner = <View style={styleArray}>{processedChildren}</View>;
+  return noWrap ? <View wrap={false}>{inner}</View> : inner;
 }
 
 export function TableRow({
@@ -441,7 +455,12 @@ export function TableRow({
     return child;
   });
 
-  return <View style={styleArray}>{processedChildren}</View>;
+  // wrap={false}: each row is atomic — never split mid-row across pages.
+  return (
+    <View wrap={false} style={styleArray}>
+      {processedChildren}
+    </View>
+  );
 }
 
 export function TableCell({

@@ -1,9 +1,11 @@
 import {
   ArrowRight,
+  BarChart2,
   ClipboardList,
   FileStack,
   FileText,
   Heading as HeadingIcon,
+  ImageIcon,
   LayoutList,
   Link as LinkIcon,
   List,
@@ -11,6 +13,7 @@ import {
   PanelBottom,
   PanelTop,
   PenLine,
+  Rows3,
   Search,
   Square,
   Table,
@@ -139,6 +142,27 @@ const components = [
     href: '/components/key-value',
     icon: List,
     install: 'npx @pdfx/cli add key-value',
+  },
+  {
+    name: 'KeepTogether',
+    description: 'Prevent content from splitting across page boundaries.',
+    href: '/components/keep-together',
+    icon: Rows3,
+    install: 'npx @pdfx/cli add keep-together',
+  },
+  {
+    name: 'PdfImage',
+    description: 'Validated image component with 7 variants and format detection.',
+    href: '/components/pdf-image',
+    icon: ImageIcon,
+    install: 'npx @pdfx/cli add pdf-image',
+  },
+  {
+    name: 'Graph',
+    description: 'Native SVG charts: bar, line, area, pie, donut, horizontal-bar.',
+    href: '/components/graph',
+    icon: BarChart2,
+    install: 'npx @pdfx/cli add graph',
   },
 ];
 

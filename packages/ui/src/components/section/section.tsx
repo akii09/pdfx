@@ -24,6 +24,11 @@ export interface SectionProps extends PDFComponentProps {
   variant?: SectionVariant;
   /** Accent color for callout/highlight left border. Use theme token or CSS color. Defaults to 'primary'. */
   accentColor?: string;
+  /**
+   * Prevent the section from splitting across page boundaries.
+   * @default false — opt in for callout/highlight/card sections you want kept together.
+   */
+  noWrap?: boolean;
 }
 
 function createSectionStyles(t: PdfxTheme) {
@@ -103,6 +108,7 @@ export function Section({
   border,
   variant = 'default',
   accentColor,
+  noWrap = false,
   children,
   style,
 }: SectionProps) {
@@ -136,5 +142,6 @@ export function Section({
     styleArray.push(style);
   }
 
-  return <View style={styleArray}>{children}</View>;
+  const inner = <View style={styleArray}>{children}</View>;
+  return noWrap ? <View wrap={false}>{inner}</View> : inner;
 }

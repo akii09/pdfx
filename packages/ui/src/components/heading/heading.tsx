@@ -17,6 +17,13 @@ export interface HeadingProps extends PDFComponentProps {
   weight?: HeadingWeight;
   tracking?: HeadingTracking;
   noMargin?: boolean;
+  /**
+   * Ensure the heading has enough space below it before a page break occurs.
+   * Uses `minPresenceAhead` to prevent orphaned headings at the bottom of a page.
+   * When true, at least 80pt of space must remain on the page or the heading moves to the next page.
+   * @default false
+   */
+  keepWithNext?: boolean;
 }
 
 function createHeadingStyles(t: PdfxTheme) {
@@ -111,6 +118,7 @@ export function Heading({
   weight,
   tracking,
   noMargin,
+  keepWithNext = false,
   children,
   style,
 }: HeadingProps) {
@@ -150,5 +158,10 @@ export function Heading({
     styleArray.push(style);
   }
 
-  return <Text style={styleArray}>{children}</Text>;
+  // minPresenceAhead keeps the heading from being stranded at the bottom of a page
+  return (
+    <Text style={styleArray} minPresenceAhead={keepWithNext ? 80 : undefined}>
+      {children}
+    </Text>
+  );
 }

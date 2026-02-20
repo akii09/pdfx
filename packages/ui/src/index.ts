@@ -92,3 +92,19 @@ export {
   type SignatureVariant,
   type SignatureSigner,
 } from './components/signature';
+export { KeepTogether, type KeepTogetherProps } from './components/keep-together/keep-together';
+export {
+  PdfImage,
+  type PdfImageProps,
+  type PdfImageSrc,
+  type PdfImageVariant,
+  type PdfImageFit,
+} from './components/pdf-image/pdf-image';
+export {
+  PdfGraph,
+  type GraphProps,
+  type GraphVariant,
+  type GraphDataPoint,
+  type GraphSeries,
+  type GraphLegendPosition,
+} from './components/graph/graph';
