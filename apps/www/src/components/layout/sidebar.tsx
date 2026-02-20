@@ -42,6 +42,8 @@ const sections: SidebarSection[] = [
       { title: 'Signature', href: '/components/signature' },
       { title: 'PageHeader', href: '/components/page-header' },
       { title: 'PageFooter', href: '/components/page-footer' },
+      { title: 'Badge', href: '/components/badge' },
+      { title: 'KeyValue', href: '/components/key-value' },
     ],
   },
 ];
