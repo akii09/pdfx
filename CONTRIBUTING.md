@@ -4,7 +4,7 @@ Thank you for your interest in contributing to PDFX. This guide will help you ge
 
 ## Code of Conduct
 
-Be respectful and constructive. We aim for a welcoming environment for everyone.
+This project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you agree to uphold it. Please report unacceptable behavior to **akashpise588@gmail.com**.
 
 ## How to Contribute
 
@@ -27,6 +27,20 @@ Be respectful and constructive. We aim for a welcoming environment for everyone.
 5. **Test**: `pnpm test` and `pnpm typecheck`
 6. **Commit** with clear messages (e.g. `feat: add Table component`)
 7. **Push** and open a PR against `main`
+
+## Branching Strategy
+
+| Branch | Purpose |
+|--------|---------|
+| `main` | Stable, production-ready code. All releases come from here. |
+| `feat/<name>` | New features (e.g. `feat/table-component`) |
+| `fix/<name>` | Bug fixes (e.g. `fix/heading-margin`) |
+| `docs/<name>` | Documentation-only changes |
+| `chore/<name>` | Maintenance, dependencies, tooling |
+
+- **Never commit directly to `main`**. All changes must come in via a PR.
+- Branch names should be lowercase and hyphen-separated.
+- Keep branches short-lived — open a PR as soon as the work is ready for review.
 
 ## Development Setup
 
@@ -64,6 +78,21 @@ pnpm dev:playground  # Playground only
 2. Export it from `packages/shared/src/themes/index.ts`
 3. Add it to `themePresets` and `ThemePresetName`
 4. Update the CLI `theme switch` command to support the new preset
+
+## Release Process
+
+PDFX uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+
+1. After merging your PR, add a changeset if your change affects a published package:
+   ```bash
+   pnpm changeset
+   ```
+2. Follow the prompts to select the affected packages and bump type (`patch`, `minor`, `major`).
+3. Commit the generated changeset file with your PR.
+4. When changes are merged to `main`, the **Release** workflow will open a "Version Packages" PR automatically.
+5. Merging that PR triggers a publish to npm.
+
+> **Note**: Only maintainers can merge the version PR and trigger a publish.
 
 ## Questions?
 
