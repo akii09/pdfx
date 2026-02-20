@@ -1,23 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://pdfx.dev/</loc>
+    <loc>https://pdfx.akashpise.dev/</loc>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://pdfx.dev/docs</loc>
+    <loc>https://pdfx.akashpise.dev/docs</loc>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pdfx.dev/components</loc>
+    <loc>https://pdfx.akashpise.dev/components</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pdfx.dev/components/heading</loc>
+    <loc>https://pdfx.akashpise.dev/components/heading</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://pdfx.dev/components/text</loc>
+    <loc>https://pdfx.akashpise.dev/components/text</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/link</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/divider</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/page-break</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/stack</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/section</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/table</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/data-table</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/badge</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/key-value</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/list</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/card</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/page-header</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/page-footer</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/form</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/signature</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/keep-together</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/pdf-image</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pdfx.akashpise.dev/components/graph</loc>
     <priority>0.7</priority>
   </url>
 </urlset>

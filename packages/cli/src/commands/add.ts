@@ -154,7 +154,8 @@ export async function add(components: string[], options: { force?: boolean } = {
       console.error(chalk.red(error.message));
       if (error.suggestion) console.log(chalk.yellow(`  Hint: ${error.suggestion}`));
     } else {
-      console.error(chalk.red((error as Error).message));
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(message));
     }
     process.exit(1);
   }
@@ -193,7 +194,8 @@ export async function add(components: string[], options: { force?: boolean } = {
         }
       } else {
         spinner.fail(`Failed to add ${componentName}`);
-        console.error(chalk.dim(`  ${(error as Error).message}`));
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(chalk.dim(`  ${message}`));
       }
       failed.push(componentName);
     }

@@ -111,6 +111,9 @@ export async function themeSwitch(presetName: string) {
     process.exit(1);
   }
 
+  // Safe: validated above via validPresets.includes()
+  const validatedPreset = presetName as ThemePresetName;
+
   const configPath = path.join(process.cwd(), 'pdfx.json');
   if (!fs.existsSync(configPath)) {
     console.error(chalk.red('No pdfx.json found. Run "pdfx init" first.'));
@@ -135,7 +138,7 @@ export async function themeSwitch(presetName: string) {
   const answer = await prompts({
     type: 'confirm',
     name: 'confirm',
-    message: `This will overwrite ${config.theme} with the ${presetName} preset. Continue?`,
+    message: `This will overwrite ${config.theme} with the ${validatedPreset} preset. Continue?`,
     initial: false,
   });
 
@@ -144,13 +147,13 @@ export async function themeSwitch(presetName: string) {
     return;
   }
 
-  const spinner = ora(`Switching to ${presetName} theme...`).start();
+  const spinner = ora(`Switching to ${validatedPreset} theme...`).start();
 
   try {
-    const preset = themePresets[presetName as ThemePresetName];
+    const preset = themePresets[validatedPreset];
     const absThemePath = path.resolve(process.cwd(), config.theme);
     fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
-    spinner.succeed(`Switched to ${presetName} theme`);
+    spinner.succeed(`Switched to ${validatedPreset} theme`);
   } catch (error: unknown) {
     spinner.fail('Failed to switch theme');
     const message = error instanceof Error ? error.message : String(error);
