@@ -73,11 +73,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Install */}
-      <section className="max-w-xl mx-auto px-4 mb-24">
-        <PackageManagerTabs command="npx @pdfx/cli init" />
-      </section>
-
       {/* Features */}
       <section className="max-w-5xl mx-auto px-4">
         <h2 className="text-2xl font-bold tracking-tight text-center mb-10">
