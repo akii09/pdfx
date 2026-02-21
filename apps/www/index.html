@@ -3,51 +3,111 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Professional React PDF component library. Copy, paste, and customize beautiful PDF components built on @react-pdf/renderer." />
+
+    <!-- Primary SEO -->
+    <title>PDFx — PDF Components for React | Open Source PDF Library</title>
+    <meta name="description" content="PDFx is an open-source React PDF component library. Copy-paste professional PDF components — invoices, reports, contracts, tables, charts — built on @react-pdf/renderer. MIT licensed, fully TypeScript." />
+    <meta name="keywords" content="react pdf components, pdf library react, react-pdf, pdf generator react, invoice pdf react, react pdf renderer components, open source pdf react, typescript pdf, pdf ui library" />
+    <meta name="author" content="PDFx" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://pdfx.akashpise.dev" />
+
+    <!-- Theme color -->
     <meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="PDFx - Professional PDF Components" />
-    <meta property="og:description" content="Professional React PDF component library. Copy, paste, and customize beautiful PDF components built on @react-pdf/renderer." />
-    <meta property="og:url" content="https://pdfx.akashpise.dev" />
     <meta property="og:site_name" content="PDFx" />
+    <meta property="og:url" content="https://pdfx.akashpise.dev" />
+    <meta property="og:title" content="PDFx — PDF Components for React" />
+    <meta property="og:description" content="Open-source React PDF component library. Copy-paste professional PDF components — invoices, reports, contracts, tables, charts — built on @react-pdf/renderer." />
+    <meta property="og:image" content="https://pdfx.akashpise.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="PDFx — Professional PDF components for React" />
+    <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter -->
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="PDFx - Professional PDF Components" />
-    <meta name="twitter:description" content="Professional React PDF component library. Copy, paste, and customize." />
+    <meta name="twitter:title" content="PDFx — PDF Components for React" />
+    <meta name="twitter:description" content="Open-source React PDF component library. Copy-paste professional PDF components built on @react-pdf/renderer. MIT licensed." />
+    <meta name="twitter:image" content="https://pdfx.akashpise.dev/og-image.png" />
+    <meta name="twitter:image:alt" content="PDFx — Professional PDF components for React" />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
-    <link rel="canonical" href="https://pdfx.akashpise.dev" />
-    <title>PDFx - Professional PDF Components</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+
+    <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <!-- JSON-LD Structured Data -->
+
+    <!-- JSON-LD Structured Data — SoftwareApplication -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "PDFx",
+        "alternateName": "PDFx React PDF Library",
         "applicationCategory": "DeveloperApplication",
-        "description": "Professional React PDF component library. Copy, paste, and customize beautiful PDF components built on @react-pdf/renderer.",
+        "applicationSubCategory": "PDF Generator",
+        "description": "Open-source React PDF component library. Copy-paste professional PDF components built on @react-pdf/renderer. MIT licensed, fully TypeScript.",
         "url": "https://pdfx.akashpise.dev",
+        "downloadUrl": "https://www.npmjs.com/package/@pdfx/cli",
+        "installUrl": "https://pdfx.akashpise.dev/installation",
         "license": "https://opensource.org/licenses/MIT",
         "operatingSystem": "Any",
+        "programmingLanguage": ["TypeScript", "JavaScript", "React"],
         "offers": {
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
+        },
+        "creator": {
+          "@type": "Organization",
+          "name": "PDFx",
+          "url": "https://pdfx.akashpise.dev"
+        },
+        "featureList": [
+          "20 pre-built React PDF components",
+          "Copy-paste model — no package lock-in",
+          "Full TypeScript support",
+          "Theme system with Professional, Modern, Minimal presets",
+          "CLI tool for component scaffolding",
+          "Built on @react-pdf/renderer",
+          "MIT licensed and free forever"
+        ]
+      }
+    </script>
+
+    <!-- JSON-LD — WebSite with SearchAction -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "PDFx",
+        "url": "https://pdfx.akashpise.dev",
+        "description": "Open-source React PDF component library — professional PDF components built on @react-pdf/renderer",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://pdfx.akashpise.dev/components?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
         }
       }
     </script>
+
+    <!-- Prevent dark mode flash — must run before any rendering -->
     <script>
-      // Prevent dark mode flash — runs before any rendering
       (function () {
         var stored = localStorage.getItem('pdfx-theme');
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

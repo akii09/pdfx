@@ -229,25 +229,44 @@ export default function Installation() {
                 </div>
               </div>
 
-              <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 text-sm text-muted-foreground leading-relaxed">
-                <strong className="text-foreground">Note:</strong> Components read the active theme
-                via{' '}
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
-                  pdfx-theme-context.tsx
-                </code>
-                , which in turn imports{' '}
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
-                  pdfx-theme.ts
-                </code>
-                . Both files are scaffolded automatically by{' '}
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
-                  pdfx init
-                </code>{' '}
-                and kept in sync by{' '}
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
-                  pdfx add
-                </code>
-                .
+              <div className="space-y-3">
+                <div className="rounded-lg border border-border/60 bg-muted/30 p-4 text-sm text-muted-foreground leading-relaxed">
+                  <strong className="text-foreground">
+                    Why{' '}
+                    <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+                      src/components/pdfx/
+                    </code>
+                    ?
+                  </strong>{' '}
+                  PDFx components are placed in their own subdirectory, separate from your regular
+                  UI components. This prevents naming conflicts — for example, your app can have a
+                  web <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">Text</code>{' '}
+                  component alongside{' '}
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+                    pdfx-text.tsx
+                  </code>{' '}
+                  for PDFs without ambiguity.
+                </div>
+                <div className="rounded-lg border border-border/60 bg-muted/30 p-4 text-sm text-muted-foreground leading-relaxed">
+                  <strong className="text-foreground">Note:</strong> Components read the active
+                  theme via{' '}
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                    pdfx-theme-context.tsx
+                  </code>
+                  , which imports{' '}
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                    pdfx-theme.ts
+                  </code>
+                  . Both are scaffolded automatically by{' '}
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                    pdfx init
+                  </code>{' '}
+                  and kept in sync by{' '}
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                    pdfx add
+                  </code>
+                  .
+                </div>
               </div>
             </div>
           )}
