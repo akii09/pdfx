@@ -19,7 +19,8 @@
     "clean": "turbo clean && rm -rf node_modules",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "pnpm build && changeset publish"
+    "release": "pnpm build && changeset publish",
+    "sync:project": "node scripts/sync-to-project.mjs"
   },
   "packageManager": "pnpm@10.29.3",
   "engines": {
