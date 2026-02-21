@@ -57,20 +57,33 @@ async function fileExistsAsync(filePath: string): Promise<boolean> {
 
 /**
  * Transforms component source code for registry distribution.
+ *
+ * Handles three file types emitted by the segregated component structure:
+ *   - `.tsx`        component file
+ *   - `.styles.ts`  StyleSheet factory (imports PdfxTheme from @pdfx/shared)
+ *   - `.types.ts`   type/interface definitions (imports PDFComponentProps from @pdfx/shared)
+ *
+ * Transforms applied:
  * - Removes @pdfx/shared type imports (workspace-only package)
- * - Inlines the PDFComponentProps interface with style and children
- * - Replaces PdfxTheme with a local ReturnType alias (avoids @pdfx/shared dependency)
- * - Normalizes theme import path to '../lib/pdfx-theme'
- * - Adds @react-pdf/types import for Style type
+ * - Inlines PDFComponentProps as { style?, children } for .types.ts files
+ * - For .tsx files: injects `type PdfxTheme = ReturnType<typeof usePdfxTheme>` after the
+ *   pdfx-theme-context import line (the import is already present)
+ * - For .styles.ts files: replaces the @pdfx/shared PdfxTheme import with a self-contained
+ *   usePdfxTheme import + ReturnType alias so the file is independent
+ * - Normalizes theme & context import paths to '../lib/pdfx-theme[-context]'
+ * - Rewrites intra-component imports: `./X.styles` → `./pdfx-X.styles`, `./X.types` → `./pdfx-X.types`
+ * - Rewrites cross-component type imports: `../table/table.types` → `./pdfx-table.types`
+ * - Rewrites data-table's table component import: `../table` → `./pdfx-table`
+ * - Inlines resolveColor helper and removes its import (avoids separate lib file)
  */
 function transformForRegistry(content: string): { content: string; usesTheme: boolean } {
   let result = content;
   const usesTheme = result.includes('pdfx-theme');
 
-  // Remove @pdfx/shared type-only imports
+  // ── 1. Remove @pdfx/shared type-only imports ──────────────────────────────
   result = result.replace(/import\s+type\s+\{[^}]*\}\s+from\s+['"]@pdfx\/shared['"];?\n?/g, '');
 
-  // Handle PDFComponentProps: inline the interface with both style and children
+  // ── 2. Inline PDFComponentProps for .types.ts files ───────────────────────
   if (result.includes('PDFComponentProps')) {
     // Add Style import from @react-pdf/types if not already present
     if (!result.includes("from '@react-pdf/types'")) {
@@ -80,58 +93,93 @@ function transformForRegistry(content: string): { content: string; usesTheme: bo
       );
     }
 
-    // Handle Omit<PDFComponentProps, 'children'> (e.g., Divider, PageBreak)
+    // Handle Omit<PDFComponentProps, 'children'>
     result = result.replace(
       /extends\s+Omit<PDFComponentProps,\s*['"]children['"]>/g,
       'extends { style?: Style }'
     );
 
-    // Replace `extends PDFComponentProps {}` (empty body) with inlined props
+    // Replace `extends PDFComponentProps {}` (empty body)
     result = result.replace(
       /export\s+interface\s+(\w+)\s+extends\s+PDFComponentProps\s*\{\s*\}/g,
       'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Content to render */\n  children: React.ReactNode;\n}'
     );
 
-    // Replace `extends PDFComponentProps {` (non-empty body) with inlined props
+    // Replace `extends PDFComponentProps {` (non-empty body)
     result = result.replace(
       /export\s+interface\s+(\w+)\s+extends\s+PDFComponentProps\s*\{/g,
       'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Content to render */\n  children: React.ReactNode;'
     );
   }
 
-  // Replace PdfxTheme with a self-contained ReturnType alias so distributed
-  // components stay properly typed without depending on @pdfx/shared.
-  // The alias is injected after the pdfx-theme-context import which is already in the file.
+  // ── 3. PdfxTheme alias ────────────────────────────────────────────────────
   if (result.includes('PdfxTheme')) {
-    result = result.replace(
-      /(import\s+\{[^}]*usePdfxTheme[^}]*\}\s+from\s+['"][^'"]*pdfx-theme-context['"];?\n)/,
-      '$1type PdfxTheme = ReturnType<typeof usePdfxTheme>;\n'
-    );
+    if (result.includes('usePdfxTheme')) {
+      // .tsx files: usePdfxTheme is already imported — inject ReturnType alias after that import
+      result = result.replace(
+        /(import\s+\{[^}]*usePdfxTheme[^}]*\}\s+from\s+['"][^'"]*pdfx-theme-context['"];?\n)/,
+        '$1type PdfxTheme = ReturnType<typeof usePdfxTheme>;\n'
+      );
+    } else {
+      // .styles.ts files: PdfxTheme came from @pdfx/shared (now removed) and there is no
+      // usePdfxTheme import yet.  Add a minimal import + alias after the StyleSheet import.
+      result = result.replace(
+        /(import\s+\{[^}]*StyleSheet[^}]*\}\s+from\s+['"]@react-pdf\/renderer['"];?\n)/,
+        "$1import { usePdfxTheme } from '../lib/pdfx-theme-context';\ntype PdfxTheme = ReturnType<typeof usePdfxTheme>;\n"
+      );
+    }
   }
 
-  // Normalize theme import: ../../lib/pdfx-theme or ./lib/pdfx-theme → ../lib/pdfx-theme
+  // ── 4. Normalize theme / context import paths ─────────────────────────────
+  // ../../lib/pdfx-theme  or  ./lib/pdfx-theme  →  ../lib/pdfx-theme
   result = result.replace(
     /from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/pdfx-theme['"]/g,
     "from '../lib/pdfx-theme'"
   );
+  // ../../lib/pdfx-theme-context  →  ../lib/pdfx-theme-context
+  result = result.replace(
+    /from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/pdfx-theme-context['"]/g,
+    "from '../lib/pdfx-theme-context'"
+  );
 
-  // For data-table: table is emitted as pdfx-table.tsx, so fix the import path
-  // Handles both '../table' (subdirectory layout) and './table' (flat layout)
+  // ── 5. Rewrite intra-component companion file imports ─────────────────────
+  // ./X.styles  →  ./pdfx-X.styles   (component imports its styles file)
+  result = result.replace(/from\s+['"]\.\/([^'"]+)\.styles['"]/g, "from './pdfx-$1.styles'");
+  // ./X.types  →  ./pdfx-X.types   (component imports its types file)
+  result = result.replace(/from\s+['"]\.\/([^'"]+)\.types['"]/g, "from './pdfx-$1.types'");
+
+  // ── 6. Rewrite cross-component type imports ───────────────────────────────
+  // ../foo/foo.types  →  ./pdfx-foo.types  (e.g. data-table.types imports TableVariant)
+  result = result.replace(/from\s+['"]\.\.\/([^/'"]+)\/\1\.types['"]/g, "from './pdfx-$1.types'");
+
+  // ── 7. data-table: rewrite table component import ─────────────────────────
+  // ../table  or  ./table  →  ./pdfx-table
   result = result.replace(/from\s+['"](?:\.\.\/|\.\/)table['"]/g, "from './pdfx-table'");
 
-  // Inline resolveColor and remove the import (avoids separate lib file in distributed components)
+  // ── 8. Inline resolveColor ────────────────────────────────────────────────
   const resolveColorInline = `const THEME_COLOR_KEYS = ['foreground','muted','mutedForeground','primary','primaryForeground','accent','destructive','success','warning','info'] as const;
 function resolveColor(value: string, colors: Record<string, string>): string {
   return THEME_COLOR_KEYS.includes(value as (typeof THEME_COLOR_KEYS)[number]) ? colors[value] : value;
 }
 `;
   if (result.includes('resolve-color')) {
-    // Handle both ../../lib/resolve-color.js (subdirectory) and ./lib/resolve-color.js (flat)
+    // Remove the import
     result = result.replace(
       /import\s+\{[^}]*resolveColor[^}]*\}\s+from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/resolve-color\.js['"];?\n?/g,
       ''
     );
-    result = result.replace(/(\n)(function create\w+Styles)/, `$1${resolveColorInline}$2`);
+    // Inject before the first exported component function.
+    // In the segregated structure createXStyles is in .styles.ts, so the .tsx file's first
+    // statement after imports is `export function ComponentName`.
+    // Fall back to the old anchor (function createXStyles) for any legacy single-file components.
+    if (result.includes('\nfunction create') && result.match(/\nfunction create\w+Styles/)) {
+      result = result.replace(/(\n)(function create\w+Styles)/, `$1${resolveColorInline}$2`);
+    } else {
+      result = result.replace(
+        /\nexport function (?=\w)/,
+        `\n${resolveColorInline}\nexport function `
+      );
+    }
   }
 
   return { content: result, usesTheme };
@@ -165,7 +213,7 @@ async function processItem(
       if (usesTheme) itemUsesTheme = true;
 
       return {
-        path: `components/pdfx/pdfx-${fileName}`,
+        path: `components/pdfx/${item.name}/pdfx-${fileName}`,
         content,
         type: file.type,
       };
@@ -182,9 +230,13 @@ async function processItem(
     dependencies: item.dependencies || [],
   };
 
-  // Add registryDependencies for theme-aware components
+  // Build registryDependencies: always include "theme" for theme-aware components
+  // and preserve any component-to-component dependencies declared in index.json.
+  const sourceDeps = item.registryDependencies ?? [];
   if (itemUsesTheme) {
-    output.registryDependencies = ['theme'];
+    output.registryDependencies = ['theme', ...sourceDeps.filter((d) => d !== 'theme')];
+  } else if (sourceDeps.length > 0) {
+    output.registryDependencies = sourceDeps;
   }
 
   const outputPath = path.join(outputDir, `${item.name}.json`);

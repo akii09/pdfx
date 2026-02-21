@@ -1,69 +1,8 @@
-import type { PdfxTheme } from '@pdfx/shared';
-import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
+import { Text as PDFText, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
-
-export type FormLayout = 'single' | 'two-column' | 'three-column';
-
-export interface FormRow {
-  label: string;
-  value: string;
-}
-
-export interface PdfFormSectionProps {
-  title?: string;
-  rows: FormRow[];
-  layout?: FormLayout;
-  style?: Style;
-}
-
-function createFormStyles(t: PdfxTheme) {
-  const { spacing, fontWeights, typography } = t.primitives;
-  const borderColor = t.colors.border;
-  return StyleSheet.create({
-    section: {
-      marginBottom: t.spacing.componentGap,
-    },
-    title: {
-      fontFamily: t.typography.heading.fontFamily,
-      fontSize: typography.sm,
-      lineHeight: t.typography.heading.lineHeight,
-      color: t.colors.foreground,
-      fontWeight: fontWeights.semibold,
-      marginBottom: spacing[2],
-    },
-    columnsRow: {
-      flexDirection: 'row',
-      gap: spacing[4],
-    },
-    column: {
-      flex: 1,
-    },
-    formRow: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-      paddingVertical: spacing[1] + 2,
-      borderBottomWidth: 1,
-      borderBottomColor: borderColor,
-      borderBottomStyle: 'solid',
-    },
-    label: {
-      width: 80,
-      fontFamily: t.typography.body.fontFamily,
-      fontSize: t.typography.body.fontSize,
-      lineHeight: t.typography.body.lineHeight,
-      color: t.colors.mutedForeground,
-      fontWeight: fontWeights.medium,
-    },
-    value: {
-      flex: 1,
-      fontFamily: t.typography.body.fontFamily,
-      fontSize: t.typography.body.fontSize,
-      lineHeight: t.typography.body.lineHeight,
-      color: t.colors.foreground,
-    },
-  });
-}
+import { createFormStyles } from './form.styles';
+import type { FormRow, PdfFormSectionProps } from './form.types';
 
 export function PdfFormSection({ title, rows, layout = 'single', style }: PdfFormSectionProps) {
   const theme = usePdfxTheme();

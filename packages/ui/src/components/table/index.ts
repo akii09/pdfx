@@ -12,4 +12,4 @@ export type {
   TableRowProps,
   TableCellProps,
   TableVariant,
-} from './table';
+} from './table.types';

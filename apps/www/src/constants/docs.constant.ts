@@ -59,8 +59,8 @@ export const theme: PdfxTheme = {
 };`;
 
 export const usageExample = `import { Document, Page } from '@react-pdf/renderer';
-import { Heading } from '@/components/pdfx/pdfx-heading';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { Heading } from '@/components/pdfx/heading/pdfx-heading';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (
@@ -257,8 +257,18 @@ export const manualStep5Structure = `your-project/
       pdfx-theme-context.tsx   # Context, PdfxThemeProvider, usePdfxTheme (Step 4)
     components/
       pdfx/
-        pdfx-heading.tsx       # Components go here
-        pdfx-text.tsx
+        heading/
+          pdfx-heading.tsx          # Component
+          pdfx-heading.styles.ts    # Styles  (safe to customize per-version)
+          pdfx-heading.types.ts     # Types
+        text/
+          pdfx-text.tsx
+          pdfx-text.styles.ts
+          pdfx-text.types.ts
+        badge/
+          pdfx-badge.tsx
+          pdfx-badge.styles.ts
+          pdfx-badge.types.ts
         ...
   pdfx.json                    # Project config (Step 2)`;
 

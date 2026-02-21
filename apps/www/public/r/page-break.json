@@ -6,7 +6,7 @@
   "description": "Forces content after it to start on a new page",
   "files": [
     {
-      "path": "components/pdfx/pdfx-page-break.tsx",
+      "path": "components/pdfx/page-break/pdfx-page-break.tsx",
       "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\nexport interface PageBreakProps extends { style?: Style } {\n  children?: never;\n}\n\nexport function PageBreak(_props: PageBreakProps) {\n  return <View break />;\n}\n",
       "type": "registry:component"
     }

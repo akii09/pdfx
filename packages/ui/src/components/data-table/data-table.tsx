@@ -1,65 +1,10 @@
-import type { PDFComponentProps } from '@pdfx/shared';
-import type { PdfxTheme } from '@pdfx/shared';
-import { Text as PDFText, StyleSheet } from '@react-pdf/renderer';
+import { Text as PDFText } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import type React from 'react';
 import { Fragment } from 'react';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
-import type { TableVariant } from '../table';
 import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from '../table';
-
-export type DataTableSize = 'default' | 'compact';
-
-export interface DataTableColumn<T = Record<string, unknown>> {
-  key: keyof T & string;
-  header: string;
-  align?: 'left' | 'center' | 'right';
-  width?: string | number;
-  render?: (value: unknown, row: T) => React.ReactNode;
-  renderFooter?: (value: unknown) => React.ReactNode;
-}
-
-export interface DataTableProps<T = Record<string, unknown>>
-  extends Omit<PDFComponentProps, 'children'> {
-  columns: DataTableColumn<T>[];
-  data: T[];
-  variant?: TableVariant;
-  footer?: Partial<Record<keyof T & string, string | number>>;
-  stripe?: boolean;
-  size?: DataTableSize;
-  /** Prevent the entire table from splitting across pages. Use for short tables that fit on one page. */
-  noWrap?: boolean;
-}
-
-function createCompactStyles(t: PdfxTheme) {
-  const { spacing, fontWeights, lineHeights } = t.primitives;
-  return StyleSheet.create({
-    cell: {
-      paddingVertical: spacing[0.5],
-      paddingHorizontal: spacing[2],
-    },
-    text: {
-      fontFamily: t.typography.body.fontFamily,
-      fontSize: t.primitives.typography.xs,
-      lineHeight: lineHeights.normal,
-      color: t.colors.foreground,
-    },
-    headerText: {
-      fontFamily: t.typography.body.fontFamily,
-      fontSize: t.primitives.typography.xs,
-      lineHeight: lineHeights.normal,
-      color: t.colors.foreground,
-      fontWeight: fontWeights.semibold,
-    },
-    footerText: {
-      fontFamily: t.typography.body.fontFamily,
-      fontSize: t.primitives.typography.xs,
-      lineHeight: lineHeights.normal,
-      color: t.colors.foreground,
-      fontWeight: fontWeights.semibold,
-    },
-  });
-}
+import { createCompactStyles, formatValue } from './data-table.styles';
+import type { DataTableProps } from './data-table.types';
 
 export function DataTable<T extends Record<string, unknown>>({
   columns,
@@ -182,10 +127,4 @@ export function DataTable<T extends Record<string, unknown>>({
       )}
     </Table>
   );
-}
-
-function formatValue(value: unknown): string {
-  if (value === null || value === undefined) return '';
-  if (typeof value === 'number') return String(value);
-  return String(value);
 }

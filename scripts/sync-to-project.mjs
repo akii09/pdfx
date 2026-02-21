@@ -186,15 +186,38 @@ function readRegistryEntry(filename) {
 // ─── Sync ────────────────────────────────────────────────────────────────────
 
 /**
+ * Returns a short label describing a registry file based on its extension.
+ * @param {string} filePath
+ * @returns {string}
+ */
+function fileLabel(filePath) {
+  if (filePath.endsWith('.styles.ts')) return 'styles';
+  if (filePath.endsWith('.types.ts')) return 'types';
+  if (filePath.endsWith('.tsx') || filePath.endsWith('.ts')) return 'component';
+  return '';
+}
+
+/**
  * Writes a single component file to the target project's component directory.
+ *
+ * Registry file paths look like: "components/pdfx/{name}/pdfx-{name}.tsx"
+ * We strip the leading "components/pdfx/" prefix and use the remainder
+ * ("badge/pdfx-badge.tsx") as a relative path within componentDir, so the
+ * file lands in a per-component subdirectory matching the CLI output.
+ *
  * @param {{ path: string; content: string }} file - Registry file entry.
- * @param {string} componentDir - Absolute path to the output directory.
+ * @param {string} componentDir - Absolute path to the root output directory (e.g. src/components/pdfx).
  */
 function writeComponentFile(file, componentDir) {
-  const fileName = path.basename(file.path);
-  const outputPath = path.join(componentDir, fileName);
+  const PREFIX = 'components/pdfx/';
+  const relPath = file.path.startsWith(PREFIX)
+    ? file.path.slice(PREFIX.length)  // → "badge/pdfx-badge.tsx"
+    : path.basename(file.path);
+  const outputPath = path.join(componentDir, relPath);
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, file.content, 'utf8');
-  console.log(`  ✓  ${fileName}`);
+  const label = fileLabel(file.path);
+  console.log(`      ${path.basename(file.path)}${label ? `  (${label})` : ''}`);
 }
 
 /**
@@ -208,8 +231,12 @@ function sync() {
   fs.mkdirSync(componentDir, { recursive: true });
 
   const registryFiles = getRegistryFiles();
-  let written = 0;
+  let totalFiles = 0;
+  let totalComponents = 0;
   let skipped = 0;
+
+  /** @type {string[]} Components that declare registryDependencies on other components. */
+  const withPeerDeps = [];
 
   console.log(`\nSyncing registry → ${path.relative(process.cwd(), componentDir)}\n`);
 
@@ -223,14 +250,39 @@ function sync() {
       continue;
     }
 
+    // Track components that depend on other registry *components* (not the theme base).
+    // "theme" is a universal base dependency covered by `pdfx init` — skip it.
+    const componentPeerDeps = (entry.registryDependencies ?? []).filter(
+      (dep) => dep !== 'theme'
+    );
+    if (componentPeerDeps.length > 0) {
+      withPeerDeps.push(`${componentName} → ${componentPeerDeps.join(', ')}`);
+    }
+
+    const fileCount = entry.files.length;
+    const fileWord = fileCount === 1 ? 'file' : 'files';
+    console.log(`  ✓  ${componentName}  (${fileCount} ${fileWord})`);
+
     for (const file of entry.files) {
       writeComponentFile(file, componentDir);
-      written++;
+      totalFiles++;
+    }
+
+    totalComponents++;
+  }
+
+  console.log(`\nDone! ${totalComponents} component(s), ${totalFiles} file(s) written to`);
+  console.log(`      ${componentDir}`);
+  if (skipped > 0) console.log(`\n  ⚠  ${skipped} component(s) skipped (no files in registry entry)`);
+
+  if (withPeerDeps.length > 0) {
+    console.log(`\n  ℹ  The following components have peer component dependencies.`);
+    console.log(`     Make sure all listed dependencies are also present in your project:`);
+    for (const entry of withPeerDeps) {
+      console.log(`       ${entry}`);
     }
   }
 
-  console.log(`\nDone! ${written} file(s) written to ${componentDir}`);
-  if (skipped > 0) console.log(`     ${skipped} skipped`);
   console.log();
 }
 

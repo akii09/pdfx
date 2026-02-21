@@ -1,66 +1,9 @@
-import type { PDFComponentProps } from '@pdfx/shared';
-import type { PdfxTheme } from '@pdfx/shared';
-import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
+import { Text as PDFText, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
-
-export type DividerVariant = 'solid' | 'dashed' | 'dotted';
-
-export type DividerThickness = 'thin' | 'medium' | 'thick';
-
-export type DividerSpacing = 'none' | 'sm' | 'md' | 'lg';
-
-export interface DividerProps extends Omit<PDFComponentProps, 'children'> {
-  spacing?: DividerSpacing;
-  variant?: DividerVariant;
-  color?: string;
-  thickness?: DividerThickness;
-  label?: string;
-  width?: string | number;
-}
-
-function createDividerStyles(t: PdfxTheme) {
-  const { spacing, fontWeights } = t.primitives;
-  return StyleSheet.create({
-    base: {
-      borderBottomColor: t.colors.border,
-      borderBottomStyle: 'solid',
-    },
-    spacingNone: { marginVertical: spacing[0] },
-    spacingSm: { marginVertical: t.spacing.paragraphGap },
-    spacingMd: { marginVertical: t.spacing.componentGap },
-    spacingLg: { marginVertical: t.spacing.sectionGap },
-    solid: { borderBottomStyle: 'solid' },
-    dashed: { borderBottomStyle: 'dashed' },
-    dotted: { borderBottomStyle: 'dotted' },
-    thin: { borderBottomWidth: spacing[0.5] },
-    medium: { borderBottomWidth: spacing[1] },
-    thick: { borderBottomWidth: spacing[2] },
-    labelContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    labelLine: {
-      flex: 1,
-      borderBottomColor: t.colors.border,
-      borderBottomStyle: 'solid',
-    },
-    labelText: {
-      fontFamily: t.typography.body.fontFamily,
-      fontSize: t.primitives.typography.xs,
-      color: t.colors.mutedForeground,
-      fontWeight: fontWeights.medium,
-      paddingHorizontal: spacing[3],
-      textTransform: 'uppercase',
-      letterSpacing: t.primitives.letterSpacing.wider * 10,
-    },
-    alignLeft: { alignSelf: 'flex-start' },
-    alignCenter: { alignSelf: 'center' },
-    alignRight: { alignSelf: 'flex-end' },
-  });
-}
+import { createDividerStyles } from './divider.styles';
+import type { DividerProps } from './divider.types';
 
 export function Divider({
   spacing = 'md',

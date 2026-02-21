@@ -113,20 +113,26 @@ async function installComponent(name: string, config: Config, force: boolean): P
   const component = await fetchComponent(name, config.registry);
   const targetDir = path.resolve(process.cwd(), config.componentDir);
 
-  ensureDir(targetDir);
+  // Each component lives in its own subdirectory: {componentDir}/{name}/
+  // e.g. src/components/pdfx/badge/pdfx-badge.tsx
+  const componentDir = path.join(targetDir, component.name);
+  ensureDir(componentDir);
+
+  // Relative form of componentDir for resolveThemeImport (which resolves from cwd internally)
+  const componentRelDir = path.join(config.componentDir, component.name);
 
   // Collect and validate file paths, rewriting theme imports if needed
   const filesToWrite: Array<{ filePath: string; content: string }> = [];
   for (const file of component.files) {
     const fileName = path.basename(file.path);
-    const filePath = safePath(targetDir, fileName);
+    const filePath = safePath(componentDir, fileName);
 
     let content = file.content;
     if (
       config.theme &&
       (content.includes('pdfx-theme') || content.includes('pdfx-theme-context'))
     ) {
-      content = resolveThemeImport(config.componentDir, config.theme, content);
+      content = resolveThemeImport(componentRelDir, config.theme, content);
     }
 
     filesToWrite.push({ filePath, content });

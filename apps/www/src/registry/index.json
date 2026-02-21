@@ -12,6 +12,14 @@
         {
           "path": "../../../../packages/ui/src/components/heading/heading.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/heading/heading.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/heading/heading.types.ts",
+          "type": "registry:component"
         }
       ],
       "dependencies": ["@react-pdf/renderer"]
@@ -24,6 +32,14 @@
       "files": [
         {
           "path": "../../../../packages/ui/src/components/text/text.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/text/text.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/text/text.types.ts",
           "type": "registry:component"
         }
       ],
@@ -38,6 +54,14 @@
         {
           "path": "../../../../packages/ui/src/components/link/link.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/link/link.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/link/link.types.ts",
+          "type": "registry:component"
         }
       ],
       "dependencies": ["@react-pdf/renderer"]
@@ -50,6 +74,14 @@
       "files": [
         {
           "path": "../../../../packages/ui/src/components/divider/divider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/divider/divider.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/divider/divider.types.ts",
           "type": "registry:component"
         }
       ],
@@ -77,6 +109,14 @@
         {
           "path": "../../../../packages/ui/src/components/stack/stack.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/stack/stack.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/stack/stack.types.ts",
+          "type": "registry:component"
         }
       ],
       "dependencies": ["@react-pdf/renderer"]
@@ -89,6 +129,14 @@
       "files": [
         {
           "path": "../../../../packages/ui/src/components/section/section.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/section/section.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/section/section.types.ts",
           "type": "registry:component"
         }
       ],
@@ -103,6 +151,14 @@
         {
           "path": "../../../../packages/ui/src/components/table/table.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/table/table.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/table/table.types.ts",
+          "type": "registry:component"
         }
       ],
       "dependencies": ["@react-pdf/renderer"]
@@ -115,6 +171,14 @@
       "files": [
         {
           "path": "../../../../packages/ui/src/components/data-table/data-table.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/data-table/data-table.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/data-table/data-table.types.ts",
           "type": "registry:component"
         }
       ],
@@ -156,6 +220,14 @@
         {
           "path": "../../../../packages/ui/src/components/badge/badge.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/badge/badge.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/badge/badge.types.ts",
+          "type": "registry:component"
         }
       ],
       "dependencies": ["@react-pdf/renderer"]
@@ -168,6 +240,14 @@
       "files": [
         {
           "path": "../../../../packages/ui/src/components/key-value/key-value.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/key-value/key-value.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/key-value/key-value.types.ts",
           "type": "registry:component"
         }
       ],
@@ -182,6 +262,14 @@
         {
           "path": "../../../../packages/ui/src/components/list/list.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/list/list.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/list/list.types.ts",
+          "type": "registry:component"
         }
       ],
       "dependencies": ["@react-pdf/renderer"]
@@ -194,6 +282,14 @@
       "files": [
         {
           "path": "../../../../packages/ui/src/components/card/card.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/card/card.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/card/card.types.ts",
           "type": "registry:component"
         }
       ],
@@ -208,6 +304,14 @@
         {
           "path": "../../../../packages/ui/src/components/form/form.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/form/form.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/form/form.types.ts",
+          "type": "registry:component"
         }
       ],
       "dependencies": ["@react-pdf/renderer"]
@@ -220,6 +324,14 @@
       "files": [
         {
           "path": "../../../../packages/ui/src/components/signature/signature.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/signature/signature.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/signature/signature.types.ts",
           "type": "registry:component"
         }
       ],
