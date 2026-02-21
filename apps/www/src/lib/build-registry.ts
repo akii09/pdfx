@@ -59,7 +59,7 @@ async function fileExistsAsync(filePath: string): Promise<boolean> {
  * Transforms component source code for registry distribution.
  * - Removes @pdfx/shared type imports (workspace-only package)
  * - Inlines the PDFComponentProps interface with style and children
- * - Strips PdfxTheme type annotation (uses structural typing)
+ * - Replaces PdfxTheme with a local ReturnType alias (avoids @pdfx/shared dependency)
  * - Normalizes theme import path to '../lib/pdfx-theme'
  * - Adds @react-pdf/types import for Style type
  */
@@ -99,8 +99,15 @@ function transformForRegistry(content: string): { content: string; usesTheme: bo
     );
   }
 
-  // Strip PdfxTheme type annotation — use structural typing for self-contained components
-  result = result.replace(/\(t:\s*PdfxTheme\)/g, '(t: any)');
+  // Replace PdfxTheme with a self-contained ReturnType alias so distributed
+  // components stay properly typed without depending on @pdfx/shared.
+  // The alias is injected after the pdfx-theme-context import which is already in the file.
+  if (result.includes('PdfxTheme')) {
+    result = result.replace(
+      /(import\s+\{[^}]*usePdfxTheme[^}]*\}\s+from\s+['"][^'"]*pdfx-theme-context['"];?\n)/,
+      "$1type PdfxTheme = ReturnType<typeof usePdfxTheme>;\n"
+    );
+  }
 
   // Normalize theme import: ../../lib/pdfx-theme or ./lib/pdfx-theme → ../lib/pdfx-theme
   result = result.replace(

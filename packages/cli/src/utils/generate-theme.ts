@@ -195,6 +195,10 @@ export function generateThemeContextFile(): string {
 // Provides React context for runtime theme switching.
 // Wrap any subtree in <PdfxThemeProvider theme={myTheme}> to override the active theme.
 
+/* eslint-disable react-refresh/only-export-components */
+// This file intentionally exports both a component (PdfxThemeProvider) and hooks/context.
+// All PDF components import from a single file — splitting would break the public API.
+
 import { type DependencyList, type ReactNode, createContext, useContext, useMemo } from 'react';
 import { theme as defaultTheme } from './pdfx-theme';
 
