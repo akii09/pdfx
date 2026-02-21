@@ -219,7 +219,10 @@ export function usePdfxTheme(): PdfxTheme {
   } catch (error) {
     // Only suppress React dispatcher errors ("Invalid hook call").
     // Re-throw anything else so unexpected bugs surface clearly.
-    if (error instanceof Error && /invalid hook call/i.test(error.message)) {
+    if (
+      error instanceof Error &&
+      /invalid hook call|useContext|cannot read properties of null/i.test(error.message)
+    ) {
       return defaultTheme;
     }
     throw error;
@@ -237,7 +240,10 @@ export function useSafeMemo<T>(factory: () => T, deps: DependencyList): T {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useMemo(factory, deps);
   } catch (error) {
-    if (error instanceof Error && /invalid hook call/i.test(error.message)) {
+    if (
+      error instanceof Error &&
+      /invalid hook call|useMemo|cannot read properties of null/i.test(error.message)
+    ) {
       return factory();
     }
     throw error;
