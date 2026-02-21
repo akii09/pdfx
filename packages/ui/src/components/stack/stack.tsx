@@ -10,6 +10,7 @@ export function Stack({
   align,
   justify,
   wrap,
+  noWrap,
   children,
   style,
 }: StackProps) {
@@ -55,5 +56,9 @@ export function Stack({
     styleArray.push(style);
   }
 
-  return <View style={styleArray}>{children}</View>;
+  return (
+    <View wrap={noWrap ? false : undefined} style={styleArray}>
+      {children}
+    </View>
+  );
 }

@@ -86,6 +86,13 @@ export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
    * @default false
    */
   fixed?: boolean;
+  /**
+   * Prevent the footer from being split across PDF pages when placed inline.
+   * A partially-rendered footer is always visually broken, so this defaults to true.
+   * Set to false only for decorative banners that can tolerate splitting.
+   * @default true
+   */
+  noWrap?: boolean;
 }
 
 function createPageFooterStyles(t: PdfxTheme) {
@@ -272,6 +279,7 @@ export function PageFooter({
   email,
   website,
   fixed = false,
+  noWrap = true,
   style,
 }: PageFooterProps) {
   const theme = usePdfxTheme();
@@ -295,7 +303,7 @@ export function PageFooter({
     }
 
     return (
-      <View fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
         {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
       </View>
@@ -314,7 +322,7 @@ export function PageFooter({
     if (resolvedTextColor) tStyle.push({ color: resolvedTextColor });
 
     return (
-      <View fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         {leftText && <PDFText style={tStyle}>{leftText}</PDFText>}
         {rightText && <PDFText style={tStyle}>{rightText}</PDFText>}
       </View>
@@ -339,7 +347,7 @@ export function PageFooter({
     }
 
     return (
-      <View fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         <View style={styles.threeColumnLeft}>
           {leftText && <PDFText style={leftStyle}>{leftText}</PDFText>}
           {address && <PDFText style={styles.textLeft}>{address}</PDFText>}
@@ -376,7 +384,7 @@ export function PageFooter({
     }
 
     return (
-      <View fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         <View style={styles.detailedTopRow}>
           <View style={styles.detailedLeft}>
             {leftText && <PDFText style={companyStyle}>{leftText}</PDFText>}
@@ -411,7 +419,7 @@ export function PageFooter({
     }
 
     return (
-      <View fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
         {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
         {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
@@ -436,7 +444,7 @@ export function PageFooter({
   }
 
   return (
-    <View fixed={fixed} style={containerStyles}>
+    <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
       {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
       {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
       {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}

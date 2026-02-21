@@ -18,7 +18,9 @@ export interface HeadingProps extends PDFComponentProps {
    * Ensure the heading has enough space below it before a page break occurs.
    * Uses `minPresenceAhead` to prevent orphaned headings at the bottom of a page.
    * When true, at least 80pt of space must remain on the page or the heading moves to the next page.
-   * @default false
+   * Defaults to **true** — headings never strand alone at the bottom of a page.
+   * Set to false only when you explicitly want a heading to be allowed at the bottom of a page.
+   * @default true
    */
   keepWithNext?: boolean;
 }

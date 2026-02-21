@@ -4,7 +4,13 @@ import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { createFormStyles } from './form.styles';
 import type { FormRow, PdfFormSectionProps } from './form.types';
 
-export function PdfFormSection({ title, rows, layout = 'single', style }: PdfFormSectionProps) {
+export function PdfFormSection({
+  title,
+  rows,
+  layout = 'single',
+  noWrap = false,
+  style,
+}: PdfFormSectionProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createFormStyles(theme), [theme]);
   const cols = layout === 'three-column' ? 3 : layout === 'two-column' ? 2 : 1;
@@ -13,7 +19,7 @@ export function PdfFormSection({ title, rows, layout = 'single', style }: PdfFor
 
   if (cols === 1) {
     return (
-      <View style={styleArray}>
+      <View wrap={!noWrap} style={styleArray}>
         {title ? <PDFText style={styles.title}>{title}</PDFText> : null}
         {rows.map((row) => (
           <View key={row.label} style={styles.formRow}>
@@ -35,7 +41,7 @@ export function PdfFormSection({ title, rows, layout = 'single', style }: PdfFor
   }
 
   return (
-    <View style={styleArray}>
+    <View wrap={!noWrap} style={styleArray}>
       {title ? <PDFText style={styles.title}>{title}</PDFText> : null}
       <View style={styles.columnsRow}>
         {chunks.map((chunk) => (

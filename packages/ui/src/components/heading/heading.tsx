@@ -13,7 +13,7 @@ export function Heading({
   weight,
   tracking,
   noMargin,
-  keepWithNext = false,
+  keepWithNext = true,
   children,
   style,
 }: HeadingProps) {

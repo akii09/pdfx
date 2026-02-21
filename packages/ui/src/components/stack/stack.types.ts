@@ -21,6 +21,12 @@ export interface StackProps extends PDFComponentProps {
   align?: StackAlign;
   /** Main-axis distribution (justifyContent). */
   justify?: StackJustify;
-  /** Enable flex wrap. */
+  /** Enable CSS flex-wrap so children wrap onto multiple lines. */
   wrap?: boolean;
+  /**
+   * Prevent the Stack from being split across PDF pages.
+   * Maps to react-pdf’s `wrap={false}` on the inner View.
+   * Use for short stacks that should always stay on a single page.
+   */
+  noWrap?: boolean;
 }

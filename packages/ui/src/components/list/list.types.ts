@@ -32,4 +32,10 @@ export interface PdfListProps {
   style?: Style;
   /** Indent level for nested rendering (internal use). */
   _level?: number;
+  /**
+   * Prevent the List from being split across PDF pages.
+   * Useful for short lists that should always stay together on a single page.
+   * @default false
+   */
+  noWrap?: boolean;
 }

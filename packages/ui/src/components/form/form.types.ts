@@ -13,5 +13,11 @@ export interface PdfFormSectionProps {
   title?: string;
   rows: FormRow[];
   layout?: FormLayout;
+  /**
+   * Prevent the form section from being split across PDF pages.
+   * Useful for short single-page forms where a mid-section break looks broken.
+   * @default false
+   */
+  noWrap?: boolean;
   style?: Style;
 }

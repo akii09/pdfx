@@ -53,4 +53,10 @@ export interface KeyValueProps extends Omit<PDFComponentProps, 'children'> {
   valueColor?: string;
   /** Bold the value text. Defaults to false. */
   boldValue?: boolean;
+  /**
+   * Prevent the KeyValue block from being split across PDF pages.
+   * Useful for short invoice-style metadata blocks that should stay on one page.
+   * @default false
+   */
+  noWrap?: boolean;
 }

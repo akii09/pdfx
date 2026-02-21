@@ -14,6 +14,7 @@ export function KeyValue({
   labelColor,
   valueColor,
   boldValue = false,
+  noWrap = false,
   style,
 }: KeyValueProps) {
   const theme = usePdfxTheme();
@@ -32,7 +33,7 @@ export function KeyValue({
   if (style) containerStyles.push(style);
 
   return (
-    <View style={containerStyles}>
+    <View wrap={!noWrap} style={containerStyles}>
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
 

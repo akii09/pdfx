@@ -138,6 +138,7 @@ export function PdfList({
   variant = 'bullet',
   gap = 'sm',
   style,
+  noWrap = false,
   _level = 0,
 }: PdfListProps) {
   const theme = usePdfxTheme();
@@ -148,7 +149,7 @@ export function PdfList({
   const styleArray = style ? [...containerStyles, style] : containerStyles;
 
   return (
-    <View style={styleArray}>
+    <View wrap={!noWrap} style={styleArray}>
       {items.map((item, index) =>
         renderItem(item, index, items.length, variant, gap, styles, _level)
       )}
