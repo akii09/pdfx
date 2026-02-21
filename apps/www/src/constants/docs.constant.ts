@@ -108,6 +108,8 @@ interface PdfxTheme {
     spacing: Record<string | number, number>;
     fontWeights: { regular: number; medium: number; semibold: number; bold: number };
     lineHeights: { tight: number; normal: number; relaxed: number };
+    borderRadius: { none: number; sm: number; md: number; lg: number; full: number };
+    letterSpacing: { tight: number; normal: number; wide: number; wider: number };
   };
   colors: {
     foreground: string; background: string; muted: string; mutedForeground: string;
@@ -135,6 +137,8 @@ export const theme: PdfxTheme = {
     spacing: { 0: 0, 0.5: 2, 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 8: 32, 10: 40, 12: 48, 16: 64 },
     fontWeights: { regular: 400, medium: 500, semibold: 600, bold: 700 },
     lineHeights: { tight: 1.2, normal: 1.4, relaxed: 1.6 },
+    borderRadius: { none: 0, sm: 2, md: 4, lg: 8, full: 9999 },
+    letterSpacing: { tight: -0.025, normal: 0, wide: 0.025, wider: 0.05 },
   },
   colors: {
     foreground: '#18181b',
@@ -194,24 +198,45 @@ export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
 /**
  * Returns the active PdfxTheme from context, or the default theme when called
  * outside a React render tree (e.g. unit tests).
+ *
+ * The try/catch is intentional: when components are invoked as plain functions
+ * in unit tests, React's dispatcher is unavailable and useContext throws an
+ * "Invalid hook call" error. We catch only that specific case and fall back to
+ * defaultTheme. Any other error is re-thrown so real bugs are never swallowed.
+ *
+ * The eslint-disable is required because react-hooks/rules-of-hooks flags hooks
+ * inside try/catch — this is the accepted pattern for libraries that must support
+ * both React render and plain-function (test) invocation contexts.
  */
 export function usePdfxTheme(): PdfxTheme {
   try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useContext(PdfxThemeContext);
-  } catch {
-    return defaultTheme;
+  } catch (error) {
+    // Only suppress React dispatcher errors ("Invalid hook call").
+    // Re-throw anything else so unexpected bugs surface clearly.
+    if (error instanceof Error && /invalid hook call/i.test(error.message)) {
+      return defaultTheme;
+    }
+    throw error;
   }
 }
 
 /**
  * Memoises the result of factory(). Falls back to factory() directly when
  * called outside React (e.g. unit tests that invoke components as plain functions).
+ *
+ * Follows the same catch-narrowing strategy as usePdfxTheme.
  */
 export function useSafeMemo<T>(factory: () => T, deps: DependencyList): T {
   try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useMemo(factory, deps);
-  } catch {
-    return factory();
+  } catch (error) {
+    if (error instanceof Error && /invalid hook call/i.test(error.message)) {
+      return factory();
+    }
+    throw error;
   }
 }`;
 

@@ -22,6 +22,8 @@ interface PdfxTheme {
     spacing: Record<string | number, number>;
     fontWeights: { regular: number; medium: number; semibold: number; bold: number };
     lineHeights: { tight: number; normal: number; relaxed: number };
+    borderRadius: { none: number; sm: number; md: number; lg: number; full: number };
+    letterSpacing: { tight: number; normal: number; wide: number; wider: number };
   };
   colors: {
     foreground: string;
@@ -104,6 +106,19 @@ function serializeTheme(t: PdfxTheme): string {
       tight: ${t.primitives.lineHeights.tight},
       normal: ${t.primitives.lineHeights.normal},
       relaxed: ${t.primitives.lineHeights.relaxed},
+    },
+    borderRadius: {
+      none: ${t.primitives.borderRadius.none},
+      sm: ${t.primitives.borderRadius.sm},
+      md: ${t.primitives.borderRadius.md},
+      lg: ${t.primitives.borderRadius.lg},
+      full: ${t.primitives.borderRadius.full},
+    },
+    letterSpacing: {
+      tight: ${t.primitives.letterSpacing.tight},
+      normal: ${t.primitives.letterSpacing.normal},
+      wide: ${t.primitives.letterSpacing.wide},
+      wider: ${t.primitives.letterSpacing.wider},
     },
   },
 
@@ -200,24 +215,45 @@ export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
 /**
  * Returns the active PdfxTheme from context, or the default theme when called
  * outside a React render tree (e.g. unit tests).
+ *
+ * The try/catch is intentional: when components are invoked as plain functions
+ * in unit tests, React's dispatcher is unavailable and useContext throws an
+ * "Invalid hook call" error. We catch only that specific case and fall back to
+ * defaultTheme. Any other error is re-thrown so real bugs are never swallowed.
+ *
+ * The eslint-disable is required because react-hooks/rules-of-hooks flags hooks
+ * inside try/catch — this is the accepted pattern for libraries that must support
+ * both React render and plain-function (test) invocation contexts.
  */
 export function usePdfxTheme(): PdfxTheme {
   try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useContext(PdfxThemeContext);
-  } catch {
-    return defaultTheme;
+  } catch (error) {
+    // Only suppress React dispatcher errors ("Invalid hook call").
+    // Re-throw anything else so unexpected bugs surface clearly.
+    if (error instanceof Error && /invalid hook call/i.test(error.message)) {
+      return defaultTheme;
+    }
+    throw error;
   }
 }
 
 /**
  * Memoises the result of factory(). Falls back to factory() directly when
  * called outside React (e.g. unit tests that invoke components as plain functions).
+ *
+ * Follows the same catch-narrowing strategy as usePdfxTheme.
  */
 export function useSafeMemo<T>(factory: () => T, deps: DependencyList): T {
   try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useMemo(factory, deps);
-  } catch {
-    return factory();
+  } catch (error) {
+    if (error instanceof Error && /invalid hook call/i.test(error.message)) {
+      return factory();
+    }
+    throw error;
   }
 }
 `;
