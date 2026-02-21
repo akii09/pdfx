@@ -85,35 +85,49 @@ function transformForRegistry(content: string): { content: string; usesTheme: bo
 
   // ── 2. Inline PDFComponentProps for .types.ts files ───────────────────────
   if (result.includes('PDFComponentProps')) {
-    // Add Style import from @react-pdf/types if not already present
-    if (!result.includes("from '@react-pdf/types'")) {
-      result = result.replace(
-        /(import\s+.*from\s+['"][^'"]+['"];?\n)(?!import)/,
-        "$1import type { Style } from '@react-pdf/types';\n"
-      );
-    }
+    // `(?:<[^{]*>)?` captures optional generic params (e.g. `<T = Record<string,unknown>>`),
+    // stopping at `{` so we never accidentally consume the interface body.
 
-    // Handle Omit<PDFComponentProps, 'children'>
+    // Handle `extends Omit<PDFComponentProps, 'children'> {}` (empty body)
+    // `extends { style?: Style }` is not valid TS — inline the property instead.
     result = result.replace(
-      /extends\s+Omit<PDFComponentProps,\s*['"]children['"]>/g,
-      'extends { style?: Style }'
+      /export\s+interface\s+(\w+(?:<[^{]*>)?)\s+extends\s+Omit<PDFComponentProps,\s*['"]children['"]\>\s*\{\s*\}/g,
+      'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n}'
+    );
+    // Handle `extends Omit<PDFComponentProps, 'children'> {` (non-empty body)
+    result = result.replace(
+      /export\s+interface\s+(\w+(?:<[^{]*>)?)\s+extends\s+Omit<PDFComponentProps,\s*['"]children['"]\>\s*\{/g,
+      'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;'
     );
 
     // Replace `extends PDFComponentProps {}` (empty body)
     result = result.replace(
-      /export\s+interface\s+(\w+)\s+extends\s+PDFComponentProps\s*\{\s*\}/g,
+      /export\s+interface\s+(\w+(?:<[^{]*>)?)\s+extends\s+PDFComponentProps\s*\{\s*\}/g,
       'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Content to render */\n  children: React.ReactNode;\n}'
     );
 
     // Replace `extends PDFComponentProps {` (non-empty body)
     result = result.replace(
-      /export\s+interface\s+(\w+)\s+extends\s+PDFComponentProps\s*\{/g,
+      /export\s+interface\s+(\w+(?:<[^{]*>)?)\s+extends\s+PDFComponentProps\s*\{/g,
       'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Content to render */\n  children: React.ReactNode;'
     );
+
+    // Inject Style import AFTER all replacements — only when Style is actually
+    // used in the file body (avoids orphan imports when the interface name has
+    // generics that previously defeated the regex).
+    const bodyForStyleCheck = result.replace(/^import[^\n]*\n/gm, '');
+    if (/\bStyle\b/.test(bodyForStyleCheck) && !result.includes("from '@react-pdf/types'")) {
+      result = result.replace(
+        /(import\s+.*from\s+['"][^'"]+['"];?\n)(?!import)/,
+        "$1import type { Style } from '@react-pdf/types';\n"
+      );
+    }
   }
 
   // ── 3. PdfxTheme alias ────────────────────────────────────────────────────
-  if (result.includes('PdfxTheme')) {
+  // Use a whole-word check so that 'usePdfxTheme' (which contains 'PdfxTheme'
+  // as a substring) does NOT trigger injection in .tsx files.
+  if (/(?<![a-zA-Z_$])PdfxTheme(?![a-zA-Z_$\d])/.test(result)) {
     if (result.includes('usePdfxTheme')) {
       // .tsx files: usePdfxTheme is already imported — inject ReturnType alias after that import
       result = result.replace(

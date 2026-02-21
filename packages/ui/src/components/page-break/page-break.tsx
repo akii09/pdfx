@@ -5,6 +5,6 @@ export interface PageBreakProps extends Omit<PDFComponentProps, 'children'> {
   children?: never;
 }
 
-export function PageBreak(_props: PageBreakProps) {
+export function PageBreak() {
   return <View break />;
 }

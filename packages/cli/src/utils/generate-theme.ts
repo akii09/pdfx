@@ -199,6 +199,12 @@ export function generateThemeContextFile(): string {
 // This file intentionally exports both a component (PdfxThemeProvider) and hooks/context.
 // All PDF components import from a single file — splitting would break the public API.
 
+/* eslint-disable react-hooks/rules-of-hooks */
+// react-hooks/rules-of-hooks: usePdfxTheme and useSafeMemo intentionally call hooks inside
+// try/catch — the accepted pattern for libraries that support both React render and
+// plain-function (unit-test) invocation. Removing this will break projects where the rule
+// is enabled.
+
 import { type DependencyList, type ReactNode, createContext, useContext, useMemo } from 'react';
 import { theme as defaultTheme } from './pdfx-theme';
 
@@ -231,7 +237,6 @@ export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
  */
 export function usePdfxTheme(): PdfxTheme {
   try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useContext(PdfxThemeContext);
   } catch (error) {
     // Only suppress React dispatcher errors ("Invalid hook call").
@@ -254,7 +259,6 @@ export function usePdfxTheme(): PdfxTheme {
  */
 export function useSafeMemo<T>(factory: () => T, deps: DependencyList): T {
   try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useMemo(factory, deps);
   } catch (error) {
     if (

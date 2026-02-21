@@ -716,8 +716,6 @@ export function PdfGraph({
   data,
   title,
   subtitle,
-  xLabel: _xLabel,
-  yLabel: _yLabel,
   width = 500,
   height = 260,
   colors,
