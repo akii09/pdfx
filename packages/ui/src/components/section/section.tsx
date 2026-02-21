@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 export type SectionSpacing = 'none' | 'sm' | 'md' | 'lg' | 'xl';
@@ -77,30 +77,6 @@ function createSectionStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createSectionStyles(theme);
-
-const spacingMap = {
-  none: styles.spacingNone,
-  sm: styles.spacingSm,
-  md: styles.spacingMd,
-  lg: styles.spacingLg,
-  xl: styles.spacingXl,
-} as const;
-
-const paddingMap = {
-  none: styles.paddingNone,
-  sm: styles.paddingSm,
-  md: styles.paddingMd,
-  lg: styles.paddingLg,
-} as const;
-
-const variantMap = {
-  default: null,
-  callout: styles.callout,
-  highlight: styles.highlight,
-  card: styles.card,
-} as const;
-
 export function Section({
   spacing = 'md',
   padding,
@@ -112,6 +88,27 @@ export function Section({
   children,
   style,
 }: SectionProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createSectionStyles(theme), [theme]);
+  const spacingMap = {
+    none: styles.spacingNone,
+    sm: styles.spacingSm,
+    md: styles.spacingMd,
+    lg: styles.spacingLg,
+    xl: styles.spacingXl,
+  };
+  const paddingMap = {
+    none: styles.paddingNone,
+    sm: styles.paddingSm,
+    md: styles.paddingMd,
+    lg: styles.paddingLg,
+  };
+  const variantMap: Record<SectionVariant, Style | null> = {
+    default: null,
+    callout: styles.callout,
+    highlight: styles.highlight,
+    card: styles.card,
+  };
   const spacingStyle = spacingMap[spacing];
   const styleArray: Style[] = [styles.base, spacingStyle];
 

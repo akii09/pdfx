@@ -108,3 +108,4 @@ export {
   type GraphSeries,
   type GraphLegendPosition,
 } from './components/graph/graph';
+export { PdfxThemeProvider, usePdfxTheme, PdfxThemeContext } from './lib/pdfx-theme-context';

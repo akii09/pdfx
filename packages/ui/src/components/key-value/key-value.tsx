@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 /**
@@ -139,20 +139,6 @@ function createKeyValueStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createKeyValueStyles(theme);
-
-const keyStyleMap: Record<KeyValueSize, Style> = {
-  sm: styles.keySm,
-  md: styles.keyMd,
-  lg: styles.keyLg,
-};
-
-const valueStyleMap: Record<KeyValueSize, Style> = {
-  sm: styles.valueSm,
-  md: styles.valueMd,
-  lg: styles.valueLg,
-};
-
 export function KeyValue({
   items,
   direction = 'horizontal',
@@ -164,6 +150,18 @@ export function KeyValue({
   boldValue = false,
   style,
 }: KeyValueProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createKeyValueStyles(theme), [theme]);
+  const keyStyleMap: Record<KeyValueSize, Style> = {
+    sm: styles.keySm,
+    md: styles.keyMd,
+    lg: styles.keyLg,
+  };
+  const valueStyleMap: Record<KeyValueSize, Style> = {
+    sm: styles.valueSm,
+    md: styles.valueMd,
+    lg: styles.valueLg,
+  };
   const containerStyles: Style[] = [styles.container];
   if (style) containerStyles.push(style);
 

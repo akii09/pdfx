@@ -1,7 +1,7 @@
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type FormLayout = 'single' | 'two-column' | 'three-column';
 
@@ -15,17 +15,6 @@ export interface PdfFormSectionProps {
   rows: FormRow[];
   layout?: FormLayout;
   style?: Style;
-}
-
-let cachedTheme: PdfxTheme | null = null;
-let cachedStyles: ReturnType<typeof createFormStyles> | null = null;
-
-function getStyles(t: PdfxTheme) {
-  if (cachedTheme !== t || !cachedStyles) {
-    cachedStyles = createFormStyles(t);
-    cachedTheme = t;
-  }
-  return cachedStyles;
 }
 
 function createFormStyles(t: PdfxTheme) {
@@ -77,7 +66,8 @@ function createFormStyles(t: PdfxTheme) {
 }
 
 export function PdfFormSection({ title, rows, layout = 'single', style }: PdfFormSectionProps) {
-  const styles = getStyles(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createFormStyles(theme), [theme]);
   const cols = layout === 'three-column' ? 3 : layout === 'two-column' ? 2 : 1;
   const sectionStyles: Style[] = [styles.section];
   const styleArray = style ? [...sectionStyles, style] : sectionStyles;

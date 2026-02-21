@@ -4,7 +4,7 @@ import { Text as PDFText, StyleSheet } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import type React from 'react';
 import { Fragment } from 'react';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import type { TableVariant } from '../table';
 import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from '../table';
 
@@ -61,8 +61,6 @@ function createCompactStyles(t: PdfxTheme) {
   });
 }
 
-const compact = createCompactStyles(theme);
-
 export function DataTable<T extends Record<string, unknown>>({
   columns,
   data,
@@ -73,6 +71,8 @@ export function DataTable<T extends Record<string, unknown>>({
   noWrap = false,
   style,
 }: DataTableProps<T>) {
+  const theme = usePdfxTheme();
+  const compact = useSafeMemo(() => createCompactStyles(theme), [theme]);
   const isCompact = size === 'compact';
 
   return (

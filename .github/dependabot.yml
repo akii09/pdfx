@@ -1,6 +1,6 @@
 version: 2
 updates:
-  # Root / monorepo devDependencies
+  # Root — covers workspace-hoisted deps
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -9,19 +9,23 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       biome:
-        patterns:
-          - "@biomejs/*"
+        patterns: ["@biomejs/*"]
       turbo:
-        patterns:
-          - "turbo"
+        patterns: ["turbo"]
       typescript:
-        patterns:
-          - "typescript"
+        patterns: ["typescript"]
       changesets:
-        patterns:
-          - "@changesets/*"
+        patterns: ["@changesets/*"]
+      types:
+        patterns: ["@types/*"]
+      dev-tools:
+        dependency-type: "development"
+        update-types: ["minor", "patch"]
 
   # CLI package
   - package-ecosystem: "npm"
@@ -29,10 +33,17 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     labels:
       - "dependencies"
       - "cli"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      cli-all:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
 
   # UI package
   - package-ecosystem: "npm"
@@ -40,10 +51,17 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     labels:
       - "dependencies"
       - "ui"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      ui-all:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
 
   # Shared package
   - package-ecosystem: "npm"
@@ -51,18 +69,28 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     labels:
       - "dependencies"
       - "shared"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      shared-all:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"  # actions don't need weekly
       day: "monday"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
     labels:
       - "dependencies"
       - "github-actions"
+    groups:
+      actions-all:
+        patterns: ["*"]

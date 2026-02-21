@@ -14,6 +14,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
+import { generateThemeContextFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
 
 function readConfig(configPath: string): Config {
@@ -89,7 +90,23 @@ export function resolveThemeImport(
     relativePath = `./${relativePath}`;
   }
 
-  return fileContent.replace(/from\s+['"]\.\.\/lib\/pdfx-theme['"]/g, `from '${relativePath}'`);
+  // Compute the context file path — pdfx-theme-context sits next to pdfx-theme
+  const absContextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context');
+  let relativeContextPath = path.relative(absComponentDir, absContextPath);
+
+  if (!relativeContextPath.startsWith('.')) {
+    relativeContextPath = `./${relativeContextPath}`;
+  }
+
+  let content = fileContent.replace(
+    /from\s+['"]\.\.\/lib\/pdfx-theme['"]/g,
+    `from '${relativePath}'`
+  );
+  content = content.replace(
+    /from\s+['"]\.\.\/lib\/pdfx-theme-context['"]/g,
+    `from '${relativeContextPath}'`
+  );
+  return content;
 }
 
 async function installComponent(name: string, config: Config, force: boolean): Promise<void> {
@@ -105,7 +122,10 @@ async function installComponent(name: string, config: Config, force: boolean): P
     const filePath = safePath(targetDir, fileName);
 
     let content = file.content;
-    if (config.theme && content.includes('pdfx-theme')) {
+    if (
+      config.theme &&
+      (content.includes('pdfx-theme') || content.includes('pdfx-theme-context'))
+    ) {
       content = resolveThemeImport(config.componentDir, config.theme, content);
     }
 
@@ -132,6 +152,17 @@ async function installComponent(name: string, config: Config, force: boolean): P
   // Write all files
   for (const file of filesToWrite) {
     writeFile(file.filePath, file.content);
+  }
+
+  // Ensure pdfx-theme-context.tsx exists alongside the theme file.
+  // Components import it for usePdfxTheme / useSafeMemo / PdfxThemeProvider.
+  if (config.theme) {
+    const absThemePath = path.resolve(process.cwd(), config.theme);
+    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
+    if (!checkFileExists(contextPath)) {
+      ensureDir(path.dirname(contextPath));
+      writeFile(contextPath, generateThemeContextFile());
+    }
   }
 
   return;

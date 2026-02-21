@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { StyleSheet, Text } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 export type HeadingWeight = 'normal' | 'medium' | 'semibold' | 'bold';
@@ -93,23 +93,6 @@ function createHeadingStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createHeadingStyles(theme);
-
-const weightMap = {
-  normal: styles.weightNormal,
-  medium: styles.weightMedium,
-  semibold: styles.weightSemibold,
-  bold: styles.weightBold,
-} as const;
-
-const trackingMap = {
-  tighter: styles.trackingTighter,
-  tight: styles.trackingTight,
-  normal: styles.trackingNormal,
-  wide: styles.trackingWide,
-  wider: styles.trackingWider,
-} as const;
-
 export function Heading({
   level = 1,
   align,
@@ -122,6 +105,21 @@ export function Heading({
   children,
   style,
 }: HeadingProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createHeadingStyles(theme), [theme]);
+  const weightMap = {
+    normal: styles.weightNormal,
+    medium: styles.weightMedium,
+    semibold: styles.weightSemibold,
+    bold: styles.weightBold,
+  };
+  const trackingMap = {
+    tighter: styles.trackingTighter,
+    tight: styles.trackingTight,
+    normal: styles.trackingNormal,
+    wide: styles.trackingWide,
+    wider: styles.trackingWider,
+  };
   const headingStyle = styles[`h${level}` as keyof typeof styles];
   const styleArray: Style[] = [headingStyle as Style];
 

@@ -1,7 +1,7 @@
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type SignatureVariant = 'single' | 'double' | 'inline';
 
@@ -20,17 +20,6 @@ export interface PdfSignatureBlockProps {
   date?: string;
   signers?: [SignatureSigner, SignatureSigner];
   style?: Style;
-}
-
-let cachedTheme: PdfxTheme | null = null;
-let cachedStyles: ReturnType<typeof createSignatureStyles> | null = null;
-
-function getStyles(t: PdfxTheme) {
-  if (cachedTheme !== t || !cachedStyles) {
-    cachedStyles = createSignatureStyles(t);
-    cachedTheme = t;
-  }
-  return cachedStyles;
 }
 
 function createSignatureStyles(t: PdfxTheme) {
@@ -132,7 +121,8 @@ export function PdfSignatureBlock({
   signers,
   style,
 }: PdfSignatureBlockProps) {
-  const styles = getStyles(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createSignatureStyles(theme), [theme]);
   const containerStyles: Style[] = [styles.container];
   const styleArray = style ? [...containerStyles, style] : containerStyles;
 

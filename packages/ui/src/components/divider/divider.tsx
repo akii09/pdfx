@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 export type DividerVariant = 'solid' | 'dashed' | 'dotted';
@@ -62,27 +62,6 @@ function createDividerStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createDividerStyles(theme);
-
-const spacingMap = {
-  none: styles.spacingNone,
-  sm: styles.spacingSm,
-  md: styles.spacingMd,
-  lg: styles.spacingLg,
-} as const;
-
-const variantMap = {
-  solid: styles.solid,
-  dashed: styles.dashed,
-  dotted: styles.dotted,
-} as const;
-
-const thicknessMap = {
-  thin: styles.thin,
-  medium: styles.medium,
-  thick: styles.thick,
-} as const;
-
 export function Divider({
   spacing = 'md',
   variant = 'solid',
@@ -92,6 +71,24 @@ export function Divider({
   width,
   style,
 }: DividerProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createDividerStyles(theme), [theme]);
+  const spacingMap = {
+    none: styles.spacingNone,
+    sm: styles.spacingSm,
+    md: styles.spacingMd,
+    lg: styles.spacingLg,
+  };
+  const variantMap = {
+    solid: styles.solid,
+    dashed: styles.dashed,
+    dotted: styles.dotted,
+  };
+  const thicknessMap = {
+    thin: styles.thin,
+    medium: styles.medium,
+    thick: styles.thick,
+  };
   const spacingStyle = spacingMap[spacing];
 
   if (label) {

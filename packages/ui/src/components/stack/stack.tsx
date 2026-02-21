@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type StackGap = 'none' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -48,31 +48,6 @@ function createStackStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createStackStyles(theme);
-
-const gapMap = {
-  none: styles.gapNone,
-  sm: styles.gapSm,
-  md: styles.gapMd,
-  lg: styles.gapLg,
-  xl: styles.gapXl,
-} as const;
-
-const alignMap = {
-  start: styles.alignStart,
-  center: styles.alignCenter,
-  end: styles.alignEnd,
-  stretch: styles.alignStretch,
-} as const;
-
-const justifyMap = {
-  start: styles.justifyStart,
-  center: styles.justifyCenter,
-  end: styles.justifyEnd,
-  between: styles.justifyBetween,
-  around: styles.justifyAround,
-} as const;
-
 export function Stack({
   gap = 'md',
   direction = 'vertical',
@@ -82,6 +57,28 @@ export function Stack({
   children,
   style,
 }: StackProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createStackStyles(theme), [theme]);
+  const gapMap = {
+    none: styles.gapNone,
+    sm: styles.gapSm,
+    md: styles.gapMd,
+    lg: styles.gapLg,
+    xl: styles.gapXl,
+  };
+  const alignMap = {
+    start: styles.alignStart,
+    center: styles.alignCenter,
+    end: styles.alignEnd,
+    stretch: styles.alignStretch,
+  };
+  const justifyMap = {
+    start: styles.justifyStart,
+    center: styles.justifyCenter,
+    end: styles.justifyEnd,
+    between: styles.justifyBetween,
+    around: styles.justifyAround,
+  };
   const directionStyle = direction === 'horizontal' ? styles.horizontal : styles.vertical;
   const gapStyle = gapMap[gap];
   const styleArray: Style[] = [directionStyle, gapStyle];

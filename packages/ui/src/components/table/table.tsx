@@ -3,7 +3,7 @@ import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import React from 'react';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type TableVariant =
   | 'line'
@@ -36,17 +36,6 @@ export interface TableCellProps extends PDFComponentProps {
   width?: string | number;
   variant?: TableVariant;
   _last?: boolean;
-}
-
-let cachedTheme: PdfxTheme | null = null;
-let cachedStyles: ReturnType<typeof createTableStyles> | null = null;
-
-function getStyles(t: PdfxTheme) {
-  if (cachedTheme !== t || !cachedStyles) {
-    cachedStyles = createTableStyles(t);
-    cachedTheme = t;
-  }
-  return cachedStyles;
 }
 
 /** Derives all styles from theme tokens. Zero hardcoded values. */
@@ -368,7 +357,8 @@ export function Table({
   zebraStripe = false,
   noWrap = false,
 }: TableProps) {
-  const styles = getStyles(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createTableStyles(theme), [theme]);
   const tableStyles: Style[] = [styles.table];
   const effectiveZebra = variant === 'striped' ? true : zebraStripe;
 
@@ -403,7 +393,8 @@ export function TableRow({
   style,
   variant = 'line',
 }: TableRowProps) {
-  const styles = getStyles(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createTableStyles(theme), [theme]);
   const rowStyles: Style[] = [styles.row];
 
   if (variant === 'grid') {
@@ -473,7 +464,8 @@ export function TableCell({
   variant = 'line',
   _last,
 }: TableCellProps) {
-  const styles = getStyles(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createTableStyles(theme), [theme]);
   const cellStyles: Style[] = [styles.cell];
 
   if (width !== undefined) {

@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 /**
@@ -259,8 +259,6 @@ function createPageFooterStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createPageFooterStyles(theme);
-
 export function PageFooter({
   leftText,
   rightText,
@@ -276,6 +274,8 @@ export function PageFooter({
   fixed = false,
   style,
 }: PageFooterProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createPageFooterStyles(theme), [theme]);
   const mt = marginTop ?? theme.spacing.sectionGap;
   const resolvedTextColor = textColor ? resolveColor(textColor, theme.colors) : undefined;
 

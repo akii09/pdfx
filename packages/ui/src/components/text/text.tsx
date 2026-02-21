@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 export type TextVariant = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl';
@@ -63,27 +63,6 @@ function createTextStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createTextStyles(theme);
-
-const weightMap = {
-  normal: styles.weightNormal,
-  medium: styles.weightMedium,
-  semibold: styles.weightSemibold,
-  bold: styles.weightBold,
-} as const;
-
-const decorationMap = {
-  underline: styles.underline,
-  'line-through': styles.lineThrough,
-  none: styles.decorationNone,
-} as const;
-
-const transformMap = {
-  uppercase: styles.uppercase,
-  lowercase: styles.lowercase,
-  capitalize: styles.capitalize,
-} as const;
-
 export function Text({
   variant,
   align,
@@ -96,6 +75,24 @@ export function Text({
   children,
   style,
 }: TextProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createTextStyles(theme), [theme]);
+  const weightMap = {
+    normal: styles.weightNormal,
+    medium: styles.weightMedium,
+    semibold: styles.weightSemibold,
+    bold: styles.weightBold,
+  };
+  const decorationMap = {
+    underline: styles.underline,
+    'line-through': styles.lineThrough,
+    none: styles.decorationNone,
+  };
+  const transformMap = {
+    uppercase: styles.uppercase,
+    lowercase: styles.lowercase,
+    capitalize: styles.capitalize,
+  };
   const baseStyle = variant ? styles[variant] : styles.text;
   const styleArray: Style[] = [baseStyle];
 

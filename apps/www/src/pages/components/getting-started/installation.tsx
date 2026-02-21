@@ -4,8 +4,9 @@ import {
   manualStep1Deps,
   manualStep2Pdfxjson,
   manualStep3Theme,
-  manualStep4Structure,
-  manualStep5AddComponent,
+  manualStep4Context,
+  manualStep5Structure,
+  manualStep6AddComponent,
 } from '@/constants/docs.constant';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -161,6 +162,38 @@ export default function Installation() {
                   <span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-xs font-bold shrink-0">
                     4
                   </span>
+                  Add the theme context file
+                </h3>
+                <p className="text-sm text-muted-foreground pl-8">
+                  Create{' '}
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                    src/lib/pdfx-theme-context.tsx
+                  </code>{' '}
+                  in the same directory as your theme file. Components use{' '}
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                    usePdfxTheme()
+                  </code>{' '}
+                  from this file to read the active theme, and{' '}
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                    PdfxThemeProvider
+                  </code>{' '}
+                  enables runtime theme switching.
+                </p>
+                <div className="pl-8">
+                  <CodeBlock
+                    code={manualStep4Context}
+                    language="tsx"
+                    filename="src/lib/pdfx-theme-context.tsx"
+                  />
+                </div>
+              </div>
+
+              {/* Step 5 */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold flex items-center gap-2.5">
+                  <span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-xs font-bold shrink-0">
+                    5
+                  </span>
                   Create component directory
                 </h3>
                 <p className="text-sm text-muted-foreground pl-8">
@@ -172,18 +205,18 @@ export default function Installation() {
                 </p>
                 <div className="pl-8">
                   <CodeBlock
-                    code={manualStep4Structure}
+                    code={manualStep5Structure}
                     language="text"
                     filename="project structure"
                   />
                 </div>
               </div>
 
-              {/* Step 5 */}
+              {/* Step 6 */}
               <div className="space-y-3">
                 <h3 className="text-sm font-semibold flex items-center gap-2.5">
                   <span className="flex items-center justify-center h-6 w-6 rounded-full bg-primary text-primary-foreground text-xs font-bold shrink-0">
-                    5
+                    6
                   </span>
                   Add components
                 </h3>
@@ -192,17 +225,29 @@ export default function Installation() {
                   component code.
                 </p>
                 <div className="pl-8">
-                  <CodeBlock code={manualStep5AddComponent} language="bash" filename="terminal" />
+                  <CodeBlock code={manualStep6AddComponent} language="bash" filename="terminal" />
                 </div>
               </div>
 
               <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4 text-sm text-muted-foreground leading-relaxed">
-                <strong className="text-foreground">Note:</strong> Components import the theme from{' '}
+                <strong className="text-foreground">Note:</strong> Components read the active theme
+                via{' '}
                 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
-                  ../lib/pdfx-theme
+                  pdfx-theme-context.tsx
                 </code>
-                . If your theme file is in a different location, update the import path in each
-                component.
+                , which in turn imports{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  pdfx-theme.ts
+                </code>
+                . Both files are scaffolded automatically by{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  pdfx init
+                </code>{' '}
+                and kept in sync by{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  pdfx add
+                </code>
+                .
               </div>
             </div>
           )}

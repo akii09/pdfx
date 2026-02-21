@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { Link as PDFLink, StyleSheet } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 export type LinkVariant = 'default' | 'muted' | 'primary';
@@ -55,19 +55,6 @@ function createLinkStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createLinkStyles(theme);
-
-const variantMap = {
-  default: styles.default,
-  muted: styles.muted,
-  primary: styles.primary,
-} as const;
-
-const underlineMap = {
-  always: styles.underlineAlways,
-  none: styles.underlineNone,
-} as const;
-
 export function Link({
   href,
   align,
@@ -77,6 +64,17 @@ export function Link({
   children,
   style,
 }: LinkProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createLinkStyles(theme), [theme]);
+  const variantMap = {
+    default: styles.default,
+    muted: styles.muted,
+    primary: styles.primary,
+  };
+  const underlineMap = {
+    always: styles.underlineAlways,
+    none: styles.underlineNone,
+  };
   const variantStyle = variantMap[variant];
   const styleArray: Style[] = [variantStyle];
 

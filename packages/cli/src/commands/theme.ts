@@ -6,7 +6,7 @@ import ora from 'ora';
 import prompts from 'prompts';
 import { DEFAULTS } from '../constants.js';
 import { ensureDir } from '../utils/file-system.js';
-import { generateThemeFile } from '../utils/generate-theme.js';
+import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
 
 /**
@@ -71,6 +71,11 @@ export async function themeInit() {
     const absThemePath = path.resolve(process.cwd(), themePath);
     ensureDir(path.dirname(absThemePath));
     fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
+
+    // Scaffold the context file alongside the theme file (idempotent — safe to overwrite)
+    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
+    fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
+
     spinner.succeed(`Created ${themePath} with ${presetName} theme`);
 
     // Update pdfx.json if it exists

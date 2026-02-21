@@ -2,7 +2,7 @@ import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import type React from 'react';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type ListVariant =
   | 'bullet'
@@ -34,19 +34,6 @@ export interface PdfListProps {
   style?: Style;
   /** Indent level for nested rendering (internal use). */
   _level?: number;
-}
-
-// ─── Style cache ──────────────────────────────────────────────────────────────
-
-let cachedTheme: PdfxTheme | null = null;
-let cachedStyles: ReturnType<typeof createListStyles> | null = null;
-
-function getStyles(t: PdfxTheme) {
-  if (cachedTheme !== t || !cachedStyles) {
-    cachedStyles = createListStyles(t);
-    cachedTheme = t;
-  }
-  return cachedStyles;
 }
 
 function createListStyles(t: PdfxTheme) {
@@ -303,7 +290,8 @@ export function PdfList({
   style,
   _level = 0,
 }: PdfListProps) {
-  const styles = getStyles(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createListStyles(theme), [theme]);
 
   const containerStyles: Style[] = [styles.container];
   if (_level > 0) containerStyles.push(styles.childrenContainer);

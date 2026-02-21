@@ -2,7 +2,7 @@ import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import type { ReactNode } from 'react';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type CardVariant = 'default' | 'bordered' | 'muted';
 
@@ -23,19 +23,6 @@ export interface PdfCardProps {
   wrap?: boolean;
   /** Custom style override. */
   style?: Style;
-}
-
-// ─── Style cache ──────────────────────────────────────────────────────────────
-
-let cachedTheme: PdfxTheme | null = null;
-let cachedStyles: ReturnType<typeof createCardStyles> | null = null;
-
-function getStyles(t: PdfxTheme) {
-  if (cachedTheme !== t || !cachedStyles) {
-    cachedStyles = createCardStyles(t);
-    cachedTheme = t;
-  }
-  return cachedStyles;
 }
 
 function createCardStyles(t: PdfxTheme) {
@@ -97,7 +84,8 @@ export function PdfCard({
   wrap = false,
   style,
 }: PdfCardProps) {
-  const styles = getStyles(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createCardStyles(theme), [theme]);
 
   const cardStyles: Style[] = [styles.card];
   if (variant === 'bordered') cardStyles.push(styles.cardBordered);

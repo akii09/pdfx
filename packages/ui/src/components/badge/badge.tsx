@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 export type BadgeVariant =
@@ -122,40 +122,6 @@ function createBadgeStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createBadgeStyles(theme);
-
-const containerVariantMap: Record<BadgeVariant, Style> = {
-  default: styles.variantDefault,
-  primary: styles.variantPrimary,
-  success: styles.variantSuccess,
-  warning: styles.variantWarning,
-  destructive: styles.variantDestructive,
-  info: styles.variantInfo,
-  outline: styles.variantOutline,
-};
-
-const textVariantMap: Record<BadgeVariant, Style> = {
-  default: styles.textDefault,
-  primary: styles.textPrimary,
-  success: styles.textSuccess,
-  warning: styles.textWarning,
-  destructive: styles.textDestructive,
-  info: styles.textInfo,
-  outline: styles.textOutline,
-};
-
-const containerSizeMap: Record<BadgeSize, Style> = {
-  sm: styles.sizeSm,
-  md: styles.sizeMd,
-  lg: styles.sizeLg,
-};
-
-const textSizeMap: Record<BadgeSize, Style> = {
-  sm: styles.textSm,
-  md: styles.textMd,
-  lg: styles.textLg,
-};
-
 export function Badge({
   label,
   variant = 'default',
@@ -164,6 +130,36 @@ export function Badge({
   color,
   style,
 }: BadgeProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createBadgeStyles(theme), [theme]);
+  const containerVariantMap: Record<BadgeVariant, Style> = {
+    default: styles.variantDefault,
+    primary: styles.variantPrimary,
+    success: styles.variantSuccess,
+    warning: styles.variantWarning,
+    destructive: styles.variantDestructive,
+    info: styles.variantInfo,
+    outline: styles.variantOutline,
+  };
+  const textVariantMap: Record<BadgeVariant, Style> = {
+    default: styles.textDefault,
+    primary: styles.textPrimary,
+    success: styles.textSuccess,
+    warning: styles.textWarning,
+    destructive: styles.textDestructive,
+    info: styles.textInfo,
+    outline: styles.textOutline,
+  };
+  const containerSizeMap: Record<BadgeSize, Style> = {
+    sm: styles.sizeSm,
+    md: styles.sizeMd,
+    lg: styles.sizeLg,
+  };
+  const textSizeMap: Record<BadgeSize, Style> = {
+    sm: styles.textSm,
+    md: styles.textMd,
+    lg: styles.textLg,
+  };
   const containerStyles: Style[] = [
     styles.containerBase,
     containerVariantMap[variant],

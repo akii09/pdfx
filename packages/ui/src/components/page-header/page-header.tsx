@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 /**
@@ -283,8 +283,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createPageHeaderStyles(theme);
-
 export function PageHeader({
   title,
   subtitle,
@@ -301,6 +299,8 @@ export function PageHeader({
   fixed = false,
   style,
 }: PageHeaderProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createPageHeaderStyles(theme), [theme]);
   const mb = marginBottom ?? theme.spacing.sectionGap;
 
   // ── Branded ─────────────────────────────────────────────────────────
