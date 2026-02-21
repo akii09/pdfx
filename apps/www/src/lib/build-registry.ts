@@ -105,7 +105,7 @@ function transformForRegistry(content: string): { content: string; usesTheme: bo
   if (result.includes('PdfxTheme')) {
     result = result.replace(
       /(import\s+\{[^}]*usePdfxTheme[^}]*\}\s+from\s+['"][^'"]*pdfx-theme-context['"];?\n)/,
-      "$1type PdfxTheme = ReturnType<typeof usePdfxTheme>;\n"
+      '$1type PdfxTheme = ReturnType<typeof usePdfxTheme>;\n'
     );
   }
 
