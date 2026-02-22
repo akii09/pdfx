@@ -20,3 +20,4 @@ export * from './key-value.constant.js';
 export * from './keep-together.constant.js';
 export * from './pdf-image.constant.js';
 export * from './graph.constant.js';
+export * from './templates.constant.js';

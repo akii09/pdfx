@@ -3,6 +3,7 @@ import { add } from './commands/add.js';
 import { diff } from './commands/diff.js';
 import { init } from './commands/init.js';
 import { list } from './commands/list.js';
+import { templateAdd, templateList } from './commands/template.js';
 import { themeInit, themeSwitch, themeValidate } from './commands/theme.js';
 
 const program = new Command();
@@ -34,5 +35,24 @@ themeCmd
   .action(themeSwitch);
 
 themeCmd.command('validate').description('Validate your theme file').action(themeValidate);
+
+const templateCmd = program.command('template').description('Scaffold PDF document templates');
+
+templateCmd
+  .command('list')
+  .description('List available templates from registry')
+  .action(templateList);
+
+templateCmd
+  .command('add <templates...>')
+  .description('Install one or more templates into your project')
+  .option('-f, --force', 'Overwrite existing files without prompting')
+  .option('-d, --dir <path>', 'Output directory (default: src/templates)')
+  .action(
+    (
+      templates: string[],
+      options: { force?: boolean; dir?: string }
+    ) => templateAdd(templates, options)
+  );
 
 program.parse();

@@ -27,6 +27,8 @@ const KeepTogetherPage = lazy(() => import('../pages/components/keep-together'))
 const PdfImagePage = lazy(() => import('../pages/components/pdf-image'));
 const GraphPage = lazy(() => import('../pages/components/graph'));
 const InstallationPage = lazy(() => import('../pages/installation'));
+const TemplatesIndexPage = lazy(() => import('../pages/templates/index'));
+const InvoicesPage = lazy(() => import('../pages/templates/invoices'));
 
 function PageLoader() {
   return (
@@ -230,6 +232,24 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader />}>
                 <GraphPage />
+              </Suspense>
+            }
+          />
+        </Route>
+        <Route path="templates">
+          <Route
+            index
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <TemplatesIndexPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="invoices"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <InvoicesPage />
               </Suspense>
             }
           />
