@@ -81,10 +81,13 @@ export {
 export { PdfList, type PdfListProps, type ListVariant, type ListItem } from './components/list';
 export { PdfCard, type PdfCardProps, type CardVariant } from './components/card';
 export {
-  PdfFormSection,
-  type PdfFormSectionProps,
+  PdfForm,
+  type PdfFormProps,
+  type PdfFormVariant,
+  type PdfFormField,
+  type PdfFormGroup,
   type FormLayout,
-  type FormRow,
+  type FormLabelPosition,
 } from './components/form';
 export {
   PdfSignatureBlock,
