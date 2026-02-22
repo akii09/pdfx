@@ -30,12 +30,18 @@ function renderItem(
   if (!isLast) rowStyles.push(gapStyle);
 
   if (variant === 'bullet') {
-    const marker = level === 0 ? '\u2022' : '\u25E6';
-    const markerStyle = level === 0 ? styles.markerBullet : styles.markerBulletSub;
     return (
       <View key={index}>
         <View style={rowStyles}>
-          <PDFText style={markerStyle}>{marker} </PDFText>
+          {level === 0 ? (
+            <View style={styles.markerBulletWrap}>
+              <View style={styles.markerBulletDot} />
+            </View>
+          ) : (
+            <View style={styles.markerBulletSubWrap}>
+              <View style={styles.markerBulletSubDot} />
+            </View>
+          )}
           <View style={{ flex: 1 }}>
             <PDFText style={styles.itemText}>{item.text}</PDFText>
           </View>
@@ -50,7 +56,9 @@ function renderItem(
   if (variant === 'numbered') {
     return (
       <View key={index} style={rowStyles}>
-        <PDFText style={styles.markerNumber}>{index + 1}. </PDFText>
+        <View style={styles.markerNumberBadge}>
+          <PDFText style={styles.markerNumberText}>{`${index + 1}`}</PDFText>
+        </View>
         <PDFText style={styles.itemText}>{item.text}</PDFText>
       </View>
     );
@@ -83,10 +91,21 @@ function renderItem(
     return (
       <View key={index}>
         <View style={rowStyles}>
-          <PDFText style={level === 0 ? styles.markerBullet : styles.markerBulletSub}>
-            {level === 0 ? '\u2022' : '\u25E6'}{' '}
-          </PDFText>
-          <PDFText style={[styles.itemText, level === 0 ? styles.itemTextBold : {}]}>
+          {level === 0 ? (
+            <View style={styles.markerBulletWrap}>
+              <View style={styles.markerBulletDot} />
+            </View>
+          ) : (
+            <View style={styles.markerBulletSubWrap}>
+              <View style={styles.markerBulletSubDot} />
+            </View>
+          )}
+          <PDFText
+            style={[
+              level === 0 ? styles.itemText : styles.itemTextSub,
+              level === 0 ? styles.itemTextBold : {},
+            ]}
+          >
             {item.text}
           </PDFText>
         </View>
@@ -121,9 +140,8 @@ function renderItemList(
   styles: ReturnType<typeof createListStyles>,
   level: number
 ): React.ReactElement {
-  const containerStyles: Style[] = level > 0 ? [styles.childrenContainer] : [];
   return (
-    <View style={containerStyles.length ? containerStyles : styles.childrenContainer}>
+    <View style={level > 0 ? styles.childrenContainer : undefined}>
       {items.map((item, index) =>
         renderItem(item, index, items.length, variant, gap, styles, level)
       )}

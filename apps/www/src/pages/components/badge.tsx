@@ -21,20 +21,12 @@ const styles = StyleSheet.create({
 
 const renderPreviewDocument = (variant: BadgeVariant) => (
   <Document title="PDFx Badge Preview">
-    <Page size="A4" style={styles.page}>
+    <Page size={{ width: 595, height: 200 }} style={styles.page}>
+      {/* Size showcase for the selected variant */}
       <View style={styles.row}>
         <Badge label="Small" variant={variant} size="sm" />
         <Badge label="Medium" variant={variant} size="md" />
         <Badge label="Large" variant={variant} size="lg" />
-      </View>
-      <View style={styles.row}>
-        <Badge label="Default" variant="default" />
-        <Badge label="Primary" variant="primary" />
-        <Badge label="Success" variant="success" />
-        <Badge label="Warning" variant="warning" />
-        <Badge label="Destructive" variant="destructive" />
-        <Badge label="Info" variant="info" />
-        <Badge label="Outline" variant="outline" />
       </View>
     </Page>
   </Document>

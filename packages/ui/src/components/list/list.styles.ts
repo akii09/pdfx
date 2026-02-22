@@ -24,35 +24,57 @@ export function createListStyles(t: PdfxTheme) {
     itemRowGapXs: { marginBottom: spacing[1] },
     itemRowGapSm: { marginBottom: spacing[2] },
     itemRowGapMd: { marginBottom: spacing[3] },
-    markerBullet: {
-      width: spacing[3],
-      marginTop: 2,
-      fontFamily: t.typography.body.fontFamily,
-      fontSize: t.typography.body.fontSize,
-      color: t.colors.primary,
-    },
-    markerBulletSub: {
-      width: spacing[3],
-      marginTop: 2,
-      fontFamily: t.typography.body.fontFamily,
-      fontSize: t.typography.body.fontSize,
-      color: t.colors.mutedForeground,
-    },
-    markerNumber: {
+    // ── Bullet markers ────────────────────────────────────────────────
+    markerBulletWrap: {
       width: spacing[4],
-      marginTop: 0,
-      fontFamily: t.typography.body.fontFamily,
-      fontSize: t.typography.body.fontSize,
-      color: t.colors.primary,
-      fontWeight: fontWeights.semibold,
+      paddingTop: 4,
+      alignItems: 'center',
     },
+    markerBulletDot: {
+      width: 5,
+      height: 5,
+      borderRadius: 3,
+      backgroundColor: t.colors.primary,
+    },
+    markerBulletSubWrap: {
+      width: spacing[4],
+      paddingTop: 5,
+      alignItems: 'center',
+    },
+    markerBulletSubDot: {
+      width: 4,
+      height: 4,
+      borderRadius: 2,
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: t.colors.mutedForeground,
+      backgroundColor: 'transparent',
+    },
+    // ── Numbered marker ───────────────────────────────────────────────
+    markerNumberBadge: {
+      width: spacing[5],
+      height: spacing[5],
+      borderRadius: spacing[5],
+      backgroundColor: t.colors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 1,
+      marginRight: spacing[2],
+    },
+    markerNumberText: {
+      fontFamily: t.typography.body.fontFamily,
+      fontSize: typography.xs,
+      color: t.colors.primaryForeground,
+      fontWeight: fontWeights.bold,
+    },
+    // ── Checklist ─────────────────────────────────────────────────────
     checkBox: {
       width: spacing[4],
       height: spacing[4],
-      borderWidth: 1,
+      borderWidth: 1.5,
       borderColor: t.colors.border,
       borderStyle: 'solid',
-      borderRadius: 2,
+      borderRadius: 3,
       marginTop: 1,
       marginRight: spacing[2],
       alignItems: 'center',
@@ -69,10 +91,11 @@ export function createListStyles(t: PdfxTheme) {
       color: t.colors.background,
       fontWeight: fontWeights.bold,
     },
+    // ── Icon box ──────────────────────────────────────────────────────
     iconBox: {
-      width: spacing[4],
-      height: spacing[4],
-      borderRadius: 2,
+      width: spacing[5],
+      height: spacing[5],
+      borderRadius: 4,
       backgroundColor: t.colors.primary,
       alignItems: 'center',
       justifyContent: 'center',
@@ -81,16 +104,24 @@ export function createListStyles(t: PdfxTheme) {
     },
     iconMark: {
       fontFamily: t.typography.body.fontFamily,
-      fontSize: 8,
+      fontSize: 9,
       color: t.colors.primaryForeground,
       fontWeight: fontWeights.bold,
     },
+    // ── Text styles ───────────────────────────────────────────────────
     itemText: {
       flex: 1,
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
       lineHeight: t.typography.body.lineHeight,
       color: t.colors.foreground,
+    },
+    itemTextSub: {
+      flex: 1,
+      fontFamily: t.typography.body.fontFamily,
+      fontSize: t.typography.body.fontSize - 0.5,
+      lineHeight: t.typography.body.lineHeight,
+      color: t.colors.mutedForeground,
     },
     itemTextBold: {
       fontWeight: fontWeights.semibold,
@@ -110,17 +141,17 @@ export function createListStyles(t: PdfxTheme) {
       marginTop: 1,
     },
     descriptiveAccent: {
-      width: spacing[1],
-      borderLeftWidth: spacing[1],
-      borderLeftColor: t.colors.primary,
-      borderLeftStyle: 'solid',
+      width: 3,
+      borderRadius: 2,
+      backgroundColor: t.colors.primary,
       marginRight: spacing[3],
+      minHeight: 16,
     },
     descriptiveContent: {
       flex: 1,
     },
     childrenContainer: {
-      marginLeft: spacing[4],
+      marginLeft: spacing[5],
       marginTop: spacing[1],
     },
   });

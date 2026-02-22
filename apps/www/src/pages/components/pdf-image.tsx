@@ -1,6 +1,6 @@
 import { pdfImageProps, pdfImageUsageCode } from '@/constants';
 import { PdfImage } from '@pdfx/ui';
-import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
+import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';
 import { useDocumentTitle } from '../../hooks/use-document-title';
@@ -16,34 +16,31 @@ type PdfImageVariant =
 
 const styles = StyleSheet.create({
   page: { padding: 40 },
-  row: { flexDirection: 'row', gap: 8, marginBottom: 12, alignItems: 'flex-start' },
-  label: { fontSize: 8, color: '#888', marginBottom: 4 },
 });
 
 // PDFx logo & favicon URLs
 const PDFX_LOGO = '/pdfx.png';
 const FAVICON = '/favicon.png';
-const PDFX_JPEG = '/pdfx.jpeg';
 
 const renderPreviewDocument = (variant: PdfImageVariant) => (
   <Document title="PDFx PdfImage Preview">
     <Page size="A4" style={styles.page}>
-      {/* Active variant */}
+      {/* Show only the selected variant */}
       <PdfImage
         src={variant === 'avatar' ? FAVICON : PDFX_LOGO}
         variant={variant}
-        height={variant === 'default' ? 120 : undefined}
-        width={variant === 'default' ? 200 : undefined}
+        height={
+          variant === 'default' || variant === 'rounded' || variant === 'bordered' ? 120 : undefined
+        }
+        width={
+          variant === 'default'
+            ? 200
+            : variant === 'rounded' || variant === 'bordered'
+              ? 120
+              : undefined
+        }
         caption={`Variant: ${variant}`}
       />
-
-      {/* Row of different variants */}
-      <View style={styles.row}>
-        <PdfImage src={PDFX_JPEG} variant="thumbnail" caption="thumbnail" />
-        <PdfImage src={FAVICON} variant="avatar" caption="avatar" />
-        <PdfImage src={PDFX_LOGO} variant="rounded" width={80} height={80} caption="rounded" />
-        <PdfImage src={FAVICON} variant="bordered" width={80} height={80} caption="bordered" />
-      </View>
     </Page>
   </Document>
 );
