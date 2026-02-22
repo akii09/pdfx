@@ -8,7 +8,6 @@ import {
   GraduationCap,
   Mail,
   Menu,
-  MessageSquarePlus,
   Palette,
   Receipt,
   Search,
@@ -81,161 +80,10 @@ const TEMPLATES = [
   },
 ];
 
-// ─── Request modal ─────────────────────────────────────────────────────────
-
-function TemplateRequestModal({ onClose }: { onClose: () => void }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  // Close on backdrop click
-  function handleOverlayClick(e: React.MouseEvent<HTMLDivElement>) {
-    if (e.target === overlayRef.current) onClose();
-  }
-
-  // Close on Escape
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
-    }
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // Open a pre-filled GitHub issue as the submission mechanism
-    const title = encodeURIComponent(`[Template Request] ${name}`);
-    const body = encodeURIComponent(
-      `**Template Name:** ${name}\n\n**What should it include:**\n${description}${email ? `\n\n**Contact email:** ${email}` : ''}`
-    );
-    window.open(
-      `https://github.com/akii09/pdfx/issues/new?title=${title}&body=${body}&labels=template-request`,
-      '_blank',
-      'noopener,noreferrer'
-    );
-    setSubmitted(true);
-  }
-
-  return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
-      onClick={handleOverlayClick}
-      onKeyDown={undefined}
-    >
-      <div className="relative w-full max-w-md rounded-xl border bg-card shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b">
-          <div className="flex items-center gap-2.5">
-            <div className="rounded-md bg-primary/10 p-1.5">
-              <MessageSquarePlus className="h-4 w-4 text-primary" />
-            </div>
-            <h2 className="text-base font-semibold">Request a Template</h2>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-md p-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        {submitted ? (
-          <div className="px-6 py-10 text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-900/40">
-              <MessageSquarePlus className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-            </div>
-            <p className="font-semibold mb-1">Request submitted!</p>
-            <p className="text-sm text-muted-foreground">
-              Your GitHub issue has been opened. We'll review the request soon.
-            </p>
-            <button
-              type="button"
-              onClick={onClose}
-              className="mt-5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-            >
-              Close
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="px-6 py-5 flex flex-col gap-4">
-            <p className="text-sm text-muted-foreground">
-              Don't see the template you need? Describe it and we'll add it to the roadmap.
-            </p>
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="tmpl-name" className="text-sm font-medium">
-                Template name <span className="text-destructive">*</span>
-              </label>
-              <input
-                id="tmpl-name"
-                type="text"
-                required
-                placeholder="e.g. Purchase Order, Lease Agreement…"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="tmpl-desc" className="text-sm font-medium">
-                What should it include? <span className="text-destructive">*</span>
-              </label>
-              <textarea
-                id="tmpl-desc"
-                required
-                rows={3}
-                placeholder="Describe the sections, fields, or features you need…"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="tmpl-email" className="text-sm font-medium">
-                Email{' '}
-                <span className="text-muted-foreground font-normal">(optional — for updates)</span>
-              </label>
-              <input
-                id="tmpl-email"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-            </div>
-            <div className="flex justify-end gap-2 pt-1">
-              <button
-                type="button"
-                onClick={onClose}
-                className="rounded-md px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-              >
-                Submit via GitHub
-              </button>
-            </div>
-          </form>
-        )}
-      </div>
-    </div>
-  );
-}
-
 // ─── Templates dropdown ─────────────────────────────────────────────────────
 
 function TemplatesDropdown() {
   const [open, setOpen] = useState(false);
-  const [requestOpen, setRequestOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   // Close on outside click
@@ -304,35 +152,32 @@ function TemplatesDropdown() {
               ))}
 
               {/* Request a template card */}
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  setRequestOpen(true);
-                }}
+              <a
+                href="https://github.com/akii09/pdfx/discussions"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
                 className="group flex flex-col gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 p-3 text-left hover:border-primary/70 hover:bg-primary/10 transition-all duration-150"
               >
                 <div className="rounded-md bg-primary/10 p-1.5 w-fit">
-                  <MessageSquarePlus className="h-4 w-4 text-primary" />
+                  <Github className="h-4 w-4 text-primary" />
                 </div>
                 <div>
                   <p className="text-xs font-semibold leading-tight text-primary">
                     Request a Template
                   </p>
                   <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
-                    Don't see what you need? Tell us and we'll build it.
+                    Don't see what you need? Tell us on GitHub Discussions.
                   </p>
                 </div>
                 <span className="text-[9px] font-medium uppercase tracking-wider text-primary/70 border border-primary/30 rounded px-1.5 py-0.5 w-fit group-hover:bg-primary/10 transition-colors">
-                  Open a request →
+                  Open discussion →
                 </span>
-              </button>
+              </a>
             </div>
           </div>
         )}
       </div>
-
-      {requestOpen && <TemplateRequestModal onClose={() => setRequestOpen(false)} />}
     </>
   );
 }
