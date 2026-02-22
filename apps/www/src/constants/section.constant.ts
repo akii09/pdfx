@@ -1,7 +1,7 @@
 export const sectionUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { Section } from '@/components/pdfx/pdfx-section';
-import { Heading } from '@/components/pdfx/pdfx-heading';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { Section } from '@/components/pdfx/section/pdfx-section';
+import { Heading } from '@/components/pdfx/heading/pdfx-heading';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (

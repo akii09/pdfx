@@ -37,7 +37,7 @@ export default function TextComponentPage() {
         </PDFPreview>
       }
       usageCode={textUsageCode}
-      usageFilename="src/components/pdfx/pdfx-text.tsx"
+      usageFilename="src/components/pdfx/text/pdfx-text.tsx"
       props={textProps}
     />
   );

@@ -103,7 +103,7 @@ export default function GraphComponentPage() {
         </PDFPreview>
       }
       usageCode={graphUsageCode}
-      usageFilename="src/components/pdfx/pdfx-graph.tsx"
+      usageFilename="src/components/pdfx/graph/pdfx-graph.tsx"
       props={graphProps}
       additionalInfo={
         <div className="space-y-4">

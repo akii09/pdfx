@@ -1,5 +1,5 @@
 export const headingUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { Heading } from '@/components/pdfx/pdfx-heading';
+import { Heading } from '@/components/pdfx/heading/pdfx-heading';
 
 export function MyDocument() {
   return (

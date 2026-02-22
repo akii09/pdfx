@@ -67,7 +67,7 @@ export default function PageHeaderComponentPage() {
         </PDFPreview>
       }
       usageCode={pageHeaderUsageCode}
-      usageFilename="src/components/pdfx/pdfx-page-header.tsx"
+      usageFilename="src/components/pdfx/page-header/pdfx-page-header.tsx"
       props={pageHeaderProps}
     />
   );

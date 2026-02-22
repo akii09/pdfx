@@ -35,7 +35,7 @@ export default function LinkComponentPage() {
         </PDFPreview>
       }
       usageCode={linkUsageCode}
-      usageFilename="src/components/pdfx/pdfx-link.tsx"
+      usageFilename="src/components/pdfx/link/pdfx-link.tsx"
       props={linkProps}
     />
   );

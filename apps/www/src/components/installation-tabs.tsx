@@ -165,11 +165,10 @@ export function InstallationTabs({
           <p className="text-sm text-muted-foreground">
             {isMultiFile ? (
               <>
-                Save each file into your{' '}
+                Save each file into{' '}
                 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
-                  src/components/pdfx/
-                </code>{' '}
-                directory.
+                  src/components/pdfx/{componentName}/
+                </code>
               </>
             ) : (
               <>
@@ -228,7 +227,7 @@ export function InstallationTabs({
                     }
                     copyValue={selectedFile.content}
                     language={getLanguage(selectedFile.path)}
-                    filename={getFileName(selectedFile.path)}
+                    filename={`src/components/pdfx/${componentName}/${getFileName(selectedFile.path)}`}
                     className="border-0 rounded-none"
                   />
                   {!isExpanded && hasMoreLines && (

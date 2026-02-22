@@ -1,5 +1,5 @@
 export const formUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { PdfForm } from '@/components/pdfx/pdfx-form';
+import { PdfForm } from '@/components/pdfx/form/pdfx-form';
 
 export function MyDocument() {
   return (

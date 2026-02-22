@@ -37,9 +37,12 @@ async function fetchComponent(name: string, registryUrl: string): Promise<Regist
 
   let response: Response;
   try {
-    response = await fetch(url);
-  } catch {
-    throw new NetworkError(`Could not reach ${registryUrl}`);
+    response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+  } catch (err) {
+    const isTimeout = err instanceof Error && err.name === 'TimeoutError';
+    throw new NetworkError(
+      isTimeout ? 'Registry request timed out' : `Could not reach ${registryUrl}`
+    );
   }
 
   if (!response.ok) {

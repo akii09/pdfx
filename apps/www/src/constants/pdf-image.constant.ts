@@ -1,5 +1,5 @@
 export const pdfImageUsageCode = `import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
-import { PdfImage } from '@/components/pdfx/pdfx-pdf-image';
+import { PdfImage } from '@/components/pdfx/pdf-image/pdfx-pdf-image';
 
 const styles = StyleSheet.create({ page: { padding: 40 } });
 

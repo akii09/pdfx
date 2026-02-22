@@ -81,7 +81,7 @@ export default function FormComponentPage() {
         </PDFPreview>
       }
       usageCode={formUsageCode}
-      usageFilename="src/components/pdfx/pdfx-form.tsx"
+      usageFilename="src/components/pdfx/form/pdfx-form.tsx"
       props={formProps}
       additionalInfo={
         <div className="space-y-4">

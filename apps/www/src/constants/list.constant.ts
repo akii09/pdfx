@@ -1,5 +1,5 @@
 export const listUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { PdfList } from '@/components/pdfx/pdfx-list';
+import { PdfList } from '@/components/pdfx/list/pdfx-list';
 
 export function MyDocument() {
   return (

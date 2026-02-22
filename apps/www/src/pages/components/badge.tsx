@@ -74,7 +74,7 @@ export default function BadgeComponentPage() {
         </PDFPreview>
       }
       usageCode={badgeUsageCode}
-      usageFilename="src/components/pdfx/pdfx-badge.tsx"
+      usageFilename="src/components/pdfx/badge/pdfx-badge.tsx"
       props={badgeProps}
       additionalInfo={
         <div className="space-y-4">

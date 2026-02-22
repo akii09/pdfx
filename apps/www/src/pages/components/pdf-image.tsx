@@ -82,7 +82,7 @@ export default function PdfImageComponentPage() {
         </PDFPreview>
       }
       usageCode={pdfImageUsageCode}
-      usageFilename="src/components/pdfx/pdfx-pdf-image.tsx"
+      usageFilename="src/components/pdfx/pdf-image/pdfx-pdf-image.tsx"
       props={pdfImageProps}
       additionalInfo={
         <div className="space-y-4">

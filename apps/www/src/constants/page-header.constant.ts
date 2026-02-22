@@ -1,6 +1,6 @@
 export const pageHeaderUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { PageHeader } from '@/components/pdfx/pdfx-page-header';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { PageHeader } from '@/components/pdfx/page-header/pdfx-page-header';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (

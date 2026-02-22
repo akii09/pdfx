@@ -1,5 +1,5 @@
 export const keyValueUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { KeyValue } from '@/components/pdfx/pdfx-key-value';
+import { KeyValue } from '@/components/pdfx/key-value/pdfx-key-value';
 
 export function MyDocument() {
   return (

@@ -60,7 +60,7 @@ export default function KeepTogetherComponentPage() {
         </PDFPreview>
       }
       usageCode={keepTogetherUsageCode}
-      usageFilename="src/components/pdfx/pdfx-keep-together.tsx"
+      usageFilename="src/components/pdfx/keep-together/pdfx-keep-together.tsx"
       props={keepTogetherProps}
       additionalInfo={
         <div className="space-y-4">

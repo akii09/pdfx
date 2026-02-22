@@ -1,7 +1,7 @@
 export const pageBreakUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { Heading } from '@/components/pdfx/pdfx-heading';
-import { PageBreak } from '@/components/pdfx/pdfx-page-break';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { Heading } from '@/components/pdfx/heading/pdfx-heading';
+import { PageBreak } from '@/components/pdfx/page-break/pdfx-page-break';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (

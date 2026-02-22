@@ -158,6 +158,14 @@ export async function themeSwitch(presetName: string) {
     const preset = themePresets[validatedPreset];
     const absThemePath = path.resolve(process.cwd(), config.theme);
     fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
+
+    // Ensure the context file is present after a switch (idempotent — only creates if missing)
+    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
+    if (!fs.existsSync(contextPath)) {
+      ensureDir(path.dirname(contextPath));
+      fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
+    }
+
     spinner.succeed(`Switched to ${validatedPreset} theme`);
   } catch (error: unknown) {
     spinner.fail('Failed to switch theme');
@@ -203,9 +211,20 @@ export async function themeValidate() {
     // Read the file and try to extract the theme object
     const content = fs.readFileSync(absThemePath, 'utf-8');
 
-    // Basic structural validation — check that required keys exist
+    // Strip comment lines to avoid false positives from comments or string literals
+    const cleanContent = content
+      .split('\n')
+      .filter((line) => {
+        const trimmed = line.trimStart();
+        return !trimmed.startsWith('//') && !trimmed.startsWith('*');
+      })
+      .join('\n');
+
+    // Check that required top-level keys exist as actual object keys (not in comments/strings)
     const requiredKeys = ['name', 'primitives', 'colors', 'typography', 'spacing', 'page'];
-    const missingKeys = requiredKeys.filter((key) => !content.includes(`${key}:`));
+    const missingKeys = requiredKeys.filter(
+      (key) => !new RegExp(`\\b${key}\\s*:`).test(cleanContent)
+    );
 
     if (missingKeys.length > 0) {
       spinner.fail(`Theme file is missing keys: ${missingKeys.join(', ')}`);
@@ -228,7 +247,9 @@ export async function themeValidate() {
       'warning',
       'info',
     ];
-    const missingColors = requiredColors.filter((key) => !content.includes(`${key}:`));
+    const missingColors = requiredColors.filter(
+      (key) => !new RegExp(`\\b${key}\\s*:`).test(cleanContent)
+    );
 
     if (missingColors.length > 0) {
       spinner.warn(`Theme file may be missing color tokens: ${missingColors.join(', ')}`);

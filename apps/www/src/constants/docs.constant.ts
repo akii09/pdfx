@@ -59,8 +59,8 @@ export const theme: PdfxTheme = {
 };`;
 
 export const usageExample = `import { Document, Page } from '@react-pdf/renderer';
-import { Heading } from '@/components/pdfx/pdfx-heading';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { Heading } from '@/components/pdfx/heading/pdfx-heading';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (
@@ -256,21 +256,24 @@ export function useSafeMemo<T>(factory: () => T, deps: DependencyList): T {
 export const manualStep5Structure = `your-project/
   src/
     lib/
-      pdfx-theme.ts            # Theme tokens (Step 3)
-      pdfx-theme-context.tsx   # Context, PdfxThemeProvider, usePdfxTheme (Step 4)
+      pdfx-theme.ts              # Theme tokens (Step 3)
+      pdfx-theme-context.tsx     # Context, PdfxThemeProvider, usePdfxTheme (Step 4)
     components/
-      pdfx/                    # ← All PDF components live here (isolated from UI components)
-        pdfx-heading.tsx       # Component
-        pdfx-heading.styles.ts # Styles (customize freely)
-        pdfx-heading.types.ts  # Types
-        pdfx-text.tsx
-        pdfx-text.styles.ts
-        pdfx-text.types.ts
-        pdfx-badge.tsx
-        pdfx-badge.styles.ts
-        pdfx-badge.types.ts
-        ...                    # Each component is a flat file, no sub-folders
-  pdfx.json                    # Project config (Step 2)`;
+      pdfx/                      # ← All PDF components live here (isolated from UI components)
+        heading/                 # Each component lives in its own subdirectory
+          pdfx-heading.tsx       # Component
+          pdfx-heading.styles.ts # Styles (customize freely)
+          pdfx-heading.types.ts  # Types
+        text/
+          pdfx-text.tsx
+          pdfx-text.styles.ts
+          pdfx-text.types.ts
+        badge/
+          pdfx-badge.tsx
+          pdfx-badge.styles.ts
+          pdfx-badge.types.ts
+        ...                      # One subdirectory per component
+  pdfx.json                      # Project config (Step 2)`;
 
 export const manualStep6AddComponent = `# Now you can copy components from each component's Manual tab.
 # Or use the CLI to add them:

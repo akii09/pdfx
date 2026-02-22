@@ -41,7 +41,7 @@ export default function StackComponentPage() {
         </PDFPreview>
       }
       usageCode={stackUsageCode}
-      usageFilename="src/components/pdfx/pdfx-stack.tsx"
+      usageFilename="src/components/pdfx/stack/pdfx-stack.tsx"
       props={stackProps}
     />
   );

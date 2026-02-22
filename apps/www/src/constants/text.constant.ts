@@ -1,5 +1,5 @@
 export const textUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (

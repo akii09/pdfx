@@ -14,7 +14,7 @@ interface ComponentPageProps {
   componentName: string;
   preview: ReactNode;
   usageCode: string;
-  /** Path where the usage file lives after install (e.g. src/components/pdfx/pdfx-heading.tsx) */
+  /** Path where the usage file lives after install (e.g. src/components/pdfx/heading/pdfx-heading.tsx) */
   usageFilename: string;
   props: PropDefinition[];
   /** Optional additional information section (requirements, notes, etc.) */

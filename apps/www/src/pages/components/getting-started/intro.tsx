@@ -174,7 +174,7 @@ export default function Intro() {
               n: '3',
               title: 'Use & Customize',
               desc: 'Import and use components in your PDFs. Edit the source freely.',
-              code: "import { Heading } from '@/components/pdfx/pdfx-heading';",
+              code: "import { Heading } from '@/components/pdfx/heading/pdfx-heading';",
             },
           ].map(({ n, title, desc, code }) => (
             <li key={n} className="flex gap-4 p-4 rounded-xl border bg-card">

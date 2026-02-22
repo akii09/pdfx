@@ -67,7 +67,7 @@ export default function PageFooterComponentPage() {
         </PDFPreview>
       }
       usageCode={pageFooterUsageCode}
-      usageFilename="src/components/pdfx/pdfx-page-footer.tsx"
+      usageFilename="src/components/pdfx/page-footer/pdfx-page-footer.tsx"
       props={pageFooterProps}
     />
   );

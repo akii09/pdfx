@@ -1,6 +1,6 @@
 export const cardUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { PdfCard } from '@/components/pdfx/pdfx-card';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { PdfCard } from '@/components/pdfx/card/pdfx-card';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (

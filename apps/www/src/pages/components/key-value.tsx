@@ -58,7 +58,7 @@ export default function KeyValueComponentPage() {
         </PDFPreview>
       }
       usageCode={keyValueUsageCode}
-      usageFilename="src/components/pdfx/pdfx-key-value.tsx"
+      usageFilename="src/components/pdfx/key-value/pdfx-key-value.tsx"
       props={keyValueProps}
       additionalInfo={
         <div className="space-y-4">

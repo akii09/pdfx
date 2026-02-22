@@ -1,6 +1,6 @@
 export const dataTableUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { DataTable } from '@/components/pdfx/pdfx-data-table';
-import { Heading } from '@/components/pdfx/pdfx-heading';
+import { DataTable } from '@/components/pdfx/data-table/pdfx-data-table';
+import { Heading } from '@/components/pdfx/heading/pdfx-heading';
 
 const users = [
   { id: 1, name: 'Alice Johnson', dept: 'Engineering', status: 'Active' },

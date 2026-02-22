@@ -1,7 +1,7 @@
 export const keepTogetherUsageCode = `import { Document, Page, StyleSheet } from '@react-pdf/renderer';
-import { Heading } from '@/components/pdfx/pdfx-heading';
-import { Table, TableHeader, TableBody, TableRow, TableCell } from '@/components/pdfx/pdfx-table';
-import { KeepTogether } from '@/components/pdfx/pdfx-keep-together';
+import { Heading } from '@/components/pdfx/heading/pdfx-heading';
+import { Table, TableHeader, TableBody, TableRow, TableCell } from '@/components/pdfx/table/pdfx-table';
+import { KeepTogether } from '@/components/pdfx/keep-together/pdfx-keep-together';
 
 const styles = StyleSheet.create({ page: { padding: 40 } });
 

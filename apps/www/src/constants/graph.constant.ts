@@ -1,5 +1,5 @@
 export const graphUsageCode = `import { Document, Page, StyleSheet } from '@react-pdf/renderer';
-import { PdfGraph } from '@/components/pdfx/pdfx-graph';
+import { PdfGraph } from '@/components/pdfx/graph/pdfx-graph';
 
 const styles = StyleSheet.create({ page: { padding: 40 } });
 

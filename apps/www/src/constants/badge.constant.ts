@@ -1,5 +1,5 @@
 export const badgeUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { Badge } from '@/components/pdfx/pdfx-badge';
+import { Badge } from '@/components/pdfx/badge/pdfx-badge';
 
 export function MyDocument() {
   return (
