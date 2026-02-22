@@ -9,7 +9,7 @@ import {
   PageFooter,
   PageHeader,
   PdfCard,
-  PdfFormSection,
+  PdfForm,
   PdfList,
   PdfSignatureBlock,
   Section,
@@ -449,7 +449,7 @@ function ListShowcasePage({ theme }: { theme: PdfxTheme }) {
   const descriptiveItems = [
     { text: 'PdfList', description: 'Bullet, numbered, checklist, icon, multi-level, descriptive' },
     { text: 'PdfCard', description: 'Default, bordered, and muted variants with padding control' },
-    { text: 'PdfFormSection', description: 'Single, two-column, and three-column layouts' },
+    { text: 'PdfForm', description: 'Fillable form with underline, box, outlined, ghost variants' },
     { text: 'PdfSignatureBlock', description: 'Single, double, and inline signature variants' },
   ];
 
@@ -487,7 +487,7 @@ function ListShowcasePage({ theme }: { theme: PdfxTheme }) {
 
 // ─── Card & Form & Signature Showcase Page ────────────────────────────────────
 
-/** Renders a page showcasing PdfCard, PdfFormSection, and PdfSignatureBlock. */
+/** Renders a page showcasing PdfCard, PdfForm, and PdfSignatureBlock. */
 function CardFormSignaturePage({ theme }: { theme: PdfxTheme }) {
   const s = StyleSheet.create({
     page: {
@@ -523,42 +523,36 @@ function CardFormSignaturePage({ theme }: { theme: PdfxTheme }) {
 
       <Divider spacing="sm" />
 
-      {/* ── Form Section Layouts ──────────────────────────────────────── */}
-      <Heading level={2}>Form — Single Column</Heading>
-      <PdfFormSection
-        title="Client Details"
-        rows={[
-          { label: 'Name', value: 'Jane Smith' },
-          { label: 'Company', value: 'Acme Corp' },
-          { label: 'Email', value: 'jane@acme.com' },
+      {/* ── Fillable Form ─────────────────────────────────────────────── */}
+      <Heading level={2}>Fillable Form (underline variant)</Heading>
+      <PdfForm
+        title="Service Request"
+        subtitle="Please fill in all fields clearly in block capitals."
+        variant="underline"
+        groups={[
+          {
+            title: 'Client Details',
+            fields: [
+              { label: 'Full Name', hint: 'First and last name' },
+              { label: 'Company' },
+              { label: 'Email Address' },
+            ],
+          },
+          {
+            title: 'Project Details',
+            layout: 'two-column',
+            fields: [
+              { label: 'Project Name' },
+              { label: 'Budget' },
+              { label: 'Start Date', hint: 'DD/MM/YYYY' },
+              { label: 'End Date', hint: 'DD/MM/YYYY' },
+            ],
+          },
+          {
+            title: 'Notes',
+            fields: [{ label: 'Additional Notes', height: 48 }],
+          },
         ]}
-        layout="single"
-      />
-
-      <Heading level={2}>Form — Two Column</Heading>
-      <PdfFormSection
-        title="Invoice Details"
-        rows={[
-          { label: 'Invoice #', value: 'INV-2026-0042' },
-          { label: 'Issue Date', value: '15 Feb 2026' },
-          { label: 'Due Date', value: '15 Mar 2026' },
-          { label: 'Status', value: 'Paid' },
-        ]}
-        layout="two-column"
-      />
-
-      <Heading level={2}>Form — Three Column</Heading>
-      <PdfFormSection
-        title="Project Overview"
-        rows={[
-          { label: 'Project', value: 'Website Redesign' },
-          { label: 'Team', value: 'Engineering' },
-          { label: 'Start', value: 'Jan 2026' },
-          { label: 'End', value: 'Mar 2026' },
-          { label: 'Budget', value: '$24,000' },
-          { label: 'Status', value: 'Active' },
-        ]}
-        layout="three-column"
       />
 
       <Divider spacing="sm" />

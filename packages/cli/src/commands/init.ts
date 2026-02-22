@@ -6,7 +6,7 @@ import ora from 'ora';
 import prompts from 'prompts';
 import { DEFAULTS } from '../constants.js';
 import { ensureDir } from '../utils/file-system.js';
-import { generateThemeFile } from '../utils/generate-theme.js';
+import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 
 export async function init() {
   console.log(chalk.bold.cyan('\n  Welcome to the pdfx cli\n'));
@@ -104,12 +104,16 @@ export async function init() {
     // Write pdfx.json
     fs.writeFileSync(path.join(process.cwd(), 'pdfx.json'), JSON.stringify(config, null, 2));
 
-    // Generate and write theme file
+    // Generate and write theme file + context file
     const presetName = (answers.themePreset || 'professional') as ThemePresetName;
     const preset = themePresets[presetName];
     const themePath = path.resolve(process.cwd(), config.theme);
     ensureDir(path.dirname(themePath));
     fs.writeFileSync(themePath, generateThemeFile(preset), 'utf-8');
+
+    // Scaffold the context file alongside the theme file
+    const contextPath = path.join(path.dirname(themePath), 'pdfx-theme-context.tsx');
+    fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
 
     spinner.succeed(`Created pdfx.json + ${config.theme} (${presetName} theme)`);
     console.log(chalk.green('\nSuccess! You can now run:'));

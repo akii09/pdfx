@@ -6,7 +6,7 @@ import {
   TableFooter,
   TableRow,
   TableCell
-} from '@/components/pdfx/pdfx-table';
+} from '@/components/pdfx/table/pdfx-table';
 
 export function MyDocument() {
   return (

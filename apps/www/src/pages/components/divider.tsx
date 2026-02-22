@@ -45,7 +45,7 @@ export default function DividerComponentPage() {
         </PDFPreview>
       }
       usageCode={dividerUsageCode}
-      usageFilename="src/components/pdfx/pdfx-divider.tsx"
+      usageFilename="src/components/pdfx/divider/pdfx-divider.tsx"
       props={dividerProps}
     />
   );

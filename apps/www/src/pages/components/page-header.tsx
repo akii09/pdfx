@@ -7,12 +7,20 @@ import { PDFPreview } from '../../components/pdf-preview';
 import { useDocumentTitle } from '../../hooks/use-document-title';
 
 const styles = StyleSheet.create({
+  // Compact demo page: narrow height so the header immediately fills the preview
   page: { padding: 30 },
+  bodyText: {
+    fontSize: 10,
+    color: '#555',
+    lineHeight: 1.6,
+    marginBottom: 6,
+  },
 });
 
 const renderPreviewDocument = (variant: PageHeaderVariant) => (
   <Document title="PDFx PageHeader Preview">
-    <Page size="A4" style={styles.page}>
+    {/* Custom compact page so the header band is immediately visible at the top */}
+    <Page size={{ width: 595, height: 240 }} style={styles.page}>
       <PageHeader
         title="Invoice #1042"
         subtitle="Acme Corp"
@@ -28,7 +36,10 @@ const renderPreviewDocument = (variant: PageHeaderVariant) => (
         phone={variant === 'two-column' ? '+1 (555) 000-0000' : undefined}
         email={variant === 'two-column' ? 'hello@acme.com' : undefined}
       />
-      <Text>Document body content continues below the header.</Text>
+      <Text style={styles.bodyText}>Document body content continues below the header.</Text>
+      <Text style={styles.bodyText}>
+        Line items, tables, and other document content would appear in this area.
+      </Text>
     </Page>
   </Document>
 );
@@ -67,7 +78,7 @@ export default function PageHeaderComponentPage() {
         </PDFPreview>
       }
       usageCode={pageHeaderUsageCode}
-      usageFilename="src/components/pdfx/pdfx-page-header.tsx"
+      usageFilename="src/components/pdfx/page-header/pdfx-page-header.tsx"
       props={pageHeaderProps}
     />
   );

@@ -39,7 +39,7 @@ export default function HeadingComponentPage() {
         </PDFPreview>
       }
       usageCode={headingUsageCode}
-      usageFilename="src/components/pdfx/pdfx-heading.tsx"
+      usageFilename="src/components/pdfx/heading/pdfx-heading.tsx"
       props={headingProps}
     />
   );

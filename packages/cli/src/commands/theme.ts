@@ -6,7 +6,7 @@ import ora from 'ora';
 import prompts from 'prompts';
 import { DEFAULTS } from '../constants.js';
 import { ensureDir } from '../utils/file-system.js';
-import { generateThemeFile } from '../utils/generate-theme.js';
+import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
 
 /**
@@ -71,6 +71,11 @@ export async function themeInit() {
     const absThemePath = path.resolve(process.cwd(), themePath);
     ensureDir(path.dirname(absThemePath));
     fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
+
+    // Scaffold the context file alongside the theme file (idempotent — safe to overwrite)
+    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
+    fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
+
     spinner.succeed(`Created ${themePath} with ${presetName} theme`);
 
     // Update pdfx.json if it exists
@@ -111,6 +116,9 @@ export async function themeSwitch(presetName: string) {
     process.exit(1);
   }
 
+  // Safe: validated above via validPresets.includes()
+  const validatedPreset = presetName as ThemePresetName;
+
   const configPath = path.join(process.cwd(), 'pdfx.json');
   if (!fs.existsSync(configPath)) {
     console.error(chalk.red('No pdfx.json found. Run "pdfx init" first.'));
@@ -135,7 +143,7 @@ export async function themeSwitch(presetName: string) {
   const answer = await prompts({
     type: 'confirm',
     name: 'confirm',
-    message: `This will overwrite ${config.theme} with the ${presetName} preset. Continue?`,
+    message: `This will overwrite ${config.theme} with the ${validatedPreset} preset. Continue?`,
     initial: false,
   });
 
@@ -144,13 +152,21 @@ export async function themeSwitch(presetName: string) {
     return;
   }
 
-  const spinner = ora(`Switching to ${presetName} theme...`).start();
+  const spinner = ora(`Switching to ${validatedPreset} theme...`).start();
 
   try {
-    const preset = themePresets[presetName as ThemePresetName];
+    const preset = themePresets[validatedPreset];
     const absThemePath = path.resolve(process.cwd(), config.theme);
     fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
-    spinner.succeed(`Switched to ${presetName} theme`);
+
+    // Ensure the context file is present after a switch (idempotent — only creates if missing)
+    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
+    if (!fs.existsSync(contextPath)) {
+      ensureDir(path.dirname(contextPath));
+      fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
+    }
+
+    spinner.succeed(`Switched to ${validatedPreset} theme`);
   } catch (error: unknown) {
     spinner.fail('Failed to switch theme');
     const message = error instanceof Error ? error.message : String(error);
@@ -195,9 +211,20 @@ export async function themeValidate() {
     // Read the file and try to extract the theme object
     const content = fs.readFileSync(absThemePath, 'utf-8');
 
-    // Basic structural validation — check that required keys exist
+    // Strip comment lines to avoid false positives from comments or string literals
+    const cleanContent = content
+      .split('\n')
+      .filter((line) => {
+        const trimmed = line.trimStart();
+        return !trimmed.startsWith('//') && !trimmed.startsWith('*');
+      })
+      .join('\n');
+
+    // Check that required top-level keys exist as actual object keys (not in comments/strings)
     const requiredKeys = ['name', 'primitives', 'colors', 'typography', 'spacing', 'page'];
-    const missingKeys = requiredKeys.filter((key) => !content.includes(`${key}:`));
+    const missingKeys = requiredKeys.filter(
+      (key) => !new RegExp(`\\b${key}\\s*:`).test(cleanContent)
+    );
 
     if (missingKeys.length > 0) {
       spinner.fail(`Theme file is missing keys: ${missingKeys.join(', ')}`);
@@ -220,7 +247,9 @@ export async function themeValidate() {
       'warning',
       'info',
     ];
-    const missingColors = requiredColors.filter((key) => !content.includes(`${key}:`));
+    const missingColors = requiredColors.filter(
+      (key) => !new RegExp(`\\b${key}\\s*:`).test(cleanContent)
+    );
 
     if (missingColors.length > 0) {
       spinner.warn(`Theme file may be missing color tokens: ${missingColors.join(', ')}`);

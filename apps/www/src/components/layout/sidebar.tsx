@@ -18,7 +18,7 @@ const sections: SidebarSection[] = [
   },
   {
     title: 'Installation',
-    links: [{ title: 'Installation', href: '/installation' }],
+    links: [{ title: 'Setup Guide', href: '/installation' }],
   },
   {
     title: 'Components',
@@ -40,6 +40,9 @@ const sections: SidebarSection[] = [
       { title: 'PageFooter', href: '/components/page-footer' },
       { title: 'Badge', href: '/components/badge' },
       { title: 'KeyValue', href: '/components/key-value' },
+      { title: 'KeepTogether', href: '/components/keep-together' },
+      { title: 'PdfImage', href: '/components/pdf-image' },
+      { title: 'Graph', href: '/components/graph' },
     ],
   },
 ];
@@ -56,16 +59,23 @@ export function Sidebar() {
 
   return (
     <aside className="hidden lg:block w-52 shrink-0 border-r">
-      <nav className="sticky top-16 space-y-5 py-6 pr-4">
-        {sections.map((section) => {
+      <nav className="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto overflow-x-hidden py-6 pr-4 scrollbar-hide">
+        {sections.map((section, sectionIndex) => {
           // On the components index page, show a condensed components section
           // since the main content already displays the full component browser
           if (section.title === 'Components' && isComponentsIndex) {
             return (
-              <div key={section.title}>
-                <h4 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  {section.title}
-                </h4>
+              <div
+                key={section.title}
+                className={cn(sectionIndex > 0 && 'mt-6 pt-6 border-t border-border/60')}
+              >
+                {/* Section header — always rendered before the menu items */}
+                <div className="mb-2 px-3 flex items-center gap-2">
+                  <span className="w-1 h-3 rounded-full bg-primary/50 shrink-0" />
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {section.title}
+                  </h4>
+                </div>
                 <p className="px-3 text-xs text-muted-foreground/70">
                   Browse all components in the main view
                 </p>
@@ -74,10 +84,17 @@ export function Sidebar() {
           }
 
           return (
-            <div key={section.title}>
-              <h4 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                {section.title}
-              </h4>
+            <div
+              key={section.title}
+              className={cn(sectionIndex > 0 && 'mt-6 pt-6 border-t border-border/60')}
+            >
+              {/* Section header — always rendered before the menu items */}
+              <div className="mb-2 px-3 flex items-center gap-2">
+                <span className="w-1 h-3 rounded-full bg-primary/50 shrink-0" />
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {section.title}
+                </h4>
+              </div>
               <ul className="space-y-0.5">
                 {section.links.map((link) => (
                   <li key={link.href}>

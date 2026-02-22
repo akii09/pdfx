@@ -1,1 +1,9 @@
-export { PdfFormSection, type PdfFormSectionProps, type FormLayout, type FormRow } from './form';
+export { PdfForm } from './form';
+export type {
+  PdfFormProps,
+  PdfFormVariant,
+  PdfFormField,
+  PdfFormGroup,
+  FormLayout,
+  FormLabelPosition,
+} from './form.types';

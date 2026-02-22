@@ -55,12 +55,13 @@ describe('PdfList', () => {
     }
   });
 
-  it('renders numbered variant with dot separator', () => {
+  it('renders numbered variant with numeric badges', () => {
     const result = PdfList({ items: sampleItems, variant: 'numbered' });
-    // In JSX {index+1}. becomes separate children: number and ". "
     const texts = collectTexts(result);
-    // Should contain the separator string ". " for each item
-    expect(texts.filter((t) => t === '. ').length).toBe(sampleItems.length);
+    // Each item gets a numeric badge: '1', '2', '3'
+    for (let i = 1; i <= sampleItems.length; i++) {
+      expect(texts.some((t) => t === String(i))).toBe(true);
+    }
   });
 
   it('renders checklist items', () => {
@@ -111,14 +112,15 @@ describe('PdfList', () => {
     expect(last.opacity).toBe(0.5);
   });
 
-  it('defaults to bullet variant — renders bullet character', () => {
+  it('defaults to bullet variant — renders item text', () => {
     const result = PdfList({ items: sampleItems });
-    // JSX {marker} ' ' produces two children: the marker char and ' '
-    const texts = collectTexts(result);
-    expect(texts.some((t) => t === '\u2022')).toBe(true);
+    // Bullets are rendered as View elements; verify item text is present
+    for (const item of sampleItems) {
+      expect(findText(result, item.text)).toBe(true);
+    }
   });
 
-  it('renders nested bullet sub-items with open circle marker', () => {
+  it('renders nested bullet sub-items with text', () => {
     const nestedItems = [
       {
         text: 'Parent',
@@ -126,8 +128,8 @@ describe('PdfList', () => {
       },
     ];
     const result = PdfList({ items: nestedItems, variant: 'bullet' });
-    const texts = collectTexts(result);
-    // Sub-level uses ◦ (open circle) as separate child
-    expect(texts.some((t) => t === '\u25E6')).toBe(true);
+    // Sub-level markers are View elements; verify parent and child text
+    expect(findText(result, 'Parent')).toBe(true);
+    expect(findText(result, 'Sub-item')).toBe(true);
   });
 });

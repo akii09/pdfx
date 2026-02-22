@@ -1,5 +1,5 @@
 export const textUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (
@@ -7,7 +7,9 @@ export function MyDocument() {
       <Page size="A4" style={{ padding: 30 }}>
         <Text>A paragraph of body text in your PDF document.</Text>
         <Text variant="xs" color="mutedForeground">Caption text</Text>
-        <Text variant="lg">Lead paragraph</Text>
+        <Text variant="lg" weight="semibold">Lead paragraph</Text>
+        <Text italic decoration="underline">Styled inline text</Text>
+        <Text transform="uppercase" variant="sm">Section label</Text>
       </Page>
     </Document>
   );
@@ -29,7 +31,33 @@ export const textProps = [
     name: 'color',
     type: 'string',
     description:
-      "Text color. Use theme token ('primary', 'muted', 'accent', etc.) or any CSS color.",
+      "Text color. Use a theme token ('primary', 'mutedForeground', 'accent', etc.) or any CSS color string.",
+  },
+  {
+    name: 'weight',
+    type: "'normal' | 'medium' | 'semibold' | 'bold'",
+    description: 'Font weight override. Defaults to the body font weight from the active theme.',
+  },
+  {
+    name: 'italic',
+    type: 'boolean',
+    description: 'Renders text in italic style.',
+  },
+  {
+    name: 'decoration',
+    type: "'underline' | 'line-through' | 'none'",
+    description:
+      'Text decoration. Use underline for links or emphasis, line-through for strikethrough.',
+  },
+  {
+    name: 'transform',
+    type: "'uppercase' | 'lowercase' | 'capitalize' | 'none'",
+    description: 'Text transform. Useful for section labels and all-caps styling.',
+  },
+  {
+    name: 'noMargin',
+    type: 'boolean',
+    description: 'Removes the default bottom margin added between text blocks.',
   },
   {
     name: 'children',
@@ -40,6 +68,7 @@ export const textProps = [
   {
     name: 'style',
     type: 'Style',
-    description: 'Custom @react-pdf/renderer styles to merge with defaults',
+    description:
+      'Custom @react-pdf/renderer styles to merge with defaults. Applied last, so it overrides everything.',
   },
 ];

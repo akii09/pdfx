@@ -14,6 +14,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
+import { generateThemeContextFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
 
 function readConfig(configPath: string): Config {
@@ -36,9 +37,12 @@ async function fetchComponent(name: string, registryUrl: string): Promise<Regist
 
   let response: Response;
   try {
-    response = await fetch(url);
-  } catch {
-    throw new NetworkError(`Could not reach ${registryUrl}`);
+    response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+  } catch (err) {
+    const isTimeout = err instanceof Error && err.name === 'TimeoutError';
+    throw new NetworkError(
+      isTimeout ? 'Registry request timed out' : `Could not reach ${registryUrl}`
+    );
   }
 
   if (!response.ok) {
@@ -89,24 +93,49 @@ export function resolveThemeImport(
     relativePath = `./${relativePath}`;
   }
 
-  return fileContent.replace(/from\s+['"]\.\.\/lib\/pdfx-theme['"]/g, `from '${relativePath}'`);
+  // Compute the context file path — pdfx-theme-context sits next to pdfx-theme
+  const absContextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context');
+  let relativeContextPath = path.relative(absComponentDir, absContextPath);
+
+  if (!relativeContextPath.startsWith('.')) {
+    relativeContextPath = `./${relativeContextPath}`;
+  }
+
+  let content = fileContent.replace(
+    /from\s+['"]\.\.\/lib\/pdfx-theme['"]/g,
+    `from '${relativePath}'`
+  );
+  content = content.replace(
+    /from\s+['"]\.\.\/lib\/pdfx-theme-context['"]/g,
+    `from '${relativeContextPath}'`
+  );
+  return content;
 }
 
 async function installComponent(name: string, config: Config, force: boolean): Promise<void> {
   const component = await fetchComponent(name, config.registry);
   const targetDir = path.resolve(process.cwd(), config.componentDir);
 
-  ensureDir(targetDir);
+  // Each component lives in its own subdirectory: {componentDir}/{name}/
+  // e.g. src/components/pdfx/badge/pdfx-badge.tsx
+  const componentDir = path.join(targetDir, component.name);
+  ensureDir(componentDir);
+
+  // Relative form of componentDir for resolveThemeImport (which resolves from cwd internally)
+  const componentRelDir = path.join(config.componentDir, component.name);
 
   // Collect and validate file paths, rewriting theme imports if needed
   const filesToWrite: Array<{ filePath: string; content: string }> = [];
   for (const file of component.files) {
     const fileName = path.basename(file.path);
-    const filePath = safePath(targetDir, fileName);
+    const filePath = safePath(componentDir, fileName);
 
     let content = file.content;
-    if (config.theme && content.includes('pdfx-theme')) {
-      content = resolveThemeImport(config.componentDir, config.theme, content);
+    if (
+      config.theme &&
+      (content.includes('pdfx-theme') || content.includes('pdfx-theme-context'))
+    ) {
+      content = resolveThemeImport(componentRelDir, config.theme, content);
     }
 
     filesToWrite.push({ filePath, content });
@@ -134,6 +163,17 @@ async function installComponent(name: string, config: Config, force: boolean): P
     writeFile(file.filePath, file.content);
   }
 
+  // Ensure pdfx-theme-context.tsx exists alongside the theme file.
+  // Components import it for usePdfxTheme / useSafeMemo / PdfxThemeProvider.
+  if (config.theme) {
+    const absThemePath = path.resolve(process.cwd(), config.theme);
+    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
+    if (!checkFileExists(contextPath)) {
+      ensureDir(path.dirname(contextPath));
+      writeFile(contextPath, generateThemeContextFile());
+    }
+  }
+
   return;
 }
 
@@ -154,7 +194,8 @@ export async function add(components: string[], options: { force?: boolean } = {
       console.error(chalk.red(error.message));
       if (error.suggestion) console.log(chalk.yellow(`  Hint: ${error.suggestion}`));
     } else {
-      console.error(chalk.red((error as Error).message));
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(message));
     }
     process.exit(1);
   }
@@ -193,7 +234,8 @@ export async function add(components: string[], options: { force?: boolean } = {
         }
       } else {
         spinner.fail(`Failed to add ${componentName}`);
-        console.error(chalk.dim(`  ${(error as Error).message}`));
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(chalk.dim(`  ${message}`));
       }
       failed.push(componentName);
     }

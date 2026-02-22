@@ -13,5 +13,6 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    allowedHosts: ['brantley-nonchimerical-speedfully.ngrok-free.dev'], // Allow both localhost and pdfx.local for development
   },
 });

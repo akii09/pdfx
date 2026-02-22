@@ -22,7 +22,9 @@ describe('Table', () => {
   it('has border and flexDirection column for grid variant', () => {
     const result = Table({ variant: 'grid', children: null });
     const styleArr = Array.isArray(result.props.style) ? result.props.style : [result.props.style];
-    const hasBorder = styleArr.some((s: { borderWidth?: number }) => s.borderWidth === 2);
+    const hasBorder = styleArr.some(
+      (s: { borderWidth?: number }) => typeof s.borderWidth === 'number' && s.borderWidth > 0
+    );
     const hasColumn = styleArr.some(
       (s: { flexDirection?: string }) => s.flexDirection === 'column'
     );

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pdfx.dev/sitemap.xml
+Sitemap: https://pdfx.akashpise.dev/sitemap.xml

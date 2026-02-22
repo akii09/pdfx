@@ -1,45 +1,40 @@
 export const formUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { PdfFormSection } from '@/components/pdfx/pdfx-form';
+import { PdfForm } from '@/components/pdfx/form/pdfx-form';
 
 export function MyDocument() {
   return (
     <Document>
       <Page size="A4" style={{ padding: 40 }}>
-        {/* Single column layout */}
-        <PdfFormSection
-          title="Client Details"
-          layout="single"
-          rows={[
-            { label: 'Name', value: 'Jane Smith' },
-            { label: 'Company', value: 'Acme Corp' },
-            { label: 'Email', value: 'jane@acme.com' },
-            { label: 'Phone', value: '+1 555 0100' },
-          ]}
-        />
-
-        {/* Two column layout */}
-        <PdfFormSection
-          title="Invoice Details"
-          layout="two-column"
-          rows={[
-            { label: 'Invoice #', value: 'INV-2026-0042' },
-            { label: 'Issue Date', value: '15 Feb 2026' },
-            { label: 'Due Date', value: '15 Mar 2026' },
-            { label: 'Status', value: 'Paid' },
-          ]}
-        />
-
-        {/* Three column layout */}
-        <PdfFormSection
-          title="Project Overview"
-          layout="three-column"
-          rows={[
-            { label: 'Project', value: 'Redesign' },
-            { label: 'Team', value: 'Engineering' },
-            { label: 'Budget', value: '$24,000' },
-            { label: 'Start', value: 'Jan 2026' },
-            { label: 'End', value: 'Mar 2026' },
-            { label: 'Status', value: 'Active' },
+        <PdfForm
+          title="Job Application"
+          subtitle="Please complete all fields clearly in block capitals."
+          variant="underline"
+          groups={[
+            {
+              title: 'Personal Information',
+              fields: [
+                { label: 'Full Name', hint: 'First and last name' },
+                { label: 'Date of Birth', hint: 'DD / MM / YYYY' },
+                { label: 'Email Address' },
+                { label: 'Phone Number', hint: '+1 (555) 000-0000' },
+              ],
+            },
+            {
+              title: 'Address',
+              layout: 'two-column',
+              fields: [
+                { label: 'Street Address' },
+                { label: 'City' },
+                { label: 'State / Province' },
+                { label: 'Zip / Postal Code' },
+              ],
+            },
+            {
+              title: 'Additional Information',
+              fields: [
+                { label: 'Cover Letter / Notes', height: 60 },
+              ],
+            },
           ]}
         />
       </Page>
@@ -49,40 +44,90 @@ export function MyDocument() {
 
 export const formProps = [
   {
-    name: 'rows',
-    type: 'FormRow[]',
+    name: 'groups',
+    type: 'PdfFormGroup[]',
     defaultValue: '-',
-    description: 'Array of form rows. Each row has a label and value string.',
-  },
-  {
-    name: 'layout',
-    type: "'single' | 'two-column' | 'three-column'",
-    defaultValue: "'single'",
+    required: true,
     description:
-      'Column layout. single = full-width rows, two-column = rows split into 2 columns, three-column = rows split into 3 columns.',
+      'Ordered list of field groups. Each group has an optional title, a fields array, and an optional column layout.',
   },
   {
     name: 'title',
     type: 'string',
     defaultValue: '-',
-    description: 'Optional section title rendered above the form rows.',
+    description: 'Form-level heading (e.g. "Application Form"). Rendered above a divider line.',
+  },
+  {
+    name: 'subtitle',
+    type: 'string',
+    defaultValue: '-',
+    description:
+      'Optional subtitle shown below the title in muted text (e.g. fill-in instructions).',
+  },
+  {
+    name: 'variant',
+    type: "'underline' | 'box' | 'outlined' | 'ghost'",
+    defaultValue: "'underline'",
+    description:
+      'Visual style of the blank field areas. underline = bottom border only (most print-friendly). box = full rectangle. outlined = rounded rectangle. ghost = light filled background.',
+  },
+  {
+    name: 'labelPosition',
+    type: "'above' | 'left'",
+    defaultValue: "'above'",
+    description:
+      'Where to place field labels relative to the blank area. above = label on its own line (default). left = label and field on the same line.',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Prevent the entire form from being split across PDF pages.',
   },
   {
     name: 'style',
     type: 'Style',
     defaultValue: '-',
-    description: 'Custom @react-pdf/renderer styles applied to the section container.',
+    description: 'Custom @react-pdf/renderer styles applied to the root container.',
   },
   {
-    name: 'FormRow.label',
+    name: 'PdfFormGroup.title',
     type: 'string',
     defaultValue: '-',
-    description: 'Field label displayed in muted foreground color.',
+    description: 'Optional section heading rendered above the group fields.',
   },
   {
-    name: 'FormRow.value',
+    name: 'PdfFormGroup.fields',
+    type: 'PdfFormField[]',
+    defaultValue: '-',
+    required: true,
+    description: 'Array of field definitions in this group.',
+  },
+  {
+    name: 'PdfFormGroup.layout',
+    type: "'single' | 'two-column' | 'three-column'",
+    defaultValue: "'single'",
+    description: 'Column layout for this group. Fields are distributed evenly across columns.',
+  },
+  {
+    name: 'PdfFormField.label',
     type: 'string',
     defaultValue: '-',
-    description: 'Field value displayed in foreground color.',
+    required: true,
+    description: 'Field label shown above or beside the blank area.',
+  },
+  {
+    name: 'PdfFormField.hint',
+    type: 'string',
+    defaultValue: '-',
+    description:
+      'Hint text shown inside the blank field area in light muted style (e.g. format hints like "DD/MM/YYYY"). Omit for a completely blank field.',
+  },
+  {
+    name: 'PdfFormField.height',
+    type: 'number',
+    defaultValue: '18',
+    description:
+      'Height of the blank field area in points. Use larger values (e.g. 60) for multi-line text fields.',
   },
 ];

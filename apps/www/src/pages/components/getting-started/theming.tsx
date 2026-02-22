@@ -1,5 +1,5 @@
 import { CodeBlock } from '@/components/code-block';
-import { themeCommands, themeCustomization } from '@/constants/docs.constant';
+import { themeCommands, themeCustomization, themeProviderUsage } from '@/constants/docs.constant';
 
 export default function Theming() {
   return (
@@ -51,6 +51,19 @@ export default function Theming() {
           and page settings to match your brand:
         </p>
         <CodeBlock code={themeCustomization} language="tsx" filename="src/lib/pdfx-theme.ts" />
+
+        <h3 id="runtime-theming" className="text-lg font-semibold mb-3 mt-8 scroll-mt-20">
+          Runtime Theme Switching
+        </h3>
+        <p className="text-muted-foreground mb-4">
+          Wrap any document subtree in{' '}
+          <code className="rounded bg-muted px-1.5 py-0.5 text-sm font-mono">
+            &lt;PdfxThemeProvider&gt;
+          </code>{' '}
+          to switch themes at runtime — no rebuild required. Components always inherit from the
+          nearest provider, so you can mix themes within a single document:
+        </p>
+        <CodeBlock code={themeProviderUsage} language="tsx" filename="src/my-document.tsx" />
       </section>
     </>
   );

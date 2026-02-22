@@ -39,7 +39,7 @@ export default function SectionComponentPage() {
         </PDFPreview>
       }
       usageCode={sectionUsageCode}
-      usageFilename="src/components/pdfx/pdfx-section.tsx"
+      usageFilename="src/components/pdfx/section/pdfx-section.tsx"
       props={sectionProps}
     />
   );

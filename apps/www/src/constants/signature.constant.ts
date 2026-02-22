@@ -1,5 +1,5 @@
 export const signatureUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { PdfSignatureBlock } from '@/components/pdfx/pdfx-signature';
+import { PdfSignatureBlock } from '@/components/pdfx/signature/pdfx-signature';
 
 export function MyDocument() {
   return (

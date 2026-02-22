@@ -1,20 +1,35 @@
+import { Link } from 'react-router-dom';
+
 export function Footer() {
   return (
-    <footer className="border-t py-8 mt-auto">
-      <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-sm text-muted-foreground">
-          Built with React + Vite. Inspired by shadcn/ui.
+    <footer className="border-t py-6 mt-auto" aria-label="Site footer">
+      <div className="container mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-xs text-muted-foreground/70 text-center sm:text-left">
+          © {new Date().getFullYear()} PDFx · MIT License
         </p>
-        <div className="flex gap-4 text-sm text-muted-foreground">
+        <nav className="flex items-center gap-5" aria-label="Footer navigation">
           <a
             href="https://github.com/akii09/pdfx"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
+            className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
+            aria-label="PDFx on GitHub"
           >
             GitHub
           </a>
-        </div>
+          <Link
+            to="/docs"
+            className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
+          >
+            Docs
+          </Link>
+          <Link
+            to="/components"
+            className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
+          >
+            Components
+          </Link>
+        </nav>
       </div>
     </footer>
   );

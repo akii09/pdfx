@@ -1,7 +1,7 @@
 export const dividerUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { Divider } from '@/components/pdfx/pdfx-divider';
-import { Heading } from '@/components/pdfx/pdfx-heading';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { Divider } from '@/components/pdfx/divider/pdfx-divider';
+import { Heading } from '@/components/pdfx/heading/pdfx-heading';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (

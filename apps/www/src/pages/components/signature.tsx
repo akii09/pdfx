@@ -65,7 +65,7 @@ export default function SignatureComponentPage() {
         </PDFPreview>
       }
       usageCode={signatureUsageCode}
-      usageFilename="src/components/pdfx/pdfx-signature.tsx"
+      usageFilename="src/components/pdfx/signature/pdfx-signature.tsx"
       props={signatureProps}
       additionalInfo={
         <div className="space-y-4">

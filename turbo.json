@@ -10,6 +10,10 @@
     },
     "build:registry": {
       "dependsOn": ["^build"],
+      "inputs": [
+        "src/registry/index.json",
+        "src/lib/build-registry.ts"
+      ],
       "outputs": ["public/r/**"],
       "cache": true
     },

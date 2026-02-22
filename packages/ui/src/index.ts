@@ -81,10 +81,13 @@ export {
 export { PdfList, type PdfListProps, type ListVariant, type ListItem } from './components/list';
 export { PdfCard, type PdfCardProps, type CardVariant } from './components/card';
 export {
-  PdfFormSection,
-  type PdfFormSectionProps,
+  PdfForm,
+  type PdfFormProps,
+  type PdfFormVariant,
+  type PdfFormField,
+  type PdfFormGroup,
   type FormLayout,
-  type FormRow,
+  type FormLabelPosition,
 } from './components/form';
 export {
   PdfSignatureBlock,
@@ -92,3 +95,20 @@ export {
   type SignatureVariant,
   type SignatureSigner,
 } from './components/signature';
+export { KeepTogether, type KeepTogetherProps } from './components/keep-together/keep-together';
+export {
+  PdfImage,
+  type PdfImageProps,
+  type PdfImageSrc,
+  type PdfImageVariant,
+  type PdfImageFit,
+} from './components/pdf-image/pdf-image';
+export {
+  PdfGraph,
+  type GraphProps,
+  type GraphVariant,
+  type GraphDataPoint,
+  type GraphSeries,
+  type GraphLegendPosition,
+} from './components/graph/graph';
+export { PdfxThemeProvider, usePdfxTheme, PdfxThemeContext } from './lib/pdfx-theme-context';

@@ -36,7 +36,7 @@ export default function PageBreakComponentPage() {
         </PDFPreview>
       }
       usageCode={pageBreakUsageCode}
-      usageFilename="src/components/pdfx/pdfx-page-break.tsx"
+      usageFilename="src/components/pdfx/page-break/pdfx-page-break.tsx"
       props={pageBreakProps}
     />
   );

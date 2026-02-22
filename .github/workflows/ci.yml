@@ -50,3 +50,12 @@ jobs:
 
       - name: Build registry
         run: pnpm build:registry
+
+      - name: Check registry is up-to-date
+        run: |
+          if ! git diff --exit-code apps/www/public/r/; then
+            echo ""
+            echo "❌ Registry is out of sync with source components."
+            echo "   Run 'pnpm build:registry' locally and commit the updated public/r/*.json files."
+            exit 1
+          fi

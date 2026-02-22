@@ -130,6 +130,7 @@ export const registryItemSchema = z.object({
   description: z.string().optional(),
   files: z.array(registryFileSchema).min(1, 'Component must have at least one file'),
   dependencies: z.array(z.string()).optional(),
+  registryDependencies: z.array(z.string()).optional(),
 });
 
 /** Schema for the full registry index */
@@ -150,6 +151,7 @@ export const registrySchema = z.object({
         })
       ),
       dependencies: z.array(z.string()).optional(),
+      registryDependencies: z.array(z.string()).optional(),
     })
   ),
 });

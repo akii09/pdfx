@@ -1,1 +1,2 @@
-export { PdfList, type PdfListProps, type ListVariant, type ListItem } from './list';
+export { PdfList } from './list';
+export type { PdfListProps, ListVariant, ListItem } from './list.types';

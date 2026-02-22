@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 /**
@@ -83,6 +83,20 @@ export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
    * Displayed in right column with address and phone.
    */
   email?: string;
+  /**
+   * Render this header on every page of the document.
+   * Uses react-pdf's built-in `fixed` prop on the outer View.
+   * When true, ensure the page content has enough top padding to avoid overlapping with the fixed header.
+   * @default false
+   */
+  fixed?: boolean;
+  /**
+   * Prevent the header from being split across PDF pages when placed inline.
+   * A partially-rendered header is always visually broken, so this defaults to true.
+   * Set to false only for decorative banners that can tolerate splitting.
+   * @default true
+   */
+  noWrap?: boolean;
 }
 
 function createPageHeaderStyles(t: PdfxTheme) {
@@ -276,8 +290,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createPageHeaderStyles(theme);
-
 export function PageHeader({
   title,
   subtitle,
@@ -291,8 +303,12 @@ export function PageHeader({
   address,
   phone,
   email,
+  fixed = false,
+  noWrap = true,
   style,
 }: PageHeaderProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createPageHeaderStyles(theme), [theme]);
   const mb = marginBottom ?? theme.spacing.sectionGap;
 
   // ── Branded ─────────────────────────────────────────────────────────
@@ -307,7 +323,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         <PDFText style={titleStyles}>{title}</PDFText>
         {subtitle && (
           <PDFText style={[styles.subtitle, styles.subtitleBranded]}>{subtitle}</PDFText>
@@ -328,7 +344,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         <PDFText style={titleStyles}>{title}</PDFText>
         {subtitle && (
           <PDFText style={[styles.subtitle, styles.subtitleCentered]}>{subtitle}</PDFText>
@@ -349,7 +365,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         <View style={styles.logoRightContent}>
           <PDFText style={titleStyles}>{title}</PDFText>
           {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
@@ -371,7 +387,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         {logo && <View style={styles.logoContainer}>{logo}</View>}
         <View style={styles.logoContent}>
           <PDFText style={titleStyles}>{title}</PDFText>
@@ -393,7 +409,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         <View style={styles.twoColumnLeft}>
           <PDFText style={titleStyles}>{title}</PDFText>
           {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
@@ -421,7 +437,7 @@ export function PageHeader({
     if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         <View style={styles.minimalLeft}>
           <PDFText style={titleStyles}>{title}</PDFText>
           {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
@@ -447,7 +463,7 @@ export function PageHeader({
   if (titleColor) titleStyles.push({ color: resolveColor(titleColor, theme.colors) });
 
   return (
-    <View style={containerStyles}>
+    <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
       <View style={styles.simpleLeft}>
         <PDFText style={titleStyles}>{title}</PDFText>
         {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}

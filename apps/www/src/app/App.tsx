@@ -23,6 +23,9 @@ const PageHeaderPage = lazy(() => import('../pages/components/page-header'));
 const PageFooterPage = lazy(() => import('../pages/components/page-footer'));
 const BadgePage = lazy(() => import('../pages/components/badge'));
 const KeyValuePage = lazy(() => import('../pages/components/key-value'));
+const KeepTogetherPage = lazy(() => import('../pages/components/keep-together'));
+const PdfImagePage = lazy(() => import('../pages/components/pdf-image'));
+const GraphPage = lazy(() => import('../pages/components/graph'));
 const InstallationPage = lazy(() => import('../pages/installation'));
 
 function PageLoader() {
@@ -203,6 +206,30 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader />}>
                 <KeyValuePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="keep-together"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <KeepTogetherPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="pdf-image"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <PdfImagePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="graph"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <GraphPage />
               </Suspense>
             }
           />

@@ -13,6 +13,8 @@ import ora from 'ora';
 import { checkFileExists, safePath } from '../utils/file-system.js';
 import { readJsonFile } from '../utils/read-json.js';
 
+const FETCH_TIMEOUT_MS = 10_000;
+
 export async function diff(components: string[]) {
   const configPath = path.join(process.cwd(), 'pdfx.json');
 
@@ -44,9 +46,14 @@ export async function diff(components: string[]) {
     try {
       let response: Response;
       try {
-        response = await fetch(`${config.registry}/${componentName}.json`);
-      } catch {
-        throw new NetworkError(`Could not reach ${config.registry}`);
+        response = await fetch(`${config.registry}/${componentName}.json`, {
+          signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+        });
+      } catch (err) {
+        const isTimeout = err instanceof Error && err.name === 'TimeoutError';
+        throw new NetworkError(
+          isTimeout ? 'Registry request timed out' : `Could not reach ${config.registry}`
+        );
       }
 
       if (!response.ok) {
@@ -66,9 +73,12 @@ export async function diff(components: string[]) {
       const component = result.data;
       spinner.stop();
 
+      // Components are installed under {componentDir}/{name}/pdfx-{name}.tsx
+      const componentSubDir = path.join(targetDir, component.name);
+
       for (const file of component.files) {
         const fileName = path.basename(file.path);
-        const localPath = safePath(targetDir, fileName);
+        const localPath = safePath(componentSubDir, fileName);
 
         if (!checkFileExists(localPath)) {
           console.log(chalk.yellow(`  ${fileName}: not installed locally`));

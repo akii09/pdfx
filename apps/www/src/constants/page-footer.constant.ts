@@ -1,6 +1,6 @@
 export const pageFooterUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { PageFooter } from '@/components/pdfx/pdfx-page-footer';
-import { Text } from '@/components/pdfx/pdfx-text';
+import { PageFooter } from '@/components/pdfx/page-footer/pdfx-page-footer';
+import { Text } from '@/components/pdfx/text/pdfx-text';
 
 export function MyDocument() {
   return (

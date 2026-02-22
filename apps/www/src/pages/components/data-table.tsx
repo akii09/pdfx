@@ -61,7 +61,7 @@ export default function DataTableComponentPage() {
         </PDFPreview>
       }
       usageCode={dataTableUsageCode}
-      usageFilename="src/components/pdfx/pdfx-data-table.tsx"
+      usageFilename="src/components/pdfx/data-table/pdfx-data-table.tsx"
       props={dataTableProps}
       additionalInfo={
         <div className="space-y-4">
@@ -114,14 +114,14 @@ export default function DataTableComponentPage() {
                       <code className="rounded bg-blue-100 dark:bg-blue-900/40 px-1 py-0.5 font-mono text-xs">
                         pdfx add table
                       </code>{' '}
-                      (or copy pdfx-table.tsx manually)
+                      (or copy files from <code>src/components/pdfx/table/</code> manually)
                     </li>
                     <li>
                       Then:{' '}
                       <code className="rounded bg-blue-100 dark:bg-blue-900/40 px-1 py-0.5 font-mono text-xs">
                         pdfx add data-table
                       </code>{' '}
-                      (or copy pdfx-data-table.tsx manually)
+                      (or copy files from <code>src/components/pdfx/data-table/</code> manually)
                     </li>
                   </ol>
                 </div>

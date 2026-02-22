@@ -9,8 +9,13 @@ const PREVIEW_LINES = 12;
 
 type InstallMethod = 'command' | 'manual';
 
+interface RegistryFile {
+  path: string;
+  content: string;
+}
+
 interface RegistryItem {
-  files: Array<{ path: string; content: string }>;
+  files: RegistryFile[];
   dependencies?: string[];
   registryDependencies?: string[];
 }
@@ -26,6 +31,14 @@ function getCodePreview(code: string, lines: number): string {
   return code.split('\n').slice(0, lines).join('\n');
 }
 
+function getFileName(filePath: string): string {
+  return filePath.split('/').at(-1) ?? filePath;
+}
+
+function getLanguage(filePath: string): string {
+  return filePath.endsWith('.tsx') ? 'tsx' : 'typescript';
+}
+
 export function InstallationTabs({
   installCommand,
   componentName,
@@ -33,14 +46,15 @@ export function InstallationTabs({
   className,
 }: InstallationTabsProps) {
   const [activeTab, setActiveTab] = useState<InstallMethod>('command');
-  const [manualCode, setManualCode] = useState<string | null>(null);
+  const [registryFiles, setRegistryFiles] = useState<RegistryFile[] | null>(null);
+  const [selectedFileIdx, setSelectedFileIdx] = useState(0);
   const [registryData, setRegistryData] = useState<RegistryItem | null>(null);
   const [isLoadingManual, setIsLoadingManual] = useState(false);
   const [manualError, setManualError] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const fetchManualCode = useCallback(async () => {
-    if (manualCode !== null) return;
+    if (registryFiles !== null) return;
     setIsLoadingManual(true);
     setManualError(null);
     try {
@@ -48,15 +62,15 @@ export function InstallationTabs({
       if (!res.ok) throw new Error('Failed to fetch');
       const data = (await res.json()) as RegistryItem;
       setRegistryData(data);
-      const firstFile = data.files?.[0];
-      if (!firstFile?.content) throw new Error('No content');
-      setManualCode(firstFile.content);
+      if (!data.files?.length) throw new Error('No files');
+      setRegistryFiles(data.files);
+      setSelectedFileIdx(0);
     } catch {
       setManualError('Could not load component code from the registry.');
     } finally {
       setIsLoadingManual(false);
     }
-  }, [componentName, manualCode]);
+  }, [componentName, registryFiles]);
 
   useEffect(() => {
     if (activeTab === 'manual') {
@@ -64,7 +78,11 @@ export function InstallationTabs({
     }
   }, [activeTab, fetchManualCode]);
 
-  const hasMoreLines = manualCode ? manualCode.split('\n').length > PREVIEW_LINES : false;
+  const selectedFile = registryFiles?.[selectedFileIdx];
+  const isMultiFile = (registryFiles?.length ?? 0) > 1;
+  const hasMoreLines = selectedFile
+    ? selectedFile.content.split('\n').length > PREVIEW_LINES
+    : false;
 
   return (
     <div className={cn('rounded-lg border overflow-hidden', className)}>
@@ -145,11 +163,46 @@ export function InstallationTabs({
           )}
 
           <p className="text-sm text-muted-foreground">
-            Copy and paste the following code into{' '}
-            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
-              {usageFilename}
-            </code>
+            {isMultiFile ? (
+              <>
+                Save each file into{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  src/components/pdfx/{componentName}/
+                </code>
+              </>
+            ) : (
+              <>
+                Copy and paste the following code into{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  {usageFilename}
+                </code>
+              </>
+            )}
           </p>
+
+          {/* File tab selector for multi-file components */}
+          {isMultiFile && registryFiles && (
+            <div className="flex items-center gap-1 flex-wrap">
+              {registryFiles.map((file, idx) => (
+                <button
+                  key={file.path}
+                  type="button"
+                  onClick={() => {
+                    setSelectedFileIdx(idx);
+                    setIsExpanded(false);
+                  }}
+                  className={cn(
+                    'px-3 py-1.5 text-xs font-mono font-medium rounded-md border transition-all',
+                    selectedFileIdx === idx
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'bg-background text-muted-foreground border-border hover:border-foreground/40 hover:text-foreground'
+                  )}
+                >
+                  {getFileName(file.path)}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="overflow-hidden rounded-lg border">
             {isLoadingManual ? (
@@ -158,7 +211,7 @@ export function InstallationTabs({
               </div>
             ) : manualError ? (
               <div className="p-4 text-sm text-muted-foreground">{manualError}</div>
-            ) : manualCode ? (
+            ) : selectedFile ? (
               <>
                 <div
                   className={cn(
@@ -167,10 +220,14 @@ export function InstallationTabs({
                   )}
                 >
                   <CodeBlock
-                    code={isExpanded ? manualCode : getCodePreview(manualCode, PREVIEW_LINES)}
-                    copyValue={manualCode}
-                    language="tsx"
-                    filename={usageFilename}
+                    code={
+                      isExpanded
+                        ? selectedFile.content
+                        : getCodePreview(selectedFile.content, PREVIEW_LINES)
+                    }
+                    copyValue={selectedFile.content}
+                    language={getLanguage(selectedFile.path)}
+                    filename={`src/components/pdfx/${componentName}/${getFileName(selectedFile.path)}`}
                     className="border-0 rounded-none"
                   />
                   {!isExpanded && hasMoreLines && (

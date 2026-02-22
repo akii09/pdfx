@@ -2,7 +2,7 @@ import type { PDFComponentProps } from '@pdfx/shared';
 import type { PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 /**
@@ -79,6 +79,20 @@ export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
    * Displayed in center column with other contact info.
    */
   website?: string;
+  /**
+   * Render this footer on every page of the document.
+   * Uses react-pdf's built-in `fixed` prop on the outer View.
+   * When true, ensure the page content has enough bottom padding to avoid overlapping with the fixed footer.
+   * @default false
+   */
+  fixed?: boolean;
+  /**
+   * Prevent the footer from being split across PDF pages when placed inline.
+   * A partially-rendered footer is always visually broken, so this defaults to true.
+   * Set to false only for decorative banners that can tolerate splitting.
+   * @default true
+   */
+  noWrap?: boolean;
 }
 
 function createPageFooterStyles(t: PdfxTheme) {
@@ -252,8 +266,6 @@ function createPageFooterStyles(t: PdfxTheme) {
   });
 }
 
-const styles = createPageFooterStyles(theme);
-
 export function PageFooter({
   leftText,
   rightText,
@@ -266,8 +278,12 @@ export function PageFooter({
   phone,
   email,
   website,
+  fixed = false,
+  noWrap = true,
   style,
 }: PageFooterProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createPageFooterStyles(theme), [theme]);
   const mt = marginTop ?? theme.spacing.sectionGap;
   const resolvedTextColor = textColor ? resolveColor(textColor, theme.colors) : undefined;
 
@@ -287,7 +303,7 @@ export function PageFooter({
     }
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
         {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
       </View>
@@ -306,7 +322,7 @@ export function PageFooter({
     if (resolvedTextColor) tStyle.push({ color: resolvedTextColor });
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         {leftText && <PDFText style={tStyle}>{leftText}</PDFText>}
         {rightText && <PDFText style={tStyle}>{rightText}</PDFText>}
       </View>
@@ -331,7 +347,7 @@ export function PageFooter({
     }
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         <View style={styles.threeColumnLeft}>
           {leftText && <PDFText style={leftStyle}>{leftText}</PDFText>}
           {address && <PDFText style={styles.textLeft}>{address}</PDFText>}
@@ -368,7 +384,7 @@ export function PageFooter({
     }
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         <View style={styles.detailedTopRow}>
           <View style={styles.detailedLeft}>
             {leftText && <PDFText style={companyStyle}>{leftText}</PDFText>}
@@ -403,7 +419,7 @@ export function PageFooter({
     }
 
     return (
-      <View style={containerStyles}>
+      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
         {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
         {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
         {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
@@ -428,7 +444,7 @@ export function PageFooter({
   }
 
   return (
-    <View style={containerStyles}>
+    <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
       {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
       {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
       {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}

@@ -97,7 +97,7 @@ export default function TableComponentPage() {
         </PDFPreview>
       }
       usageCode={tableUsageCode}
-      usageFilename="src/components/pdfx/pdfx-table.tsx"
+      usageFilename="src/components/pdfx/table/pdfx-table.tsx"
       props={tableProps}
       additionalInfo={
         <div className="space-y-4">

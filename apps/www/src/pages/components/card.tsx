@@ -54,7 +54,7 @@ export default function CardComponentPage() {
         </PDFPreview>
       }
       usageCode={cardUsageCode}
-      usageFilename="src/components/pdfx/pdfx-card.tsx"
+      usageFilename="src/components/pdfx/card/pdfx-card.tsx"
       props={cardProps}
       additionalInfo={
         <div className="space-y-4">

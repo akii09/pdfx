@@ -84,7 +84,7 @@ export default function ListComponentPage() {
         </PDFPreview>
       }
       usageCode={listUsageCode}
-      usageFilename="src/components/pdfx/pdfx-list.tsx"
+      usageFilename="src/components/pdfx/list/pdfx-list.tsx"
       props={listProps}
       additionalInfo={
         <div className="space-y-4">

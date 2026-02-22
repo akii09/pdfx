@@ -1,5 +1,5 @@
 export const linkUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { Link } from '@/components/pdfx/pdfx-link';
+import { Link } from '@/components/pdfx/link/pdfx-link';
 
 export function MyDocument() {
   return (

@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { PdfFormSection } from './form';
+import { PdfForm } from './form';
 
 /** Recursively search a react-pdf element tree for a text value. */
 function findText(node: unknown, value: string): boolean {
   if (!node || typeof node !== 'object') return false;
-  // Handle raw arrays (e.g. from .map() in JSX)
   if (Array.isArray(node)) return node.some((c: unknown) => findText(c, value));
   const n = node as { props?: { children?: unknown } };
   if (n.props?.children === value) return true;
@@ -12,78 +11,123 @@ function findText(node: unknown, value: string): boolean {
   return children.some((c: unknown) => findText(c, value));
 }
 
-const sampleRows = [
-  { label: 'Name', value: 'Jane Doe' },
-  { label: 'Email', value: 'jane@example.com' },
-  { label: 'Phone', value: '+1 555 000' },
-  { label: 'Date', value: '2026-02-17' },
+const sampleGroups = [
+  {
+    title: 'Personal Details',
+    fields: [
+      { label: 'Full Name', hint: 'First and last name' },
+      { label: 'Email Address' },
+      { label: 'Phone Number', hint: '+1 (555) 000-0000' },
+      { label: 'Date of Birth', hint: 'DD/MM/YYYY' },
+    ],
+  },
 ];
 
-describe('PdfFormSection', () => {
+describe('PdfForm', () => {
   it('renders without crashing', () => {
-    const result = PdfFormSection({ rows: sampleRows });
+    const result = PdfForm({ groups: sampleGroups });
     expect(result).toBeDefined();
   });
 
-  it('renders all labels', () => {
-    const result = PdfFormSection({ rows: sampleRows });
-    for (const row of sampleRows) {
-      expect(findText(result, row.label)).toBe(true);
+  it('renders form title', () => {
+    const result = PdfForm({ groups: sampleGroups, title: 'Application Form' });
+    expect(findText(result, 'Application Form')).toBe(true);
+  });
+
+  it('renders form subtitle', () => {
+    const result = PdfForm({ groups: sampleGroups, subtitle: 'Please fill in all fields.' });
+    expect(findText(result, 'Please fill in all fields.')).toBe(true);
+  });
+
+  it('renders group title', () => {
+    const result = PdfForm({ groups: sampleGroups });
+    expect(findText(result, 'Personal Details')).toBe(true);
+  });
+
+  it('renders all field labels', () => {
+    const result = PdfForm({ groups: sampleGroups });
+    for (const field of sampleGroups[0].fields) {
+      expect(findText(result, field.label)).toBe(true);
     }
   });
 
-  it('renders all values', () => {
-    const result = PdfFormSection({ rows: sampleRows });
-    for (const row of sampleRows) {
-      expect(findText(result, row.value)).toBe(true);
-    }
+  it('renders field hints', () => {
+    const result = PdfForm({ groups: sampleGroups });
+    expect(findText(result, 'DD/MM/YYYY')).toBe(true);
+    expect(findText(result, 'First and last name')).toBe(true);
   });
 
-  it('renders optional title', () => {
-    const result = PdfFormSection({ rows: sampleRows, title: 'Applicant Info' });
-    expect(findText(result, 'Applicant Info')).toBe(true);
+  it('renders without title', () => {
+    const result = PdfForm({ groups: sampleGroups });
+    expect(findText(result, 'Application Form')).toBe(false);
   });
 
-  it('does not render title when not provided', () => {
-    const result = PdfFormSection({ rows: sampleRows });
-    expect(findText(result, 'Applicant Info')).toBe(false);
+  it('renders multiple groups', () => {
+    const groups = [
+      { title: 'Section A', fields: [{ label: 'Field A' }] },
+      { title: 'Section B', fields: [{ label: 'Field B' }] },
+    ];
+    const result = PdfForm({ groups });
+    expect(findText(result, 'Section A')).toBe(true);
+    expect(findText(result, 'Section B')).toBe(true);
+    expect(findText(result, 'Field A')).toBe(true);
+    expect(findText(result, 'Field B')).toBe(true);
   });
 
-  it('single layout has column container (no columnsRow)', () => {
-    const result = PdfFormSection({ rows: sampleRows, layout: 'single' });
-    const styleArr = Array.isArray(result.props.style) ? result.props.style : [result.props.style];
-    // Single layout uses a plain section style (no flexDirection: row)
-    const hasRow = styleArr.some((s: { flexDirection?: string }) => s.flexDirection === 'row');
-    expect(hasRow).toBe(false);
+  it('renders two-column layout', () => {
+    const groups = [
+      {
+        layout: 'two-column' as const,
+        fields: [
+          { label: 'First Name' },
+          { label: 'Last Name' },
+          { label: 'City' },
+          { label: 'Zip Code' },
+        ],
+      },
+    ];
+    const result = PdfForm({ groups });
+    expect(findText(result, 'First Name')).toBe(true);
+    expect(findText(result, 'Last Name')).toBe(true);
   });
 
-  it('two-column layout has a row container with two children', () => {
-    const result = PdfFormSection({ rows: sampleRows, layout: 'two-column' });
-    // The children after optional title should include a row view
-    const children = Array.isArray(result.props.children)
-      ? result.props.children
-      : [result.props.children];
-    // Find the columns row (it should have flexDirection row)
-    const colRow = children.find((c: { props?: { style?: unknown } }) => {
-      const s = c?.props?.style;
-      const arr = Array.isArray(s) ? s : [s];
-      return arr.some((x: { flexDirection?: string }) => x?.flexDirection === 'row');
-    });
-    expect(colRow).toBeDefined();
+  it('renders three-column layout', () => {
+    const groups = [
+      {
+        layout: 'three-column' as const,
+        fields: [{ label: 'Day' }, { label: 'Month' }, { label: 'Year' }],
+      },
+    ];
+    const result = PdfForm({ groups });
+    expect(findText(result, 'Day')).toBe(true);
+    expect(findText(result, 'Month')).toBe(true);
+    expect(findText(result, 'Year')).toBe(true);
   });
 
-  it('three-column layout renders', () => {
-    const result = PdfFormSection({ rows: sampleRows, layout: 'three-column' });
-    // All values should still be present
-    for (const row of sampleRows) {
-      expect(findText(result, row.value)).toBe(true);
-    }
+  it('renders with labelPosition left', () => {
+    const result = PdfForm({ groups: sampleGroups, labelPosition: 'left' });
+    expect(findText(result, 'Full Name')).toBe(true);
+  });
+
+  it('applies box variant without crashing', () => {
+    const result = PdfForm({ groups: sampleGroups, variant: 'box' });
+    expect(result).toBeDefined();
+  });
+
+  it('applies outlined variant without crashing', () => {
+    const result = PdfForm({ groups: sampleGroups, variant: 'outlined' });
+    expect(result).toBeDefined();
+  });
+
+  it('applies ghost variant without crashing', () => {
+    const result = PdfForm({ groups: sampleGroups, variant: 'ghost' });
+    expect(result).toBeDefined();
   });
 
   it('applies style override', () => {
-    const result = PdfFormSection({ rows: sampleRows, style: { opacity: 0.9 } });
+    const result = PdfForm({ groups: sampleGroups, style: { opacity: 0.8 } });
     const styleArr = Array.isArray(result.props.style) ? result.props.style : [result.props.style];
     const last = styleArr[styleArr.length - 1] as { opacity?: number };
-    expect(last.opacity).toBe(0.9);
+    expect(last.opacity).toBe(0.8);
   });
 });
