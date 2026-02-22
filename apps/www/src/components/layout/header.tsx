@@ -16,9 +16,9 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-sm">
-      <div className="container mx-auto flex h-14 items-center justify-between px-4">
+      <div className="container-fluid mx-auto flex h-14 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold text-xl">
-          <img src="/pdfx.png" alt="PDFx" className="h-20 w-auto dark:invert dark:brightness-0" />
+          <img src="/pdfx.png" alt="PDFx" className="h-10 w-auto dark:invert dark:brightness-0" />
         </Link>
 
         {/* Desktop nav */}
