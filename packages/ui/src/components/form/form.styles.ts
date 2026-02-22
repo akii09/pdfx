@@ -150,7 +150,7 @@ export function createFormStyles(t: PdfxTheme, variant: PdfFormVariant = 'underl
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
       color: t.colors.mutedForeground,
-      opacity: 0.6,
+      opacity: 0.14,
       paddingTop: hasPadding ? spacing[1] : spacing[0.5],
       paddingBottom: hasPadding ? spacing[1] : 0,
       paddingHorizontal: hasPadding ? spacing[2] : 0,
