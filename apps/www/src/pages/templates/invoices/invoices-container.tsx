@@ -195,7 +195,7 @@ export default function InvoicesContainerPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('preview');
 
   const current = TEMPLATES.find((t) => t.id === activeId) ?? TEMPLATES[0];
-  const installCmd = `pdfx template add ${current.id}`;
+  const installCmd = `npx @pdfx/cli template add ${current.id}`;
 
   useDocumentTitle('Invoice Templates');
 

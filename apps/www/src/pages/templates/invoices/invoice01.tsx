@@ -15,15 +15,17 @@ import {
   usePdfxTheme,
 } from '@pdfx/ui';
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
-import type { invoiceDetailsType } from './invoice01.type';
+import type { InvoiceData } from './invoice01.type';
 
-const invoiceDetails: invoiceDetailsType = {
+const sampleData: InvoiceData = {
   invoiceNumber: 'INV-2026-001',
   invoiceDate: 'February 17, 2026',
   dueDate: 'March 17, 2026',
   companyName: 'PDFx Inc.',
   subtitle: 'Innovative PDF Solutions',
   companyAddress: 'Nagpur, IN',
+  companyEmail: 'hello@pdfx.io',
+  logo: '/favicon.png',
   billTo: {
     name: 'Client Corp.',
     address: '456 Client Ave, Suite 2',
@@ -48,17 +50,21 @@ const invoiceDetails: invoiceDetailsType = {
   notes: 'Thank you for your business!',
 };
 
-const AVATAR_BASE64 = '/favicon.png';
-
-export function Invoice01Document({ theme }: { theme?: PdfxTheme }) {
+export function Invoice01Document({
+  theme,
+  data = sampleData,
+}: {
+  theme?: PdfxTheme;
+  data?: InvoiceData;
+}) {
   return (
     <PdfxThemeProvider theme={theme}>
-      <Invoice01Content />
+      <Invoice01Content data={data} />
     </PdfxThemeProvider>
   );
 }
 
-function Invoice01Content() {
+function Invoice01Content({ data }: { data: InvoiceData }) {
   const theme = usePdfxTheme();
 
   const styles = StyleSheet.create({
@@ -70,15 +76,15 @@ function Invoice01Content() {
   });
 
   return (
-    <Document title="PDFx Invoice INV-001">
+    <Document title={`Invoice ${data.invoiceNumber}`}>
       <Page size="A4" style={styles.page}>
         <PageHeader
           variant="logo-left"
-          logo={<PdfImage src={AVATAR_BASE64} style={{ margin: 0 }} />}
-          title={invoiceDetails.companyName}
-          subtitle={invoiceDetails.subtitle}
-          rightText={invoiceDetails.invoiceNumber}
-          rightSubText={`Due: ${invoiceDetails.dueDate}`}
+          logo={<PdfImage src={data.logo ?? '/favicon.png'} style={{ margin: 0 }} />}
+          title={data.companyName}
+          subtitle={data.subtitle}
+          rightText={data.invoiceNumber}
+          rightSubText={`Due: ${data.dueDate}`}
           style={{ marginBottom: 0 }}
         />
         <Section noWrap style={{ flexDirection: 'row' }}>
@@ -92,13 +98,13 @@ function Invoice01Content() {
               From
             </Text>
             <Text noMargin variant="xs">
-              {invoiceDetails.companyName}
+              {data.companyName}
             </Text>
             <Text noMargin variant="xs">
-              {invoiceDetails.companyAddress}
+              {data.companyAddress}
             </Text>
             <Text noMargin variant="xs">
-              hello@pdfx.io
+              {data.companyEmail}
             </Text>
           </View>
           <View style={{ flex: 1, paddingRight: 15 }}>
@@ -111,13 +117,13 @@ function Invoice01Content() {
               Bill To
             </Text>
             <Text noMargin variant="xs">
-              {invoiceDetails.billTo.name}
+              {data.billTo.name}
             </Text>
             <Text noMargin variant="xs">
-              {invoiceDetails.billTo.address}
+              {data.billTo.address}
             </Text>
             <Text noMargin variant="xs">
-              {invoiceDetails.billTo.email}
+              {data.billTo.email}
             </Text>
           </View>
 
@@ -131,13 +137,13 @@ function Invoice01Content() {
               Payment Terms
             </Text>
             <Text noMargin variant="xs">
-              {invoiceDetails.paymentTerms.method}
+              {data.paymentTerms.method}
             </Text>
             <Text noMargin variant="xs">
-              {invoiceDetails.paymentTerms.gst}
+              {data.paymentTerms.gst}
             </Text>
             <Text noMargin variant="xs">
-              {invoiceDetails.paymentTerms.dueDate}
+              {data.paymentTerms.dueDate}
             </Text>
           </View>
         </Section>
@@ -151,7 +157,7 @@ function Invoice01Content() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoiceDetails.items.map((item, index) => (
+            {data.items.map((item, index) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: invoice items have no stable id
               <TableRow key={index}>
                 <TableCell>{item.description}</TableCell>
@@ -168,11 +174,11 @@ function Invoice01Content() {
               size="sm"
               dividerThickness={1}
               items={[
-                { key: 'Subtotal', value: `$${invoiceDetails.summary.subtotal.toFixed(2)}` },
-                { key: 'Tax', value: `$${invoiceDetails.summary.tax.toFixed(2)}` },
+                { key: 'Subtotal', value: `$${data.summary.subtotal.toFixed(2)}` },
+                { key: 'Tax', value: `$${data.summary.tax.toFixed(2)}` },
                 {
                   key: 'Total',
-                  value: `$${invoiceDetails.summary.total.toFixed(2)}`,
+                  value: `$${data.summary.total.toFixed(2)}`,
                   valueStyle: { fontSize: 12, fontWeight: 'bold' },
                   keyStyle: { fontSize: 12, fontWeight: 'bold', color: 'primary' },
                 },
@@ -182,7 +188,7 @@ function Invoice01Content() {
           </View>
         </Section>
         <PageFooter
-          leftText={invoiceDetails.notes}
+          leftText={data.notes}
           rightText="Page 1 of 1"
           sticky
           pagePadding={25}

@@ -13,7 +13,7 @@ import {
 } from '@react-pdf/renderer';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 // ─── Public Types ─────────────────────────────────────────────────────────────
 
@@ -100,19 +100,6 @@ interface ChartLayout {
   xLabels: string[];
 }
 
-// ─── Style cache ──────────────────────────────────────────────────────────────
-
-let cachedTheme: PdfxTheme | null = null;
-let cachedStyles: ReturnType<typeof createGraphStyles> | null = null;
-
-function getStyles(t: PdfxTheme) {
-  if (cachedTheme !== t || !cachedStyles) {
-    cachedStyles = createGraphStyles(t);
-    cachedTheme = t;
-  }
-  return cachedStyles;
-}
-
 function createGraphStyles(t: PdfxTheme) {
   return StyleSheet.create({
     container: {
@@ -168,6 +155,7 @@ function normalizeData(data: GraphDataPoint[] | GraphSeries[]): GraphSeries[] {
 /** Compute nice Y-axis ticks for a given value range. */
 function computeYTicks(min: number, max: number, count: number): number[] {
   if (min === max) return [0, max || 1];
+  if (count <= 1) return [min, max];
   const step = (max - min) / (count - 1);
   return Array.from({ length: count }, (_, i) => {
     const v = min + i * step;
@@ -729,8 +717,9 @@ export function PdfGraph({
   noWrap = true,
   style,
 }: GraphProps) {
-  const styles = getStyles(defaultTheme);
-  const palette = colors ?? getDefaultPalette(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createGraphStyles(theme), [theme]);
+  const palette = colors ?? getDefaultPalette(theme);
   const series = normalizeData(data);
 
   // ── Compute layout ────────────────────────────────────────────────
@@ -774,10 +763,10 @@ export function PdfGraph({
 
   switch (variant) {
     case 'bar':
-      chartContent = renderBarChart(series, layout, palette, showGrid, showValues, defaultTheme);
+      chartContent = renderBarChart(series, layout, palette, showGrid, showValues, theme);
       break;
     case 'horizontal-bar':
-      chartContent = renderHorizontalBarChart(series, layout, palette, showValues, defaultTheme);
+      chartContent = renderHorizontalBarChart(series, layout, palette, showValues, theme);
       break;
     case 'line':
       chartContent = renderLineAreaChart(
@@ -789,7 +778,7 @@ export function PdfGraph({
         showDots,
         smooth,
         false,
-        defaultTheme
+        theme
       );
       break;
     case 'area':
@@ -802,14 +791,14 @@ export function PdfGraph({
         showDots,
         smooth,
         true,
-        defaultTheme
+        theme
       );
       break;
     case 'pie':
-      chartContent = renderPieDonutChart(series, layout, palette, undefined, false, defaultTheme);
+      chartContent = renderPieDonutChart(series, layout, palette, undefined, false, theme);
       break;
     case 'donut':
-      chartContent = renderPieDonutChart(series, layout, palette, centerLabel, true, defaultTheme);
+      chartContent = renderPieDonutChart(series, layout, palette, centerLabel, true, theme);
       break;
   }
 
@@ -825,8 +814,8 @@ export function PdfGraph({
       <Svg width={width} height={height}>
         <Defs>
           <LinearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0%" stopColor={defaultTheme.colors.background} stopOpacity={0} />
-            <Stop offset="100%" stopColor={defaultTheme.colors.background} stopOpacity={0} />
+            <Stop offset="0%" stopColor={theme.colors.background} stopOpacity={0} />
+            <Stop offset="100%" stopColor={theme.colors.background} stopOpacity={0} />
           </LinearGradient>
         </Defs>
         {chartContent}

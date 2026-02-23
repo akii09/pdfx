@@ -1,12 +1,13 @@
-// import type { PDFComponentProps } from '@pdfx/shared';
-
-export type invoiceDetailsType = {
+export interface InvoiceData {
   invoiceNumber: string;
   invoiceDate: string;
   dueDate: string;
   companyName: string;
   companyAddress: string;
+  companyEmail: string;
   subtitle: string;
+  /** Optional logo URL or base64 data URI shown in the classic template header. */
+  logo?: string;
   billTo: {
     name: string;
     address: string;
@@ -29,27 +30,4 @@ export type invoiceDetailsType = {
     gst: string;
   };
   notes?: string;
-};
-
-// export interface Invoice01Props extends PDFComponentProps {
-//   invoiceNumber: string,
-//   invoiceDate: string,
-//   dueDate: string,
-//   billTo: {
-//     name: string,
-//     address: string,
-//     email: string,
-//     phone: string,
-//   },
-//   items: {
-//     description: string,
-//     quantity: number,
-//     price: number,
-//   }[],
-//   summary: {
-//     subtotal: number,
-//     tax: number,
-//     total: number,
-//   },
-//   notes?: string,
-// }
+}

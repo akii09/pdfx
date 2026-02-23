@@ -1,7 +1,7 @@
 import type { PdfxTheme } from '@pdfx/shared';
 import { Image, Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -127,17 +127,6 @@ const VARIANT_DEFAULTS: Record<PdfImageVariant, VariantDefaults> = {
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
-let cachedTheme: PdfxTheme | null = null;
-let cachedStyles: ReturnType<typeof createImageStyles> | null = null;
-
-function getStyles(t: PdfxTheme) {
-  if (cachedTheme !== t || !cachedStyles) {
-    cachedStyles = createImageStyles(t);
-    cachedTheme = t;
-  }
-  return cachedStyles;
-}
-
 function createImageStyles(t: PdfxTheme) {
   const { spacing } = t.primitives;
   return StyleSheet.create({
@@ -206,7 +195,8 @@ export function PdfImage({
 }: PdfImageProps) {
   warnIfUnsupported(src);
 
-  const styles = getStyles(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createImageStyles(theme), [theme]);
   const defaults = VARIANT_DEFAULTS[variant];
 
   // ── Resolve dimensions ─────────────────────────────────────────────

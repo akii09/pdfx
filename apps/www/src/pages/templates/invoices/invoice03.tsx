@@ -14,15 +14,16 @@ import {
   usePdfxTheme,
 } from '@pdfx/ui';
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
-import type { invoiceDetailsType } from './invoice01.type';
+import type { InvoiceData } from './invoice01.type';
 
-const invoiceDetails: invoiceDetailsType = {
+const sampleData: InvoiceData = {
   invoiceNumber: 'INV-2026-003',
   invoiceDate: 'February 20, 2026',
   dueDate: 'March 22, 2026',
   companyName: 'PDFx Inc.',
   subtitle: 'Innovative PDF Solutions',
   companyAddress: 'Nagpur, IN',
+  companyEmail: 'hello@pdfx.io',
   billTo: {
     name: 'Enterprise Corp',
     address: '500 Enterprise Way, Building A',
@@ -30,7 +31,7 @@ const invoiceDetails: invoiceDetailsType = {
     phone: '+1 (555) 246-8135',
   },
   items: [
-    { description: 'Annual Licenselan', quantity: 1, unitPrice: 25000 },
+    { description: 'Annual License', quantity: 1, unitPrice: 25000 },
     { description: 'Support & Maintenance', quantity: 12, unitPrice: 1500 },
     { description: 'Custom Integration', quantity: 1, unitPrice: 12000 },
   ],
@@ -47,15 +48,21 @@ const invoiceDetails: invoiceDetailsType = {
   notes: 'Invoice for annual enterprise subscription. Please retain for your records.',
 };
 
-export function Invoice03Document({ theme }: { theme?: PdfxTheme }) {
+export function Invoice03Document({
+  theme,
+  data = sampleData,
+}: {
+  theme?: PdfxTheme;
+  data?: InvoiceData;
+}) {
   return (
     <PdfxThemeProvider theme={theme}>
-      <Invoice03Content />
+      <Invoice03Content data={data} />
     </PdfxThemeProvider>
   );
 }
 
-function Invoice03Content() {
+function Invoice03Content({ data }: { data: InvoiceData }) {
   const theme = usePdfxTheme();
 
   const styles = StyleSheet.create({
@@ -88,7 +95,7 @@ function Invoice03Content() {
   });
 
   return (
-    <Document title="PDFx Invoice INV-003">
+    <Document title={`Invoice ${data.invoiceNumber}`}>
       <Page size="A4" style={styles.page}>
         {/* Minimal header: company on left, invoice stamp on right */}
         <Section
@@ -102,8 +109,8 @@ function Invoice03Content() {
           <View style={{ flex: 1 }}>
             <PageHeader
               variant="minimal"
-              title={invoiceDetails.companyName}
-              subtitle={`${invoiceDetails.companyAddress}  ·  hello@pdfx.io`}
+              title={data.companyName}
+              subtitle={`${data.companyAddress}  ·  ${data.companyEmail}`}
               marginBottom={0}
             />
           </View>
@@ -129,13 +136,13 @@ function Invoice03Content() {
               }}
               noMargin
             >
-              {invoiceDetails.invoiceNumber}
+              {data.invoiceNumber}
             </Text>
             <Text
               style={{ fontSize: 8, color: theme.colors.mutedForeground, textAlign: 'right' }}
               noMargin
             >
-              {invoiceDetails.invoiceDate}
+              {data.invoiceDate}
             </Text>
           </View>
         </Section>
@@ -147,16 +154,16 @@ function Invoice03Content() {
               Bill To
             </Text>
             <Text variant="sm" noMargin>
-              {invoiceDetails.billTo.name}
+              {data.billTo.name}
             </Text>
             <Text variant="xs" noMargin color="mutedForeground">
-              {invoiceDetails.billTo.address}
+              {data.billTo.address}
             </Text>
             <Text variant="xs" noMargin color="mutedForeground">
-              {invoiceDetails.billTo.email}
+              {data.billTo.email}
             </Text>
             <Text variant="xs" noMargin color="mutedForeground">
-              {invoiceDetails.billTo.phone}
+              {data.billTo.phone}
             </Text>
           </View>
           <View style={{ flex: 1 }}>
@@ -166,9 +173,9 @@ function Invoice03Content() {
             <KeyValue
               size="sm"
               items={[
-                { key: 'Due Date', value: invoiceDetails.dueDate },
-                { key: 'Payment', value: invoiceDetails.paymentTerms.method },
-                { key: 'GST', value: invoiceDetails.paymentTerms.gst },
+                { key: 'Due Date', value: data.dueDate },
+                { key: 'Payment', value: data.paymentTerms.method },
+                { key: 'GST', value: data.paymentTerms.gst },
               ]}
             />
           </View>
@@ -185,7 +192,7 @@ function Invoice03Content() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoiceDetails.items.map((item, index) => (
+            {data.items.map((item, index) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: invoice items have no stable id
               <TableRow key={index}>
                 <TableCell>{item.description}</TableCell>
@@ -205,11 +212,11 @@ function Invoice03Content() {
               size="sm"
               dividerThickness={1}
               items={[
-                { key: 'Subtotal', value: `$${invoiceDetails.summary.subtotal.toFixed(2)}` },
-                { key: 'Tax (7%)', value: `$${invoiceDetails.summary.tax.toFixed(2)}` },
+                { key: 'Subtotal', value: `$${data.summary.subtotal.toFixed(2)}` },
+                { key: 'Tax (7%)', value: `$${data.summary.tax.toFixed(2)}` },
                 {
                   key: 'Balance Due',
-                  value: `$${invoiceDetails.summary.total.toFixed(2)}`,
+                  value: `$${data.summary.total.toFixed(2)}`,
                   valueStyle: {
                     fontSize: 13,
                     fontWeight: 'bold',
@@ -224,7 +231,7 @@ function Invoice03Content() {
         </Section>
 
         <PageFooter
-          leftText={invoiceDetails.notes}
+          leftText={data.notes}
           rightText="Page 1 of 1"
           sticky
           pagePadding={25}

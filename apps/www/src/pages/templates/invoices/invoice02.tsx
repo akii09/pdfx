@@ -14,15 +14,16 @@ import {
   usePdfxTheme,
 } from '@pdfx/ui';
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
-import type { invoiceDetailsType } from './invoice01.type';
+import type { InvoiceData } from './invoice01.type';
 
-const invoiceDetails: invoiceDetailsType = {
+const sampleData: InvoiceData = {
   invoiceNumber: 'INV-2026-002',
   invoiceDate: 'February 18, 2026',
   dueDate: 'March 20, 2026',
   companyName: 'PDFx Inc.',
   subtitle: 'Innovative PDF Solutions',
   companyAddress: 'Nagpur, IN',
+  companyEmail: 'hello@pdfx.io',
   billTo: {
     name: 'TechStart Solutions',
     address: '789 Innovation Blvd, Floor 3',
@@ -47,15 +48,21 @@ const invoiceDetails: invoiceDetailsType = {
   notes: 'Payment terms: Net 30 days. Thank you for your business!',
 };
 
-export function Invoice02Document({ theme }: { theme?: PdfxTheme }) {
+export function Invoice02Document({
+  theme,
+  data = sampleData,
+}: {
+  theme?: PdfxTheme;
+  data?: InvoiceData;
+}) {
   return (
     <PdfxThemeProvider theme={theme}>
-      <Invoice02Content />
+      <Invoice02Content data={data} />
     </PdfxThemeProvider>
   );
 }
 
-function Invoice02Content() {
+function Invoice02Content({ data }: { data: InvoiceData }) {
   const theme = usePdfxTheme();
 
   const styles = StyleSheet.create({
@@ -92,13 +99,13 @@ function Invoice02Content() {
   });
 
   return (
-    <Document title="PDFx Invoice INV-002">
+    <Document title={`Invoice ${data.invoiceNumber}`}>
       <Page size="A4" style={styles.page}>
         {/* Branded full-width banner header */}
         <PageHeader
           variant="branded"
-          title={invoiceDetails.companyName}
-          subtitle={`${invoiceDetails.subtitle}  ·  ${invoiceDetails.companyAddress}  ·  hello@pdfx.io`}
+          title={data.companyName}
+          subtitle={`${data.subtitle}  ·  ${data.companyAddress}  ·  ${data.companyEmail}`}
         />
 
         {/* Invoice meta row: details left, billed-to right */}
@@ -108,7 +115,7 @@ function Invoice02Content() {
               Invoice Number
             </Text>
             <Text style={{ ...styles.metaValue, fontWeight: 'bold', fontSize: 11 }} noMargin>
-              {invoiceDetails.invoiceNumber}
+              {data.invoiceNumber}
             </Text>
           </View>
           <View style={styles.metaCol}>
@@ -116,7 +123,7 @@ function Invoice02Content() {
               Invoice Date
             </Text>
             <Text style={styles.metaValue} noMargin>
-              {invoiceDetails.invoiceDate}
+              {data.invoiceDate}
             </Text>
           </View>
           <View style={styles.metaCol}>
@@ -124,7 +131,7 @@ function Invoice02Content() {
               Due Date
             </Text>
             <Text style={styles.metaValue} noMargin>
-              {invoiceDetails.dueDate}
+              {data.dueDate}
             </Text>
           </View>
           <View style={styles.dividerCol} />
@@ -133,16 +140,16 @@ function Invoice02Content() {
               Billed To
             </Text>
             <Text style={{ ...styles.metaValue, fontWeight: 'bold' }} noMargin>
-              {invoiceDetails.billTo.name}
+              {data.billTo.name}
             </Text>
             <Text style={{ ...styles.metaValue, color: theme.colors.mutedForeground }} noMargin>
-              {invoiceDetails.billTo.address}
+              {data.billTo.address}
             </Text>
             <Text style={{ ...styles.metaValue, color: theme.colors.mutedForeground }} noMargin>
-              {invoiceDetails.billTo.email}
+              {data.billTo.email}
             </Text>
             <Text style={{ ...styles.metaValue, color: theme.colors.mutedForeground }} noMargin>
-              {invoiceDetails.billTo.phone}
+              {data.billTo.phone}
             </Text>
           </View>
         </View>
@@ -158,7 +165,7 @@ function Invoice02Content() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoiceDetails.items.map((item, index) => (
+            {data.items.map((item, index) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: invoice items have no stable id
               <TableRow key={index}>
                 <TableCell>{item.description}</TableCell>
@@ -178,10 +185,10 @@ function Invoice02Content() {
               Payment Method
             </Text>
             <Text variant="xs" noMargin>
-              {invoiceDetails.paymentTerms.method}
+              {data.paymentTerms.method}
             </Text>
             <Text variant="xs" noMargin color="mutedForeground">
-              {invoiceDetails.paymentTerms.gst}
+              {data.paymentTerms.gst}
             </Text>
           </View>
           {/* Totals — right */}
@@ -190,11 +197,11 @@ function Invoice02Content() {
               size="sm"
               dividerThickness={1}
               items={[
-                { key: 'Subtotal', value: `$${invoiceDetails.summary.subtotal.toFixed(2)}` },
-                { key: 'Tax (7%)', value: `$${invoiceDetails.summary.tax.toFixed(2)}` },
+                { key: 'Subtotal', value: `$${data.summary.subtotal.toFixed(2)}` },
+                { key: 'Tax (7%)', value: `$${data.summary.tax.toFixed(2)}` },
                 {
                   key: 'Total Due',
-                  value: `$${invoiceDetails.summary.total.toFixed(2)}`,
+                  value: `$${data.summary.total.toFixed(2)}`,
                   valueStyle: { fontSize: 12, fontWeight: 'bold' },
                   keyStyle: { fontSize: 12, fontWeight: 'bold' },
                 },
@@ -205,7 +212,7 @@ function Invoice02Content() {
         </Section>
 
         <PageFooter
-          leftText={invoiceDetails.notes}
+          leftText={data.notes}
           rightText="Page 1 of 1"
           sticky
           pagePadding={25}
