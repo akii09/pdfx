@@ -60,7 +60,6 @@ const renderPreviewDocument = () => (
         subtitle={invoiceDetails.subtitle}
         rightText={invoiceDetails.invoiceNumber}
         rightSubText={`Due: ${invoiceDetails.dueDate}`}
-        status="paid"
         style={{ marginBottom: 0 }}
       />
       {/* Three-column section: From | Bill to | Payment Details */}

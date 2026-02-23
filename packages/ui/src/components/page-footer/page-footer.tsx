@@ -25,7 +25,6 @@ export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
   phone?: string;
   email?: string;
   website?: string;
-  
   /**
    *  Fix this footer to the bottom of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.
    * @default false
