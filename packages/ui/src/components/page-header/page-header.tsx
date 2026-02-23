@@ -25,42 +25,13 @@ export type PageHeaderVariant =
   | 'two-column';
 
 export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
-  /**
-   * Main heading / document title displayed in the header.
-   */
   title: string;
-  /**
-   * Optional subtitle or organization name below the title.
-   */
   subtitle?: string;
-  /**
-   * Text displayed on the right side of the header (e.g., date, invoice number, reference).
-   * Ignored in `centered` and `branded` variants (single-column layout).
-   */
   rightText?: string;
-  /**
-   * Secondary right text shown below rightText (e.g., "Due: 2026-02-28").
-   */
   rightSubText?: string;
-  /**
-   * Visual layout variant. Defaults to 'simple'.
-   */
   variant?: PageHeaderVariant;
-  /**
-   * Custom background color for the header band.
-   * Use theme token (e.g. 'primary', 'muted') or a CSS color.
-   * Only applies to 'simple' and 'centered' variants (branded uses primary by default).
-   */
   background?: string;
-  /**
-   * Custom text color for the title.
-   * Use theme token or CSS color. Overrides the variant default.
-   */
   titleColor?: string;
-  /**
-   * Bottom margin below the header before document content begins.
-   * Defaults to theme.spacing.sectionGap.
-   */
   marginBottom?: number;
   /**
    * Logo element for logo-left variant.
@@ -68,21 +39,10 @@ export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
    * @example <Image src="/logo.png" style={{ width: 48, height: 48 }} />
    */
   logo?: React.ReactNode;
-  /**
-   * Company address for two-column variant.
-   * Displayed in right column with phone and email.
-   */
   address?: string;
-  /**
-   * Phone number for two-column variant.
-   * Displayed in right column with address and email.
-   */
   phone?: string;
-  /**
-   * Email address for two-column variant.
-   * Displayed in right column with address and phone.
-   */
   email?: string;
+  status?: 'paid' | 'due' | 'overdue';
   /**
    * Render this header on every page of the document.
    * Uses react-pdf's built-in `fixed` prop on the outer View.
@@ -169,7 +129,7 @@ function createPageHeaderStyles(t: PdfxTheme) {
     // ── Typography ──────────────────────────────────────────────────────
     title: {
       fontFamily: heading.fontFamily,
-      fontSize: heading.fontSize.h2,
+      fontSize: heading.fontSize.h3,
       fontWeight: fontWeights.bold,
       color: c.foreground,
       lineHeight: heading.lineHeight,
@@ -221,15 +181,11 @@ function createPageHeaderStyles(t: PdfxTheme) {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      paddingBottom: spacing[4],
-      borderBottomWidth: spacing[0.5],
-      borderBottomColor: c.border,
-      borderBottomStyle: 'solid',
     },
     logoContainer: {
-      marginRight: spacing[4],
-      width: 48,
-      height: 48,
+      marginRight: spacing[2],
+      width: 42,
+      height: 42,
     },
     logoContent: {
       flex: 1,
@@ -393,6 +349,12 @@ export function PageHeader({
           <PDFText style={titleStyles}>{title}</PDFText>
           {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
         </View>
+        {(rightText || rightSubText) && (
+          <View style={styles.simpleRight}>
+            {rightText && <PDFText style={styles.rightText}>{rightText}</PDFText>}
+            {rightSubText && <PDFText style={styles.rightSubText}>{rightSubText}</PDFText>}
+          </View>
+        )}
       </View>
     );
   }

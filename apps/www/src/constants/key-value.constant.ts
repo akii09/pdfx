@@ -82,6 +82,29 @@ export const keyValueProps = [
     description: 'Render all value text in bold weight.',
   },
   {
+    name: 'dividerColor',
+    type: 'string',
+    description:
+      'Color of the divider line between rows. Uses theme token or CSS color. - it is only applied if divided=true',
+  },
+  {
+    name: 'dividerThickness',
+    type: 'number',
+    description: 'Thickness of the divider line between rows. - it is only applied if divided=true',
+  },
+  {
+    name: 'dividerMargin',
+    type: 'number',
+    description: 'Margin below the divider line between rows. - it is only applied if divided=true',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'false',
+    description:
+      'Prevent the KeyValue block from being split across PDF pages. Useful for short invoice-style metadata blocks that should stay on one page.',
+  },
+  {
     name: 'style',
     type: 'Style',
     description: 'Custom @react-pdf/renderer styles applied to the outer container.',
@@ -106,5 +129,17 @@ export const keyValueEntryProps = [
     type: 'string',
     description:
       'Per-item value color override. Takes priority over the component-level valueColor prop.',
+  },
+  {
+    name: 'valueStyle',
+    type: 'Style',
+    description:
+      'Per-item custom styles for the value text. Merged with size-based styles and global valueColor.',
+  },
+  {
+    name: 'keyStyle',
+    type: 'Style',
+    description:
+      'Per-item custom styles for the key text. Merged with size-based styles and global labelColor.',
   },
 ];

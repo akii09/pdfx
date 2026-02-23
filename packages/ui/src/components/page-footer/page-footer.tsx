@@ -5,15 +5,6 @@ import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
-/**
- * PageFooter layout variant.
- *
- * - `simple`       — Left: copyright/company text. Right: page number or custom text.
- * - `centered`     — All content centered (good for certificates, formal docs).
- * - `branded`      — Solid primary-color band with white text.
- * - `minimal`      — Just a top border with subtle muted text.
- * - `three-column` — Left: company name. Center: contact info. Right: page number.
- */
 export type PageFooterVariant =
   | 'simple'
   | 'centered'
@@ -23,61 +14,16 @@ export type PageFooterVariant =
   | 'detailed';
 
 export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
-  /**
-   * Left-aligned footer text (or center text in `centered` variant).
-   * Common use: company name, copyright notice, confidentiality disclaimer.
-   */
   leftText?: string;
-  /**
-   * Right-aligned footer text.
-   * Common use: page numbers, document reference, date.
-   * Ignored in `centered` variant.
-   */
   rightText?: string;
-  /**
-   * Optional center text that appears between left and right columns.
-   * Only shown in `simple` and `minimal` variants.
-   */
   centerText?: string;
-  /**
-   * Visual layout variant. Defaults to 'simple'.
-   */
   variant?: PageFooterVariant;
-  /**
-   * Custom background color for the footer band.
-   * Use theme token (e.g. 'primary', 'muted') or a CSS color.
-   * Applies to all variants. For branded, defaults to 'primary'.
-   */
   background?: string;
-  /**
-   * Custom text color override for all footer text.
-   * Use theme token or CSS color.
-   */
   textColor?: string;
-  /**
-   * Top margin above the footer (space between content and footer).
-   * Defaults to theme.spacing.sectionGap.
-   */
   marginTop?: number;
-  /**
-   * Company address for three-column variant.
-   * Displayed in center column with phone and email.
-   */
   address?: string;
-  /**
-   * Phone number for three-column variant.
-   * Displayed in center column with address and email.
-   */
   phone?: string;
-  /**
-   * Email address for three-column variant.
-   * Displayed in center column with address and phone.
-   */
   email?: string;
-  /**
-   * Website URL for three-column variant.
-   * Displayed in center column with other contact info.
-   */
   website?: string;
   /**
    * Render this footer on every page of the document.
@@ -86,6 +32,40 @@ export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
    * @default false
    */
   fixed?: boolean;
+  /**
+   * Anchors the footer to the absolute bottom of every PDF page.
+   *
+   * When `sticky` is true the footer is rendered with `position: 'absolute'`,
+   * `bottom: 0`, and `fixed` is automatically enabled so it repeats on every page.
+   *
+   * **Important:** set `pagePadding` to match your `<Page>` horizontal padding so
+   * the footer lines up with the rest of the content. Also add a matching
+   * `paddingBottom` to your `<Page>` so body content does not slide under the footer.
+   *
+   * ```tsx
+   * // ✅ Correct usage
+   * <Page style={{ padding: 40, paddingBottom: 60 }}>
+   *   {content}
+   *   <PageFooter sticky pagePadding={40} leftText="© 2026 Acme" rightText="Page 1" />
+   * </Page>
+   * ```
+   *
+   * @default false
+   */
+  sticky?: boolean;
+  /**
+   * Horizontal inset (in points) applied to the sticky footer so it aligns with
+   * the page's left/right padding.
+   *
+   * When `sticky` is true, this value is used as `left` and `right` offsets so
+   * the footer respects the page padding instead of stretching to the raw page edges.
+   * Pass the same value you use for `padding` (or `paddingHorizontal`) on `<Page>`.
+   *
+   * Only used when `sticky` is true. Ignored otherwise.
+   *
+   * @default 0
+   */
+  pagePadding?: number;
   /**
    * Prevent the footer from being split across PDF pages when placed inline.
    * A partially-rendered footer is always visually broken, so this defaults to true.
@@ -279,21 +259,39 @@ export function PageFooter({
   email,
   website,
   fixed = false,
+  sticky = false,
+  pagePadding = 0,
   noWrap = true,
   style,
 }: PageFooterProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createPageFooterStyles(theme), [theme]);
-  const mt = marginTop ?? theme.spacing.sectionGap;
+  // sticky implies fixed; marginTop is irrelevant with absolute positioning
+  const isFixed = fixed || sticky;
+  const mt = sticky ? 0 : (marginTop ?? theme.spacing.sectionGap);
   const resolvedTextColor = textColor ? resolveColor(textColor, theme.colors) : undefined;
+  /**
+   * The sticky style is built dynamically so `pagePadding` is reflected in
+   * `left`/`right`, matching the page's horizontal padding exactly.
+   */
+  const stickyStyle: Style = sticky
+    ? { position: 'absolute', bottom: pagePadding, left: pagePadding, right: pagePadding }
+    : {};
+
+  /**
+   * Appends background + custom style + sticky overrides to a container style array.
+   * sticky style is always last so it wins over all other overrides.
+   */
+  function applyOverrides(base: Style[]): Style[] {
+    if (background) base.push({ backgroundColor: resolveColor(background, theme.colors) });
+    if (style) base.push(style);
+    if (sticky) base.push(stickyStyle);
+    return base;
+  }
 
   // ── Branded ──────────────────────────────────────────────────────────
   if (variant === 'branded') {
-    const containerStyles: Style[] = [styles.brandedContainer, { marginTop: mt }];
-    if (background) {
-      containerStyles.push({ backgroundColor: resolveColor(background, theme.colors) });
-    }
-    if (style) containerStyles.push(style);
+    const containerStyles = applyOverrides([styles.brandedContainer, { marginTop: mt }]);
 
     const lStyle: Style[] = [styles.textBranded];
     const rStyle: Style[] = [styles.textBrandedRight];
@@ -303,7 +301,7 @@ export function PageFooter({
     }
 
     return (
-      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
         {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
         {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
       </View>
@@ -312,17 +310,13 @@ export function PageFooter({
 
   // ── Centered ─────────────────────────────────────────────────────────
   if (variant === 'centered') {
-    const containerStyles: Style[] = [styles.centeredContainer, { marginTop: mt }];
-    if (background) {
-      containerStyles.push({ backgroundColor: resolveColor(background, theme.colors) });
-    }
-    if (style) containerStyles.push(style);
+    const containerStyles = applyOverrides([styles.centeredContainer, { marginTop: mt }]);
 
     const tStyle: Style[] = [styles.textCenteredVariant];
     if (resolvedTextColor) tStyle.push({ color: resolvedTextColor });
 
     return (
-      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
         {leftText && <PDFText style={tStyle}>{leftText}</PDFText>}
         {rightText && <PDFText style={tStyle}>{rightText}</PDFText>}
       </View>
@@ -331,11 +325,7 @@ export function PageFooter({
 
   // ── Three-column ────────────────────────────────────────────────────
   if (variant === 'three-column') {
-    const containerStyles: Style[] = [styles.threeColumnContainer, { marginTop: mt }];
-    if (background) {
-      containerStyles.push({ backgroundColor: resolveColor(background, theme.colors) });
-    }
-    if (style) containerStyles.push(style);
+    const containerStyles = applyOverrides([styles.threeColumnContainer, { marginTop: mt }]);
 
     const leftStyle: Style[] = [styles.companyName];
     const centerStyle: Style[] = [styles.contactInfoCenter];
@@ -347,7 +337,7 @@ export function PageFooter({
     }
 
     return (
-      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
         <View style={styles.threeColumnLeft}>
           {leftText && <PDFText style={leftStyle}>{leftText}</PDFText>}
           {address && <PDFText style={styles.textLeft}>{address}</PDFText>}
@@ -366,11 +356,7 @@ export function PageFooter({
 
   // ── Detailed ─────────────────────────────────────────────────────────
   if (variant === 'detailed') {
-    const containerStyles: Style[] = [styles.detailedContainer, { marginTop: mt }];
-    if (background) {
-      containerStyles.push({ backgroundColor: resolveColor(background, theme.colors) });
-    }
-    if (style) containerStyles.push(style);
+    const containerStyles = applyOverrides([styles.detailedContainer, { marginTop: mt }]);
 
     const companyStyle: Style[] = [styles.companyBold];
     const addrStyle: Style[] = [styles.textLeft];
@@ -384,7 +370,7 @@ export function PageFooter({
     }
 
     return (
-      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
         <View style={styles.detailedTopRow}>
           <View style={styles.detailedLeft}>
             {leftText && <PDFText style={companyStyle}>{leftText}</PDFText>}
@@ -403,11 +389,7 @@ export function PageFooter({
 
   // ── Minimal ──────────────────────────────────────────────────────────
   if (variant === 'minimal') {
-    const containerStyles: Style[] = [styles.minimalContainer, { marginTop: mt }];
-    if (background) {
-      containerStyles.push({ backgroundColor: resolveColor(background, theme.colors) });
-    }
-    if (style) containerStyles.push(style);
+    const containerStyles = applyOverrides([styles.minimalContainer, { marginTop: mt }]);
 
     const lStyle: Style[] = [styles.textLeft];
     const cStyle: Style[] = [styles.textCenter];
@@ -419,7 +401,7 @@ export function PageFooter({
     }
 
     return (
-      <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
+      <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
         {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
         {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
         {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
@@ -428,11 +410,7 @@ export function PageFooter({
   }
 
   // ── Simple (default) ─────────────────────────────────────────────────
-  const containerStyles: Style[] = [styles.simpleContainer, { marginTop: mt }];
-  if (background) {
-    containerStyles.push({ backgroundColor: resolveColor(background, theme.colors) });
-  }
-  if (style) containerStyles.push(style);
+  const containerStyles = applyOverrides([styles.simpleContainer, { marginTop: mt }]);
 
   const lStyle: Style[] = [styles.textLeft];
   const cStyle: Style[] = [styles.textCenter];
@@ -444,7 +422,7 @@ export function PageFooter({
   }
 
   return (
-    <View wrap={!noWrap} fixed={fixed} style={containerStyles}>
+    <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
       {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
       {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
       {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
