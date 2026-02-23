@@ -31,7 +31,7 @@ const invoiceDetails: invoiceDetailsType = {
   },
   items: [
     { description: 'API Integration', quantity: 1, unitPrice: 15000 },
-    { description: 'Performance Optimization', quantity: 2, unitPrice: 5500 },
+    { description: 'SEO', quantity: 2, unitPrice: 5500 },
     { description: 'Security Audit', quantity: 1, unitPrice: 7200 },
   ],
   summary: {

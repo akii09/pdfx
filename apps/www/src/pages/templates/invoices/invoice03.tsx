@@ -30,7 +30,7 @@ const invoiceDetails: invoiceDetailsType = {
     phone: '+1 (555) 246-8135',
   },
   items: [
-    { description: 'Annual License - Professional Plan', quantity: 1, unitPrice: 25000 },
+    { description: 'Annual Licenselan', quantity: 1, unitPrice: 25000 },
     { description: 'Support & Maintenance', quantity: 12, unitPrice: 1500 },
     { description: 'Custom Integration', quantity: 1, unitPrice: 12000 },
   ],
