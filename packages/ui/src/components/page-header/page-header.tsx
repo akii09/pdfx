@@ -44,7 +44,6 @@ export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
   noWrap?: boolean;
 }
 
-
 export function PageHeader({
   title,
   subtitle,

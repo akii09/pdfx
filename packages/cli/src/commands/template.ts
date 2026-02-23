@@ -14,8 +14,8 @@ import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
 import { DEFAULTS, REGISTRY_SUBPATHS } from '../constants.js';
-import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { requireConfig, tryReadConfig } from '../utils/config.js';
+import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
 
 async function fetchTemplate(name: string, registryUrl: string): Promise<RegistryItem> {
@@ -310,10 +310,7 @@ export async function templateList() {
   // pdfx.json is optional — fall back to defaults when absent
   const config = tryReadConfig();
   const registryUrl = config?.registry ?? DEFAULTS.REGISTRY_URL;
-  const templateBaseDir = path.resolve(
-    process.cwd(),
-    config?.templateDir ?? DEFAULTS.TEMPLATE_DIR
-  );
+  const templateBaseDir = path.resolve(process.cwd(), config?.templateDir ?? DEFAULTS.TEMPLATE_DIR);
 
   const spinner = ora('Fetching template list...').start();
 

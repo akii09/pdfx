@@ -1,15 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {
-  NetworkError,
-  RegistryError,
-  componentNameSchema,
-  registryItemSchema,
-} from '@pdfx/shared';
+import { NetworkError, RegistryError, componentNameSchema, registryItemSchema } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
-import { checkFileExists, safePath } from '../utils/file-system.js';
 import { requireConfig } from '../utils/config.js';
+import { checkFileExists, safePath } from '../utils/file-system.js';
 
 const FETCH_TIMEOUT_MS = 10_000;
 

@@ -10,8 +10,7 @@ export function readJsonFile(filePath: string): unknown {
   try {
     raw = fs.readFileSync(filePath, 'utf-8');
   } catch (error: unknown) {
-    const isNotFound =
-      error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT';
+    const isNotFound = error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT';
     throw new ConfigError(
       isNotFound ? `File not found: ${filePath}` : `Could not read ${filePath}`,
       isNotFound ? 'Run: npx @pdfx/cli init' : undefined

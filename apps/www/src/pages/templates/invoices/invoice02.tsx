@@ -211,12 +211,7 @@ function Invoice02Content({ data }: { data: InvoiceData }) {
           </View>
         </Section>
 
-        <PageFooter
-          leftText={data.notes}
-          rightText="Page 1 of 1"
-          sticky
-          pagePadding={25}
-        />
+        <PageFooter leftText={data.notes} rightText="Page 1 of 1" sticky pagePadding={25} />
       </Page>
     </Document>
   );

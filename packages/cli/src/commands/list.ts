@@ -3,8 +3,8 @@ import { NetworkError, RegistryError, registrySchema } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import { DEFAULTS } from '../constants.js';
-import { checkFileExists, safePath } from '../utils/file-system.js';
 import { tryReadConfig } from '../utils/config.js';
+import { checkFileExists, safePath } from '../utils/file-system.js';
 
 const FETCH_TIMEOUT_MS = 10_000;
 

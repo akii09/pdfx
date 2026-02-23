@@ -50,7 +50,6 @@ export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
   noWrap?: boolean;
 }
 
-
 export function PageFooter({
   leftText,
   rightText,
