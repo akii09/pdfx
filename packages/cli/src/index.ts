@@ -3,6 +3,7 @@ import { add } from './commands/add.js';
 import { diff } from './commands/diff.js';
 import { init } from './commands/init.js';
 import { list } from './commands/list.js';
+import { templateAdd, templateList } from './commands/template.js';
 import { themeInit, themeSwitch, themeValidate } from './commands/theme.js';
 
 const program = new Command();
@@ -34,5 +35,18 @@ themeCmd
   .action(themeSwitch);
 
 themeCmd.command('validate').description('Validate your theme file').action(themeValidate);
+
+const templateCmd = program.command('template').description('Manage PDF templates');
+
+templateCmd
+  .command('add <templates...>')
+  .description('Add a template to your project')
+  .option('-f, --force', 'Overwrite existing files without prompting')
+  .action((templates: string[], options: { force?: boolean }) => templateAdd(templates, options));
+
+templateCmd
+  .command('list')
+  .description('List available templates from registry')
+  .action(templateList);
 
 program.parse();
