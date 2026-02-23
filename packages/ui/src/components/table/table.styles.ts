@@ -213,6 +213,7 @@ export function createTableStyles(t: PdfxTheme) {
       flex: 1,
       paddingVertical: cellPadV,
       paddingHorizontal: cellPadH,
+      justifyContent: 'center',
     },
     cellFixed: {
       flex: 0,
@@ -255,10 +256,18 @@ export function createTableStyles(t: PdfxTheme) {
     },
 
     // ─── Cell text ───────────────────────────────────────────────────────────
+    //
+    // lineHeight: 1 is intentional and critical for all cell text styles.
+    //
+    // react-pdf adds EXTRA leading space below the text box when lineHeight > 1,
+    // making rows appear to have more bottom padding than top padding. Since cells
+    // already use symmetric paddingVertical on their <View> wrapper, text nodes
+    // must use lineHeight: 1 so the text box is exactly fontSize tall with no
+    // extra leading that would skew the visual vertical alignment.
     cellText: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.foreground,
     },
 
@@ -266,14 +275,14 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextHeaderGrid: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
     cellTextHeaderLine: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
@@ -281,14 +290,14 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextHeaderMinimal: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.mutedForeground,
       fontWeight: fontWeights.medium,
     },
     cellTextHeaderStriped: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
@@ -296,7 +305,7 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextHeaderCompact: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
       textTransform: 'uppercase',
@@ -306,7 +315,7 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextHeaderBordered: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.foreground,
       fontWeight: fontWeights.bold,
     },
@@ -314,7 +323,7 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextHeaderPrimaryHeader: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.primaryForeground,
       fontWeight: fontWeights.semibold,
       textTransform: 'uppercase',
@@ -325,7 +334,7 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextFooter: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
@@ -334,7 +343,7 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextCompact: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
-      lineHeight: t.typography.body.lineHeight,
+      lineHeight: 1,
       color: t.colors.foreground,
     },
   });

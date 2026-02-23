@@ -293,9 +293,13 @@ async function buildRegistry() {
   // resolve relative paths from the registry dir to get absolute paths.
   const registryBaseDir = path.dirname(registryPath);
 
-  // Process all items in parallel
+  // Separate template items (pre-built JSON, just copy) from component items (source → transform)
+  const componentItems = registry.items.filter((item) => item.type !== 'registry:template');
+  const templateItems = registry.items.filter((item) => item.type === 'registry:template');
+
+  // Process component items in parallel
   const results = await Promise.allSettled(
-    registry.items.map((item) => processItem(item, registryBaseDir, outputDir))
+    componentItems.map((item) => processItem(item, registryBaseDir, outputDir))
   );
 
   const failures = results.filter((r): r is PromiseRejectedResult => r.status === 'rejected');
@@ -303,6 +307,24 @@ async function buildRegistry() {
   if (failures.length > 0) {
     const messages = failures.map((f) => String(f.reason)).join('\n  ');
     throw new Error(`Registry build had failures:\n  ${messages}`);
+  }
+
+  // Template items are pre-built hand-crafted JSON files already living in
+  // public/r/templates/.  We just verify they exist and log them — no source
+  // transformation needed.
+  const appDir = path.join(__dirname, '../..');
+  const templateFailures: string[] = [];
+  for (const item of templateItems) {
+    const templatePath = path.join(appDir, 'public', 'r', 'templates', `${item.name}.json`);
+    if (await fileExistsAsync(templatePath)) {
+      console.log(`  ${item.name}.json (template, pre-built)`);
+    } else {
+      templateFailures.push(`Missing pre-built template: public/r/templates/${item.name}.json`);
+    }
+  }
+
+  if (templateFailures.length > 0) {
+    throw new Error(`Registry build had failures:\n  ${templateFailures.join('\n  ')}`);
   }
 
   const indexOutputPath = path.join(outputDir, 'index.json');

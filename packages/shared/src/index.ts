@@ -32,6 +32,8 @@ export {
   type RegistryItem,
   type RegistryFile,
   type Registry,
+  type RegistryIndexItem,
+  registryIndexItemSchema,
 } from './schemas.js';
 
 export {

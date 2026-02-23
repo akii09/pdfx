@@ -223,4 +223,53 @@ describe('PageFooter', () => {
     expect(findText(result, 'Company')).toBe(true);
     // Should render without crashing when optional fields are absent
   });
+
+  // ──── Sticky prop tests ─────────────────────────────────────────────
+
+  it('sticky=true applies position absolute + bottom 0 to style', () => {
+    const result = PageFooter({ leftText: 'Footer', sticky: true });
+    const containerStyles = Array.isArray(result.props.style)
+      ? result.props.style
+      : [result.props.style];
+    expect(containerStyles.some((s: { position?: string }) => s.position === 'absolute')).toBe(
+      true
+    );
+    expect(containerStyles.some((s: { bottom?: number }) => s.bottom === 0)).toBe(true);
+  });
+
+  it('sticky=true sets fixed prop on the View', () => {
+    const result = PageFooter({ leftText: 'Footer', sticky: true });
+    expect(result.props.fixed).toBe(true);
+  });
+
+  it('sticky=true works with all variants', () => {
+    const variants = [
+      'simple',
+      'centered',
+      'minimal',
+      'branded',
+      'three-column',
+      'detailed',
+    ] as const;
+    for (const variant of variants) {
+      const result = PageFooter({ leftText: 'Footer', sticky: true, variant });
+      const containerStyles = Array.isArray(result.props.style)
+        ? result.props.style
+        : [result.props.style];
+      expect(
+        containerStyles.some((s: { position?: string }) => s.position === 'absolute'),
+        `variant "${variant}" should have position:absolute when sticky`
+      ).toBe(true);
+    }
+  });
+
+  it('sticky=false (default) does NOT apply absolute positioning', () => {
+    const result = PageFooter({ leftText: 'Footer' });
+    const containerStyles = Array.isArray(result.props.style)
+      ? result.props.style
+      : [result.props.style];
+    expect(containerStyles.some((s: { position?: string }) => s.position === 'absolute')).toBe(
+      false
+    );
+  });
 });

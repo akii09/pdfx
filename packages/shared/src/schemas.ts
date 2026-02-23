@@ -110,10 +110,17 @@ export const configSchema = z.object({
   componentDir: z.string().min(1, 'componentDir must not be empty'),
   registry: z.string().url('registry must be a valid URL'),
   theme: z.string().min(1).optional(),
+  /** Directory where templates are installed. Defaults to ./src/templates/pdfx */
+  templateDir: z.string().min(1).optional(),
 });
 
 /** Valid file types for registry items */
-export const registryFileTypes = ['registry:component', 'registry:lib', 'registry:style'] as const;
+export const registryFileTypes = [
+  'registry:component',
+  'registry:lib',
+  'registry:style',
+  'registry:template',
+] as const;
 
 /** Schema for a single file in a registry item */
 export const registryFileSchema = z.object({
@@ -122,7 +129,7 @@ export const registryFileSchema = z.object({
   type: z.enum(registryFileTypes),
 });
 
-/** Schema for a component fetched from the registry */
+/** Schema for a component/template fetched from the registry */
 export const registryItemSchema = z.object({
   name: z.string().min(1),
   type: z.string().optional(),
@@ -131,6 +138,25 @@ export const registryItemSchema = z.object({
   files: z.array(registryFileSchema).min(1, 'Component must have at least one file'),
   dependencies: z.array(z.string()).optional(),
   registryDependencies: z.array(z.string()).optional(),
+  /** For templates: peerDependencies are @pdfx/ui components that must be available */
+  peerComponents: z.array(z.string()).optional(),
+});
+
+/** A single entry in the full registry index */
+export const registryIndexItemSchema = z.object({
+  name: z.string().min(1),
+  type: z.string(),
+  title: z.string(),
+  description: z.string(),
+  files: z.array(
+    z.object({
+      path: z.string().min(1),
+      type: z.string(),
+    })
+  ),
+  dependencies: z.array(z.string()).optional(),
+  registryDependencies: z.array(z.string()).optional(),
+  peerComponents: z.array(z.string()).optional(),
 });
 
 /** Schema for the full registry index */
@@ -138,22 +164,7 @@ export const registrySchema = z.object({
   $schema: z.string(),
   name: z.string(),
   homepage: z.string(),
-  items: z.array(
-    z.object({
-      name: z.string().min(1),
-      type: z.string(),
-      title: z.string(),
-      description: z.string(),
-      files: z.array(
-        z.object({
-          path: z.string().min(1),
-          type: z.string(),
-        })
-      ),
-      dependencies: z.array(z.string()).optional(),
-      registryDependencies: z.array(z.string()).optional(),
-    })
-  ),
+  items: z.array(registryIndexItemSchema),
 });
 
 /**
@@ -171,3 +182,4 @@ export type Config = z.infer<typeof configSchema>;
 export type RegistryItem = z.infer<typeof registryItemSchema>;
 export type RegistryFile = z.infer<typeof registryFileSchema>;
 export type Registry = z.infer<typeof registrySchema>;
+export type RegistryIndexItem = z.infer<typeof registryIndexItemSchema>;

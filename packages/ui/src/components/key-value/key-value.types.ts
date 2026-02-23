@@ -1,4 +1,5 @@
 import type { PDFComponentProps } from '@pdfx/shared';
+import type { Style } from '@react-pdf/types/style';
 
 /**
  * KeyValue layout direction.
@@ -19,6 +20,10 @@ export interface KeyValueEntry {
   value: string;
   /** Optional color for the value text. Use theme token or CSS color. */
   valueColor?: string;
+  /** Optional custom styles for the value text. */
+  valueStyle?: Style;
+  /** Optional custom styles for the key text. */
+  keyStyle?: Style;
 }
 
 export interface KeyValueProps extends Omit<PDFComponentProps, 'children'> {
@@ -59,4 +64,8 @@ export interface KeyValueProps extends Omit<PDFComponentProps, 'children'> {
    * @default false
    */
   noWrap?: boolean;
+
+  dividerColor?: string;
+  dividerThickness?: number;
+  dividerMargin?: number;
 }

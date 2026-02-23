@@ -375,6 +375,56 @@
         }
       ],
       "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "invoice-classic",
+      "type": "registry:template",
+      "title": "Invoice Classic",
+      "description": "Professional A4 invoice with logo-left header, three-column billing section, and zebra-striped grid table.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-classic.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "pdf-image"
+      ]
+    },
+    {
+      "name": "invoice-modern",
+      "type": "registry:template",
+      "title": "Invoice Modern",
+      "description": "Branded full-width banner header, horizontal invoice meta strip, and primary-header table.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-modern.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": ["page-header", "page-footer", "table", "key-value", "section", "text"]
+    },
+    {
+      "name": "invoice-minimal",
+      "type": "registry:template",
+      "title": "Invoice Minimal",
+      "description": "Clean minimal layout with inline invoice stamp, two-column billing info, and compact table.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-minimal.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": ["page-header", "page-footer", "table", "key-value", "section", "text"]
     }
   ]
 }

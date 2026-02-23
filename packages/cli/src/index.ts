@@ -36,23 +36,17 @@ themeCmd
 
 themeCmd.command('validate').description('Validate your theme file').action(themeValidate);
 
-const templateCmd = program.command('template').description('Scaffold PDF document templates');
+const templateCmd = program.command('template').description('Manage PDF templates');
+
+templateCmd
+  .command('add <templates...>')
+  .description('Add a template to your project')
+  .option('-f, --force', 'Overwrite existing files without prompting')
+  .action((templates: string[], options: { force?: boolean }) => templateAdd(templates, options));
 
 templateCmd
   .command('list')
   .description('List available templates from registry')
   .action(templateList);
-
-templateCmd
-  .command('add <templates...>')
-  .description('Install one or more templates into your project')
-  .option('-f, --force', 'Overwrite existing files without prompting')
-  .option('-d, --dir <path>', 'Output directory (default: src/templates)')
-  .action(
-    (
-      templates: string[],
-      options: { force?: boolean; dir?: string }
-    ) => templateAdd(templates, options)
-  );
 
 program.parse();

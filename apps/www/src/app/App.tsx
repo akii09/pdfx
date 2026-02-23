@@ -28,7 +28,7 @@ const PdfImagePage = lazy(() => import('../pages/components/pdf-image'));
 const GraphPage = lazy(() => import('../pages/components/graph'));
 const InstallationPage = lazy(() => import('../pages/installation'));
 const TemplatesIndexPage = lazy(() => import('../pages/templates/index'));
-const InvoicesPage = lazy(() => import('../pages/templates/invoices'));
+const InvoicesIndexPage = lazy(() => import('../pages/templates/invoices/index'));
 
 function PageLoader() {
   return (
@@ -249,7 +249,7 @@ export default function App() {
             path="invoices"
             element={
               <Suspense fallback={<PageLoader />}>
-                <InvoicesPage />
+                <InvoicesIndexPage />
               </Suspense>
             }
           />
