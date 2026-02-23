@@ -25,51 +25,27 @@ export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
   phone?: string;
   email?: string;
   website?: string;
+  
   /**
-   * Render this footer on every page of the document.
-   * Uses react-pdf's built-in `fixed` prop on the outer View.
-   * When true, ensure the page content has enough bottom padding to avoid overlapping with the fixed footer.
+   *  Fix this footer to the bottom of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.
    * @default false
    */
   fixed?: boolean;
+
   /**
-   * Anchors the footer to the absolute bottom of every PDF page.
-   *
-   * When `sticky` is true the footer is rendered with `position: 'absolute'`,
-   * `bottom: 0`, and `fixed` is automatically enabled so it repeats on every page.
-   *
-   * **Important:** set `pagePadding` to match your `<Page>` horizontal padding so
-   * the footer lines up with the rest of the content. Also add a matching
-   * `paddingBottom` to your `<Page>` so body content does not slide under the footer.
-   *
-   * ```tsx
-   * // ✅ Correct usage
-   * <Page style={{ padding: 40, paddingBottom: 60 }}>
-   *   {content}
-   *   <PageFooter sticky pagePadding={40} leftText="© 2026 Acme" rightText="Page 1" />
-   * </Page>
-   * ```
-   *
+   * Render this footer at the bottom of the page, but allow it to scroll with the content if the page is long enough. This is achieved using absolute positioning with `position: 'absolute'` and `bottom: 0`.
    * @default false
    */
   sticky?: boolean;
+
   /**
-   * Horizontal inset (in points) applied to the sticky footer so it aligns with
-   * the page's left/right padding.
-   *
-   * When `sticky` is true, this value is used as `left` and `right` offsets so
-   * the footer respects the page padding instead of stretching to the raw page edges.
-   * Pass the same value you use for `padding` (or `paddingHorizontal`) on `<Page>`.
-   *
-   * Only used when `sticky` is true. Ignored otherwise.
-   *
+   * When using `sticky`, this value sets the `left` and `right` offsets to match the page's horizontal padding, ensuring the footer content is aligned with the rest of the page content.
    * @default 0
    */
   pagePadding?: number;
+
   /**
    * Prevent the footer from being split across PDF pages when placed inline.
-   * A partially-rendered footer is always visually broken, so this defaults to true.
-   * Set to false only for decorative banners that can tolerate splitting.
    * @default true
    */
   noWrap?: boolean;
@@ -117,10 +93,8 @@ function createPageFooterStyles(t: PdfxTheme) {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingTop: spacing[2],
-      borderTopWidth: spacing[0.5],
-      borderTopColor: c.border,
-      borderTopStyle: 'solid',
+      paddingTop: spacing[1],
+      paddingBottom: spacing[1],
     },
 
     // ── Branded variant ─────────────────────────────────────────────────
@@ -392,18 +366,15 @@ export function PageFooter({
     const containerStyles = applyOverrides([styles.minimalContainer, { marginTop: mt }]);
 
     const lStyle: Style[] = [styles.textLeft];
-    const cStyle: Style[] = [styles.textCenter];
     const rStyle: Style[] = [styles.textRight];
     if (resolvedTextColor) {
       lStyle.push({ color: resolvedTextColor });
-      cStyle.push({ color: resolvedTextColor });
       rStyle.push({ color: resolvedTextColor });
     }
 
     return (
       <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
         {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
-        {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
         {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
       </View>
     );

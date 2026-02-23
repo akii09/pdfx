@@ -5,16 +5,6 @@ import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
-/**
- * PageHeader layout variant.
- *
- * - `simple`     — Left: title/subtitle. Right: optional logo area or metadata.
- * - `centered`   — All content centered (good for formal documents, certificates).
- * - `minimal`    — Just a bottom border with title. No background.
- * - `branded`    — Solid primary-color background with white text (strong brand presence).
- * - `logo-left`  — Logo on left, title/subtitle on right. Professional layout.
- * - `two-column` — Left: title/subtitle. Right: contact info (address, phone, email).
- */
 export type PageHeaderVariant =
   | 'simple'
   | 'centered'
@@ -33,27 +23,22 @@ export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
   background?: string;
   titleColor?: string;
   marginBottom?: number;
-  /**
-   * Logo element for logo-left variant.
-   * Accepts any valid React PDF element (Image, View with custom content).
-   * @example <Image src="/logo.png" style={{ width: 48, height: 48 }} />
-   */
-  logo?: React.ReactNode;
   address?: string;
   phone?: string;
   email?: string;
-  status?: 'paid' | 'due' | 'overdue';
   /**
-   * Render this header on every page of the document.
-   * Uses react-pdf's built-in `fixed` prop on the outer View.
-   * When true, ensure the page content has enough top padding to avoid overlapping with the fixed header.
+   * @example <Image src="/logo.png" style={{ width: 48, height: 48 }} />
+   */
+  logo?: React.ReactNode;
+
+  /**
+   * Fix this header to the top of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.
    * @default false
    */
   fixed?: boolean;
+
   /**
-   * Prevent the header from being split across PDF pages when placed inline.
-   * A partially-rendered header is always visually broken, so this defaults to true.
-   * Set to false only for decorative banners that can tolerate splitting.
+   * Prevent the header from being split across PDF pages when placed inline. A partially-rendered header is always visually broken, so this defaults to true. Set to false only for decorative banners that can tolerate splitting.
    * @default true
    */
   noWrap?: boolean;
