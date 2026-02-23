@@ -97,6 +97,19 @@ export const pageFooterProps = [
       'Website URL for three-column and detailed variants. Shown in the center (three-column) or right (detailed) column.',
   },
   {
+    name: 'fixed',
+    type: 'boolean',
+    defaultValue: 'false',
+    description:
+      'If true, the footer is rendered with position: fixed so it appears at the bottom of every PDF page regardless of content length.',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'true',
+    description: 'Prevents the footer from being split across PDF pages when placed inline.',
+  },
+  {
     name: 'style',
     type: 'Style',
     description: 'Custom @react-pdf/renderer styles to merge with defaults.',

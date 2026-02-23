@@ -39,6 +39,10 @@ export async function init() {
         name: 'registry',
         message: 'Registry URL:',
         initial: DEFAULTS.REGISTRY_URL,
+        validate: (value: string) =>
+          value.startsWith('https://')
+            ? true
+            : 'Registry URL must start with https:// for security',
       },
       {
         type: 'select',

@@ -79,11 +79,22 @@ npx @pdfx/cli init
 # Add components
 npx @pdfx/cli add heading text
 
-# List available components
+# List available components (works without pdfx.json)
 npx @pdfx/cli list
 
-# Compare local vs registry
-npx @pdfx/cli diff heading`;
+# Compare local vs registry (exits with code 1 if anything differs)
+npx @pdfx/cli diff heading
+
+# List available invoice / document templates (works without pdfx.json)
+npx @pdfx/cli template list
+
+# Install a template into your project
+npx @pdfx/cli template add invoice-classic
+
+# Theme commands
+npx @pdfx/cli theme init           # scaffold a theme file
+npx @pdfx/cli theme switch modern  # switch to a preset
+npx @pdfx/cli theme validate       # validate your theme file`;
 
 export const manualStep1Deps = 'npm install @react-pdf/renderer';
 

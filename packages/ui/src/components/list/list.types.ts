@@ -30,7 +30,7 @@ export interface PdfListProps {
   gap?: 'xs' | 'sm' | 'md';
   /** Custom style override applied to the outer container. */
   style?: Style;
-  /** Indent level for nested rendering (internal use). */
+  /** @internal Indent level for nested rendering — do not set manually. */
   _level?: number;
   /**
    * Prevent the List from being split across PDF pages.

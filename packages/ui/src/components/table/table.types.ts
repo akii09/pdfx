@@ -31,5 +31,6 @@ export interface TableCellProps extends PDFComponentProps {
   align?: 'left' | 'center' | 'right';
   width?: string | number;
   variant?: TableVariant;
+  /** @internal Injected by TableRow — do not set manually. */
   _last?: boolean;
 }

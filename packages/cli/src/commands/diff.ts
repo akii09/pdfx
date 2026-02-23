@@ -1,43 +1,29 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-  type Config,
   NetworkError,
   RegistryError,
   componentNameSchema,
-  configSchema,
   registryItemSchema,
 } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import { checkFileExists, safePath } from '../utils/file-system.js';
-import { readJsonFile } from '../utils/read-json.js';
+import { requireConfig } from '../utils/config.js';
 
 const FETCH_TIMEOUT_MS = 10_000;
 
 export async function diff(components: string[]) {
-  const configPath = path.join(process.cwd(), 'pdfx.json');
-
-  if (!checkFileExists(configPath)) {
-    console.error(chalk.red('Error: pdfx.json not found'));
-    console.log(chalk.yellow('Run: pdfx init'));
-    process.exit(1);
-  }
-
-  const raw = readJsonFile(configPath);
-  const configResult = configSchema.safeParse(raw);
-  if (!configResult.success) {
-    console.error(chalk.red('Invalid pdfx.json'));
-    process.exit(1);
-  }
-
-  const config: Config = configResult.data;
+  const config = requireConfig();
   const targetDir = path.resolve(process.cwd(), config.componentDir);
+
+  let anyDiffers = false;
 
   for (const componentName of components) {
     const nameResult = componentNameSchema.safeParse(componentName);
     if (!nameResult.success) {
       console.error(chalk.red(`Invalid component name: "${componentName}"`));
+      anyDiffers = true;
       continue;
     }
 
@@ -82,6 +68,7 @@ export async function diff(components: string[]) {
 
         if (!checkFileExists(localPath)) {
           console.log(chalk.yellow(`  ${fileName}: not installed locally`));
+          anyDiffers = true;
           continue;
         }
 
@@ -92,6 +79,7 @@ export async function diff(components: string[]) {
           console.log(chalk.green(`  ${fileName}: up to date`));
         } else {
           console.log(chalk.yellow(`  ${fileName}: differs from registry`));
+          anyDiffers = true;
 
           const localLines = localContent.split('\n');
           const registryLines = registryContent.split('\n');
@@ -105,6 +93,11 @@ export async function diff(components: string[]) {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       spinner.fail(message);
+      anyDiffers = true;
     }
+  }
+
+  if (anyDiffers) {
+    process.exit(1);
   }
 }

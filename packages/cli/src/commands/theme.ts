@@ -62,7 +62,14 @@ export async function themeInit() {
   }
 
   const presetName = answers.preset as ThemePresetName;
-  const themePath = answers.themePath as string;
+  const rawThemePath = answers.themePath as string;
+  // Sanitize: ensure the resolved path stays within the current project directory
+  const absThemePathCheck = path.resolve(process.cwd(), rawThemePath);
+  if (!absThemePathCheck.startsWith(process.cwd())) {
+    console.error(chalk.red('Theme path must be inside the current project directory.'));
+    process.exit(1);
+  }
+  const themePath = rawThemePath;
   const preset = themePresets[presetName];
 
   const spinner = ora(`Scaffolding ${presetName} theme...`).start();

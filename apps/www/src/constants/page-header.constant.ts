@@ -90,6 +90,20 @@ export const pageHeaderProps = [
       'Email address for two-column variant. Displayed in the right column with address and phone.',
   },
   {
+    name: 'fixed',
+    type: 'boolean',
+    defaultValue: 'false',
+    description:
+      'If true, the header is rendered with position: fixed so it appears at the top of every PDF page regardless of content length.',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'true',
+    description:
+      'Prevents the header from being split across PDF pages when placed inline. Defaults to true — set to false only for decorative banners that can tolerate splitting.',
+  },
+  {
     name: 'style',
     type: 'Style',
     description: 'Custom @react-pdf/renderer styles to merge with defaults.',

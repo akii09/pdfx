@@ -7,7 +7,6 @@ import {
   type RegistryItem,
   ValidationError,
   componentNameSchema,
-  configSchema,
   registryItemSchema,
   registrySchema,
 } from '@pdfx/shared';
@@ -16,25 +15,8 @@ import ora from 'ora';
 import prompts from 'prompts';
 import { DEFAULTS, REGISTRY_SUBPATHS } from '../constants.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
+import { requireConfig, tryReadConfig } from '../utils/config.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
-import { readJsonFile } from '../utils/read-json.js';
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-function readConfig(configPath: string): Config {
-  const raw = readJsonFile(configPath);
-  const result = configSchema.safeParse(raw);
-
-  if (!result.success) {
-    const issues = result.error.issues.map((i) => i.message).join(', ');
-    throw new ConfigError(
-      `Invalid pdfx.json: ${issues}`,
-      `Fix the config or re-run ${chalk.cyan('pdfx init')}`
-    );
-  }
-
-  return result.data;
-}
 
 async function fetchTemplate(name: string, registryUrl: string): Promise<RegistryItem> {
   const url = `${registryUrl}/${REGISTRY_SUBPATHS.TEMPLATES}/${name}.json`;
@@ -263,27 +245,7 @@ async function installTemplate(name: string, config: Config, force: boolean): Pr
 // ─── Public commands ─────────────────────────────────────────────────────────
 
 export async function templateAdd(names: string[], options: { force?: boolean } = {}) {
-  const configPath = path.join(process.cwd(), 'pdfx.json');
-
-  if (!checkFileExists(configPath)) {
-    console.error(chalk.red('Error: pdfx.json not found'));
-    console.log(chalk.yellow('Run: pdfx init'));
-    process.exit(1);
-  }
-
-  let config: Config;
-  try {
-    config = readConfig(configPath);
-  } catch (error: unknown) {
-    if (error instanceof ConfigError) {
-      console.error(chalk.red(error.message));
-      if (error.suggestion) console.log(chalk.yellow(`  Hint: ${error.suggestion}`));
-    } else {
-      const message = error instanceof Error ? error.message : String(error);
-      console.error(chalk.red(message));
-    }
-    process.exit(1);
-  }
+  const config = requireConfig();
 
   const force = options.force ?? false;
   const failed: string[] = [];
@@ -345,34 +307,26 @@ export async function templateAdd(names: string[], options: { force?: boolean } 
 }
 
 export async function templateList() {
-  const configPath = path.join(process.cwd(), 'pdfx.json');
+  // pdfx.json is optional — fall back to defaults when absent
+  const config = tryReadConfig();
+  const registryUrl = config?.registry ?? DEFAULTS.REGISTRY_URL;
+  const templateBaseDir = path.resolve(
+    process.cwd(),
+    config?.templateDir ?? DEFAULTS.TEMPLATE_DIR
+  );
 
-  if (!checkFileExists(configPath)) {
-    console.error(chalk.red('Error: pdfx.json not found'));
-    console.log(chalk.yellow('Run: pdfx init'));
-    process.exit(1);
-  }
-
-  const raw = readJsonFile(configPath);
-  const configResult = configSchema.safeParse(raw);
-  if (!configResult.success) {
-    console.error(chalk.red('Invalid pdfx.json'));
-    process.exit(1);
-  }
-
-  const config: Config = configResult.data;
   const spinner = ora('Fetching template list...').start();
 
   try {
     let response: Response;
     try {
-      response = await fetch(`${config.registry}/index.json`, {
+      response = await fetch(`${registryUrl}/index.json`, {
         signal: AbortSignal.timeout(10_000),
       });
     } catch (err) {
       const isTimeout = err instanceof Error && err.name === 'TimeoutError';
       throw new NetworkError(
-        isTimeout ? 'Registry request timed out' : `Could not reach ${config.registry}`
+        isTimeout ? 'Registry request timed out' : `Could not reach ${registryUrl}`
       );
     }
 
@@ -395,11 +349,6 @@ export async function templateList() {
       console.log(chalk.dim('\n  No templates available in the registry.\n'));
       return;
     }
-
-    const templateBaseDir = path.resolve(
-      process.cwd(),
-      config.templateDir ?? DEFAULTS.TEMPLATE_DIR
-    );
 
     console.log(chalk.bold(`\n  Available Templates (${templates.length})\n`));
 
