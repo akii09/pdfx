@@ -1,9 +1,5 @@
-import Invoice01Page from './invoice01';
+import InvoicesContainerPage from './invoices-container';
 
 export default function InvoicesIndexPage() {
-  return (
-    <div>
-      <Invoice01Page />
-    </div>
-  );
+  return <InvoicesContainerPage />;
 }
