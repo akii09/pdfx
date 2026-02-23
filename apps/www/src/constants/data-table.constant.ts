@@ -60,7 +60,7 @@ export const dataTableProps = [
   },
   {
     name: 'variant',
-    type: "'line' | 'grid' | 'minimal' | 'striped'",
+    type: "'line' | 'grid' | 'minimal' | 'striped' | 'compact' | 'bordered' | 'primary-header'",
     defaultValue: "'line'",
     description: 'Visual style. Same as Table component.',
   },
@@ -105,5 +105,17 @@ export const dataTableProps = [
     type: '(value, row) => ReactNode',
     defaultValue: '-',
     description: 'Custom cell renderer. Receives value and full row.',
+  },
+  {
+    name: 'Column.renderFooter',
+    type: '(value) => ReactNode',
+    defaultValue: '-',
+    description: 'Custom footer cell renderer for this column.',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Prevent the entire table from splitting across pages.',
   },
 ];

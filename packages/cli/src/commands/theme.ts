@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { type ThemePresetName, configSchema, themePresets } from '@pdfx/shared';
+import { type ThemePresetName, configSchema, themePresets, themeSchema } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
+import ts from 'typescript';
 import { DEFAULTS } from '../constants.js';
 import { ensureDir } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
@@ -175,6 +176,92 @@ export async function themeSwitch(presetName: string) {
   }
 }
 
+function toPlainValue(node: ts.Expression): unknown {
+  if (
+    ts.isAsExpression(node) ||
+    ts.isTypeAssertionExpression(node) ||
+    ts.isParenthesizedExpression(node)
+  ) {
+    return toPlainValue(node.expression);
+  }
+
+  if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) {
+    return node.text;
+  }
+
+  if (ts.isNumericLiteral(node)) {
+    return Number(node.text);
+  }
+
+  if (node.kind === ts.SyntaxKind.TrueKeyword) return true;
+  if (node.kind === ts.SyntaxKind.FalseKeyword) return false;
+  if (node.kind === ts.SyntaxKind.NullKeyword) return null;
+
+  if (ts.isPrefixUnaryExpression(node) && node.operator === ts.SyntaxKind.MinusToken) {
+    const n = toPlainValue(node.operand);
+    return typeof n === 'number' ? -n : undefined;
+  }
+
+  if (ts.isArrayLiteralExpression(node)) {
+    return node.elements.map((el) =>
+      ts.isSpreadElement(el) ? undefined : toPlainValue(el as ts.Expression)
+    );
+  }
+
+  if (ts.isObjectLiteralExpression(node)) {
+    const out: Record<string, unknown> = {};
+    for (const prop of node.properties) {
+      if (!ts.isPropertyAssignment(prop)) return undefined;
+      if (ts.isComputedPropertyName(prop.name)) return undefined;
+
+      const key =
+        ts.isIdentifier(prop.name) ||
+        ts.isStringLiteral(prop.name) ||
+        ts.isNumericLiteral(prop.name)
+          ? prop.name.text
+          : undefined;
+
+      if (!key) return undefined;
+      const value = toPlainValue(prop.initializer);
+      if (value === undefined) return undefined;
+      out[key] = value;
+    }
+    return out;
+  }
+
+  return undefined;
+}
+
+function parseThemeObject(themePath: string): unknown {
+  const content = fs.readFileSync(themePath, 'utf-8');
+  const sourceFile = ts.createSourceFile(
+    themePath,
+    content,
+    ts.ScriptTarget.Latest,
+    true,
+    ts.ScriptKind.TS
+  );
+
+  for (const stmt of sourceFile.statements) {
+    if (!ts.isVariableStatement(stmt)) continue;
+    const isExported = stmt.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
+    if (!isExported) continue;
+
+    for (const decl of stmt.declarationList.declarations) {
+      if (!ts.isIdentifier(decl.name) || decl.name.text !== 'theme' || !decl.initializer) continue;
+      const parsed = toPlainValue(decl.initializer);
+      if (parsed === undefined) {
+        throw new Error(
+          'Could not statically parse exported theme object. Keep `export const theme = { ... }` as a plain object literal.'
+        );
+      }
+      return parsed;
+    }
+  }
+
+  throw new Error('No exported `theme` object found.');
+}
+
 /**
  * Validate the user's theme file against the theme schema.
  */
@@ -208,54 +295,16 @@ export async function themeValidate() {
   const spinner = ora('Validating theme file...').start();
 
   try {
-    // Read the file and try to extract the theme object
-    const content = fs.readFileSync(absThemePath, 'utf-8');
+    const parsedTheme = parseThemeObject(absThemePath);
+    const result = themeSchema.safeParse(parsedTheme);
 
-    // Strip comment lines to avoid false positives from comments or string literals
-    const cleanContent = content
-      .split('\n')
-      .filter((line) => {
-        const trimmed = line.trimStart();
-        return !trimmed.startsWith('//') && !trimmed.startsWith('*');
-      })
-      .join('\n');
-
-    // Check that required top-level keys exist as actual object keys (not in comments/strings)
-    const requiredKeys = ['name', 'primitives', 'colors', 'typography', 'spacing', 'page'];
-    const missingKeys = requiredKeys.filter(
-      (key) => !new RegExp(`\\b${key}\\s*:`).test(cleanContent)
-    );
-
-    if (missingKeys.length > 0) {
-      spinner.fail(`Theme file is missing keys: ${missingKeys.join(', ')}`);
-      console.log(chalk.dim('  Run "pdfx theme init" to regenerate the theme file.'));
+    if (!result.success) {
+      const message = result.error.issues.map((issue) => issue.message).join(', ');
+      spinner.fail(`Theme validation failed: ${message}`);
       process.exit(1);
     }
 
-    // Check for required color tokens
-    const requiredColors = [
-      'foreground',
-      'background',
-      'muted',
-      'mutedForeground',
-      'primary',
-      'primaryForeground',
-      'border',
-      'accent',
-      'destructive',
-      'success',
-      'warning',
-      'info',
-    ];
-    const missingColors = requiredColors.filter(
-      (key) => !new RegExp(`\\b${key}\\s*:`).test(cleanContent)
-    );
-
-    if (missingColors.length > 0) {
-      spinner.warn(`Theme file may be missing color tokens: ${missingColors.join(', ')}`);
-    } else {
-      spinner.succeed('Theme file structure looks valid');
-    }
+    spinner.succeed('Theme file is valid');
 
     console.log(chalk.dim(`\n  Validated: ${configResult.data.theme}\n`));
   } catch (error: unknown) {

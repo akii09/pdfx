@@ -38,19 +38,14 @@ export const dividerProps = [
   },
   {
     name: 'variant',
-    type: "'default' | 'dashed' | 'dotted'",
-    defaultValue: "'default'",
+    type: "'solid' | 'dashed' | 'dotted'",
+    defaultValue: "'solid'",
     description: 'Line variant style.',
   },
   {
-    name: 'children',
-    type: 'ReactNode',
-    description: 'Optional content to display within the divider',
-  },
-  {
     name: 'thickness',
-    type: "'sm' | 'md' | 'lg'",
-    defaultValue: "'md'",
+    type: "'thin' | 'medium' | 'thick'",
+    defaultValue: "'thin'",
     description: 'Line thickness.',
   },
   {

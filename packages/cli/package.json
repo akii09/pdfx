@@ -28,13 +28,13 @@
     "commander": "^12.1.0",
     "chalk": "^5.3.0",
     "ora": "^8.1.1",
-    "prompts": "^2.4.2"
+    "prompts": "^2.4.2",
+    "typescript": "catalog:"
   },
   "devDependencies": {
     "@types/node": "^20.17.9",
     "@types/prompts": "^2.4.9",
     "tsup": "^8.5.1",
-    "typescript": "catalog:",
     "vitest": "catalog:",
     "rimraf": "^6.0.1"
   },

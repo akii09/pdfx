@@ -13,7 +13,7 @@ import {
 } from '@react-pdf/renderer';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 // ─── Public Types ─────────────────────────────────────────────────────────────
 
@@ -100,19 +100,6 @@ interface ChartLayout {
   xLabels: string[];
 }
 
-// ─── Style cache ──────────────────────────────────────────────────────────────
-
-let cachedTheme: PdfxTheme | null = null;
-let cachedStyles: ReturnType<typeof createGraphStyles> | null = null;
-
-function getStyles(t: PdfxTheme) {
-  if (cachedTheme !== t || !cachedStyles) {
-    cachedStyles = createGraphStyles(t);
-    cachedTheme = t;
-  }
-  return cachedStyles;
-}
-
 function createGraphStyles(t: PdfxTheme) {
   return StyleSheet.create({
     container: {
@@ -140,6 +127,14 @@ function createGraphStyles(t: PdfxTheme) {
       gap: 12,
       marginTop: 6,
     },
+    legendColumn: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 8,
+      marginLeft: 12,
+      marginTop: 18,
+      minWidth: 120,
+    },
     legendItem: {
       display: 'flex',
       flexDirection: 'row',
@@ -150,6 +145,11 @@ function createGraphStyles(t: PdfxTheme) {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.primitives.typography.xs,
       color: t.colors.mutedForeground,
+    },
+    chartWithRightLegend: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
     },
   });
 }
@@ -651,13 +651,17 @@ function Legend({
   series,
   palette,
   styles,
+  position = 'bottom',
 }: {
   series: GraphSeries[];
   palette: string[];
   styles: ReturnType<typeof createGraphStyles>;
+  position?: 'bottom' | 'right';
 }) {
+  const containerStyle = position === 'right' ? styles.legendColumn : styles.legendRow;
+
   return (
-    <View style={styles.legendRow}>
+    <View style={containerStyle}>
       {series.map((s, i) => (
         <View key={s.name} style={styles.legendItem}>
           <Svg width={10} height={10}>
@@ -716,6 +720,8 @@ export function PdfGraph({
   data,
   title,
   subtitle,
+  xLabel,
+  yLabel,
   width = 500,
   height = 260,
   colors,
@@ -729,8 +735,9 @@ export function PdfGraph({
   noWrap = true,
   style,
 }: GraphProps) {
-  const styles = getStyles(defaultTheme);
-  const palette = colors ?? getDefaultPalette(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createGraphStyles(theme), [theme]);
+  const palette = colors ?? getDefaultPalette(theme);
   const series = normalizeData(data);
 
   // ── Compute layout ────────────────────────────────────────────────
@@ -774,10 +781,10 @@ export function PdfGraph({
 
   switch (variant) {
     case 'bar':
-      chartContent = renderBarChart(series, layout, palette, showGrid, showValues, defaultTheme);
+      chartContent = renderBarChart(series, layout, palette, showGrid, showValues, theme);
       break;
     case 'horizontal-bar':
-      chartContent = renderHorizontalBarChart(series, layout, palette, showValues, defaultTheme);
+      chartContent = renderHorizontalBarChart(series, layout, palette, showValues, theme);
       break;
     case 'line':
       chartContent = renderLineAreaChart(
@@ -789,7 +796,7 @@ export function PdfGraph({
         showDots,
         smooth,
         false,
-        defaultTheme
+        theme
       );
       break;
     case 'area':
@@ -802,14 +809,14 @@ export function PdfGraph({
         showDots,
         smooth,
         true,
-        defaultTheme
+        theme
       );
       break;
     case 'pie':
-      chartContent = renderPieDonutChart(series, layout, palette, undefined, false, defaultTheme);
+      chartContent = renderPieDonutChart(series, layout, palette, undefined, false, theme);
       break;
     case 'donut':
-      chartContent = renderPieDonutChart(series, layout, palette, centerLabel, true, defaultTheme);
+      chartContent = renderPieDonutChart(series, layout, palette, centerLabel, true, theme);
       break;
   }
 
@@ -822,16 +829,41 @@ export function PdfGraph({
     <View style={containerStyles}>
       {title && <PDFText style={styles.title}>{title}</PDFText>}
       {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
-      <Svg width={width} height={height}>
-        <Defs>
-          <LinearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0%" stopColor={defaultTheme.colors.background} stopOpacity={0} />
-            <Stop offset="100%" stopColor={defaultTheme.colors.background} stopOpacity={0} />
-          </LinearGradient>
-        </Defs>
-        {chartContent}
-      </Svg>
-      {showLegend && legend === 'bottom' && Legend({ series, palette, styles })}
+      <View style={legend === 'right' ? styles.chartWithRightLegend : undefined}>
+        <Svg width={width} height={height}>
+          <Defs>
+            <LinearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0%" stopColor={theme.colors.background} stopOpacity={0} />
+              <Stop offset="100%" stopColor={theme.colors.background} stopOpacity={0} />
+            </LinearGradient>
+          </Defs>
+          {chartContent}
+          {!isPieOrDonut && xLabel && (
+            <SvgText
+              x={chartX + chartW / 2}
+              y={height - 2}
+              fill={theme.colors.mutedForeground}
+              textAnchor="middle"
+              style={{ fontSize: 8 }}
+            >
+              {xLabel}
+            </SvgText>
+          )}
+          {!isPieOrDonut && yLabel && (
+            <SvgText
+              x={2}
+              y={10}
+              fill={theme.colors.mutedForeground}
+              textAnchor="start"
+              style={{ fontSize: 8 }}
+            >
+              {yLabel}
+            </SvgText>
+          )}
+        </Svg>
+        {showLegend && legend === 'right' && Legend({ series, palette, styles, position: 'right' })}
+      </View>
+      {showLegend && legend === 'bottom' && Legend({ series, palette, styles, position: 'bottom' })}
     </View>
   );
 

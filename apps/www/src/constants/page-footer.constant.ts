@@ -101,4 +101,16 @@ export const pageFooterProps = [
     type: 'Style',
     description: 'Custom @react-pdf/renderer styles to merge with defaults.',
   },
+  {
+    name: 'fixed',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Fix the footer to the bottom of each page.',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'true',
+    description: 'Prevent inline footer blocks from splitting across pages.',
+  },
 ];

@@ -94,4 +94,16 @@ export const pageHeaderProps = [
     type: 'Style',
     description: 'Custom @react-pdf/renderer styles to merge with defaults.',
   },
+  {
+    name: 'fixed',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Fix the header to the top of each page.',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'true',
+    description: 'Prevent inline header blocks from splitting across pages.',
+  },
 ];

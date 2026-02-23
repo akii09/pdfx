@@ -20,9 +20,37 @@ export function MyDocument() {
 export const stackProps = [
   {
     name: 'gap',
-    type: "'none' | 'sm' | 'md' | 'lg'",
+    type: "'none' | 'sm' | 'md' | 'lg' | 'xl'",
     defaultValue: "'md'",
     description: 'Gap between children. Maps to theme spacing scale.',
+  },
+  {
+    name: 'direction',
+    type: "'vertical' | 'horizontal'",
+    defaultValue: "'vertical'",
+    description: 'Stack direction.',
+  },
+  {
+    name: 'align',
+    type: "'start' | 'center' | 'end' | 'stretch'",
+    description: 'Cross-axis alignment.',
+  },
+  {
+    name: 'justify',
+    type: "'start' | 'center' | 'end' | 'between' | 'around'",
+    description: 'Main-axis distribution.',
+  },
+  {
+    name: 'wrap',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Enable flex-wrap for horizontal stacks.',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Prevent stack from splitting across pages.',
   },
   {
     name: 'style',

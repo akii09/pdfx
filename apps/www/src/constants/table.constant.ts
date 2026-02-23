@@ -99,10 +99,10 @@ export const tableProps = [
   // DataTable props
   {
     name: 'DataTable.columns',
-    type: "Array<{ key: string; label: string; align?: 'left' | 'center' | 'right'; width?: string | number }>",
+    type: "Array<{ key: string; header: string; align?: 'left' | 'center' | 'right'; width?: string | number; render?: (value, row) => ReactNode; renderFooter?: (value) => ReactNode }>",
     required: true,
     description:
-      'Column schema. Each column needs a key (maps to data field) and a label (header text). Optionally set alignment and fixed width.',
+      'Column schema. Each column needs a key (maps to data field) and a header (header text). Optionally set alignment, fixed width, and custom cell/footer renderers.',
   },
   {
     name: 'DataTable.data',
@@ -126,9 +126,15 @@ export const tableProps = [
       "Row density. compact reduces padding and uses smaller font. Equivalent to using variant='compact' but composable with other variants.",
   },
   {
-    name: 'DataTable.footerRow',
-    type: 'Record<string, string | number | undefined>',
+    name: 'DataTable.footer',
+    type: 'Partial<Record<string, string | number>>',
     description:
       'Optional summary/total row shown in a TableFooter with bold text and a top border. Keys match column keys.',
+  },
+  {
+    name: 'DataTable.noWrap',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Prevent the entire table from splitting across pages.',
   },
 ];

@@ -13,6 +13,7 @@
 // try/catch — the accepted pattern for libraries that support both React render and
 // plain-function (unit-test) invocation.
 
+import * as React from 'react';
 import { type DependencyList, type ReactNode, createContext, useContext, useMemo } from 'react';
 import { theme as defaultTheme } from './pdfx-theme';
 
@@ -23,6 +24,20 @@ export const PdfxThemeContext = createContext<PdfxTheme>(defaultTheme);
 export interface PdfxThemeProviderProps {
   theme?: PdfxTheme;
   children: ReactNode;
+}
+
+/**
+ * Detect whether React currently has an active dispatcher.
+ * When components are invoked as plain functions in tests, dispatcher is null.
+ */
+function hasActiveDispatcher(): boolean {
+  const maybeInternals = React as unknown as {
+    __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?: { H?: unknown };
+  };
+
+  const dispatcher =
+    maybeInternals.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.H;
+  return dispatcher != null;
 }
 
 export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
@@ -44,6 +59,10 @@ export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
  * both React render and plain-function (test) invocation contexts.
  */
 export function usePdfxTheme(): PdfxTheme {
+  if (!hasActiveDispatcher()) {
+    return defaultTheme;
+  }
+
   try {
     return useContext(PdfxThemeContext);
   } catch (error) {
@@ -66,6 +85,10 @@ export function usePdfxTheme(): PdfxTheme {
  * Follows the same error-handling strategy as usePdfxTheme.
  */
 export function useSafeMemo<T>(factory: () => T, deps: DependencyList): T {
+  if (!hasActiveDispatcher()) {
+    return factory();
+  }
+
   try {
     return useMemo(factory, deps);
   } catch (error) {

@@ -60,9 +60,10 @@ export async function list() {
 
     const targetDir = path.resolve(process.cwd(), config.componentDir);
 
-    console.log(chalk.bold(`\n  Available Components (${result.data.items.length})\n`));
+    const components = result.data.items.filter((item) => item.type === 'registry:ui');
+    console.log(chalk.bold(`\n  Available Components (${components.length})\n`));
 
-    for (const item of result.data.items) {
+    for (const item of components) {
       // Components are installed under {componentDir}/{name}/pdfx-{name}.tsx
       const componentSubDir = path.join(targetDir, item.name);
       const localPath = safePath(componentSubDir, `pdfx-${item.name}.tsx`);
