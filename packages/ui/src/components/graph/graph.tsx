@@ -15,6 +15,87 @@ import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
+// ─── Graph Width Utilities ────────────────────────────────────────────────────
+
+/**
+ * A4 page width in points (595pt).
+ * Used for calculating safe graph widths.
+ */
+export const A4_WIDTH = 595;
+
+/**
+ * Options for calculating graph width.
+ */
+export interface GraphWidthOptions {
+  /** Additional container padding (e.g., Section padding). Default: 0 */
+  containerPadding?: number;
+  /** Additional wrapper padding (e.g., graphShell). Default: 0 */
+  wrapperPadding?: number;
+  /** Page size width override. Default: 595 (A4) */
+  pageWidth?: number;
+}
+
+/**
+ * Calculate the safe graph width based on theme page margins and container context.
+ *
+ * This utility ensures graphs don't overflow their container by accounting for:
+ * - Page margins (from theme)
+ * - Container padding (e.g., Section component)
+ * - Wrapper padding (e.g., a bordered graphShell View)
+ *
+ * @example
+ * ```tsx
+ * const width = getGraphWidth(theme);
+ * // For a graph inside a Section with padding="md" (12pt) and a graphShell (12pt):
+ * const width = getGraphWidth(theme, { containerPadding: 12, wrapperPadding: 12 });
+ * ```
+ */
+export function getGraphWidth(theme: PdfxTheme, options: GraphWidthOptions = {}): number {
+  const { containerPadding = 0, wrapperPadding = 0, pageWidth = A4_WIDTH } = options;
+
+  const { marginLeft, marginRight } = theme.spacing.page;
+
+  // Calculate available width:
+  // pageWidth - page margins - container padding (both sides) - wrapper padding (both sides)
+  const availableWidth =
+    pageWidth - marginLeft - marginRight - containerPadding * 2 - wrapperPadding * 2;
+
+  // Return floored value to avoid sub-pixel overflow, with minimum width guard
+  return Math.max(Math.floor(availableWidth), 100);
+}
+
+/**
+ * Pre-calculated safe graph widths for common scenarios.
+ * These values work with all built-in themes on A4 pages.
+ */
+export const GRAPH_SAFE_WIDTHS = {
+  /** Safe width for graph directly in page content (no extra containers) */
+  default: 420,
+  /** Safe width for graph inside a Section with md padding */
+  inSection: 400,
+  /** Safe width for graph inside a Section + bordered wrapper (like graphShell) */
+  inSectionWithWrapper: 380,
+} as const;
+
+/**
+ * Internal layout constants for chart margins.
+ * These values ensure proper spacing for axis labels and legends.
+ */
+const CHART_MARGINS = {
+  /** Left margin for charts with Y-axis labels */
+  axisLeft: 40,
+  /** Left margin for pie/donut charts (no axis) */
+  pieLeft: 10,
+  /** Right margin for all chart types */
+  right: 10,
+  /** Top margin for all chart types */
+  top: 10,
+  /** Bottom margin for charts with X-axis labels */
+  axisBottom: 24,
+  /** Bottom margin for pie/donut charts (no axis) */
+  pieBottom: 10,
+} as const;
+
 // ─── Public Types ─────────────────────────────────────────────────────────────
 
 export type GraphVariant = 'bar' | 'horizontal-bar' | 'line' | 'area' | 'pie' | 'donut';
@@ -56,10 +137,32 @@ export interface GraphProps {
   xLabel?: string;
   /** Y-axis label. */
   yLabel?: string;
-  /** Total SVG width in PDF points. @default 500 */
+  /**
+   * Total SVG width in PDF points.
+   * Ignored when `fullWidth` is true.
+   * @default 420
+   */
   width?: number;
   /** Total SVG height in PDF points. @default 260 */
   height?: number;
+  /**
+   * When true, automatically calculates width based on theme page margins.
+   * Accounts for page margins and optional container/wrapper padding.
+   * @default false
+   */
+  fullWidth?: boolean;
+  /**
+   * Container padding to account for when using fullWidth.
+   * Use this when graph is inside a Section or Card with padding.
+   * @default 0
+   */
+  containerPadding?: number;
+  /**
+   * Wrapper padding to account for when using fullWidth.
+   * Use this when graph is wrapped in a bordered View (like graphShell).
+   * @default 0
+   */
+  wrapperPadding?: number;
   /** Override the color palette (hex values). */
   colors?: string[];
   /** Show numeric value labels on bars or data points. @default false */
@@ -722,8 +825,11 @@ export function PdfGraph({
   subtitle,
   xLabel,
   yLabel,
-  width = 500,
+  width: explicitWidth,
   height = 260,
+  fullWidth = false,
+  containerPadding = 0,
+  wrapperPadding = 0,
   colors,
   showValues = false,
   showGrid = true,
@@ -740,14 +846,23 @@ export function PdfGraph({
   const palette = colors ?? getDefaultPalette(theme);
   const series = normalizeData(data);
 
+  // ── Calculate width ─────────────────────────────────────────────────
+  // If fullWidth is enabled, calculate based on theme; otherwise use explicit or default
+  const width = useSafeMemo(() => {
+    if (fullWidth) {
+      return getGraphWidth(theme, { containerPadding, wrapperPadding });
+    }
+    return explicitWidth ?? GRAPH_SAFE_WIDTHS.default;
+  }, [fullWidth, explicitWidth, theme, containerPadding, wrapperPadding]);
+
   // ── Compute layout ────────────────────────────────────────────────
   const isPieOrDonut = variant === 'pie' || variant === 'donut';
 
-  // Margins for axes / labels
-  const marginLeft = isPieOrDonut ? 10 : 40;
-  const marginRight = 10;
-  const marginTop = 10;
-  const marginBottom = isPieOrDonut ? 10 : 24;
+  // Use layout constants for margins
+  const marginLeft = isPieOrDonut ? CHART_MARGINS.pieLeft : CHART_MARGINS.axisLeft;
+  const marginRight = CHART_MARGINS.right;
+  const marginTop = CHART_MARGINS.top;
+  const marginBottom = isPieOrDonut ? CHART_MARGINS.pieBottom : CHART_MARGINS.axisBottom;
 
   const chartX = marginLeft;
   const chartY = marginTop;

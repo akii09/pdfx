@@ -19,6 +19,10 @@ export function Heading({
 }: HeadingProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createHeadingStyles(theme), [theme]);
+
+  // Clamp level to valid range (1-6) to prevent runtime errors
+  const safeLevel = Math.min(Math.max(Math.round(level), 1), 6) as 1 | 2 | 3 | 4 | 5 | 6;
+
   const weightMap = {
     normal: styles.weightNormal,
     medium: styles.weightMedium,
@@ -32,7 +36,7 @@ export function Heading({
     wide: styles.trackingWide,
     wider: styles.trackingWider,
   };
-  const headingStyle = styles[`h${level}` as keyof typeof styles];
+  const headingStyle = styles[`h${safeLevel}` as keyof typeof styles];
   const styleArray: Style[] = [headingStyle as Style];
 
   if (weight && weight in weightMap) {

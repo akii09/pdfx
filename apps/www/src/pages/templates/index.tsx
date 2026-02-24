@@ -19,6 +19,14 @@ const CATEGORIES: TemplateCategoryCard[] = [
     count: 3,
     tags: ['A4', 'Theme-aware', 'Table', 'KeyValue'],
   },
+  {
+    href: '/templates/reports',
+    title: 'Reports',
+    description:
+      'Production-ready business report layouts for finance, operations, security, and growth teams.',
+    count: 4,
+    tags: ['Executive', 'Graph', 'DataTable', 'Best Practices'],
+  },
 ];
 
 export default function TemplatesIndex() {
@@ -71,11 +79,6 @@ export default function TemplatesIndex() {
             </div>
           </Link>
         ))}
-
-        {/* Coming soon placeholder */}
-        <div className="rounded-xl border border-dashed border-border bg-muted/20 p-5 flex items-center justify-center">
-          <p className="text-sm text-muted-foreground/60 text-center">More templates coming soon</p>
-        </div>
       </div>
     </div>
   );

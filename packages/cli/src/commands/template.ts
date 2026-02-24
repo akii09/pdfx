@@ -18,6 +18,7 @@ import { DEFAULTS, REGISTRY_SUBPATHS } from '../constants.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
+import { resolveThemeImport } from './add.js';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -53,6 +54,44 @@ async function fetchTemplate(name: string, registryUrl: string): Promise<Registr
     throw new RegistryError(
       response.status === 404
         ? `Template "${name}" not found in registry`
+        : `Registry returned HTTP ${response.status}`
+    );
+  }
+
+  let data: unknown;
+  try {
+    data = await response.json();
+  } catch {
+    throw new RegistryError(`Invalid response for "${name}": not valid JSON`);
+  }
+
+  const result = registryItemSchema.safeParse(data);
+  if (!result.success) {
+    throw new RegistryError(
+      `Invalid registry entry for "${name}": ${result.error.issues[0]?.message}`
+    );
+  }
+
+  return result.data;
+}
+
+async function fetchComponent(name: string, registryUrl: string): Promise<RegistryItem> {
+  const url = `${registryUrl}/${name}.json`;
+
+  let response: Response;
+  try {
+    response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+  } catch (err) {
+    const isTimeout = err instanceof Error && err.name === 'TimeoutError';
+    throw new NetworkError(
+      isTimeout ? 'Registry request timed out' : `Could not reach ${registryUrl}`
+    );
+  }
+
+  if (!response.ok) {
+    throw new RegistryError(
+      response.status === 404
+        ? `Component "${name}" not found in registry`
         : `Registry returned HTTP ${response.status}`
     );
   }
@@ -170,8 +209,80 @@ async function resolveConflict(
 
 // ─── Install a single template ───────────────────────────────────────────────
 
-async function installTemplate(name: string, config: Config, force: boolean): Promise<void> {
+interface InstallTemplateResult {
+  installedPeers: string[];
+  peerWarnings: string[];
+}
+
+async function ensurePeerComponents(
+  template: RegistryItem,
+  config: Config,
+  force: boolean
+): Promise<InstallTemplateResult> {
+  const installedPeers: string[] = [];
+  const peerWarnings: string[] = [];
+
+  if (!template.peerComponents || template.peerComponents.length === 0) {
+    return { installedPeers, peerWarnings };
+  }
+
+  const componentBaseDir = path.resolve(process.cwd(), config.componentDir);
+
+  for (const componentName of template.peerComponents) {
+    const componentDir = path.join(componentBaseDir, componentName);
+    const expectedMain = path.join(componentDir, `pdfx-${componentName}.tsx`);
+
+    if (checkFileExists(componentDir)) {
+      if (!checkFileExists(expectedMain)) {
+        peerWarnings.push(
+          `${componentName}: directory exists but expected file missing (${path.basename(expectedMain)})`
+        );
+      } else {
+        peerWarnings.push(
+          `${componentName}: already exists, skipped install (use "pdfx diff ${componentName}" to verify freshness)`
+        );
+      }
+      continue;
+    }
+
+    const component = await fetchComponent(componentName, config.registry);
+    ensureDir(componentDir);
+
+    const componentRelDir = path.join(config.componentDir, component.name);
+    for (const file of component.files) {
+      const fileName = path.basename(file.path);
+      const filePath = safePath(componentDir, fileName);
+      let content = file.content;
+      if (
+        config.theme &&
+        (content.includes('pdfx-theme') || content.includes('pdfx-theme-context'))
+      ) {
+        content = resolveThemeImport(componentRelDir, config.theme, content);
+      }
+
+      if (checkFileExists(filePath) && !force) {
+        peerWarnings.push(
+          `${componentName}: skipped writing ${fileName} because it already exists (use --force to overwrite)`
+        );
+        continue;
+      }
+
+      writeFile(filePath, content);
+    }
+
+    installedPeers.push(componentName);
+  }
+
+  return { installedPeers, peerWarnings };
+}
+
+async function installTemplate(
+  name: string,
+  config: Config,
+  force: boolean
+): Promise<InstallTemplateResult> {
   const template = await fetchTemplate(name, config.registry);
+  const peerResult = await ensurePeerComponents(template, config, force);
 
   // Resolve install directory — use config.templateDir if set, else DEFAULTS.TEMPLATE_DIR
   const templateBaseDir = path.resolve(process.cwd(), config.templateDir ?? DEFAULTS.TEMPLATE_DIR);
@@ -258,6 +369,8 @@ async function installTemplate(name: string, config: Config, force: boolean): Pr
       writeFile(contextPath, generateThemeContextFile());
     }
   }
+
+  return peerResult;
 }
 
 // ─── Public commands ─────────────────────────────────────────────────────────
@@ -303,8 +416,16 @@ export async function templateAdd(names: string[], options: { force?: boolean } 
     const spinner = ora(`Adding template ${templateName}...`).start();
 
     try {
-      await installTemplate(templateName, config, force);
+      const result = await installTemplate(templateName, config, force);
       spinner.succeed(`Added template ${chalk.cyan(templateName)}`);
+      if (result.installedPeers.length > 0) {
+        console.log(
+          chalk.green(`  Installed required components: ${result.installedPeers.join(', ')}`)
+        );
+      }
+      for (const warning of result.peerWarnings) {
+        console.log(chalk.yellow(`  Warning: ${warning}`));
+      }
     } catch (error: unknown) {
       if (error instanceof ValidationError && error.message.includes('Cancelled')) {
         spinner.info('Cancelled');

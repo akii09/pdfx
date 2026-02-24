@@ -29,6 +29,7 @@ const GraphPage = lazy(() => import('../pages/components/graph'));
 const InstallationPage = lazy(() => import('../pages/installation'));
 const TemplatesIndexPage = lazy(() => import('../pages/templates/index'));
 const InvoicesIndexPage = lazy(() => import('../pages/templates/invoices/index'));
+const ReportsIndexPage = lazy(() => import('../pages/templates/reports/index'));
 
 function PageLoader() {
   return (
@@ -250,6 +251,14 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader />}>
                 <InvoicesIndexPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="reports"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ReportsIndexPage />
               </Suspense>
             }
           />

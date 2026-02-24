@@ -4,17 +4,22 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // ── Template registry files ──────────────────────────────────────────────────
-import invoice01Registry from '../../../../public/r/templates/invoice-classic.json';
-import invoice03Registry from '../../../../public/r/templates/invoice-minimal.json';
-import invoice02Registry from '../../../../public/r/templates/invoice-modern.json';
+import reportFinancialRegistry from '../../../../public/r/templates/report-financial.json';
+import reportMarketingRegistry from '../../../../public/r/templates/report-marketing.json';
+import reportOperationsRegistry from '../../../../public/r/templates/report-operations.json';
+import reportSecurityRegistry from '../../../../public/r/templates/report-security.json';
 
 // ── Component registry files ─────────────────────────────────────────────────
+import badgeRegistry from '../../../../public/r/badge.json';
+import dataTableRegistry from '../../../../public/r/data-table.json';
+import dividerRegistry from '../../../../public/r/divider.json';
+import graphRegistry from '../../../../public/r/graph.json';
 import keyValueRegistry from '../../../../public/r/key-value.json';
+import listRegistry from '../../../../public/r/list.json';
 import pageFooterRegistry from '../../../../public/r/page-footer.json';
 import pageHeaderRegistry from '../../../../public/r/page-header.json';
-import pdfImageRegistry from '../../../../public/r/pdf-image.json';
 import sectionRegistry from '../../../../public/r/section.json';
-import tableRegistry from '../../../../public/r/table.json';
+import stackRegistry from '../../../../public/r/stack.json';
 import textRegistry from '../../../../public/r/text.json';
 
 import { CopyButton } from '../../../components/copy-button';
@@ -24,22 +29,28 @@ import {
   type TemplateCodeFile,
 } from '../../../components/template-code-explorer';
 import { useDocumentTitle } from '../../../hooks/use-document-title';
-import { Invoice01Document } from './invoice01';
-import { Invoice02Document } from './invoice02';
-import { Invoice03Document } from './invoice03';
+import { FinancialReportDocument } from './report-financial';
+import { MarketingReportDocument } from './report-marketing';
+import { OperationsReportDocument } from './report-operations';
+import { SecurityReportDocument } from './report-security';
 
-type TemplateId = 'invoice-classic' | 'invoice-modern' | 'invoice-minimal';
+type TemplateId = 'report-financial' | 'report-operations' | 'report-security' | 'report-marketing';
 type ThemePreset = 'professional' | 'modern' | 'minimal';
 type ViewMode = 'preview' | 'code';
 
 // ── Component file map ───────────────────────────────────────────────────────
-const INVOICE_COMPONENT_FILES: TemplateCodeFile[] = [
+// All report templates share report-layout.tsx which uses these components.
+const REPORT_COMPONENT_FILES: TemplateCodeFile[] = [
+  badgeRegistry,
+  dataTableRegistry,
+  dividerRegistry,
+  graphRegistry,
   keyValueRegistry,
+  listRegistry,
   pageFooterRegistry,
   pageHeaderRegistry,
-  pdfImageRegistry,
   sectionRegistry,
-  tableRegistry,
+  stackRegistry,
   textRegistry,
 ].flatMap((reg) =>
   reg.files.map((f) => ({
@@ -80,7 +91,7 @@ interface TemplateConfig {
   components: string[];
   codeFiles: TemplateCodeFile[];
   explorerFiles: TemplateCodeFile[];
-  invoiceNumber: string;
+  reportNumber: string;
   Component: React.ComponentType<{ theme?: PdfxTheme }>;
   downloadFilename: string;
 }
@@ -88,49 +99,74 @@ interface TemplateConfig {
 // ── Template configs ─────────────────────────────────────────────────────────
 
 const TEMPLATES: TemplateConfig[] = (() => {
-  const classic = toCodeFiles(invoice01Registry.files, 'invoice-classic');
-  const modern = toCodeFiles(invoice02Registry.files, 'invoice-modern');
-  const minimal = toCodeFiles(invoice03Registry.files, 'invoice-minimal');
+  const financial = toCodeFiles(reportFinancialRegistry.files, 'report-financial');
+  const operations = toCodeFiles(reportOperationsRegistry.files, 'report-operations');
+  const security = toCodeFiles(reportSecurityRegistry.files, 'report-security');
+  const marketing = toCodeFiles(reportMarketingRegistry.files, 'report-marketing');
 
   return [
     {
-      id: 'invoice-classic' as TemplateId,
-      label: 'Classic',
-      badge: 'Professional',
-      description: 'Logo-left header with three-column billing info, zebra-striped grid table.',
-      layout: 'Logo Left · Grid Table',
-      components: ['PageHeader', 'Section', 'Table', 'KeyValue', 'PageFooter', 'Text', 'PdfImage'],
-      codeFiles: classic,
-      explorerFiles: toExplorerFiles(classic, INVOICE_COMPONENT_FILES),
-      invoiceNumber: 'INV-2026-001',
-      Component: Invoice01Document,
-      downloadFilename: 'invoice-classic.pdf',
+      id: 'report-financial' as TemplateId,
+      label: 'Financial',
+      badge: 'Executive',
+      reportNumber: 'RPT-2026-Q1',
+      description: 'Revenue, margin, and cash-focused report for finance and leadership reviews.',
+      layout: 'Summary Cards · Trend · KPI Table',
+      components: [
+        'PageHeader',
+        'PageFooter',
+        'PdfGraph',
+        'DataTable',
+        'KeyValue',
+        'Badge',
+        'PdfList',
+      ],
+      codeFiles: financial,
+      explorerFiles: toExplorerFiles(financial, REPORT_COMPONENT_FILES),
+      Component: FinancialReportDocument,
+      downloadFilename: 'report-financial.pdf',
     },
     {
-      id: 'invoice-modern' as TemplateId,
-      label: 'Modern',
-      badge: 'Branded',
-      description: 'Full-width branded banner, horizontal meta strip, primary-header table.',
-      layout: 'Branded Banner · Primary Header Table',
-      components: ['PageHeader', 'Section', 'Table', 'KeyValue', 'PageFooter', 'Text'],
-      codeFiles: modern,
-      explorerFiles: toExplorerFiles(modern, INVOICE_COMPONENT_FILES),
-      invoiceNumber: 'INV-2026-002',
-      Component: Invoice02Document,
-      downloadFilename: 'invoice-modern.pdf',
+      id: 'report-operations' as TemplateId,
+      label: 'Operations',
+      badge: 'Delivery',
+      reportNumber: 'RPT-2026-M02',
+      description:
+        'Service delivery report tracking SLA health, backlog pressure, and escalations.',
+      layout: 'Status Pill · Throughput Trend · Delivery Table',
+      components: ['PageHeader', 'PageFooter', 'PdfGraph', 'DataTable', 'Badge', 'Section'],
+      codeFiles: operations,
+      explorerFiles: toExplorerFiles(operations, REPORT_COMPONENT_FILES),
+      Component: OperationsReportDocument,
+      downloadFilename: 'report-operations.pdf',
     },
     {
-      id: 'invoice-minimal' as TemplateId,
-      label: 'Minimal',
-      badge: 'Clean',
-      description: 'Minimal underline header, inline invoice stamp, compact table layout.',
-      layout: 'Minimal · Compact Table',
-      components: ['PageHeader', 'Section', 'Table', 'KeyValue', 'PageFooter', 'Text'],
-      codeFiles: minimal,
-      explorerFiles: toExplorerFiles(minimal, INVOICE_COMPONENT_FILES),
-      invoiceNumber: 'INV-2026-003',
-      Component: Invoice03Document,
-      downloadFilename: 'invoice-minimal.pdf',
+      id: 'report-security' as TemplateId,
+      label: 'Security',
+      badge: 'Risk',
+      reportNumber: 'RPT-2026-S05',
+      description:
+        'Security posture report for vulnerabilities, remediation SLA, and control maturity.',
+      layout: 'Risk Summary · Trendline · Risk Register',
+      components: ['PageHeader', 'PageFooter', 'PdfGraph', 'DataTable', 'KeyValue', 'Badge'],
+      codeFiles: security,
+      explorerFiles: toExplorerFiles(security, REPORT_COMPONENT_FILES),
+      Component: SecurityReportDocument,
+      downloadFilename: 'report-security.pdf',
+    },
+    {
+      id: 'report-marketing' as TemplateId,
+      label: 'Growth',
+      badge: 'Pipeline',
+      reportNumber: 'RPT-2026-C02',
+      description:
+        'Marketing and growth report with MQL quality, CAC efficiency, and channel progress.',
+      layout: 'Acquisition Summary · Conversion Trend · Channel Table',
+      components: ['PageHeader', 'PageFooter', 'PdfGraph', 'DataTable', 'Badge', 'PdfList'],
+      codeFiles: marketing,
+      explorerFiles: toExplorerFiles(marketing, REPORT_COMPONENT_FILES),
+      Component: MarketingReportDocument,
+      downloadFilename: 'report-marketing.pdf',
     },
   ];
 })();
@@ -199,7 +235,7 @@ function TemplateCard({
           {template.badge}
         </span>
         <span className="text-[10px] font-mono text-muted-foreground/60">
-          {template.invoiceNumber}
+          {template.reportNumber}
         </span>
       </div>
       <h3 className={`text-sm font-semibold mb-1 ${active ? 'text-primary' : 'text-foreground'}`}>
@@ -248,15 +284,15 @@ function ThemeSwatch({
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-export default function InvoicesContainerPage() {
-  const [activeId, setActiveId] = useState<TemplateId>('invoice-classic');
+export default function ReportsContainerPage() {
+  const [activeId, setActiveId] = useState<TemplateId>('report-financial');
   const [pdfTheme, setPdfTheme] = useState<ThemePreset>('professional');
   const [viewMode, setViewMode] = useState<ViewMode>('preview');
 
   const current = TEMPLATES.find((t) => t.id === activeId) ?? TEMPLATES[0];
   const installCmd = `pdfx template add ${current.id}`;
 
-  useDocumentTitle('Invoice Templates');
+  useDocumentTitle('Report Templates');
 
   return (
     <div className="py-6">
@@ -266,18 +302,17 @@ export default function InvoicesContainerPage() {
           Templates
         </Link>
         <ChevronRight className="h-3 w-3" />
-        <span className="text-foreground font-medium">Invoices</span>
+        <span className="text-foreground font-medium">Reports</span>
       </nav>
 
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">
-            Invoice Templates
+            Report Templates
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Ready-to-use PDF invoice layouts built with{' '}
-            <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">@pdfx/ui</code>.
+            Production-ready PDF reports for finance, operations, security, and growth teams.
           </p>
         </div>
         <div className="shrink-0 flex items-center gap-1.5 bg-muted/60 rounded-lg px-3 py-2 border border-border text-xs font-mono text-muted-foreground">
@@ -290,8 +325,8 @@ export default function InvoicesContainerPage() {
         </div>
       </div>
 
-      {/* Template cards */}
-      <div className="grid grid-cols-3 gap-2.5 mb-3">
+      {/* Template cards — 2 cols on sm, 4 on lg */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-3">
         {TEMPLATES.map((t) => (
           <TemplateCard
             key={t.id}
@@ -350,7 +385,7 @@ export default function InvoicesContainerPage() {
       <div className="rounded-xl border border-border overflow-hidden shadow-sm mb-3">
         {viewMode === 'preview' ? (
           <PDFPreview
-            title={`${current.label} — ${current.invoiceNumber}`}
+            title={`${current.label} — ${current.reportNumber}`}
             downloadFilename={current.downloadFilename}
             height="h-[78vh]"
           >

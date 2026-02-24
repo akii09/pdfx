@@ -46,6 +46,13 @@ export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
 }
 
 /**
+ * Regex patterns that indicate the hook was called outside a valid React context.
+ * These errors should be caught and handled gracefully by falling back to defaults.
+ */
+const HOOK_ERROR_PATTERNS =
+  /invalid hook call|useContext|useMemo|cannot read properties of null|dispatcher|renderWithHooks|resolveDispatcher|hooks can only be called|rendered fewer hooks/i;
+
+/**
  * Returns the active PdfxTheme from context, or the default theme when called
  * outside a React render tree (e.g. unit tests).
  *
@@ -68,10 +75,7 @@ export function usePdfxTheme(): PdfxTheme {
   } catch (error) {
     // Suppress context errors when hook is called outside a render tree or
     // without a provider (common in unit tests). Re-throw anything else.
-    if (
-      error instanceof Error &&
-      /invalid hook call|useContext|cannot read properties of null/i.test(error.message)
-    ) {
+    if (error instanceof Error && HOOK_ERROR_PATTERNS.test(error.message)) {
       return defaultTheme;
     }
     throw error;
@@ -92,10 +96,7 @@ export function useSafeMemo<T>(factory: () => T, deps: DependencyList): T {
   try {
     return useMemo(factory, deps);
   } catch (error) {
-    if (
-      error instanceof Error &&
-      /invalid hook call|useMemo|cannot read properties of null/i.test(error.message)
-    ) {
+    if (error instanceof Error && HOOK_ERROR_PATTERNS.test(error.message)) {
       return factory();
     }
     throw error;
