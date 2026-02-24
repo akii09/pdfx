@@ -22,9 +22,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "text",
@@ -45,9 +43,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "link",
@@ -68,9 +64,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "divider",
@@ -91,9 +85,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "page-break",
@@ -106,9 +98,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "stack",
@@ -129,9 +119,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "section",
@@ -152,9 +140,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "table",
@@ -175,9 +161,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "data-table",
@@ -198,12 +182,8 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ],
-      "registryDependencies": [
-        "table"
-      ]
+      "dependencies": ["@react-pdf/renderer"],
+      "registryDependencies": ["table"]
     },
     {
       "name": "page-header",
@@ -216,9 +196,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "page-footer",
@@ -231,9 +209,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "badge",
@@ -254,9 +230,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "key-value",
@@ -277,9 +251,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "list",
@@ -300,9 +272,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "card",
@@ -323,9 +293,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "form",
@@ -346,9 +314,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "signature",
@@ -369,9 +335,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "keep-together",
@@ -384,9 +348,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "pdf-image",
@@ -399,9 +361,7 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
+      "dependencies": ["@react-pdf/renderer"]
     },
     {
       "name": "graph",
@@ -414,8 +374,160 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": [
-        "@react-pdf/renderer"
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "invoice-classic",
+      "type": "registry:template",
+      "title": "Invoice Classic",
+      "description": "Professional A4 invoice with logo-left header, three-column billing section, and zebra-striped grid table.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-classic.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "pdf-image"
+      ]
+    },
+    {
+      "name": "invoice-modern",
+      "type": "registry:template",
+      "title": "Invoice Modern",
+      "description": "Branded full-width banner header, horizontal invoice meta strip, and primary-header table.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-modern.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": ["page-header", "page-footer", "table", "key-value", "section", "text"]
+    },
+    {
+      "name": "invoice-minimal",
+      "type": "registry:template",
+      "title": "Invoice Minimal",
+      "description": "Clean minimal layout with inline invoice stamp, two-column billing info, and compact table.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-minimal.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": ["page-header", "page-footer", "table", "key-value", "section", "text"]
+    },
+    {
+      "name": "report-financial",
+      "type": "registry:template",
+      "title": "Financial Report",
+      "description": "Executive financial report with KPI cards, trend chart, delivery table, and highlights section.",
+      "files": [
+        {
+          "path": "public/r/templates/report-financial.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": [
+        "badge",
+        "data-table",
+        "divider",
+        "graph",
+        "key-value",
+        "list",
+        "page-footer",
+        "page-header",
+        "section",
+        "stack",
+        "text"
+      ]
+    },
+    {
+      "name": "report-operations",
+      "type": "registry:template",
+      "title": "Operations Report",
+      "description": "Operations and delivery report covering SLA health, throughput trends, and risk tracking.",
+      "files": [
+        {
+          "path": "public/r/templates/report-operations.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": [
+        "badge",
+        "data-table",
+        "divider",
+        "graph",
+        "key-value",
+        "list",
+        "page-footer",
+        "page-header",
+        "section",
+        "stack",
+        "text"
+      ]
+    },
+    {
+      "name": "report-security",
+      "type": "registry:template",
+      "title": "Security Report",
+      "description": "Security posture report with vulnerability trend tracking, remediation table, and risk summary.",
+      "files": [
+        {
+          "path": "public/r/templates/report-security.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": [
+        "badge",
+        "data-table",
+        "divider",
+        "graph",
+        "key-value",
+        "list",
+        "page-footer",
+        "page-header",
+        "section",
+        "stack",
+        "text"
+      ]
+    },
+    {
+      "name": "report-marketing",
+      "type": "registry:template",
+      "title": "Growth Report",
+      "description": "Growth and marketing report with acquisition trendline, channel performance, and execution highlights.",
+      "files": [
+        {
+          "path": "public/r/templates/report-marketing.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": [
+        "badge",
+        "data-table",
+        "divider",
+        "graph",
+        "key-value",
+        "list",
+        "page-footer",
+        "page-header",
+        "section",
+        "stack",
+        "text"
       ]
     }
   ]

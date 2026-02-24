@@ -12,6 +12,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { checkFileExists, safePath } from '../utils/file-system.js';
 import { readJsonFile } from '../utils/read-json.js';
+import { resolveThemeImport } from './add.js';
 
 const FETCH_TIMEOUT_MS = 10_000;
 
@@ -86,7 +87,15 @@ export async function diff(components: string[]) {
         }
 
         const localContent = fs.readFileSync(localPath, 'utf-8');
-        const registryContent = file.content;
+        const registryContent =
+          config.theme &&
+          (file.content.includes('pdfx-theme') || file.content.includes('pdfx-theme-context'))
+            ? resolveThemeImport(
+                path.join(config.componentDir, component.name),
+                config.theme,
+                file.content
+              )
+            : file.content;
 
         if (localContent === registryContent) {
           console.log(chalk.green(`  ${fileName}: up to date`));

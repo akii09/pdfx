@@ -28,7 +28,7 @@ export default function TextComponentPage() {
   return (
     <ComponentPage
       title="Text"
-      description="PDF text component for body paragraphs. Renders text at 12px with 1.5 line height and 8px bottom margin."
+      description="Theme-aware PDF text component for body paragraphs, labels, and display text. Typography, spacing, and colors come from the active PDFx theme."
       installCommand="npx @pdfx/cli add text"
       componentName="text"
       preview={

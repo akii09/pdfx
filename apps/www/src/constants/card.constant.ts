@@ -63,4 +63,10 @@ export const cardProps = [
     defaultValue: '-',
     description: 'Custom @react-pdf/renderer styles applied to the card container.',
   },
+  {
+    name: 'wrap',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Allow card content to split across pages. Disabled by default.',
+  },
 ];

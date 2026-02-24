@@ -15,6 +15,9 @@ export function KeyValue({
   valueColor,
   boldValue = false,
   noWrap = false,
+  dividerColor,
+  dividerThickness,
+  dividerMargin,
   style,
 }: KeyValueProps) {
   const theme = usePdfxTheme();
@@ -42,6 +45,9 @@ export function KeyValue({
         if (labelColor) {
           keyStyles.push({ color: resolveColor(labelColor, theme.colors) });
         }
+        if (item.keyStyle) {
+          keyStyles.push(item.keyStyle);
+        }
 
         // Value text styles — per-item color takes priority over global valueColor
         const valStyles: Style[] = [valueStyleMap[size]];
@@ -50,10 +56,20 @@ export function KeyValue({
         if (resolvedValueColor) {
           valStyles.push({ color: resolveColor(resolvedValueColor, theme.colors) });
         }
+        if (item.valueStyle) {
+          valStyles.push(item.valueStyle);
+        }
 
         if (direction === 'horizontal') {
           const rowStyles: Style[] = [styles.rowHorizontal];
-          if (divided && !isLast) rowStyles.push(styles.divider);
+          if (divided && !isLast) {
+            const dividerStyle: Style = {};
+            if (dividerColor)
+              dividerStyle.borderBottomColor = resolveColor(dividerColor, theme.colors);
+            if (dividerThickness) dividerStyle.borderBottomWidth = dividerThickness;
+            if (dividerMargin) dividerStyle.marginBottom = dividerMargin;
+            rowStyles.push({ ...styles.divider, ...dividerStyle });
+          }
 
           return (
             <View key={item.key} style={rowStyles}>

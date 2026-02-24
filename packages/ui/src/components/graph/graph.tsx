@@ -13,7 +13,88 @@ import {
 } from '@react-pdf/renderer';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
+
+// ─── Graph Width Utilities ────────────────────────────────────────────────────
+
+/**
+ * A4 page width in points (595pt).
+ * Used for calculating safe graph widths.
+ */
+export const A4_WIDTH = 595;
+
+/**
+ * Options for calculating graph width.
+ */
+export interface GraphWidthOptions {
+  /** Additional container padding (e.g., Section padding). Default: 0 */
+  containerPadding?: number;
+  /** Additional wrapper padding (e.g., graphShell). Default: 0 */
+  wrapperPadding?: number;
+  /** Page size width override. Default: 595 (A4) */
+  pageWidth?: number;
+}
+
+/**
+ * Calculate the safe graph width based on theme page margins and container context.
+ *
+ * This utility ensures graphs don't overflow their container by accounting for:
+ * - Page margins (from theme)
+ * - Container padding (e.g., Section component)
+ * - Wrapper padding (e.g., a bordered graphShell View)
+ *
+ * @example
+ * ```tsx
+ * const width = getGraphWidth(theme);
+ * // For a graph inside a Section with padding="md" (12pt) and a graphShell (12pt):
+ * const width = getGraphWidth(theme, { containerPadding: 12, wrapperPadding: 12 });
+ * ```
+ */
+export function getGraphWidth(theme: PdfxTheme, options: GraphWidthOptions = {}): number {
+  const { containerPadding = 0, wrapperPadding = 0, pageWidth = A4_WIDTH } = options;
+
+  const { marginLeft, marginRight } = theme.spacing.page;
+
+  // Calculate available width:
+  // pageWidth - page margins - container padding (both sides) - wrapper padding (both sides)
+  const availableWidth =
+    pageWidth - marginLeft - marginRight - containerPadding * 2 - wrapperPadding * 2;
+
+  // Return floored value to avoid sub-pixel overflow, with minimum width guard
+  return Math.max(Math.floor(availableWidth), 100);
+}
+
+/**
+ * Pre-calculated safe graph widths for common scenarios.
+ * These values work with all built-in themes on A4 pages.
+ */
+export const GRAPH_SAFE_WIDTHS = {
+  /** Safe width for graph directly in page content (no extra containers) */
+  default: 420,
+  /** Safe width for graph inside a Section with md padding */
+  inSection: 400,
+  /** Safe width for graph inside a Section + bordered wrapper (like graphShell) */
+  inSectionWithWrapper: 380,
+} as const;
+
+/**
+ * Internal layout constants for chart margins.
+ * These values ensure proper spacing for axis labels and legends.
+ */
+const CHART_MARGINS = {
+  /** Left margin for charts with Y-axis labels */
+  axisLeft: 40,
+  /** Left margin for pie/donut charts (no axis) */
+  pieLeft: 10,
+  /** Right margin for all chart types */
+  right: 10,
+  /** Top margin for all chart types */
+  top: 10,
+  /** Bottom margin for charts with X-axis labels */
+  axisBottom: 24,
+  /** Bottom margin for pie/donut charts (no axis) */
+  pieBottom: 10,
+} as const;
 
 // ─── Public Types ─────────────────────────────────────────────────────────────
 
@@ -56,10 +137,32 @@ export interface GraphProps {
   xLabel?: string;
   /** Y-axis label. */
   yLabel?: string;
-  /** Total SVG width in PDF points. @default 500 */
+  /**
+   * Total SVG width in PDF points.
+   * Ignored when `fullWidth` is true.
+   * @default 420
+   */
   width?: number;
   /** Total SVG height in PDF points. @default 260 */
   height?: number;
+  /**
+   * When true, automatically calculates width based on theme page margins.
+   * Accounts for page margins and optional container/wrapper padding.
+   * @default false
+   */
+  fullWidth?: boolean;
+  /**
+   * Container padding to account for when using fullWidth.
+   * Use this when graph is inside a Section or Card with padding.
+   * @default 0
+   */
+  containerPadding?: number;
+  /**
+   * Wrapper padding to account for when using fullWidth.
+   * Use this when graph is wrapped in a bordered View (like graphShell).
+   * @default 0
+   */
+  wrapperPadding?: number;
   /** Override the color palette (hex values). */
   colors?: string[];
   /** Show numeric value labels on bars or data points. @default false */
@@ -100,19 +203,6 @@ interface ChartLayout {
   xLabels: string[];
 }
 
-// ─── Style cache ──────────────────────────────────────────────────────────────
-
-let cachedTheme: PdfxTheme | null = null;
-let cachedStyles: ReturnType<typeof createGraphStyles> | null = null;
-
-function getStyles(t: PdfxTheme) {
-  if (cachedTheme !== t || !cachedStyles) {
-    cachedStyles = createGraphStyles(t);
-    cachedTheme = t;
-  }
-  return cachedStyles;
-}
-
 function createGraphStyles(t: PdfxTheme) {
   return StyleSheet.create({
     container: {
@@ -140,6 +230,14 @@ function createGraphStyles(t: PdfxTheme) {
       gap: 12,
       marginTop: 6,
     },
+    legendColumn: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 8,
+      marginLeft: 12,
+      marginTop: 18,
+      minWidth: 120,
+    },
     legendItem: {
       display: 'flex',
       flexDirection: 'row',
@@ -150,6 +248,11 @@ function createGraphStyles(t: PdfxTheme) {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.primitives.typography.xs,
       color: t.colors.mutedForeground,
+    },
+    chartWithRightLegend: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
     },
   });
 }
@@ -651,13 +754,17 @@ function Legend({
   series,
   palette,
   styles,
+  position = 'bottom',
 }: {
   series: GraphSeries[];
   palette: string[];
   styles: ReturnType<typeof createGraphStyles>;
+  position?: 'bottom' | 'right';
 }) {
+  const containerStyle = position === 'right' ? styles.legendColumn : styles.legendRow;
+
   return (
-    <View style={styles.legendRow}>
+    <View style={containerStyle}>
       {series.map((s, i) => (
         <View key={s.name} style={styles.legendItem}>
           <Svg width={10} height={10}>
@@ -716,8 +823,13 @@ export function PdfGraph({
   data,
   title,
   subtitle,
-  width = 500,
+  xLabel,
+  yLabel,
+  width: explicitWidth,
   height = 260,
+  fullWidth = false,
+  containerPadding = 0,
+  wrapperPadding = 0,
   colors,
   showValues = false,
   showGrid = true,
@@ -729,18 +841,28 @@ export function PdfGraph({
   noWrap = true,
   style,
 }: GraphProps) {
-  const styles = getStyles(defaultTheme);
-  const palette = colors ?? getDefaultPalette(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createGraphStyles(theme), [theme]);
+  const palette = colors ?? getDefaultPalette(theme);
   const series = normalizeData(data);
+
+  // ── Calculate width ─────────────────────────────────────────────────
+  // If fullWidth is enabled, calculate based on theme; otherwise use explicit or default
+  const width = useSafeMemo(() => {
+    if (fullWidth) {
+      return getGraphWidth(theme, { containerPadding, wrapperPadding });
+    }
+    return explicitWidth ?? GRAPH_SAFE_WIDTHS.default;
+  }, [fullWidth, explicitWidth, theme, containerPadding, wrapperPadding]);
 
   // ── Compute layout ────────────────────────────────────────────────
   const isPieOrDonut = variant === 'pie' || variant === 'donut';
 
-  // Margins for axes / labels
-  const marginLeft = isPieOrDonut ? 10 : 40;
-  const marginRight = 10;
-  const marginTop = 10;
-  const marginBottom = isPieOrDonut ? 10 : 24;
+  // Use layout constants for margins
+  const marginLeft = isPieOrDonut ? CHART_MARGINS.pieLeft : CHART_MARGINS.axisLeft;
+  const marginRight = CHART_MARGINS.right;
+  const marginTop = CHART_MARGINS.top;
+  const marginBottom = isPieOrDonut ? CHART_MARGINS.pieBottom : CHART_MARGINS.axisBottom;
 
   const chartX = marginLeft;
   const chartY = marginTop;
@@ -774,10 +896,10 @@ export function PdfGraph({
 
   switch (variant) {
     case 'bar':
-      chartContent = renderBarChart(series, layout, palette, showGrid, showValues, defaultTheme);
+      chartContent = renderBarChart(series, layout, palette, showGrid, showValues, theme);
       break;
     case 'horizontal-bar':
-      chartContent = renderHorizontalBarChart(series, layout, palette, showValues, defaultTheme);
+      chartContent = renderHorizontalBarChart(series, layout, palette, showValues, theme);
       break;
     case 'line':
       chartContent = renderLineAreaChart(
@@ -789,7 +911,7 @@ export function PdfGraph({
         showDots,
         smooth,
         false,
-        defaultTheme
+        theme
       );
       break;
     case 'area':
@@ -802,14 +924,14 @@ export function PdfGraph({
         showDots,
         smooth,
         true,
-        defaultTheme
+        theme
       );
       break;
     case 'pie':
-      chartContent = renderPieDonutChart(series, layout, palette, undefined, false, defaultTheme);
+      chartContent = renderPieDonutChart(series, layout, palette, undefined, false, theme);
       break;
     case 'donut':
-      chartContent = renderPieDonutChart(series, layout, palette, centerLabel, true, defaultTheme);
+      chartContent = renderPieDonutChart(series, layout, palette, centerLabel, true, theme);
       break;
   }
 
@@ -822,16 +944,41 @@ export function PdfGraph({
     <View style={containerStyles}>
       {title && <PDFText style={styles.title}>{title}</PDFText>}
       {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
-      <Svg width={width} height={height}>
-        <Defs>
-          <LinearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0%" stopColor={defaultTheme.colors.background} stopOpacity={0} />
-            <Stop offset="100%" stopColor={defaultTheme.colors.background} stopOpacity={0} />
-          </LinearGradient>
-        </Defs>
-        {chartContent}
-      </Svg>
-      {showLegend && legend === 'bottom' && Legend({ series, palette, styles })}
+      <View style={legend === 'right' ? styles.chartWithRightLegend : undefined}>
+        <Svg width={width} height={height}>
+          <Defs>
+            <LinearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0%" stopColor={theme.colors.background} stopOpacity={0} />
+              <Stop offset="100%" stopColor={theme.colors.background} stopOpacity={0} />
+            </LinearGradient>
+          </Defs>
+          {chartContent}
+          {!isPieOrDonut && xLabel && (
+            <SvgText
+              x={chartX + chartW / 2}
+              y={height - 2}
+              fill={theme.colors.mutedForeground}
+              textAnchor="middle"
+              style={{ fontSize: 8 }}
+            >
+              {xLabel}
+            </SvgText>
+          )}
+          {!isPieOrDonut && yLabel && (
+            <SvgText
+              x={2}
+              y={10}
+              fill={theme.colors.mutedForeground}
+              textAnchor="start"
+              style={{ fontSize: 8 }}
+            >
+              {yLabel}
+            </SvgText>
+          )}
+        </Svg>
+        {showLegend && legend === 'right' && Legend({ series, palette, styles, position: 'right' })}
+      </View>
+      {showLegend && legend === 'bottom' && Legend({ series, palette, styles, position: 'bottom' })}
     </View>
   );
 

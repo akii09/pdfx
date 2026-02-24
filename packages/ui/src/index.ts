@@ -105,10 +105,14 @@ export {
 } from './components/pdf-image/pdf-image';
 export {
   PdfGraph,
+  getGraphWidth,
+  A4_WIDTH,
+  GRAPH_SAFE_WIDTHS,
   type GraphProps,
   type GraphVariant,
   type GraphDataPoint,
   type GraphSeries,
   type GraphLegendPosition,
+  type GraphWidthOptions,
 } from './components/graph/graph';
 export { PdfxThemeProvider, usePdfxTheme, PdfxThemeContext } from './lib/pdfx-theme-context';

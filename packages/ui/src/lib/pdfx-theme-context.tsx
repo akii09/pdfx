@@ -13,6 +13,7 @@
 // try/catch — the accepted pattern for libraries that support both React render and
 // plain-function (unit-test) invocation.
 
+import * as React from 'react';
 import { type DependencyList, type ReactNode, createContext, useContext, useMemo } from 'react';
 import { theme as defaultTheme } from './pdfx-theme';
 
@@ -25,10 +26,31 @@ export interface PdfxThemeProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Detect whether React currently has an active dispatcher.
+ * When components are invoked as plain functions in tests, dispatcher is null.
+ */
+function hasActiveDispatcher(): boolean {
+  const maybeInternals = React as unknown as {
+    __CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?: { H?: unknown };
+  };
+
+  const dispatcher =
+    maybeInternals.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.H;
+  return dispatcher != null;
+}
+
 export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
   const resolvedTheme = useMemo(() => theme ?? defaultTheme, [theme]);
   return <PdfxThemeContext.Provider value={resolvedTheme}>{children}</PdfxThemeContext.Provider>;
 }
+
+/**
+ * Regex patterns that indicate the hook was called outside a valid React context.
+ * These errors should be caught and handled gracefully by falling back to defaults.
+ */
+const HOOK_ERROR_PATTERNS =
+  /invalid hook call|useContext|useMemo|cannot read properties of null|dispatcher|renderWithHooks|resolveDispatcher|hooks can only be called|rendered fewer hooks/i;
 
 /**
  * Returns the active PdfxTheme from context, or the default theme when called
@@ -44,15 +66,16 @@ export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
  * both React render and plain-function (test) invocation contexts.
  */
 export function usePdfxTheme(): PdfxTheme {
+  if (!hasActiveDispatcher()) {
+    return defaultTheme;
+  }
+
   try {
     return useContext(PdfxThemeContext);
   } catch (error) {
     // Suppress context errors when hook is called outside a render tree or
     // without a provider (common in unit tests). Re-throw anything else.
-    if (
-      error instanceof Error &&
-      /invalid hook call|useContext|cannot read properties of null/i.test(error.message)
-    ) {
+    if (error instanceof Error && HOOK_ERROR_PATTERNS.test(error.message)) {
       return defaultTheme;
     }
     throw error;
@@ -66,13 +89,14 @@ export function usePdfxTheme(): PdfxTheme {
  * Follows the same error-handling strategy as usePdfxTheme.
  */
 export function useSafeMemo<T>(factory: () => T, deps: DependencyList): T {
+  if (!hasActiveDispatcher()) {
+    return factory();
+  }
+
   try {
     return useMemo(factory, deps);
   } catch (error) {
-    if (
-      error instanceof Error &&
-      /invalid hook call|useMemo|cannot read properties of null/i.test(error.message)
-    ) {
+    if (error instanceof Error && HOOK_ERROR_PATTERNS.test(error.message)) {
       return factory();
     }
     throw error;

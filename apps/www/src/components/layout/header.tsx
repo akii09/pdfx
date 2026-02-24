@@ -15,7 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../theme-toggle';
 
@@ -28,6 +28,8 @@ const TEMPLATES = [
     description: 'Professional billing invoice with itemized table and totals.',
     color: 'text-blue-500',
     bg: 'bg-blue-50 dark:bg-blue-950/40',
+    isDisabled: false,
+    path: '/templates/invoices',
   },
   {
     icon: FileSpreadsheet,
@@ -35,6 +37,8 @@ const TEMPLATES = [
     description: 'Business or analytics report with charts and summary sections.',
     color: 'text-emerald-500',
     bg: 'bg-emerald-50 dark:bg-emerald-950/40',
+    isDisabled: false,
+    path: '/templates/reports',
   },
   {
     icon: Award,
@@ -42,6 +46,8 @@ const TEMPLATES = [
     description: 'Completion or achievement certificate with elegant layout.',
     color: 'text-yellow-500',
     bg: 'bg-yellow-50 dark:bg-yellow-950/40',
+    isDisabled: true,
+    path: '/templates/certificates',
   },
   {
     icon: ClipboardList,
@@ -49,6 +55,8 @@ const TEMPLATES = [
     description: 'Structured registration or enrollment form with field sections.',
     color: 'text-purple-500',
     bg: 'bg-purple-50 dark:bg-purple-950/40',
+    isDisabled: true,
+    path: '/templates/registration-forms',
   },
   {
     icon: Mail,
@@ -56,6 +64,8 @@ const TEMPLATES = [
     description: 'Formal business letter with header, body, and signature block.',
     color: 'text-orange-500',
     bg: 'bg-orange-50 dark:bg-orange-950/40',
+    isDisabled: true,
+    path: '/templates/letters',
   },
   {
     icon: User,
@@ -63,6 +73,8 @@ const TEMPLATES = [
     description: 'Clean single-page resume with skills, experience, and education.',
     color: 'text-pink-500',
     bg: 'bg-pink-50 dark:bg-pink-950/40',
+    isDisabled: true,
+    path: '/templates/resumes',
   },
   {
     icon: GraduationCap,
@@ -70,6 +82,8 @@ const TEMPLATES = [
     description: 'Student or course progress report with grade tables.',
     color: 'text-cyan-500',
     bg: 'bg-cyan-50 dark:bg-cyan-950/40',
+    isDisabled: true,
+    path: '/templates/academic-reports',
   },
   {
     icon: FileText,
@@ -77,6 +91,8 @@ const TEMPLATES = [
     description: 'Project or business proposal with sections and timeline.',
     color: 'text-indigo-500',
     bg: 'bg-indigo-50 dark:bg-indigo-950/40',
+    isDisabled: true,
+    path: '/templates/proposals',
   },
 ];
 
@@ -85,6 +101,7 @@ const TEMPLATES = [
 function TemplatesDropdown() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   // Close on outside click
   useEffect(() => {
@@ -132,9 +149,17 @@ function TemplatesDropdown() {
                 <button
                   key={t.name}
                   type="button"
-                  onClick={() => setOpen(false)}
-                  className="group flex flex-col gap-2 rounded-lg border border-border/60 bg-card p-3 text-left hover:border-border hover:bg-muted/40 hover:shadow-sm transition-all duration-150 cursor-not-allowed opacity-70"
-                  title="Coming soon"
+                  onClick={() => {
+                    if (!t.isDisabled) {
+                      navigate(t.path);
+                      setOpen(false);
+                    }
+                  }}
+                  className={cn(
+                    'group flex flex-col gap-2 rounded-lg border border-border/60 bg-card p-3 text-left hover:border-border hover:bg-muted/40 hover:shadow-sm transition-all duration-150 cursor-pointer',
+                    t.isDisabled && 'opacity-70 cursor-not-allowed'
+                  )}
+                  title={t.isDisabled ? 'Coming soon' : undefined}
                 >
                   <div className={cn('rounded-md p-1.5 w-fit', t.bg)}>
                     <t.icon className={cn('h-4 w-4', t.color)} />
@@ -145,9 +170,11 @@ function TemplatesDropdown() {
                       {t.description}
                     </p>
                   </div>
-                  <span className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground/60 border border-border/50 rounded px-1.5 py-0.5 w-fit">
-                    Coming soon
-                  </span>
+                  {t.isDisabled && (
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-primary/70 border border-primary/30 rounded px-1.5 py-0.5 w-fit mt-auto">
+                      Coming Soon
+                    </span>
+                  )}
                 </button>
               ))}
 

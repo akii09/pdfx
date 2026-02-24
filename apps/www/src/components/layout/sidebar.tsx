@@ -45,6 +45,14 @@ const sections: SidebarSection[] = [
       { title: 'Graph', href: '/components/graph' },
     ],
   },
+  {
+    title: 'Templates',
+    links: [
+      // { title: 'All Templates', href: '/templates' },
+      { title: 'Invoices', href: '/templates/invoices' },
+      { title: 'Reports', href: '/templates/reports' },
+    ],
+  },
 ];
 
 export function Sidebar() {
@@ -52,7 +60,8 @@ export function Sidebar() {
   const showSidebar =
     location.pathname.startsWith('/docs') ||
     location.pathname.startsWith('/components') ||
-    location.pathname.startsWith('/installation');
+    location.pathname.startsWith('/installation') ||
+    location.pathname.startsWith('/templates');
   const isComponentsIndex = location.pathname === '/components';
 
   if (!showSidebar) return null;

@@ -1,7 +1,7 @@
 import type { PdfxTheme } from '@pdfx/shared';
 import { Image, Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme as defaultTheme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -206,7 +206,8 @@ export function PdfImage({
 }: PdfImageProps) {
   warnIfUnsupported(src);
 
-  const styles = getStyles(defaultTheme);
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => getStyles(theme), [theme]);
   const defaults = VARIANT_DEFAULTS[variant];
 
   // ── Resolve dimensions ─────────────────────────────────────────────

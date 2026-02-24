@@ -234,7 +234,15 @@ export function TableCell({
 
   const content =
     typeof children === 'string' ? (
-      <PDFText style={[textStyle, align ? { textAlign: align } : {}]}>{children}</PDFText>
+      <PDFText
+        style={[
+          textStyle,
+          align ? { textAlign: align } : {},
+          { margin: 0, padding: 0 }, // ← hard reset — always last so it wins
+        ]}
+      >
+        {children}
+      </PDFText>
     ) : (
       children
     );

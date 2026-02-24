@@ -46,7 +46,7 @@ export const signatureProps = [
   {
     name: 'label',
     type: 'string',
-    defaultValue: "'Authorized By'",
+    defaultValue: "'Signature'",
     description: 'Label text shown above the signature line (single and inline variants).',
   },
   {

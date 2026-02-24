@@ -61,6 +61,18 @@ export const pageFooterProps = [
       'Top margin above the footer (space between content and footer). Defaults to theme sectionGap.',
   },
   {
+    name: 'sticky',
+    type: 'boolean',
+    description:
+      'If true, the footer will be anchored to the bottom of the page with absolute positioning. Requires pagePadding to be set to avoid overlap with page content.',
+  },
+  {
+    name: 'pagePadding',
+    type: 'number',
+    description:
+      'Horizontal padding to apply when the footer is sticky. Should match the page padding to ensure proper alignment.',
+  },
+  {
     name: 'address',
     type: 'string',
     description:
@@ -88,5 +100,17 @@ export const pageFooterProps = [
     name: 'style',
     type: 'Style',
     description: 'Custom @react-pdf/renderer styles to merge with defaults.',
+  },
+  {
+    name: 'fixed',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Fix the footer to the bottom of each page.',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'true',
+    description: 'Prevent inline footer blocks from splitting across pages.',
   },
 ];

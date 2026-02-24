@@ -23,9 +23,42 @@ export function MyDocument() {
 export const sectionProps = [
   {
     name: 'spacing',
-    type: "'none' | 'sm' | 'md' | 'lg'",
+    type: "'none' | 'sm' | 'md' | 'lg' | 'xl'",
     defaultValue: "'md'",
     description: 'Vertical spacing (margin) around the section. Maps to theme.',
+  },
+  {
+    name: 'padding',
+    type: "'none' | 'sm' | 'md' | 'lg'",
+    description: 'Inner padding scale for the section.',
+  },
+  {
+    name: 'background',
+    type: 'string',
+    description: 'Background color token or raw CSS color.',
+  },
+  {
+    name: 'border',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Adds a standard border around default variant sections.',
+  },
+  {
+    name: 'variant',
+    type: "'default' | 'callout' | 'highlight' | 'card'",
+    defaultValue: "'default'",
+    description: 'Visual section variant with predefined styling.',
+  },
+  {
+    name: 'accentColor',
+    type: 'string',
+    description: 'Accent color for callout/highlight left border.',
+  },
+  {
+    name: 'noWrap',
+    type: 'boolean',
+    defaultValue: 'false',
+    description: 'Prevent section content from splitting across pages.',
   },
   {
     name: 'style',

@@ -5,16 +5,6 @@ import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
-/**
- * PageHeader layout variant.
- *
- * - `simple`     — Left: title/subtitle. Right: optional logo area or metadata.
- * - `centered`   — All content centered (good for formal documents, certificates).
- * - `minimal`    — Just a bottom border with title. No background.
- * - `branded`    — Solid primary-color background with white text (strong brand presence).
- * - `logo-left`  — Logo on left, title/subtitle on right. Professional layout.
- * - `two-column` — Left: title/subtitle. Right: contact info (address, phone, email).
- */
 export type PageHeaderVariant =
   | 'simple'
   | 'centered'
@@ -25,75 +15,30 @@ export type PageHeaderVariant =
   | 'two-column';
 
 export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
-  /**
-   * Main heading / document title displayed in the header.
-   */
   title: string;
-  /**
-   * Optional subtitle or organization name below the title.
-   */
   subtitle?: string;
-  /**
-   * Text displayed on the right side of the header (e.g., date, invoice number, reference).
-   * Ignored in `centered` and `branded` variants (single-column layout).
-   */
   rightText?: string;
-  /**
-   * Secondary right text shown below rightText (e.g., "Due: 2026-02-28").
-   */
   rightSubText?: string;
-  /**
-   * Visual layout variant. Defaults to 'simple'.
-   */
   variant?: PageHeaderVariant;
-  /**
-   * Custom background color for the header band.
-   * Use theme token (e.g. 'primary', 'muted') or a CSS color.
-   * Only applies to 'simple' and 'centered' variants (branded uses primary by default).
-   */
   background?: string;
-  /**
-   * Custom text color for the title.
-   * Use theme token or CSS color. Overrides the variant default.
-   */
   titleColor?: string;
-  /**
-   * Bottom margin below the header before document content begins.
-   * Defaults to theme.spacing.sectionGap.
-   */
   marginBottom?: number;
+  address?: string;
+  phone?: string;
+  email?: string;
   /**
-   * Logo element for logo-left variant.
-   * Accepts any valid React PDF element (Image, View with custom content).
    * @example <Image src="/logo.png" style={{ width: 48, height: 48 }} />
    */
   logo?: React.ReactNode;
+
   /**
-   * Company address for two-column variant.
-   * Displayed in right column with phone and email.
-   */
-  address?: string;
-  /**
-   * Phone number for two-column variant.
-   * Displayed in right column with address and email.
-   */
-  phone?: string;
-  /**
-   * Email address for two-column variant.
-   * Displayed in right column with address and phone.
-   */
-  email?: string;
-  /**
-   * Render this header on every page of the document.
-   * Uses react-pdf's built-in `fixed` prop on the outer View.
-   * When true, ensure the page content has enough top padding to avoid overlapping with the fixed header.
+   * Fix this header to the top of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.
    * @default false
    */
   fixed?: boolean;
+
   /**
-   * Prevent the header from being split across PDF pages when placed inline.
-   * A partially-rendered header is always visually broken, so this defaults to true.
-   * Set to false only for decorative banners that can tolerate splitting.
+   * Prevent the header from being split across PDF pages when placed inline. A partially-rendered header is always visually broken, so this defaults to true. Set to false only for decorative banners that can tolerate splitting.
    * @default true
    */
   noWrap?: boolean;
@@ -169,7 +114,7 @@ function createPageHeaderStyles(t: PdfxTheme) {
     // ── Typography ──────────────────────────────────────────────────────
     title: {
       fontFamily: heading.fontFamily,
-      fontSize: heading.fontSize.h2,
+      fontSize: heading.fontSize.h3,
       fontWeight: fontWeights.bold,
       color: c.foreground,
       lineHeight: heading.lineHeight,
@@ -393,6 +338,12 @@ export function PageHeader({
           <PDFText style={titleStyles}>{title}</PDFText>
           {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
         </View>
+        {(rightText || rightSubText) && (
+          <View style={styles.simpleRight}>
+            {rightText && <PDFText style={styles.rightText}>{rightText}</PDFText>}
+            {rightSubText && <PDFText style={styles.rightSubText}>{rightSubText}</PDFText>}
+          </View>
+        )}
       </View>
     );
   }
