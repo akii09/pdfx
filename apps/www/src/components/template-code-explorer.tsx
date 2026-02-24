@@ -46,7 +46,7 @@ function buildFileTree(files: TemplateCodeFile[]): TreeNode {
 
   for (const file of files) {
     const { folder } = parsePath(file.path);
-    
+
     if (!folder) {
       // Root-level file
       root.files.push(file);
@@ -55,15 +55,16 @@ function buildFileTree(files: TemplateCodeFile[]): TreeNode {
       const parts = folder.split('/');
       let current = root;
       let pathSoFar = '';
-      
+
       for (const part of parts) {
         pathSoFar = pathSoFar ? `${pathSoFar}/${part}` : part;
         if (!current.children.has(part)) {
           current.children.set(part, createTreeNode(part, pathSoFar));
         }
-        current = current.children.get(part)!;
+        const next = current.children.get(part);
+        if (next) current = next;
       }
-      
+
       current.files.push(file);
     }
   }
@@ -176,7 +177,7 @@ export function TemplateCodeExplorer({ files, className, initialPath }: Template
       : (ordered[0]?.path ?? '');
 
   const [activePath, setActivePath] = useState(initial);
-  
+
   // Build initial expanded paths - expand folders containing initial file + top-level folders
   const initialExpandedPaths = useMemo(() => {
     const paths = new Set<string>();

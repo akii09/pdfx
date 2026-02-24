@@ -2,7 +2,6 @@ import type { PdfxTheme } from '@pdfx/shared';
 import {
   Badge,
   DataTable,
-  Divider,
   KeyValue,
   PageFooter,
   PageHeader,
@@ -10,7 +9,6 @@ import {
   PdfList,
   PdfxThemeProvider,
   Section,
-  Stack,
   Text,
   usePdfxTheme,
 } from '@pdfx/ui';

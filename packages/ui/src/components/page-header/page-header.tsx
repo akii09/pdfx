@@ -166,11 +166,15 @@ function createPageHeaderStyles(t: PdfxTheme) {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      paddingBottom: spacing[4],
+      borderBottomWidth: spacing[0.5],
+      borderBottomColor: c.border,
+      borderBottomStyle: 'solid',
     },
     logoContainer: {
-      marginRight: spacing[2],
-      width: 42,
-      height: 42,
+      marginRight: spacing[4],
+      width: 48,
+      height: 48,
     },
     logoContent: {
       flex: 1,

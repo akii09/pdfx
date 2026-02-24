@@ -48,7 +48,7 @@ const invoiceDetails: invoiceDetailsType = {
   notes: 'Thank you for your business!',
 };
 
-const AVATAR_BASE64 = '/favicon.png';
+const AVATAR_BASE64 = '/PDFX-LOGO.png';
 
 export function Invoice01Document({ theme }: { theme?: PdfxTheme }) {
   return (
