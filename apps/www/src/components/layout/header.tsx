@@ -37,7 +37,7 @@ const TEMPLATES = [
     description: 'Business or analytics report with charts and summary sections.',
     color: 'text-emerald-500',
     bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-    isDisabled: true,
+    isDisabled: false,
     path: '/templates/reports',
   },
   {
