@@ -64,7 +64,7 @@ export default function FormComponentPage() {
     <ComponentPage
       title="Form"
       description="A printable fillable-form component for PDFs. Renders blank field areas with labels — users fill in the fields after printing."
-      installCommand="npx @pdfx/cli add form"
+      installCommand="npx @akii09/pdfx-cli add form"
       componentName="form"
       preview={
         <PDFPreview

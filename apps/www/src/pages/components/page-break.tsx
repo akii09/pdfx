@@ -28,7 +28,7 @@ export default function PageBreakComponentPage() {
     <ComponentPage
       title="PageBreak"
       description="Forces content after it to start on a new page. Wraps @react-pdf View with break prop."
-      installCommand="npx @pdfx/cli add page-break"
+      installCommand="npx @akii09/pdfx-cli add page-break"
       componentName="page-break"
       preview={
         <PDFPreview title="Preview" downloadFilename="page-break-preview.pdf">

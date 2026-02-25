@@ -49,7 +49,7 @@ export default function BadgeComponentPage() {
     <ComponentPage
       title="Badge"
       description="Compact status label with seven semantic color variants and three sizes. Use badges to indicate status, categories, or metadata inline within PDF documents."
-      installCommand="npx @pdfx/cli add badge"
+      installCommand="npx @akii09/pdfx-cli add badge"
       componentName="badge"
       preview={
         <PDFPreview

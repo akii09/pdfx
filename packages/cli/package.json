@@ -1,6 +1,6 @@
 {
-  "name": "@pdfx/cli",
-  "version": "0.1.0-alpha.1",
+  "name": "@akii09/pdfx-cli",
+  "version": "0.1.0",
   "description": "CLI for PDFx components",
   "type": "module",
   "bin": {
@@ -14,7 +14,10 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -41,6 +44,6 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/",
-    "provenance": true
+    "provenance": false
   }
 }

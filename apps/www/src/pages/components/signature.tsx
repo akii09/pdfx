@@ -48,7 +48,7 @@ export default function SignatureComponentPage() {
     <ComponentPage
       title="Signature"
       description="A PDF signature block component with three layout variants: single, double (side-by-side), and inline."
-      installCommand="npx @pdfx/cli add signature"
+      installCommand="npx @akii09/pdfx-cli add signature"
       componentName="signature"
       preview={
         <PDFPreview

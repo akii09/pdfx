@@ -65,7 +65,7 @@ export default function Installation() {
                   by default (configurable during init).
                 </p>
                 <PackageManagerTabs
-                  command="npx @pdfx/cli init"
+                  command="npx @akii09/pdfx-cli init"
                   className="border-0 rounded-lg shadow-none"
                 />
               </div>
@@ -74,7 +74,7 @@ export default function Installation() {
                   Then add the components you need:
                 </p>
                 <PackageManagerTabs
-                  command="npx @pdfx/cli add heading text"
+                  command="npx @akii09/pdfx-cli add heading text"
                   className="border-0 rounded-lg shadow-none"
                 />
               </div>

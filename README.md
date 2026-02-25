@@ -26,10 +26,10 @@ A professional React PDF component library built on [@react-pdf/renderer](https:
 
 ```bash
 # Install the CLI globally
-pnpm add -g @pdfx/cli
+pnpm add -g @akii09/pdfx-cli
 
 # Or use npx
-npx @pdfx/cli init
+npx @akii09/pdfx-cli init
 ```
 
 ## Quick Start

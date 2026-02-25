@@ -15,13 +15,13 @@ export const tocItems = [
 ];
 
 export const themeCommands = `# Initialize or replace your theme
-npx @pdfx/cli theme init
+npx @akii09/pdfx-cli theme init
 
 # Switch to a different preset
-npx @pdfx/cli theme switch modern
+npx @akii09/pdfx-cli theme switch modern
 
 # Validate your theme file
-npx @pdfx/cli theme validate`;
+npx @akii09/pdfx-cli theme validate`;
 
 export const themeCustomization = `// src/lib/pdfx-theme.ts — edit any token to restyle every component at once.
 // The PdfxTheme type is defined inline in this file — no extra imports needed.
@@ -74,16 +74,16 @@ export function MyDocument() {
 }`;
 
 export const cliCommands = `# Initialize PDFx in your project (includes theme setup)
-npx @pdfx/cli init
+npx @akii09/pdfx-cli init
 
 # Add components
-npx @pdfx/cli add heading text
+npx @akii09/pdfx-cli add heading text
 
 # List available components
-npx @pdfx/cli list
+npx @akii09/pdfx-cli list
 
 # Compare local vs registry
-npx @pdfx/cli diff heading`;
+npx @akii09/pdfx-cli diff heading`;
 
 export const manualStep1Deps = 'npm install @react-pdf/renderer';
 
@@ -277,7 +277,7 @@ export const manualStep5Structure = `your-project/
 
 export const manualStep6AddComponent = `# Now you can copy components from each component's Manual tab.
 # Or use the CLI to add them:
-npx @pdfx/cli add heading text table`;
+npx @akii09/pdfx-cli add heading text table`;
 
 export const themeProviderUsage = `import { PdfxThemeProvider } from '@pdfx/ui';
 import { modernTheme, minimalTheme } from '@pdfx/shared';

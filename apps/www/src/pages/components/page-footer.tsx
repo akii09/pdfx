@@ -66,7 +66,7 @@ export default function PageFooterComponentPage() {
     <ComponentPage
       title="PageFooter"
       description="Document footer band with left, center, and right text slots. Supports six layout variants: simple, centered, minimal, branded, three-column, and detailed."
-      installCommand="npx @pdfx/cli add page-footer"
+      installCommand="npx @akii09/pdfx-cli add page-footer"
       componentName="page-footer"
       preview={
         <PDFPreview

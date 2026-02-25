@@ -31,7 +31,7 @@ export default function HeadingComponentPage() {
     <ComponentPage
       title="Heading"
       description="PDF heading component with 6 levels. Uses browser-standard heading sizes (32px for h1 down to 10.72px for h6)."
-      installCommand="npx @pdfx/cli add heading"
+      installCommand="npx @akii09/pdfx-cli add heading"
       componentName="heading"
       preview={
         <PDFPreview title="Preview" downloadFilename="heading-preview.pdf">

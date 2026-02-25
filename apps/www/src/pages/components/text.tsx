@@ -29,7 +29,7 @@ export default function TextComponentPage() {
     <ComponentPage
       title="Text"
       description="Theme-aware PDF text component for body paragraphs, labels, and display text. Typography, spacing, and colors come from the active PDFx theme."
-      installCommand="npx @pdfx/cli add text"
+      installCommand="npx @akii09/pdfx-cli add text"
       componentName="text"
       preview={
         <PDFPreview title="Preview" downloadFilename="text-preview.pdf">

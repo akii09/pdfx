@@ -61,7 +61,7 @@ export default function PageHeaderComponentPage() {
     <ComponentPage
       title="PageHeader"
       description="Document header band with title, subtitle, and optional right metadata. Supports seven layout variants: simple, centered, minimal, branded, logo-left, logo-right, and two-column."
-      installCommand="npx @pdfx/cli add page-header"
+      installCommand="npx @akii09/pdfx-cli add page-header"
       componentName="page-header"
       preview={
         <PDFPreview

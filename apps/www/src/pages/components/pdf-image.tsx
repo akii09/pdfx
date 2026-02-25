@@ -62,7 +62,7 @@ export default function PdfImageComponentPage() {
     <ComponentPage
       title="PdfImage"
       description="A validated, theme-aware image component for react-pdf documents. Supports JPEG, PNG, GIF, BMP, and SVG formats with seven layout variants. Emits a warning for unsupported formats (WebP, AVIF, HEIC) and prevents images from being clipped at page boundaries by default."
-      installCommand="npx @pdfx/cli add pdf-image"
+      installCommand="npx @akii09/pdfx-cli add pdf-image"
       componentName="pdf-image"
       preview={
         <PDFPreview

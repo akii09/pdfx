@@ -358,7 +358,7 @@ export default function MyWidgetComponentPage() {
     <ComponentPage
       title="MyWidget"
       description="Short description of what this component does and when to use it."
-      installCommand="npx @pdfx/cli add my-widget"
+      installCommand="npx @akii09/pdfx-cli add my-widget"
       componentName="my-widget"
       preview={
         <PDFPreview
@@ -433,7 +433,7 @@ import { Puzzle } from 'lucide-react';
   description: 'Short description shown on the components listing card.',
   href: '/components/my-widget',
   icon: Puzzle,
-  install: 'npx @pdfx/cli add my-widget',
+  install: 'npx @akii09/pdfx-cli add my-widget',
 },
 ```
 

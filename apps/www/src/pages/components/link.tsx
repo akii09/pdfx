@@ -27,7 +27,7 @@ export default function LinkComponentPage() {
     <ComponentPage
       title="Link"
       description="PDF link component for hyperlinks. Renders as clickable link in PDF viewers."
-      installCommand="npx @pdfx/cli add link"
+      installCommand="npx @akii09/pdfx-cli add link"
       componentName="link"
       preview={
         <PDFPreview title="Preview" downloadFilename="link-preview.pdf">

@@ -37,7 +37,7 @@ export default function DividerComponentPage() {
     <ComponentPage
       title="Divider"
       description="Horizontal rule with theme-based border color and spacing."
-      installCommand="npx @pdfx/cli add divider"
+      installCommand="npx @akii09/pdfx-cli add divider"
       componentName="divider"
       preview={
         <PDFPreview title="Preview" downloadFilename="divider-preview.pdf">

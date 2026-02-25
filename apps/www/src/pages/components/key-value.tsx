@@ -41,7 +41,7 @@ export default function KeyValueComponentPage() {
     <ComponentPage
       title="KeyValue"
       description="A labeled data display component for presenting key-value pairs in PDF documents. Supports horizontal (side-by-side) and vertical (stacked) layouts with optional dividers, size scaling, and per-item color overrides."
-      installCommand="npx @pdfx/cli add key-value"
+      installCommand="npx @akii09/pdfx-cli add key-value"
       componentName="key-value"
       preview={
         <PDFPreview

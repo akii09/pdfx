@@ -44,7 +44,7 @@ export default function DataTableComponentPage() {
     <ComponentPage
       title="DataTable"
       description="Data-driven table API for displaying large datasets. Pass columns + data array for automatic rendering. Use compact mode for data-dense views with many columns and rows."
-      installCommand="npx @pdfx/cli add data-table"
+      installCommand="npx @akii09/pdfx-cli add data-table"
       componentName="data-table"
       preview={
         <PDFPreview
