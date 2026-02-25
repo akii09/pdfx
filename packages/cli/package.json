@@ -1,6 +1,6 @@
 {
   "name": "@akii09/pdfx-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "CLI for PDFx components",
   "type": "module",
   "bin": {
@@ -31,12 +31,15 @@
     "chalk": "^5.3.0",
     "ora": "^8.1.1",
     "prompts": "^2.4.2",
+    "semver": "^7.6.3",
+    "execa": "^9.5.2",
     "typescript": "catalog:"
   },
   "devDependencies": {
     "@pdfx/shared": "workspace:*",
     "@types/node": "catalog:",
     "@types/prompts": "^2.4.9",
+    "@types/semver": "^7.5.8",
     "tsup": "^8.5.1",
     "vitest": "catalog:",
     "rimraf": "^6.0.1"
