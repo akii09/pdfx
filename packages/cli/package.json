@@ -32,7 +32,7 @@
     "typescript": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^20.17.9",
+    "@types/node": "catalog:",
     "@types/prompts": "^2.4.9",
     "tsup": "^8.5.1",
     "vitest": "catalog:",
