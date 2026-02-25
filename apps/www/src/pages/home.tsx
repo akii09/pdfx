@@ -693,9 +693,7 @@ export default function HomePage() {
   return (
     <div className="overflow-x-hidden">
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
-      <section
-        className="relative flex flex-col justify-center overflow-hidden min-h-[auto] lg:min-h-screen"
-      >
+      <section className="relative flex flex-col justify-center overflow-hidden min-h-[auto] lg:min-h-screen">
         {/* Grid — light */}
         <div
           className="absolute inset-0 pointer-events-none dark:hidden"
