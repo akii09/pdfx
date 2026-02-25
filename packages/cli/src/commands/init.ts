@@ -7,9 +7,32 @@ import prompts from 'prompts';
 import { DEFAULTS } from '../constants.js';
 import { ensureDir } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
+import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
+import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
 
 export async function init() {
   console.log(chalk.bold.cyan('\n  Welcome to the pdfx cli\n'));
+
+  // Run pre-flight checks
+  const preFlightResult = runPreFlightChecks();
+  displayPreFlightResults(preFlightResult);
+
+  // Exit if there are blocking errors
+  if (!preFlightResult.canProceed) {
+    console.error(
+      chalk.red('\n  Cannot proceed due to blocking issues. Please fix them and try again.\n')
+    );
+    process.exit(1);
+  }
+
+  // Check and install @react-pdf/renderer if needed
+  const hasReactPdf = await ensureReactPdfRenderer(preFlightResult.dependencies.reactPdfRenderer);
+  if (!hasReactPdf) {
+    console.error(
+      chalk.red('\n  @react-pdf/renderer is required. Please install it and try again.\n')
+    );
+    process.exit(1);
+  }
 
   // L8: Warn if pdfx.json already exists
   const existingConfig = path.join(process.cwd(), 'pdfx.json');

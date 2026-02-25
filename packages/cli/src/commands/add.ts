@@ -13,6 +13,7 @@ import {
 import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
+import { validateReactPdfRenderer } from '../utils/dependency-validator.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
@@ -178,6 +179,24 @@ async function installComponent(name: string, config: Config, force: boolean): P
 }
 
 export async function add(components: string[], options: { force?: boolean } = {}) {
+  // Lightweight dependency check - just verify @react-pdf/renderer exists
+  const reactPdfCheck = validateReactPdfRenderer();
+  if (!reactPdfCheck.installed) {
+    console.error(chalk.red('\nError: @react-pdf/renderer is not installed\n'));
+    console.log(chalk.yellow('  PDFx components require @react-pdf/renderer to work.\n'));
+    console.log(chalk.cyan('  Run: pdfx init'));
+    console.log(chalk.dim('  or install manually: npm install @react-pdf/renderer\n'));
+    process.exit(1);
+  }
+
+  if (!reactPdfCheck.valid) {
+    console.log(
+      chalk.yellow(
+        `\n  ⚠ Warning: ${reactPdfCheck.message}\n  ${chalk.dim('→')} You may encounter compatibility issues\n`
+      )
+    );
+  }
+
   const configPath = path.join(process.cwd(), 'pdfx.json');
 
   if (!checkFileExists(configPath)) {
