@@ -7,7 +7,7 @@
   "files": [
     {
       "path": "components/pdfx/page-break/pdfx-page-break.tsx",
-      "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\nexport interface PageBreakProps {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  children?: never;\n}\n\nexport function PageBreak() {\n  return <View break />;\n}\n",
+      "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\nexport interface PageBreakProps {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  children?: never;\n}\n\nexport function PageBreak({ style }: PageBreakProps) {\n  return <View break style={style} />;\n}\n",
       "type": "registry:component"
     }
   ],

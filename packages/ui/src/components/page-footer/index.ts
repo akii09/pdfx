@@ -1,2 +1,5 @@
-export { PageFooter } from './page-footer';
-export type { PageFooterProps, PageFooterVariant } from './page-footer';
+export {
+  PageFooter,
+  type PageFooterProps,
+  type PageFooterVariant,
+} from './page-footer';

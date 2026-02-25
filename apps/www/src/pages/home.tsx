@@ -377,26 +377,26 @@ function HeroCardsMobile() {
   return (
     <div
       className="relative w-full mx-auto"
-      style={{ maxWidth: '320px', height: '260px' }}
+      style={{ maxWidth: '340px', height: '240px' }}
       aria-hidden="true"
     >
       {/* Contract — back */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 0.75, y: 0 }}
+        animate={{ opacity: 0.7, y: 0 }}
         transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
         className="absolute rounded-xl overflow-hidden border border-black/[0.06] bg-white shadow-lg"
-        style={{ left: '0%', top: '18%', width: '55%', height: '76%', rotate: '-5deg', zIndex: 10 }}
+        style={{ left: '2%', top: '18%', width: '48%', height: '68%', rotate: '-5deg', zIndex: 10 }}
       >
         <ContractCard />
       </motion.div>
       {/* Report — back right */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 0.85, y: 0 }}
+        animate={{ opacity: 0.8, y: 0 }}
         transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         className="absolute rounded-xl overflow-hidden border border-black/[0.06] bg-white shadow-lg"
-        style={{ right: '0%', top: '10%', width: '54%', height: '73%', rotate: '4deg', zIndex: 20 }}
+        style={{ right: '2%', top: '10%', width: '48%', height: '66%', rotate: '4deg', zIndex: 20 }}
       >
         <ReportCard />
       </motion.div>
@@ -410,8 +410,8 @@ function HeroCardsMobile() {
           left: '50%',
           transform: 'translateX(-50%)',
           top: '0%',
-          width: '62%',
-          height: '86%',
+          width: '60%',
+          height: '85%',
           zIndex: 30,
         }}
       >
@@ -436,14 +436,14 @@ function QuickInstall() {
     <button
       type="button"
       onClick={copy}
-      className="inline-flex items-center gap-2.5 rounded-lg border border-border bg-muted/40 px-4 py-2.5 text-sm font-mono text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-150 group"
+      className="inline-flex items-center gap-2 sm:gap-2.5 rounded-lg border border-border bg-muted/40 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-mono text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-150 group max-w-full overflow-hidden"
     >
-      <span className="text-muted-foreground/40 group-hover:text-muted-foreground/60 transition-colors">
+      <span className="text-muted-foreground/40 group-hover:text-muted-foreground/60 transition-colors shrink-0">
         $
       </span>
-      {cmd}
+      <span className="truncate">{cmd}</span>
       <Copy
-        className={`h-3.5 w-3.5 transition-all ${copied ? 'text-foreground scale-110' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`}
+        className={`h-3.5 w-3.5 shrink-0 transition-all ${copied ? 'text-foreground scale-110' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`}
       />
     </button>
   );
@@ -693,10 +693,7 @@ export default function HomePage() {
   return (
     <div className="overflow-x-hidden">
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
-      <section
-        className="relative flex flex-col justify-center overflow-hidden"
-        style={{ minHeight: '100svh' }}
-      >
+      <section className="relative flex flex-col justify-center overflow-hidden min-h-[auto] lg:min-h-screen">
         {/* Grid — light */}
         <div
           className="absolute inset-0 pointer-events-none dark:hidden"
@@ -720,7 +717,7 @@ export default function HomePage() {
           aria-hidden="true"
         />
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 xl:px-8 pt-24 pb-16">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 xl:px-8 pt-20 sm:pt-24 pb-8 sm:pb-16">
           {/* ── Desktop: side-by-side ── */}
           <div className="hidden lg:flex lg:items-center lg:gap-16 xl:gap-20">
             {/* Text */}
@@ -809,14 +806,14 @@ export default function HomePage() {
           </div>
 
           {/* ── Mobile: stacked ── */}
-          <div className="lg:hidden flex flex-col items-center text-center gap-8">
-            <div className="max-w-md mx-auto">
+          <div className="lg:hidden flex flex-col items-center text-center">
+            <div className="w-full max-w-sm sm:max-w-md mx-auto px-4">
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45 }}
               >
-                <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur-sm px-3.5 py-1 text-xs text-muted-foreground mb-6">
+                <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur-sm px-2.5 sm:px-3 py-1 text-[10px] sm:text-xs text-muted-foreground mb-4 sm:mb-6">
                   <span className="h-1.5 w-1.5 rounded-full bg-foreground/50 animate-pulse" />
                   Open source · MIT · 20 components
                 </div>
@@ -826,7 +823,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.06 }}
-                className="text-[2.4rem] sm:text-[3rem] font-bold tracking-[-0.025em] text-foreground leading-[1.06] mb-5"
+                className="text-[1.75rem] sm:text-[2.5rem] font-bold tracking-[-0.025em] text-foreground leading-[1.1] mb-3 sm:mb-5"
               >
                 PDF components
                 <br />
@@ -837,7 +834,7 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.12 }}
-                className="text-base text-muted-foreground mb-7 leading-relaxed"
+                className="text-sm sm:text-base text-muted-foreground mb-5 sm:mb-7 leading-relaxed"
               >
                 Copy, paste, customize. Professional PDFs with a component library you fully own.
               </motion.p>
@@ -846,17 +843,17 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.18 }}
-                className="flex flex-col sm:flex-row items-center gap-3 mb-5"
+                className="flex flex-col gap-2.5 mb-4 sm:mb-5"
               >
                 <Link
                   to="/docs"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-foreground text-background font-medium text-sm hover:opacity-90 active:scale-[0.98] transition-all"
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-lg bg-foreground text-background font-medium text-sm hover:opacity-90 active:scale-[0.98] transition-all"
                 >
                   Get started <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   to="/components"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-border text-foreground font-medium text-sm hover:bg-muted active:scale-[0.98] transition-all"
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-lg border border-border text-foreground font-medium text-sm hover:bg-muted active:scale-[0.98] transition-all"
                 >
                   Browse components
                 </Link>
@@ -866,7 +863,7 @@ export default function HomePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.26 }}
-                className="flex justify-center mb-5"
+                className="flex justify-center mb-4 sm:mb-5"
               >
                 <QuickInstall />
               </motion.div>
@@ -893,7 +890,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.2 }}
-              className="w-full px-4"
+              className="w-full mt-6 sm:mt-10 overflow-hidden"
             >
               <HeroCardsMobile />
             </motion.div>

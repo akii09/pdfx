@@ -303,7 +303,7 @@ export function Header() {
       <div
         className={cn(
           'md:hidden border-t overflow-hidden transition-all duration-200',
-          mobileOpen ? 'max-h-80' : 'max-h-0'
+          mobileOpen ? 'max-h-[420px]' : 'max-h-0'
         )}
         aria-hidden={!mobileOpen}
       >
@@ -322,12 +322,28 @@ export function Header() {
           >
             Components
           </Link>
-          <span className="text-sm text-muted-foreground/60 py-2 flex items-center gap-1.5">
-            Templates
-            <span className="rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground border border-border">
-              Soon
-            </span>
-          </span>
+          {/* Templates section with submenu */}
+          <div className="py-2">
+            <span className="text-sm font-medium text-foreground">Templates</span>
+            <div className="mt-2 ml-3 flex flex-col gap-1 border-l border-border pl-3">
+              <Link
+                to="/templates/invoices"
+                onClick={() => setMobileOpen(false)}
+                className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"
+              >
+                <Receipt className="h-3.5 w-3.5 text-blue-500" />
+                Invoices
+              </Link>
+              <Link
+                to="/templates/reports"
+                onClick={() => setMobileOpen(false)}
+                className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"
+              >
+                <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-500" />
+                Reports
+              </Link>
+            </div>
+          </div>
           <span className="text-sm text-muted-foreground/60 py-2 flex items-center gap-1.5">
             <Palette className="h-3.5 w-3.5" />
             Theme Customizer
@@ -335,16 +351,19 @@ export function Header() {
               Soon
             </span>
           </span>
+          <div className="h-px bg-border my-2" />
           <a
             href="https://github.com/akii09/pdfx"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-muted-foreground hover:text-foreground py-2"
+            className="text-sm text-muted-foreground hover:text-foreground py-2 flex items-center gap-2"
           >
+            <Github className="h-4 w-4" />
             GitHub
           </a>
-          <div className="py-2">
+          <div className="py-2 flex items-center gap-2">
             <ThemeToggle />
+            <span className="text-xs text-muted-foreground">Toggle theme</span>
           </div>
         </nav>
       </div>

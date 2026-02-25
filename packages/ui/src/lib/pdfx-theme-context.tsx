@@ -8,16 +8,11 @@
 // This file intentionally exports both a component (PdfxThemeProvider) and hooks/context.
 // All PDF components import from a single file — splitting would break the public API.
 
-/* eslint-disable react-hooks/rules-of-hooks */
-// react-hooks/rules-of-hooks: usePdfxTheme and useSafeMemo intentionally call hooks inside
-// try/catch — the accepted pattern for libraries that support both React render and
-// plain-function (unit-test) invocation.
-
 import * as React from 'react';
 import { type DependencyList, type ReactNode, createContext, useContext, useMemo } from 'react';
 import { theme as defaultTheme } from './pdfx-theme';
 
-type PdfxTheme = typeof defaultTheme;
+export type PdfxTheme = typeof defaultTheme;
 
 export const PdfxThemeContext = createContext<PdfxTheme>(defaultTheme);
 
@@ -56,14 +51,10 @@ const HOOK_ERROR_PATTERNS =
  * Returns the active PdfxTheme from context, or the default theme when called
  * outside a React render tree (e.g. unit tests).
  *
- * The try/catch is intentional: when components are invoked as plain functions
- * in unit tests, React's dispatcher is unavailable and useContext throws an
- * "Invalid hook call" error. We catch only that specific case and fall back to
- * defaultTheme. Any other error is re-thrown so real bugs are never swallowed.
- *
- * The eslint-disable is required because react-hooks/rules-of-hooks flags hooks
- * inside try/catch — this is the accepted pattern for libraries that must support
- * both React render and plain-function (test) invocation contexts.
+ * Uses hasActiveDispatcher() to detect whether React has an active dispatcher.
+ * When called outside a React render tree, returns defaultTheme immediately.
+ * The try/catch is a safety net for edge cases where the dispatcher check passes
+ * but context is still unavailable.
  */
 export function usePdfxTheme(): PdfxTheme {
   if (!hasActiveDispatcher()) {
