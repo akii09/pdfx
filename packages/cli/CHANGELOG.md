@@ -1,5 +1,11 @@
 # @akii09/pdfx-cli
 
+## 0.1.1
+
+### Patch Changes
+
+- CLI Share issues
+
 ## 0.1.0
 
 ### Patch Changes
