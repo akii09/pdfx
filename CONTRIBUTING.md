@@ -22,7 +22,7 @@ This project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUC
 ## Development Setup
 
 ```bash
-# Prerequisites: Node 18+, pnpm 9+
+# Prerequisites: Node 24+, pnpm 10+
 # Clone your fork
 git clone https://github.com/YOUR_USERNAME/pdfx.git
 cd pdfx

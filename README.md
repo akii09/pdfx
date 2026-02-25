@@ -74,6 +74,8 @@ npx @pdfx/cli init
 | `pdfx theme init` | Initialize or replace the theme file |
 | `pdfx theme switch <preset>` | Switch theme (professional, modern, minimal) |
 | `pdfx theme validate` | Validate your theme file |
+| `pdfx template add <templates...>` | Add templates (e.g. `pdfx template add invoice-classic`) |
+| `pdfx template list` | List available templates from registry |
 
 ## Theme Presets
 
