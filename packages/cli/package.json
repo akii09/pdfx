@@ -34,6 +34,7 @@
     "typescript": "catalog:"
   },
   "devDependencies": {
+    "@pdfx/shared": "workspace:*",
     "@types/node": "catalog:",
     "@types/prompts": "^2.4.9",
     "tsup": "^8.5.1",
