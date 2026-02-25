@@ -1,0 +1,17 @@
+{
+  "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
+  "name": "page-break",
+  "type": "registry:ui",
+  "title": "PageBreak",
+  "description": "Forces content after it to start on a new page",
+  "files": [
+    {
+      "path": "components/pdfx/page-break/pdfx-page-break.tsx",
+      "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\nexport interface PageBreakProps {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  children?: never;\n}\n\nexport function PageBreak({ style }: PageBreakProps) {\n  return <View break style={style} />;\n}\n",
+      "type": "registry:component"
+    }
+  ],
+  "dependencies": [
+    "@react-pdf/renderer"
+  ]
+}

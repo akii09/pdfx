@@ -1,0 +1,604 @@
+{
+  "$schema": "https://pdfx.akashpise.dev/schema/registry.json",
+  "name": "pdfx",
+  "homepage": "https://pdfx.akashpise.dev",
+  "items": [
+    {
+      "name": "heading",
+      "type": "registry:ui",
+      "title": "Heading",
+      "description": "PDF heading component with 6 levels (h1-h6)",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/heading/heading.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/heading/heading.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/heading/heading.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "text",
+      "type": "registry:ui",
+      "title": "Text",
+      "description": "PDF text component for paragraphs",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/text/text.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/text/text.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/text/text.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "link",
+      "type": "registry:ui",
+      "title": "Link",
+      "description": "PDF link component for hyperlinks",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/link/link.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/link/link.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/link/link.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "divider",
+      "type": "registry:ui",
+      "title": "Divider",
+      "description": "Horizontal rule with theme-based spacing",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/divider/divider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/divider/divider.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/divider/divider.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "page-break",
+      "type": "registry:ui",
+      "title": "PageBreak",
+      "description": "Forces content after it to start on a new page",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/page-break/page-break.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "stack",
+      "type": "registry:ui",
+      "title": "Stack",
+      "description": "Vertical layout with theme-based gap",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/stack/stack.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/stack/stack.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/stack/stack.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "section",
+      "type": "registry:ui",
+      "title": "Section",
+      "description": "Logical section with theme-based spacing",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/section/section.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/section/section.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/section/section.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Composable table with Table, TableRow, TableCell",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/table/table.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/table/table.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/table/table.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "DataTable",
+      "description": "Convenience API: columns + data array. Uses Table/TableRow/TableCell internally.",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/data-table/data-table.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/data-table/data-table.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/data-table/data-table.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "table"
+      ]
+    },
+    {
+      "name": "page-header",
+      "type": "registry:ui",
+      "title": "PageHeader",
+      "description": "Fixed or inline page header with 7 layout variants including logo support",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/page-header/page-header.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "page-footer",
+      "type": "registry:ui",
+      "title": "PageFooter",
+      "description": "Fixed or inline page footer with 6 layout variants and contact info support",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/page-footer/page-footer.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Inline status badge with 7 color variants and 3 sizes",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/badge/badge.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/badge/badge.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/badge/badge.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "key-value",
+      "type": "registry:ui",
+      "title": "KeyValue",
+      "description": "Label-value pair display with horizontal/vertical layout and dividers",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/key-value/key-value.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/key-value/key-value.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/key-value/key-value.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "list",
+      "type": "registry:ui",
+      "title": "PdfList",
+      "description": "List component with bullet, numbered, checklist, icon, multi-level, and descriptive variants",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/list/list.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/list/list.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/list/list.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "PdfCard",
+      "description": "Bordered container card with title, 3 variants and padding control",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/card/card.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/card/card.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/card/card.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "form",
+      "type": "registry:ui",
+      "title": "PdfFormSection",
+      "description": "Form layout with labeled fields in single, two-column, or three-column layouts",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/form/form.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/form/form.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/form/form.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "signature",
+      "type": "registry:ui",
+      "title": "PdfSignatureBlock",
+      "description": "Signature block with single, double, and inline variants",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/signature/signature.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/signature/signature.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/signature/signature.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "keep-together",
+      "type": "registry:ui",
+      "title": "KeepTogether",
+      "description": "Prevents page breaks within wrapped content",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/keep-together/keep-together.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "pdf-image",
+      "type": "registry:ui",
+      "title": "PdfImage",
+      "description": "Image component with 7 display variants, fit modes, and optional captions",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/pdf-image/pdf-image.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "graph",
+      "type": "registry:ui",
+      "title": "PdfGraph",
+      "description": "SVG chart component with bar, line, area, pie, donut, and horizontal-bar variants",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/graph/graph.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "invoice-classic",
+      "type": "registry:template",
+      "title": "Invoice Classic",
+      "description": "Professional A4 invoice with logo-left header, three-column billing section, and zebra-striped grid table.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-classic.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "pdf-image"
+      ]
+    },
+    {
+      "name": "invoice-modern",
+      "type": "registry:template",
+      "title": "Invoice Modern",
+      "description": "Branded full-width banner header, horizontal invoice meta strip, and primary-header table.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-modern.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text"
+      ]
+    },
+    {
+      "name": "invoice-minimal",
+      "type": "registry:template",
+      "title": "Invoice Minimal",
+      "description": "Clean minimal layout with inline invoice stamp, two-column billing info, and compact table.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-minimal.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text"
+      ]
+    },
+    {
+      "name": "report-financial",
+      "type": "registry:template",
+      "title": "Financial Report",
+      "description": "Executive financial report with KPI cards, trend chart, delivery table, and highlights section.",
+      "files": [
+        {
+          "path": "public/r/templates/report-financial.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "badge",
+        "data-table",
+        "divider",
+        "graph",
+        "key-value",
+        "list",
+        "page-footer",
+        "page-header",
+        "section",
+        "stack",
+        "text"
+      ]
+    },
+    {
+      "name": "report-operations",
+      "type": "registry:template",
+      "title": "Operations Report",
+      "description": "Operations and delivery report covering SLA health, throughput trends, and risk tracking.",
+      "files": [
+        {
+          "path": "public/r/templates/report-operations.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "badge",
+        "data-table",
+        "divider",
+        "graph",
+        "key-value",
+        "list",
+        "page-footer",
+        "page-header",
+        "section",
+        "stack",
+        "text"
+      ]
+    },
+    {
+      "name": "report-security",
+      "type": "registry:template",
+      "title": "Security Report",
+      "description": "Security posture report with vulnerability trend tracking, remediation table, and risk summary.",
+      "files": [
+        {
+          "path": "public/r/templates/report-security.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "badge",
+        "data-table",
+        "divider",
+        "graph",
+        "key-value",
+        "list",
+        "page-footer",
+        "page-header",
+        "section",
+        "stack",
+        "text"
+      ]
+    },
+    {
+      "name": "report-marketing",
+      "type": "registry:template",
+      "title": "Growth Report",
+      "description": "Growth and marketing report with acquisition trendline, channel performance, and execution highlights.",
+      "files": [
+        {
+          "path": "public/r/templates/report-marketing.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "badge",
+        "data-table",
+        "divider",
+        "graph",
+        "key-value",
+        "list",
+        "page-footer",
+        "page-header",
+        "section",
+        "stack",
+        "text"
+      ]
+    }
+  ]
+}

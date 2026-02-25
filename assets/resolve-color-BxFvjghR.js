@@ -1,0 +1,1 @@
+const n=["foreground","background","muted","mutedForeground","primary","primaryForeground","border","accent","destructive","success","warning","info"];function c(r,e){const o=r;return n.includes(o)?e[o]:r}export{c as r};
