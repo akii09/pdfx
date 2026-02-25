@@ -33,7 +33,7 @@ export default function StackComponentPage() {
     <ComponentPage
       title="Stack"
       description="Vertical layout with theme-based gap between children."
-      installCommand="npx @pdfx/cli add stack"
+      installCommand="npx @akii09/pdfx-cli add stack"
       componentName="stack"
       preview={
         <PDFPreview title="Preview" downloadFilename="stack-preview.pdf">

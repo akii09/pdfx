@@ -51,7 +51,7 @@ export default function KeepTogetherComponentPage() {
     <ComponentPage
       title="KeepTogether"
       description="Utility wrapper that prevents its children from being split across page boundaries. Wraps content in a react-pdf wrap={false} View — treating the subtree as an atomic block that either fits on the current page or moves entirely to the next."
-      installCommand="npx @pdfx/cli add keep-together"
+      installCommand="npx @akii09/pdfx-cli add keep-together"
       componentName="keep-together"
       preview={
         <PDFPreview title="Preview" downloadFilename="keep-together-preview.pdf">

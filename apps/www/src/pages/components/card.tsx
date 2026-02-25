@@ -37,7 +37,7 @@ export default function CardComponentPage() {
     <ComponentPage
       title="Card"
       description="A content container for PDF documents with an optional title and three visual variants: default, bordered, and muted."
-      installCommand="npx @pdfx/cli add card"
+      installCommand="npx @akii09/pdfx-cli add card"
       componentName="card"
       preview={
         <PDFPreview

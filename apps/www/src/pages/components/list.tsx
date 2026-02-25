@@ -67,7 +67,7 @@ export default function ListComponentPage() {
     <ComponentPage
       title="List"
       description="Flexible PDF list component with 6 visual variants: bullet, numbered, checklist, icon, multi-level, and descriptive."
-      installCommand="npx @pdfx/cli add list"
+      installCommand="npx @akii09/pdfx-cli add list"
       componentName="list"
       preview={
         <PDFPreview

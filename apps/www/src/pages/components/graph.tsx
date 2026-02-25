@@ -86,7 +86,7 @@ export default function GraphComponentPage() {
     <ComponentPage
       title="Graph"
       description="Native SVG charts rendered inside react-pdf documents — no external charting libraries required. Supports bar, horizontal-bar, line, area, pie, and donut variants. All rendering uses react-pdf's built-in SVG primitives for crisp vector output at any PDF resolution."
-      installCommand="npx @pdfx/cli add graph"
+      installCommand="npx @akii09/pdfx-cli add graph"
       componentName="graph"
       preview={
         <PDFPreview

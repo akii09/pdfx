@@ -162,13 +162,13 @@ export default function Intro() {
               n: '1',
               title: 'Initialize PDFx',
               desc: 'Run the CLI to scaffold your config, theme file, and component directory.',
-              code: 'npx @pdfx/cli init',
+              code: 'npx @akii09/pdfx-cli init',
             },
             {
               n: '2',
               title: 'Add Components',
               desc: 'Copy any component from the registry directly into your project.',
-              code: 'npx @pdfx/cli add heading text table graph',
+              code: 'npx @akii09/pdfx-cli add heading text table graph',
             },
             {
               n: '3',

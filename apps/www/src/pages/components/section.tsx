@@ -31,7 +31,7 @@ export default function SectionComponentPage() {
     <ComponentPage
       title="Section"
       description="Logical section with theme-based vertical spacing."
-      installCommand="npx @pdfx/cli add section"
+      installCommand="npx @akii09/pdfx-cli add section"
       componentName="section"
       preview={
         <PDFPreview title="Preview" downloadFilename="section-preview.pdf">

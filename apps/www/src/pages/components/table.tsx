@@ -80,7 +80,7 @@ export default function TableComponentPage() {
     <ComponentPage
       title="Table"
       description="Composable Table with TableHeader, TableBody, TableFooter, TableRow, and TableCell. Supports 7 visual variants, zebra striping, and alignment."
-      installCommand="npx @pdfx/cli add table"
+      installCommand="npx @akii09/pdfx-cli add table"
       componentName="table"
       preview={
         <PDFPreview
