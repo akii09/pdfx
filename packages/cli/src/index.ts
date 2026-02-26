@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Command } from 'commander';
 import { add } from './commands/add.js';
 import { diff } from './commands/diff.js';
@@ -8,7 +11,19 @@ import { themeInit, themeSwitch, themeValidate } from './commands/theme.js';
 
 const program = new Command();
 
-program.name('pdfx').description('CLI for PDFx components').version('0.1.0');
+// Read version from package.json
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = join(__filename, '..');
+const packageJsonPath = join(__dirname, '../package.json');
+let version = '0.1.3'; // fallback
+try {
+  const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+  version = pkg.version;
+} catch {
+  // Use fallback version
+}
+
+program.name('pdfx').description('CLI for PDFx components').version(version);
 
 program.command('init').description('Initialize pdfx in your project').action(init);
 
@@ -16,7 +31,10 @@ program
   .command('add <components...>')
   .description('Add components to your project')
   .option('-f, --force', 'Overwrite existing files without prompting')
-  .action((components: string[], options: { force?: boolean }) => add(components, options));
+  .option('-r, --registry <url>', 'Override registry URL')
+  .action((components: string[], options: { force?: boolean; registry?: string }) =>
+    add(components, options)
+  );
 
 program.command('list').description('List available components from registry').action(list);
 

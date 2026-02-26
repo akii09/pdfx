@@ -56,12 +56,32 @@ export async function init() {
         name: 'componentDir',
         message: 'Where should we install components?',
         initial: DEFAULTS.COMPONENT_DIR,
+        validate: (value: string) => {
+          if (!value || value.trim().length === 0) {
+            return 'Component directory is required';
+          }
+          // Validate it's a relative path
+          if (path.isAbsolute(value)) {
+            return 'Please use a relative path (e.g., ./src/components/pdfx)';
+          }
+          // Validate it looks like a directory path
+          if (!value.startsWith('.')) {
+            return 'Path should start with ./ or ../ (e.g., ./src/components/pdfx)';
+          }
+          return true;
+        },
       },
       {
         type: 'text',
         name: 'registry',
         message: 'Registry URL:',
         initial: DEFAULTS.REGISTRY_URL,
+        validate: (value: string) => {
+          if (!value || !value.startsWith('http')) {
+            return 'Please enter a valid HTTP(S) URL';
+          }
+          return true;
+        },
       },
       {
         type: 'select',
@@ -91,6 +111,20 @@ export async function init() {
         name: 'themePath',
         message: 'Where should we create the theme file?',
         initial: DEFAULTS.THEME_FILE,
+        validate: (value: string) => {
+          if (!value || value.trim().length === 0) {
+            return 'Theme path is required';
+          }
+          // Validate it's a relative path
+          if (path.isAbsolute(value)) {
+            return 'Please use a relative path (e.g., ./src/lib/pdfx-theme.ts)';
+          }
+          // Ensure it has .ts or .tsx extension
+          if (!value.endsWith('.ts') && !value.endsWith('.tsx')) {
+            return 'Theme file must have .ts or .tsx extension (e.g., ./src/lib/pdfx-theme.ts)';
+          }
+          return true;
+        },
       },
     ],
     {
@@ -124,6 +158,10 @@ export async function init() {
   const spinner = ora('Creating config and theme files...').start();
 
   try {
+    // Create component directory
+    const componentDirPath = path.resolve(process.cwd(), answers.componentDir);
+    ensureDir(componentDirPath);
+
     // Write pdfx.json
     fs.writeFileSync(path.join(process.cwd(), 'pdfx.json'), JSON.stringify(config, null, 2));
 

@@ -25,29 +25,29 @@ export function runPreFlightChecks(cwd: string = process.cwd()): PreFlightResult
     blockingErrors.push(
       `${environment.hasPackageJson.message}\n  ${chalk.dim('→')} ${environment.hasPackageJson.fixCommand}`
     );
-  }
-
-  if (!environment.isReactProject.valid) {
+    // Early exit - if no package.json, skip React check
+  } else if (!environment.isReactProject.valid) {
     blockingErrors.push(
       `${environment.isReactProject.message}\n  ${chalk.dim('→')} ${environment.isReactProject.fixCommand}`
     );
+    // Early exit - if not React project, skip React install check
+  } else {
+    // Only check React installation if we have a React project
+    if (!dependencies.react.valid && dependencies.react.installed) {
+      warnings.push(
+        `${dependencies.react.message}\n  ${chalk.dim('→')} Current: ${dependencies.react.currentVersion}, Required: ${dependencies.react.requiredVersion}`
+      );
+    } else if (!dependencies.react.installed) {
+      blockingErrors.push(
+        `${dependencies.react.message}\n  ${chalk.dim('→')} Install React: npm install react react-dom`
+      );
+    }
   }
 
   // Check Node.js version (blocking)
   if (!dependencies.nodeJs.valid) {
     blockingErrors.push(
       `${dependencies.nodeJs.message}\n  ${chalk.dim('→')} Current: ${dependencies.nodeJs.currentVersion}, Required: ${dependencies.nodeJs.requiredVersion}\n  ${chalk.dim('→')} Visit https://nodejs.org to upgrade`
-    );
-  }
-
-  // Check React version (warning only)
-  if (!dependencies.react.valid && dependencies.react.installed) {
-    warnings.push(
-      `${dependencies.react.message}\n  ${chalk.dim('→')} Current: ${dependencies.react.currentVersion}, Required: ${dependencies.react.requiredVersion}`
-    );
-  } else if (!dependencies.react.installed) {
-    blockingErrors.push(
-      `${dependencies.react.message}\n  ${chalk.dim('→')} This should have been caught by React project check`
     );
   }
 

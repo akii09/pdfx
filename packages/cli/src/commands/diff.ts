@@ -53,7 +53,9 @@ export async function diff(components: string[]) {
       } catch (err) {
         const isTimeout = err instanceof Error && err.name === 'TimeoutError';
         throw new NetworkError(
-          isTimeout ? 'Registry request timed out' : `Could not reach ${config.registry}`
+          isTimeout
+            ? `Registry request timed out after 10 seconds.\n  ${chalk.dim('Check your internet connection or try again later.')}`
+            : `Could not reach registry at ${config.registry}\n  ${chalk.dim('Verify the URL is correct and you have internet access.')}`
         );
       }
 
@@ -104,9 +106,17 @@ export async function diff(components: string[]) {
 
           const localLines = localContent.split('\n');
           const registryLines = registryContent.split('\n');
+          const lineDiff = localLines.length - registryLines.length;
 
           console.log(chalk.dim(`    Local: ${localLines.length} lines`));
           console.log(chalk.dim(`    Registry: ${registryLines.length} lines`));
+          if (lineDiff !== 0) {
+            const diffText =
+              lineDiff > 0
+                ? `${Math.abs(lineDiff)} line${Math.abs(lineDiff) > 1 ? 's' : ''} added locally`
+                : `${Math.abs(lineDiff)} line${Math.abs(lineDiff) > 1 ? 's' : ''} removed locally`;
+            console.log(chalk.dim(`    → ${diffText}`));
+          }
         }
       }
 
