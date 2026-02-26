@@ -15,6 +15,16 @@ import { readJsonFile } from '../utils/read-json.js';
  * Prompts for preset selection and theme file path, then scaffolds the theme file.
  */
 export async function themeInit() {
+  // Check if pdfx.json exists - block if not present
+  const configPath = path.join(process.cwd(), 'pdfx.json');
+  if (!fs.existsSync(configPath)) {
+    console.error(chalk.red('\nError: pdfx.json not found'));
+    console.log(chalk.yellow('\n  PDFx is not initialized in this project.\n'));
+    console.log(chalk.cyan('  Run: pdfx init'));
+    console.log(chalk.dim('  This will set up your project configuration and theme.\n'));
+    process.exit(1);
+  }
+
   console.log(chalk.bold.cyan('\n  PDFx Theme Setup\n'));
 
   const answers = await prompts(
@@ -109,16 +119,19 @@ export async function themeInit() {
  * Overwrites the existing theme file with the selected preset.
  */
 export async function themeSwitch(presetName: string) {
+  // Resolve 'default' alias to 'professional'
+  const resolvedPreset = presetName === 'default' ? 'professional' : presetName;
+
   const validPresets = Object.keys(themePresets);
-  if (!validPresets.includes(presetName)) {
-    console.error(
-      chalk.red(`Invalid preset: "${presetName}". Valid presets: ${validPresets.join(', ')}`)
-    );
+  if (!validPresets.includes(resolvedPreset)) {
+    console.error(chalk.red(`✖ Invalid theme preset: "${presetName}"`));
+    console.log(chalk.dim(`  Available presets: ${validPresets.join(', ')}, default\n`));
+    console.log(chalk.dim('  Usage: pdfx theme switch <preset>'));
     process.exit(1);
   }
 
   // Safe: validated above via validPresets.includes()
-  const validatedPreset = presetName as ThemePresetName;
+  const validatedPreset = resolvedPreset as ThemePresetName;
 
   const configPath = path.join(process.cwd(), 'pdfx.json');
   if (!fs.existsSync(configPath)) {
@@ -299,8 +312,13 @@ export async function themeValidate() {
     const result = themeSchema.safeParse(parsedTheme);
 
     if (!result.success) {
-      const message = result.error.issues.map((issue) => issue.message).join(', ');
-      spinner.fail(`Theme validation failed: ${message}`);
+      const issues = result.error.issues
+        .map((issue) => `  → ${chalk.yellow(issue.path.join('.'))}: ${issue.message}`)
+        .join('\n');
+      spinner.fail('Theme validation failed');
+      console.log(chalk.red('\n  Missing or invalid fields:\n'));
+      console.log(issues);
+      console.log(chalk.dim('\n  Fix these fields in your theme file and run validate again.\n'));
       process.exit(1);
     }
 

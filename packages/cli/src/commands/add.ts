@@ -42,7 +42,9 @@ async function fetchComponent(name: string, registryUrl: string): Promise<Regist
   } catch (err) {
     const isTimeout = err instanceof Error && err.name === 'TimeoutError';
     throw new NetworkError(
-      isTimeout ? 'Registry request timed out' : `Could not reach ${registryUrl}`
+      isTimeout
+        ? `Registry request timed out after 10 seconds.\n  ${chalk.dim('Check your internet connection or try again later.')}`
+        : `Could not reach registry at ${registryUrl}\n  ${chalk.dim('Verify the URL is correct and you have internet access.')}`
     );
   }
 
@@ -178,7 +180,18 @@ async function installComponent(name: string, config: Config, force: boolean): P
   return;
 }
 
-export async function add(components: string[], options: { force?: boolean } = {}) {
+export async function add(
+  components: string[],
+  options: { force?: boolean; registry?: string } = {}
+) {
+  // Validate arguments
+  if (!components || components.length === 0) {
+    console.error(chalk.red('Error: Component name required'));
+    console.log(chalk.dim('Usage: pdfx add <component...>'));
+    console.log(chalk.dim('Example: pdfx add heading text table\n'));
+    process.exit(1);
+  }
+
   // Lightweight dependency check - just verify @react-pdf/renderer exists
   const reactPdfCheck = validateReactPdfRenderer();
   if (!reactPdfCheck.installed) {
@@ -208,6 +221,11 @@ export async function add(components: string[], options: { force?: boolean } = {
   let config: Config;
   try {
     config = readConfig(configPath);
+
+    // Override registry if provided via CLI option
+    if (options.registry) {
+      config = { ...config, registry: options.registry };
+    }
   } catch (error: unknown) {
     if (error instanceof ConfigError) {
       console.error(chalk.red(error.message));
