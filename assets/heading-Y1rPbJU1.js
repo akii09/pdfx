@@ -1,0 +1,16 @@
+import{j as e}from"./index-BVFh2AD0.js";import{H as t}from"./heading-DGDvsETl.js";import{P as n,D as i,a as o,S as a}from"./pdf-preview-B-SOP6ZJ.js";import{C as r}from"./component-page-GS5dkn21.js";import{u as d}from"./use-document-title-V-BiQsgU.js";import"./resolve-color-BxFvjghR.js";import"./code-block-MMyd8R4U.js";import"./copy-LVkApIKL.js";import"./package-manager-tabs-BqfAVd2q.js";import"./table-of-contents-B_FJiNHG.js";const s=`import { Document, Page } from '@react-pdf/renderer';
+import { Heading } from '@/components/pdfx/heading/pdfx-heading';
+
+export function MyDocument() {
+  return (
+    <Document>
+      <Page size="A4" style={{ padding: 30 }}>
+        <Heading level={1}>Main Title</Heading>
+        <Heading level={2} align="center" color="primary">Subtitle</Heading>
+        <Heading level={3} weight="medium" tracking="wide">Section</Heading>
+        <Heading level={4} transform="uppercase">Label</Heading>
+        <Heading level={1} keepWithNext>Stays with next paragraph</Heading>
+      </Page>
+    </Document>
+  );
+}`,l=[{name:"level",type:"1 | 2 | 3 | 4 | 5 | 6",defaultValue:"1",description:"Heading level corresponding to h1–h6 sizing. Controls font size, weight, and spacing."},{name:"align",type:"'left' | 'center' | 'right'",description:"Text alignment. Maps to textAlign."},{name:"color",type:"string",description:"Text color. Use a theme token ('primary', 'mutedForeground', 'accent', etc.) or any CSS color string."},{name:"weight",type:"'normal' | 'medium' | 'semibold' | 'bold'",description:"Font weight override. Defaults to the heading font weight set by the active theme."},{name:"tracking",type:"'tighter' | 'tight' | 'normal' | 'wide' | 'wider'",description:"Letter spacing. Use wide or wider for uppercase section labels."},{name:"transform",type:"'uppercase' | 'lowercase' | 'capitalize' | 'none'",description:"Text transform. Common for section headers and eyebrow labels."},{name:"noMargin",type:"boolean",description:"Removes the default bottom margin added below headings."},{name:"keepWithNext",type:"boolean",defaultValue:"true",description:"Prevents the heading from being stranded at the bottom of a page without content following it. Equivalent to CSS widow/orphan control. Enabled by default."},{name:"children",type:"React.ReactNode",description:"The heading text content.",required:!0},{name:"style",type:"Style",description:"Custom @react-pdf/renderer styles to merge with defaults. Applied last, so it overrides everything."}],p=a.create({page:{padding:30}}),m=e.jsx(i,{title:"PDFx Heading Preview",children:e.jsxs(o,{size:"A4",style:p.page,children:[e.jsx(t,{level:1,children:"Main Title"}),e.jsx(t,{level:2,align:"center",color:"primary",children:"Subtitle"}),e.jsx(t,{level:3,style:{color:"navy"},children:"Custom Styled"})]})});function H(){return d("Heading Component"),e.jsx(r,{title:"Heading",description:"PDF heading component with 6 levels. Uses browser-standard heading sizes (32px for h1 down to 10.72px for h6).",installCommand:"npx @akii09/pdfx-cli add heading",componentName:"heading",preview:e.jsx(n,{title:"Preview",downloadFilename:"heading-preview.pdf",children:m}),usageCode:s,usageFilename:"src/components/pdfx/heading/pdfx-heading.tsx",props:l})}export{H as default};
