@@ -10,6 +10,10 @@ Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/u
 
 ---
 
+[![PDFx Demo](https://pdfx.akashpise.dev/og-image.png)](https://pdfx.akashpise.dev/)
+
+---
+
 ## Features
 
 - **Copy-paste components** — Components live in your project. No PDFx runtime dependency.
