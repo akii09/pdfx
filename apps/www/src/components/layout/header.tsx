@@ -246,7 +246,7 @@ export function Header() {
             </Link>
             <TemplatesDropdown />
             {/* Theme Customizer — coming soon */}
-            <button
+            {/* <button
               type="button"
               disabled
               className="flex items-center gap-1.5 text-sm text-muted-foreground/50 cursor-not-allowed select-none"
@@ -257,7 +257,7 @@ export function Header() {
               <span className="ml-0.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary/70 border border-primary/20">
                 Soon
               </span>
-            </button>
+            </button> */}
           </nav>
         </div>
 
@@ -344,13 +344,13 @@ export function Header() {
               </Link>
             </div>
           </div>
-          <span className="text-sm text-muted-foreground/60 py-2 flex items-center gap-1.5">
+          {/* <span className="text-sm text-muted-foreground/60 py-2 flex items-center gap-1.5">
             <Palette className="h-3.5 w-3.5" />
             Theme Customizer
             <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary/70 border border-primary/20">
               Soon
             </span>
-          </span>
+          </span> */}
           <div className="h-px bg-border my-2" />
           <a
             href="https://github.com/akii09/pdfx"
