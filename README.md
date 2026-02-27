@@ -14,12 +14,12 @@ Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/u
 
 - **Copy-paste components** — Components live in your project. No PDFx runtime dependency.
 - **Theme system** — Control typography, spacing, colors, and page settings from a single config.
-- **CLI** — `pdfx init`, `pdfx add`, `pdfx theme switch` for instant setup.
+- **CLI** — `npx @akii09/pdfx-cli init`, `add`, `theme switch` for instant setup.
 - **TypeScript** — Full type safety with Zod validation throughout.
 
 ## Prerequisites
 
-- Node.js ≥ 24.0.0
+- Node.js ≥ 18.0.0
 - A React project with `@react-pdf/renderer` installed
 
 ## Quick Start
@@ -29,9 +29,10 @@ Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/u
 npx @akii09/pdfx-cli@alpha init
 
 # Add components
-pdfx add heading text table
+npx @akii09/pdfx-cli add heading
+npx @akii09/pdfx-cli add text table
 
-# Use them
+# Use them in your React component
 ```
 
 ```tsx
@@ -52,16 +53,16 @@ export default () => (
 
 | Command | Description |
 |---------|-------------|
-| `pdfx init` | Initialize PDFx in your project |
-| `pdfx add <components...>` | Add components from the registry |
-| `pdfx add <components...> --force` | Overwrite existing components |
-| `pdfx list` | List all available components |
-| `pdfx diff <components...>` | Compare local vs registry version |
-| `pdfx theme init` | Set up the theme file |
-| `pdfx theme switch <preset>` | Switch theme preset |
-| `pdfx theme validate` | Validate your theme file |
-| `pdfx template add <templates...>` | Add a template (e.g. `invoice-classic`) |
-| `pdfx template list` | List available templates |
+| `npx @akii09/pdfx-cli init` | Initialize PDFx in your project |
+| `npx @akii09/pdfx-cli add <component-name>` | Add a component from the registry |
+| `npx @akii09/pdfx-cli add <component-name> --force` | Overwrite an existing component |
+| `npx @akii09/pdfx-cli list` | List all available components |
+| `npx @akii09/pdfx-cli diff <component-name>` | Compare local vs registry version |
+| `npx @akii09/pdfx-cli theme init` | Set up the theme file |
+| `npx @akii09/pdfx-cli theme switch <preset>` | Switch theme preset |
+| `npx @akii09/pdfx-cli theme validate` | Validate your theme file |
+| `npx @akii09/pdfx-cli template add <template-name>` | Add a template (e.g. `invoice-classic`) |
+| `npx @akii09/pdfx-cli template list` | List available templates |
 
 ## Theme Presets
 
@@ -73,9 +74,15 @@ export default () => (
 
 ## Available Components
 
-Run `pdfx list` to see all components with install status. Current highlights:
+Run `npx @akii09/pdfx-cli list` to see all components with install status. Current highlights:
 
-`heading` `text` `table` `data-table` `badge` `card` `list` `form` `key-value` `signature` `page-header` `page-footer` `pdf-image` `graph` `divider` `stack` `section` and more.
+**Core**: `heading` `text` `divider` `page-break`
+**Layout**: `stack` `section` `page-header` `page-footer`
+**Data**: `table` `data-table` `list` `key-value`
+**Visual**: `badge` `card` `pdf-image` `graph`
+**Forms**: `form` `signature`
+
+See the [component registry](./COMPONENT-INVENTORY-AUDIT.md) for the complete list.
 
 ## Project Structure
 
