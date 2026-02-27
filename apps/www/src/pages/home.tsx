@@ -688,8 +688,6 @@ const features = [
 // ─── Main Home Page ───────────────────────────────────────────────────────────
 
 export default function HomePage() {
-  useDocumentTitle('PDF Components for React');
-
   return (
     <div className="overflow-x-hidden">
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
