@@ -19,7 +19,7 @@
     "@vercel/analytics": "^1.6.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "framer-motion": "^12.34.0",
+    "framer-motion": "^12.34.3",
     "lucide-react": "^0.564.0",
     "prism-react-renderer": "^2.4.1",
     "prismjs": "^1.30.0",
