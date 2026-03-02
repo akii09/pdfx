@@ -1,7 +1,7 @@
 import './lib/prism-setup';
+import { Analytics } from '@vercel/analytics/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Analytics } from '@vercel/analytics/react';
 import { BrowserRouter } from 'react-router-dom';
 import App from './app/App';
 import { ErrorBoundary } from './components/error-boundary';

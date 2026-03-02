@@ -8,7 +8,6 @@ import {
   GraduationCap,
   Mail,
   Menu,
-  Palette,
   Receipt,
   Search,
   User,

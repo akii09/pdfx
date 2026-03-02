@@ -2,7 +2,6 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, Copy, Github } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDocumentTitle } from '../hooks/use-document-title';
 
 // ─── PDF Mock Cards ───────────────────────────────────────────────────────────
 
