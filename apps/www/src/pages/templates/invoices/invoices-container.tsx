@@ -18,6 +18,7 @@ import tableRegistry from '../../../../public/r/table.json';
 import textRegistry from '../../../../public/r/text.json';
 
 import { CopyButton } from '../../../components/copy-button';
+import { OpenSourceCta } from '../../../components/open-source-cta';
 import { PDFPreview } from '../../../components/pdf-preview';
 import {
   TemplateCodeExplorer,
@@ -365,8 +366,11 @@ export default function InvoicesContainerPage() {
         )}
       </div>
 
+      {/* Open-source CTA */}
+      <OpenSourceCta />
+
       {/* Metadata row */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 mt-3">
         {/* Components used */}
         <div className="rounded-lg border border-border bg-card px-4 py-3 flex-1 min-w-[200px]">
           <div className="flex items-center gap-2 mb-2">

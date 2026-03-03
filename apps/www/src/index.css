@@ -142,3 +142,14 @@ code {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
+
+/* Pulse-once animation for Discord float button */
+@keyframes pulse-once {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(88, 101, 242, 0);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(88, 101, 242, 0.25);
+  }
+}
