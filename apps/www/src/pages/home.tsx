@@ -775,10 +775,19 @@ export default function HomePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.28 }}
-                className="mb-5"
+                className="mb-4"
               >
                 <QuickInstall />
               </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.33 }}
+                className="text-xs text-muted-foreground/70 mb-5"
+              >
+                Used by 14+ developers · MIT License · No vendor lock-in
+              </motion.p>
 
               <motion.div
                 initial={{ opacity: 0 }}
@@ -860,10 +869,19 @@ export default function HomePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.26 }}
-                className="flex justify-center mb-4 sm:mb-5"
+                className="flex justify-center mb-3"
               >
                 <QuickInstall />
               </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="text-xs text-muted-foreground/70 mb-4 sm:mb-5"
+              >
+                Used by 14+ developers · MIT License · No vendor lock-in
+              </motion.p>
 
               <motion.div
                 initial={{ opacity: 0 }}
