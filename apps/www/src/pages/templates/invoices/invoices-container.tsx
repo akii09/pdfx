@@ -5,6 +5,9 @@ import { Link } from 'react-router-dom';
 
 // ── Template registry files ──────────────────────────────────────────────────
 import invoice01Registry from '../../../../public/r/templates/invoice-classic.json';
+import invoice06Registry from '../../../../public/r/templates/invoice-consultant.json';
+import invoice04Registry from '../../../../public/r/templates/invoice-corporate.json';
+import invoice05Registry from '../../../../public/r/templates/invoice-creative.json';
 import invoice03Registry from '../../../../public/r/templates/invoice-minimal.json';
 import invoice02Registry from '../../../../public/r/templates/invoice-modern.json';
 
@@ -28,8 +31,17 @@ import { useDocumentTitle } from '../../../hooks/use-document-title';
 import { Invoice01Document } from './invoice01';
 import { Invoice02Document } from './invoice02';
 import { Invoice03Document } from './invoice03';
+import { Invoice04Document } from './invoice04';
+import { Invoice05Document } from './invoice05';
+import { Invoice06Document } from './invoice06';
 
-type TemplateId = 'invoice-classic' | 'invoice-modern' | 'invoice-minimal';
+type TemplateId =
+  | 'invoice-classic'
+  | 'invoice-modern'
+  | 'invoice-minimal'
+  | 'invoice-corporate'
+  | 'invoice-creative'
+  | 'invoice-consultant';
 type ThemePreset = 'professional' | 'modern' | 'minimal';
 type ViewMode = 'preview' | 'code';
 
@@ -92,6 +104,9 @@ const TEMPLATES: TemplateConfig[] = (() => {
   const classic = toCodeFiles(invoice01Registry.files, 'invoice-classic');
   const modern = toCodeFiles(invoice02Registry.files, 'invoice-modern');
   const minimal = toCodeFiles(invoice03Registry.files, 'invoice-minimal');
+  const corporate = toCodeFiles(invoice04Registry.files, 'invoice-corporate');
+  const creative = toCodeFiles(invoice05Registry.files, 'invoice-creative');
+  const consultant = toCodeFiles(invoice06Registry.files, 'invoice-consultant');
 
   return [
     {
@@ -132,6 +147,46 @@ const TEMPLATES: TemplateConfig[] = (() => {
       invoiceNumber: 'INV-2026-003',
       Component: Invoice03Document,
       downloadFilename: 'invoice-minimal.pdf',
+    },
+    {
+      id: 'invoice-corporate' as TemplateId,
+      label: 'Corporate',
+      badge: 'Executive',
+      description:
+        'Logo-right header with two-column info layout, bordered table, muted summary card.',
+      layout: 'Logo Right · Bordered Table',
+      components: ['PageHeader', 'Section', 'Table', 'KeyValue', 'PageFooter', 'Text', 'PdfImage'],
+      codeFiles: corporate,
+      explorerFiles: toExplorerFiles(corporate, INVOICE_COMPONENT_FILES),
+      invoiceNumber: 'INV-2026-004',
+      Component: Invoice04Document,
+      downloadFilename: 'invoice-corporate.pdf',
+    },
+    {
+      id: 'invoice-creative' as TemplateId,
+      label: 'Creative',
+      badge: 'Bold',
+      description: 'Centered header with invoice badge, accent block billing, striped table.',
+      layout: 'Centered · Striped Table',
+      components: ['PageHeader', 'Section', 'Table', 'KeyValue', 'PageFooter', 'Text'],
+      codeFiles: creative,
+      explorerFiles: toExplorerFiles(creative, INVOICE_COMPONENT_FILES),
+      invoiceNumber: 'INV-2026-005',
+      Component: Invoice05Document,
+      downloadFilename: 'invoice-creative.pdf',
+    },
+    {
+      id: 'invoice-consultant' as TemplateId,
+      label: 'Consultant',
+      badge: 'Hourly',
+      description: 'Two-column header, hourly billing with hours/rate columns, line table.',
+      layout: 'Two-Column · Line Table',
+      components: ['Section', 'Table', 'KeyValue', 'PageFooter', 'Text'],
+      codeFiles: consultant,
+      explorerFiles: toExplorerFiles(consultant, INVOICE_COMPONENT_FILES),
+      invoiceNumber: 'INV-2026-006',
+      Component: Invoice06Document,
+      downloadFilename: 'invoice-consultant.pdf',
     },
   ];
 })();
