@@ -184,6 +184,28 @@ importers:
 
   configs: {}
 
+  packages/builder-core:
+    dependencies:
+      '@pdfx/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@biomejs/biome':
+        specifier: ^1.9.4
+        version: 1.9.4
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.14
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 2.1.9(@types/node@22.19.11)(lightningcss@1.30.2)
+
   packages/cli:
     dependencies:
       chalk:

@@ -1,0 +1,33 @@
+{
+  "name": "@pdfx/builder-core",
+  "version": "0.1.0-alpha.1",
+  "private": true,
+  "type": "module",
+  "description": "Core logic for PDFx Visual Builder - schemas, generators, serializers",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema/index.ts",
+    "./generators": "./src/generators/index.ts",
+    "./serializers": "./src/serializers/index.ts",
+    "./templates": "./src/templates/index.ts"
+  },
+  "files": ["src"],
+  "scripts": {
+    "test": "vitest run",
+    "lint": "biome check src/",
+    "format": "biome format --write src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@pdfx/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
