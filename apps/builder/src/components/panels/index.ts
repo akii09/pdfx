@@ -1,0 +1,1 @@
+export { PanelTabs } from './PanelTabs';

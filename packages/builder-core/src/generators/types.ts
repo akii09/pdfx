@@ -5,5 +5,5 @@ import type { BuilderState } from '../serializers/types';
  */
 export function generateTypes(_state: BuilderState): string {
   // Implementation in Phase 3, Week 9
-  return `// Generated types - implementation pending\n`;
+  return '';
 }

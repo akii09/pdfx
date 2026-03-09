@@ -1,25 +1,12 @@
 /**
  * Property type enumeration for component schema definitions
  */
-export type PropType =
-  | 'string'
-  | 'number'
-  | 'boolean'
-  | 'select'
-  | 'color'
-  | 'array'
-  | 'object';
+export type PropType = 'string' | 'number' | 'boolean' | 'select' | 'color' | 'array' | 'object';
 
 /**
  * Component category for organizing the sidebar palette
  */
-export type ComponentCategory =
-  | 'typography'
-  | 'layout'
-  | 'data'
-  | 'structure'
-  | 'media'
-  | 'forms';
+export type ComponentCategory = 'typography' | 'layout' | 'data' | 'structure' | 'media' | 'forms';
 
 /**
  * Option for select-type properties
@@ -32,12 +19,7 @@ export interface SelectOption {
 /**
  * Property grouping for organizing the properties panel
  */
-export type PropGroup =
-  | 'content'
-  | 'typography'
-  | 'style'
-  | 'layout'
-  | 'advanced';
+export type PropGroup = 'content' | 'typography' | 'style' | 'layout' | 'advanced';
 
 /**
  * Schema definition for a single component property

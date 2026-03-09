@@ -15,7 +15,7 @@
   },
   "files": ["src"],
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "lint": "biome check src/",
     "format": "biome format --write src/",
     "typecheck": "tsc --noEmit"

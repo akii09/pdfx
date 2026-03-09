@@ -1,0 +1,15 @@
+{
+  "extends": "../../configs/tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@pdfx/ui": ["../../packages/ui/src"],
+      "@pdfx/shared": ["../../packages/shared/src"],
+      "@pdfx/builder-core": ["../../packages/builder-core/src"]
+    }
+  },
+  "include": ["src"]
+}
