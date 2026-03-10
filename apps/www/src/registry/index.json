@@ -377,6 +377,90 @@
       "dependencies": ["@react-pdf/renderer"]
     },
     {
+      "name": "page-number",
+      "type": "registry:ui",
+      "title": "PdfPageNumber",
+      "description": "Dynamic page numbers with customizable format and alignment",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/page-number/page-number.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/page-number/page-number.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/page-number/page-number.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "watermark",
+      "type": "registry:ui",
+      "title": "PdfWatermark",
+      "description": "Diagonal or positioned text overlay for DRAFT, CONFIDENTIAL, PAID, etc.",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/watermark/watermark.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/watermark/watermark.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/watermark/watermark.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "qrcode",
+      "type": "registry:ui",
+      "title": "PdfQRCode",
+      "description": "Native SVG QR code for URLs, payments, and document verification",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/qrcode/qrcode.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/qrcode/qrcode.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/qrcode/qrcode.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer", "qrcode"]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "PdfAlert",
+      "description": "Callout boxes with info, success, warning, and error variants",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/alert/alert.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/alert/alert.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/alert/alert.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
       "name": "invoice-classic",
       "type": "registry:template",
       "title": "Invoice Classic",

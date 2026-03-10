@@ -1,9 +1,11 @@
 import {
+  AlertTriangle,
   ArrowRight,
   BarChart2,
   ClipboardList,
   FileStack,
   FileText,
+  Hash,
   Heading as HeadingIcon,
   ImageIcon,
   LayoutList,
@@ -13,9 +15,11 @@ import {
   PanelBottom,
   PanelTop,
   PenLine,
+  QrCode,
   Rows3,
   Search,
   Square,
+  Stamp,
   Table,
   Tag,
 } from 'lucide-react';
@@ -163,6 +167,34 @@ const components = [
     href: '/components/graph',
     icon: BarChart2,
     install: 'npx @akii09/pdfx-cli add graph',
+  },
+  {
+    name: 'PdfPageNumber',
+    description: 'Dynamic page numbers with customizable format.',
+    href: '/components/page-number',
+    icon: Hash,
+    install: 'npx @akii09/pdfx-cli add page-number',
+  },
+  {
+    name: 'PdfWatermark',
+    description: 'Diagonal or positioned text overlay for DRAFT, CONFIDENTIAL, etc.',
+    href: '/components/watermark',
+    icon: Stamp,
+    install: 'npx @akii09/pdfx-cli add watermark',
+  },
+  {
+    name: 'PdfQRCode',
+    description: 'Native SVG QR code for URLs, payments, and verification.',
+    href: '/components/qrcode',
+    icon: QrCode,
+    install: 'npx @akii09/pdfx-cli add qrcode',
+  },
+  {
+    name: 'PdfAlert',
+    description: 'Info, success, warning, and error callout boxes with icons.',
+    href: '/components/alert',
+    icon: AlertTriangle,
+    install: 'npx @akii09/pdfx-cli add alert',
   },
 ];
 

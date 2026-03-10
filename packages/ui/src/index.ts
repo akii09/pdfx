@@ -13,6 +13,27 @@ export {
   type DividerSpacing,
 } from './components/divider';
 export { PageBreak, type PageBreakProps } from './components/page-break';
+export {
+  PdfPageNumber,
+  type PdfPageNumberProps,
+  type PageNumberAlign,
+  type PageNumberSize,
+} from './components/page-number';
+export {
+  PdfWatermark,
+  type PdfWatermarkProps,
+  type WatermarkPosition,
+} from './components/watermark';
+export {
+  PdfQRCode,
+  type PdfQRCodeProps,
+  type QRCodeErrorLevel,
+} from './components/qrcode';
+export {
+  PdfAlert,
+  type PdfAlertProps,
+  type AlertVariant,
+} from './components/alert';
 export { Link, type LinkProps, type LinkVariant, type LinkUnderline } from './components/link';
 export {
   Text,

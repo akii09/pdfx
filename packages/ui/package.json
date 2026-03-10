@@ -10,7 +10,9 @@
     ".": "./src/index.ts",
     "./*": "./src/*.tsx"
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "test": "vitest run",
     "lint": "biome check src/",
@@ -22,12 +24,14 @@
     "react": "catalog:"
   },
   "dependencies": {
-    "@pdfx/shared": "workspace:*"
+    "@pdfx/shared": "workspace:*",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@react-pdf/renderer": "catalog:",
     "@react-pdf/types": "^2.9.2",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "catalog:",
     "react": "catalog:",
     "typescript": "catalog:",

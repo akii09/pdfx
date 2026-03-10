@@ -6,13 +6,18 @@ import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 /**
+ * HTTP methods supported by react-pdf for authenticated image requests.
+ */
+export type PdfImageHTTPMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+
+/**
  * Image source accepted by react-pdf's Image component.
  * - string: URL, absolute file path, or base64 data URI (`data:image/png;base64,...`)
  * - object: authenticated URL with custom headers
  */
 export type PdfImageSrc =
   | string
-  | { uri: string; method?: string; headers?: Record<string, string>; body?: string };
+  | { uri: string; method?: PdfImageHTTPMethod; headers?: Record<string, string>; body?: string };
 
 /**
  * Controls how the image fills its container (mirrors CSS object-fit).
