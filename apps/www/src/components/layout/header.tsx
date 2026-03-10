@@ -1,12 +1,10 @@
 import {
   Award,
   ChevronDown,
-  ClipboardList,
+  Copy,
+  Database,
   FileSpreadsheet,
-  FileText,
   Github,
-  GraduationCap,
-  Mail,
   Menu,
   Receipt,
   Search,
@@ -18,84 +16,93 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../theme-toggle';
 
-// ─── Template data ─────────────────────────────────────────────────────────
+// ─── Template data (Data-driven, import from @pdfx/ui) ────────────────────────
 
 const TEMPLATES = [
   {
     icon: Receipt,
-    name: 'Invoice',
-    description: 'Professional billing invoice with itemized table and totals.',
+    name: 'Invoice Template',
+    description: 'Data-driven invoice template. Pass data, get a complete PDF.',
     color: 'text-blue-500',
     bg: 'bg-blue-50 dark:bg-blue-950/40',
     isDisabled: false,
-    path: '/templates/invoices',
+    path: '/templates/invoice-template',
+  },
+  {
+    icon: User,
+    name: 'Resume Template',
+    description: 'Data-driven resume template with professional, modern, and minimal variants.',
+    color: 'text-pink-500',
+    bg: 'bg-pink-50 dark:bg-pink-950/40',
+    isDisabled: false,
+    path: '/templates/resume-template',
   },
   {
     icon: FileSpreadsheet,
-    name: 'Reports',
+    name: 'Report Template',
     description: 'Business or analytics report with charts and summary sections.',
     color: 'text-emerald-500',
     bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-    isDisabled: false,
-    path: '/templates/reports',
+    isDisabled: true,
+    path: '/templates/report-template',
   },
   {
     icon: Award,
-    name: 'Certificate',
+    name: 'Certificate Template',
     description: 'Completion or achievement certificate with elegant layout.',
     color: 'text-yellow-500',
     bg: 'bg-yellow-50 dark:bg-yellow-950/40',
     isDisabled: true,
-    path: '/templates/certificates',
-  },
-  {
-    icon: ClipboardList,
-    name: 'Registration Form',
-    description: 'Structured registration or enrollment form with field sections.',
-    color: 'text-purple-500',
-    bg: 'bg-purple-50 dark:bg-purple-950/40',
-    isDisabled: true,
-    path: '/templates/registration-forms',
-  },
-  {
-    icon: Mail,
-    name: 'Letter',
-    description: 'Formal business letter with header, body, and signature block.',
-    color: 'text-orange-500',
-    bg: 'bg-orange-50 dark:bg-orange-950/40',
-    isDisabled: true,
-    path: '/templates/letters',
-  },
-  {
-    icon: User,
-    name: 'Resume',
-    description: 'Clean single-page resume with skills, experience, and education.',
-    color: 'text-pink-500',
-    bg: 'bg-pink-50 dark:bg-pink-950/40',
-    isDisabled: true,
-    path: '/templates/resumes',
-  },
-  {
-    icon: GraduationCap,
-    name: 'Academic Report',
-    description: 'Student or course progress report with grade tables.',
-    color: 'text-cyan-500',
-    bg: 'bg-cyan-50 dark:bg-cyan-950/40',
-    isDisabled: true,
-    path: '/templates/academic-reports',
-  },
-  {
-    icon: FileText,
-    name: 'Proposal',
-    description: 'Project or business proposal with sections and timeline.',
-    color: 'text-indigo-500',
-    bg: 'bg-indigo-50 dark:bg-indigo-950/40',
-    isDisabled: true,
-    path: '/templates/proposals',
+    path: '/templates/certificate-template',
   },
 ];
 
-// ─── Templates dropdown ─────────────────────────────────────────────────────
+// ─── Blocks data (Composition-based, copy-paste) ───────────────────────────────
+
+const BLOCKS = [
+  {
+    icon: Receipt,
+    name: 'Invoices',
+    description: '6 pre-designed invoice layouts. Copy, paste, and customize.',
+    color: 'text-blue-500',
+    bg: 'bg-blue-50 dark:bg-blue-950/40',
+    isDisabled: false,
+    path: '/blocks/invoices',
+    count: 6,
+  },
+  {
+    icon: FileSpreadsheet,
+    name: 'Reports',
+    description: '4 production-ready report designs for various business needs.',
+    color: 'text-emerald-500',
+    bg: 'bg-emerald-50 dark:bg-emerald-950/40',
+    isDisabled: false,
+    path: '/blocks/reports',
+    count: 4,
+  },
+  {
+    icon: User,
+    name: 'Resumes',
+    description: 'Professional resume layouts with multiple styles.',
+    color: 'text-pink-500',
+    bg: 'bg-pink-50 dark:bg-pink-950/40',
+    isDisabled: true,
+    path: '/blocks/resumes',
+    count: 0,
+  },
+  {
+    icon: Award,
+    name: 'Certificates',
+    description: 'Award and achievement certificate designs.',
+    color: 'text-yellow-500',
+    bg: 'bg-yellow-50 dark:bg-yellow-950/40',
+    isDisabled: true,
+    path: '/blocks/certificates',
+    count: 0,
+  },
+];
+
+// ─── Templates dropdown (Data-driven) ────────────────────────────────────
 
 function TemplatesDropdown() {
   const [open, setOpen] = useState(false);
@@ -131,19 +138,24 @@ function TemplatesDropdown() {
         </button>
 
         {open && (
-          <div className="absolute left-0 top-full mt-2.5 z-[100] w-[640px] rounded-xl border bg-popover shadow-xl overflow-hidden">
+          <div className="absolute left-0 top-full mt-2.5 z-[100] w-[480px] rounded-xl border bg-popover shadow-xl overflow-hidden">
             {/* Panel header */}
             <div className="px-4 py-3 border-b bg-muted/30">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                PDF Templates
-              </p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Copy-paste ready document templates built on PDFx components.
+              <div className="flex items-center gap-2">
+                <Database className="h-4 w-4 text-primary" />
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Data-Driven Templates
+                </p>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Import from{' '}
+                <code className="text-[10px] bg-muted px-1 py-0.5 rounded font-mono">@pdfx/ui</code>
+                , pass your data, get a complete PDF.
               </p>
             </div>
 
             {/* Template grid */}
-            <div className="grid grid-cols-3 gap-2 p-4">
+            <div className="grid grid-cols-2 gap-2 p-4">
               {TEMPLATES.map((t) => (
                 <button
                   key={t.name}
@@ -176,8 +188,107 @@ function TemplatesDropdown() {
                   )}
                 </button>
               ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
 
-              {/* Request a template card */}
+// ─── Blocks dropdown (Composition-based) ──────────────────────────────────
+
+function BlocksDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  // Close on outside click
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [open]);
+
+  return (
+    <>
+      <div ref={ref} className="relative">
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className={cn(
+            'flex items-center gap-1 text-sm transition-colors',
+            open ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          Blocks
+          <ChevronDown
+            className={cn('h-3.5 w-3.5 transition-transform duration-200', open && 'rotate-180')}
+          />
+        </button>
+
+        {open && (
+          <div className="absolute left-0 top-full mt-2.5 z-[100] w-[480px] rounded-xl border bg-popover shadow-xl overflow-hidden">
+            {/* Panel header */}
+            <div className="px-4 py-3 border-b bg-muted/30">
+              <div className="flex items-center gap-2">
+                <Copy className="h-4 w-4 text-primary" />
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Pre-Composed Blocks
+                </p>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Copy, paste, and customize. Full design ownership in your codebase.
+              </p>
+            </div>
+
+            {/* Blocks grid */}
+            <div className="grid grid-cols-2 gap-2 p-4">
+              {BLOCKS.map((b) => (
+                <button
+                  key={b.name}
+                  type="button"
+                  onClick={() => {
+                    if (!b.isDisabled) {
+                      navigate(b.path);
+                      setOpen(false);
+                    }
+                  }}
+                  className={cn(
+                    'group flex flex-col gap-2 rounded-lg border border-border/60 bg-card p-3 text-left hover:border-border hover:bg-muted/40 hover:shadow-sm transition-all duration-150 cursor-pointer',
+                    b.isDisabled && 'opacity-70 cursor-not-allowed'
+                  )}
+                  title={b.isDisabled ? 'Coming soon' : undefined}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className={cn('rounded-md p-1.5 w-fit', b.bg)}>
+                      <b.icon className={cn('h-4 w-4', b.color)} />
+                    </div>
+                    {b.count > 0 && (
+                      <span className="text-[10px] font-mono text-muted-foreground/70 bg-muted rounded px-1.5 py-0.5">
+                        {b.count} designs
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold leading-tight">{b.name}</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug line-clamp-2">
+                      {b.description}
+                    </p>
+                  </div>
+                  {b.isDisabled && (
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-primary/70 border border-primary/30 rounded px-1.5 py-0.5 w-fit mt-auto">
+                      Coming Soon
+                    </span>
+                  )}
+                </button>
+              ))}
+
+              {/* Request a block card */}
               <a
                 href="https://github.com/akii09/pdfx/discussions"
                 target="_blank"
@@ -190,10 +301,10 @@ function TemplatesDropdown() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold leading-tight text-primary">
-                    Request a Template
+                    Request a Block
                   </p>
                   <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
-                    Don't see what you need? Tell us on GitHub Discussions.
+                    Tell us what designs you need on GitHub Discussions.
                   </p>
                 </div>
                 <span className="text-[9px] font-medium uppercase tracking-wider text-primary/70 border border-primary/30 rounded px-1.5 py-0.5 w-fit group-hover:bg-primary/10 transition-colors">
@@ -244,6 +355,7 @@ export function Header() {
               Components
             </Link>
             <TemplatesDropdown />
+            <BlocksDropdown />
             {/* Theme Customizer — coming soon */}
             {/* <button
               type="button"
@@ -321,12 +433,40 @@ export function Header() {
           >
             Components
           </Link>
-          {/* Templates section with submenu */}
+          {/* Templates section (Data-driven) */}
           <div className="py-2">
             <span className="text-sm font-medium text-foreground">Templates</span>
+            <p className="text-[10px] text-muted-foreground/70 mt-0.5">
+              Data-driven, import from @pdfx/ui
+            </p>
             <div className="mt-2 ml-3 flex flex-col gap-1 border-l border-border pl-3">
               <Link
-                to="/templates/invoices"
+                to="/templates/invoice-template"
+                onClick={() => setMobileOpen(false)}
+                className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"
+              >
+                <Receipt className="h-3.5 w-3.5 text-blue-500" />
+                Invoice Template
+              </Link>
+              <Link
+                to="/templates/resume-template"
+                onClick={() => setMobileOpen(false)}
+                className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"
+              >
+                <User className="h-3.5 w-3.5 text-pink-500" />
+                Resume Template
+              </Link>
+            </div>
+          </div>
+          {/* Blocks section (Composition-based) */}
+          <div className="py-2">
+            <span className="text-sm font-medium text-foreground">Blocks</span>
+            <p className="text-[10px] text-muted-foreground/70 mt-0.5">
+              Copy-paste, customize in your code
+            </p>
+            <div className="mt-2 ml-3 flex flex-col gap-1 border-l border-border pl-3">
+              <Link
+                to="/blocks/invoices"
                 onClick={() => setMobileOpen(false)}
                 className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"
               >
@@ -334,7 +474,7 @@ export function Header() {
                 Invoices
               </Link>
               <Link
-                to="/templates/reports"
+                to="/blocks/reports"
                 onClick={() => setMobileOpen(false)}
                 className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"
               >

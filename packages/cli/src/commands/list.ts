@@ -35,9 +35,9 @@ export async function list() {
       componentDir: './src/components/pdfx',
       theme: './src/lib/pdfx-theme.ts',
     };
-    console.log(chalk.dim('No pdfx.json found. Listing components from default registry.\n'));
+    console.log(chalk.dim('No pdfx.json found. Listing from default registry.\n'));
   }
-  const spinner = ora('Fetching component list...').start();
+  const spinner = ora('Fetching registry...').start();
 
   try {
     let response: Response;
@@ -67,26 +67,78 @@ export async function list() {
 
     spinner.stop();
 
+    // Categorize items
     const components = result.data.items.filter((item) => item.type === 'registry:ui');
-    console.log(chalk.bold(`\n  Available Components (${components.length})\n`));
+    const templates = result.data.items.filter((item) => item.type === 'registry:template');
+    const blocks = result.data.items.filter((item) => item.type === 'registry:block');
+
+    const componentBaseDir = path.resolve(process.cwd(), config.componentDir);
+    const templateBaseDir = path.resolve(process.cwd(), config.templateDir ?? './src/templates');
+
+    // ─── Components Section ─────────────────────────────────────────────────
+    console.log(chalk.bold(`\n  Components (${components.length})`));
+    console.log(chalk.dim('  Install with: pdfx add <component>\n'));
 
     for (const item of components) {
-      // Only show install status if we have a local project
-      if (hasLocalProject) {
-        const targetDir = path.resolve(process.cwd(), config.componentDir);
-        const componentSubDir = path.join(targetDir, item.name);
-        const localPath = safePath(componentSubDir, `pdfx-${item.name}.tsx`);
-        const installed = checkFileExists(localPath);
-        const status = installed ? chalk.green('[installed]') : chalk.dim('[not installed]');
+      const componentSubDir = path.join(componentBaseDir, item.name);
+      const localPath = safePath(componentSubDir, `pdfx-${item.name}.tsx`);
+      const installed = hasLocalProject && checkFileExists(localPath);
+      const status = installed ? chalk.green('[installed]') : chalk.dim('[not installed]');
 
-        console.log(`  ${chalk.cyan(item.name.padEnd(20))} ${item.description}`);
+      console.log(`  ${chalk.cyan(item.name.padEnd(20))} ${item.description}`);
+      if (hasLocalProject) {
         console.log(`  ${''.padEnd(20)} ${status}`);
-      } else {
-        // No local project - just show component info
-        console.log(`  ${chalk.cyan(item.name.padEnd(20))} ${item.description}`);
       }
       console.log();
     }
+
+    // ─── Templates Section ──────────────────────────────────────────────────
+    console.log(chalk.bold(`  Templates (${templates.length})`));
+    console.log(chalk.dim('  Data-driven. Install with: pdfx template add <template>\n'));
+
+    for (const item of templates) {
+      const templateDir = path.join(templateBaseDir, item.name);
+      const installed = hasLocalProject && checkFileExists(templateDir);
+      const status = installed ? chalk.green('[installed]') : chalk.dim('[not installed]');
+
+      console.log(`  ${chalk.cyan(item.name.padEnd(22))} ${item.description ?? ''}`);
+      if (hasLocalProject) {
+        console.log(`  ${''.padEnd(22)} ${status}`);
+      }
+      console.log();
+    }
+
+    // ─── Blocks Section ─────────────────────────────────────────────────────
+    console.log(chalk.bold(`  Blocks (${blocks.length})`));
+    console.log(chalk.dim('  Copy-paste designs. Install with: pdfx block add <block>\n'));
+
+    for (const item of blocks) {
+      const blockDir = path.join(templateBaseDir, item.name);
+      const installed = hasLocalProject && checkFileExists(blockDir);
+      const status = installed ? chalk.green('[installed]') : chalk.dim('[not installed]');
+
+      console.log(`  ${chalk.cyan(item.name.padEnd(22))} ${item.description ?? ''}`);
+      if (hasLocalProject) {
+        console.log(`  ${''.padEnd(22)} ${status}`);
+      }
+      if (item.peerComponents && item.peerComponents.length > 0) {
+        console.log(chalk.dim(`  ${''.padEnd(22)} requires: ${item.peerComponents.join(', ')}`));
+      }
+      console.log();
+    }
+
+    // ─── Summary ────────────────────────────────────────────────────────────
+    console.log(chalk.dim('  Quick Start:'));
+    console.log(
+      chalk.dim(`    pdfx add heading table            ${chalk.dim('# Add components')}`)
+    );
+    console.log(
+      chalk.dim(`    pdfx template add invoice-template ${chalk.dim('# Add data-driven template')}`)
+    );
+    console.log(
+      chalk.dim(`    pdfx block add invoice-classic    ${chalk.dim('# Add copy-paste block')}`)
+    );
+    console.log();
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     spinner.fail(message);

@@ -512,6 +512,78 @@
       ]
     },
     {
+      "name": "invoice-creative",
+      "type": "registry:template",
+      "title": "Invoice Creative",
+      "description": "Creative invoice with accent sidebar, modern typography, and vibrant color highlights.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-creative.json",
+          "type": "registry:block"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "badge"
+      ]
+    },
+    {
+      "name": "invoice-consultant",
+      "type": "registry:template",
+      "title": "Invoice Consultant",
+      "description": "Consultant-focused invoice with hourly rate breakdown, project summary, and professional styling.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-consultant.json",
+          "type": "registry:block"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "divider"
+      ]
+    },
+    {
+      "name": "invoice-corporate",
+      "type": "registry:template",
+      "title": "Invoice Corporate",
+      "description": "Enterprise invoice with formal layout, purchase order fields, and approval signatures.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-corporate.json",
+          "type": "registry:block"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "signature"
+      ]
+    },
+    {
       "name": "invoice-classic",
       "type": "registry:template",
       "title": "Invoice Classic",
@@ -519,7 +591,7 @@
       "files": [
         {
           "path": "public/r/templates/invoice-classic.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": [
@@ -543,7 +615,7 @@
       "files": [
         {
           "path": "public/r/templates/invoice-modern.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": [
@@ -566,7 +638,7 @@
       "files": [
         {
           "path": "public/r/templates/invoice-minimal.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": [
@@ -589,7 +661,7 @@
       "files": [
         {
           "path": "public/r/templates/report-financial.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": [
@@ -617,7 +689,7 @@
       "files": [
         {
           "path": "public/r/templates/report-operations.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": [
@@ -645,7 +717,7 @@
       "files": [
         {
           "path": "public/r/templates/report-security.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": [
@@ -673,7 +745,7 @@
       "files": [
         {
           "path": "public/r/templates/report-marketing.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": [
@@ -691,6 +763,52 @@
         "section",
         "stack",
         "text"
+      ]
+    },
+    {
+      "name": "invoice-template",
+      "type": "registry:template",
+      "title": "Invoice Template",
+      "description": "Data-driven invoice generator with classic, modern, and minimal variants. Pass company, client, and line items.",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/templates/invoice/invoice.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/templates/invoice/invoice.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/templates/invoice/invoice.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
+      "name": "resume-template",
+      "type": "registry:template",
+      "title": "Resume Template",
+      "description": "Data-driven resume/CV generator with professional, modern, and minimal variants. Pass experience, education, and skills.",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/templates/resume/resume.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/templates/resume/resume.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/templates/resume/resume.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
       ]
     }
   ]

@@ -52,9 +52,17 @@ const sections: SidebarSection[] = [
   {
     title: 'Templates',
     links: [
-      // { title: 'All Templates', href: '/templates' },
-      { title: 'Invoices', href: '/templates/invoices' },
-      { title: 'Reports', href: '/templates/reports' },
+      { title: 'Overview', href: '/templates' },
+      { title: 'InvoiceTemplate', href: '/templates/invoice-template' },
+      { title: 'ResumeTemplate', href: '/templates/resume-template' },
+    ],
+  },
+  {
+    title: 'Blocks',
+    links: [
+      { title: 'Overview', href: '/blocks' },
+      { title: 'Invoices', href: '/blocks/invoices' },
+      { title: 'Reports', href: '/blocks/reports' },
     ],
   },
 ];
@@ -65,7 +73,8 @@ export function Sidebar() {
     location.pathname.startsWith('/docs') ||
     location.pathname.startsWith('/components') ||
     location.pathname.startsWith('/installation') ||
-    location.pathname.startsWith('/templates');
+    location.pathname.startsWith('/templates') ||
+    location.pathname.startsWith('/blocks');
   const isComponentsIndex = location.pathname === '/components';
 
   if (!showSidebar) return null;

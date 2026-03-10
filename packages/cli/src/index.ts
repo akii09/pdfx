@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Command } from 'commander';
 import { add } from './commands/add.js';
+import { blockAdd, blockList } from './commands/block.js';
 import { diff } from './commands/diff.js';
 import { init } from './commands/init.js';
 import { list } from './commands/list.js';
@@ -66,5 +67,15 @@ templateCmd
   .command('list')
   .description('List available templates from registry')
   .action(templateList);
+
+const blockCmd = program.command('block').description('Manage PDF blocks (copy-paste designs)');
+
+blockCmd
+  .command('add <blocks...>')
+  .description('Add a block to your project')
+  .option('-f, --force', 'Overwrite existing files without prompting')
+  .action((blocks: string[], options: { force?: boolean }) => blockAdd(blocks, options));
+
+blockCmd.command('list').description('List available blocks from registry').action(blockList);
 
 program.parse();
