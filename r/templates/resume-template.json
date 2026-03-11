@@ -1,0 +1,23 @@
+{
+  "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
+  "name": "resume-template",
+  "type": "registry:template",
+  "title": "Resume Template",
+  "description": "Data-driven resume/CV generator with professional, modern, and minimal variants. Pass experience, education, and skills.",
+  "files": [
+    {
+      "path": "templates/pdfx/resume-template/resume-template.tsx",
+      "type": "registry:template",
+      "content": "import { ResumeTemplate } from '@pdfx/ui';\nimport type { ResumeTemplateProps } from '@pdfx/ui';\n\n// Re-export for convenience — import directly from @pdfx/ui in your code.\nexport { ResumeTemplate };\nexport type { ResumeTemplateProps };\n\n// ─── Quick Usage Example ──────────────────────────────────────────────────────\n//\n// import { ResumeTemplate } from '@pdfx/ui';\n// import { PDFViewer } from '@react-pdf/renderer';\n//\n// function App() {\n//   return (\n//     <PDFViewer>\n//       <ResumeTemplate\n//         variant=\"professional\"\n//         personal={{\n//           name: 'Jane Doe',\n//           title: 'Senior Software Engineer',\n//           email: 'jane@example.com',\n//           phone: '+1 (555) 123-4567',\n//           location: 'San Francisco, CA',\n//           github: 'github.com/janedoe',\n//         }}\n//         summary={{\n//           content: 'Experienced engineer specializing in full-stack development.',\n//         }}\n//         experience={[\n//           {\n//             company: 'TechCorp Inc.',\n//             role: 'Senior Software Engineer',\n//             startDate: 'Jan 2022',\n//             endDate: 'Present',\n//             highlights: [\n//               'Led migration to microservices architecture',\n//               'Reduced API response time by 40%',\n//             ],\n//           },\n//         ]}\n//         education={[\n//           {\n//             institution: 'Stanford University',\n//             degree: 'B.S. Computer Science',\n//             endDate: '2021',\n//           },\n//         ]}\n//         skills={[\n//           { category: 'Languages', skills: ['TypeScript', 'Python', 'Go'] },\n//           { category: 'Frameworks', skills: ['React', 'Node.js', 'FastAPI'] },\n//         ]}\n//       />\n//     </PDFViewer>\n//   );\n// }\n//\n// Variants:\n//   professional  — traditional single-column with bordered sections\n//   modern        — two-column with colored sidebar\n//   minimal       — clean centered header, compact layout\n"
+    },
+    {
+      "path": "templates/pdfx/resume-template/resume-template.types.ts",
+      "type": "registry:template",
+      "content": "// ResumeTemplate types are provided by @pdfx/ui\n// Import them directly:\n//\n//   import type { ResumeTemplateProps, ResumeVariant, ResumePersonal,\n//     ResumeExperience, ResumeEducation, ResumeSkillCategory,\n//     ResumeProject, ResumeCertification, ResumeLanguage } from '@pdfx/ui';\n\nexport type {\n  ResumeTemplateProps,\n  ResumeVariant,\n  ResumePersonal,\n  ResumeSummary,\n  ResumeExperience,\n  ResumeEducation,\n  ResumeSkillCategory,\n  ResumeProject,\n  ResumeCertification,\n  ResumeLanguage,\n} from '@pdfx/ui';\n"
+    }
+  ],
+  "dependencies": [
+    "@react-pdf/renderer",
+    "@pdfx/ui"
+  ]
+}

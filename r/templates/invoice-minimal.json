@@ -1,7 +1,7 @@
 {
   "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
   "name": "invoice-minimal",
-  "type": "registry:template",
+  "type": "registry:block",
   "title": "Invoice Minimal",
   "description": "Clean minimal layout with inline invoice stamp, two-column billing info, and a compact table. Best paired with the Minimal or Professional theme.",
   "files": [
