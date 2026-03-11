@@ -1,5 +1,11 @@
 # @akii09/pdfx-cli
 
+## 0.1.5
+
+### Patch Changes
+
+- [#53](https://github.com/akii09/pdfx/pull/53) [`00fd8a7`](https://github.com/akii09/pdfx/commit/00fd8a7580b801b573556981153d7ed05dac7444) Thanks [@akii09](https://github.com/akii09)! - Fixed CLI issues and added Blocks and Templates
+
 ## 0.1.4
 
 ### Patch Changes
