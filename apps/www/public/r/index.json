@@ -513,7 +513,7 @@
     },
     {
       "name": "invoice-creative",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Invoice Creative",
       "description": "Creative invoice with accent sidebar, modern typography, and vibrant color highlights.",
       "files": [
@@ -537,7 +537,7 @@
     },
     {
       "name": "invoice-consultant",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Invoice Consultant",
       "description": "Consultant-focused invoice with hourly rate breakdown, project summary, and professional styling.",
       "files": [
@@ -561,7 +561,7 @@
     },
     {
       "name": "invoice-corporate",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Invoice Corporate",
       "description": "Enterprise invoice with formal layout, purchase order fields, and approval signatures.",
       "files": [
@@ -585,7 +585,7 @@
     },
     {
       "name": "invoice-classic",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Invoice Classic",
       "description": "Professional A4 invoice with logo-left header, three-column billing section, and zebra-striped grid table.",
       "files": [
@@ -609,7 +609,7 @@
     },
     {
       "name": "invoice-modern",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Invoice Modern",
       "description": "Branded full-width banner header, horizontal invoice meta strip, and primary-header table.",
       "files": [
@@ -632,7 +632,7 @@
     },
     {
       "name": "invoice-minimal",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Invoice Minimal",
       "description": "Clean minimal layout with inline invoice stamp, two-column billing info, and compact table.",
       "files": [
@@ -655,7 +655,7 @@
     },
     {
       "name": "report-financial",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Financial Report",
       "description": "Executive financial report with KPI cards, trend chart, delivery table, and highlights section.",
       "files": [
@@ -683,7 +683,7 @@
     },
     {
       "name": "report-operations",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Operations Report",
       "description": "Operations and delivery report covering SLA health, throughput trends, and risk tracking.",
       "files": [
@@ -711,7 +711,7 @@
     },
     {
       "name": "report-security",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Security Report",
       "description": "Security posture report with vulnerability trend tracking, remediation table, and risk summary.",
       "files": [
@@ -739,7 +739,7 @@
     },
     {
       "name": "report-marketing",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Growth Report",
       "description": "Growth and marketing report with acquisition trendline, channel performance, and execution highlights.",
       "files": [
@@ -772,20 +772,13 @@
       "description": "Data-driven invoice generator with classic, modern, and minimal variants. Pass company, client, and line items.",
       "files": [
         {
-          "path": "../../../../packages/ui/src/templates/invoice/invoice.tsx",
-          "type": "registry:component"
-        },
-        {
-          "path": "../../../../packages/ui/src/templates/invoice/invoice.styles.ts",
-          "type": "registry:component"
-        },
-        {
-          "path": "../../../../packages/ui/src/templates/invoice/invoice.types.ts",
-          "type": "registry:component"
+          "path": "public/r/templates/invoice-template.json",
+          "type": "registry:template"
         }
       ],
       "dependencies": [
-        "@react-pdf/renderer"
+        "@react-pdf/renderer",
+        "@pdfx/ui"
       ]
     },
     {
@@ -795,20 +788,13 @@
       "description": "Data-driven resume/CV generator with professional, modern, and minimal variants. Pass experience, education, and skills.",
       "files": [
         {
-          "path": "../../../../packages/ui/src/templates/resume/resume.tsx",
-          "type": "registry:component"
-        },
-        {
-          "path": "../../../../packages/ui/src/templates/resume/resume.styles.ts",
-          "type": "registry:component"
-        },
-        {
-          "path": "../../../../packages/ui/src/templates/resume/resume.types.ts",
-          "type": "registry:component"
+          "path": "public/r/templates/resume-template.json",
+          "type": "registry:template"
         }
       ],
       "dependencies": [
-        "@react-pdf/renderer"
+        "@react-pdf/renderer",
+        "@pdfx/ui"
       ]
     }
   ]

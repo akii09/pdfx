@@ -120,6 +120,7 @@ export const registryFileTypes = [
   'registry:lib',
   'registry:style',
   'registry:template',
+  'registry:block',
 ] as const;
 
 /** Schema for a single file in a registry item */

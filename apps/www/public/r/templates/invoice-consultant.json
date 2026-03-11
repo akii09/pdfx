@@ -1,7 +1,7 @@
 {
   "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
   "name": "invoice-consultant",
-  "type": "registry:template",
+  "type": "registry:block",
   "title": "Invoice Consultant",
   "description": "Professional services A4 invoice with two-column header, hourly billing (Hours/Rate columns), line table, and callout notes section. Theme-aware via PdfxThemeProvider.",
   "files": [

@@ -1,7 +1,7 @@
 {
   "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
   "name": "invoice-corporate",
-  "type": "registry:template",
+  "type": "registry:block",
   "title": "Invoice Corporate",
   "description": "Executive A4 invoice with logo-right header, two-column info layout, bordered table, and muted summary card. Theme-aware via PdfxThemeProvider.",
   "files": [
