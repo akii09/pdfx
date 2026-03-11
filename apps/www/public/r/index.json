@@ -512,78 +512,6 @@
       ]
     },
     {
-      "name": "invoice-creative",
-      "type": "registry:block",
-      "title": "Invoice Creative",
-      "description": "Creative invoice with accent sidebar, modern typography, and vibrant color highlights.",
-      "files": [
-        {
-          "path": "public/r/templates/invoice-creative.json",
-          "type": "registry:block"
-        }
-      ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ],
-      "peerComponents": [
-        "page-header",
-        "page-footer",
-        "table",
-        "key-value",
-        "section",
-        "text",
-        "badge"
-      ]
-    },
-    {
-      "name": "invoice-consultant",
-      "type": "registry:block",
-      "title": "Invoice Consultant",
-      "description": "Consultant-focused invoice with hourly rate breakdown, project summary, and professional styling.",
-      "files": [
-        {
-          "path": "public/r/templates/invoice-consultant.json",
-          "type": "registry:block"
-        }
-      ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ],
-      "peerComponents": [
-        "page-header",
-        "page-footer",
-        "table",
-        "key-value",
-        "section",
-        "text",
-        "divider"
-      ]
-    },
-    {
-      "name": "invoice-corporate",
-      "type": "registry:block",
-      "title": "Invoice Corporate",
-      "description": "Enterprise invoice with formal layout, purchase order fields, and approval signatures.",
-      "files": [
-        {
-          "path": "public/r/templates/invoice-corporate.json",
-          "type": "registry:block"
-        }
-      ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ],
-      "peerComponents": [
-        "page-header",
-        "page-footer",
-        "table",
-        "key-value",
-        "section",
-        "text",
-        "signature"
-      ]
-    },
-    {
       "name": "invoice-classic",
       "type": "registry:block",
       "title": "Invoice Classic",
@@ -766,6 +694,78 @@
       ]
     },
     {
+      "name": "invoice-creative",
+      "type": "registry:block",
+      "title": "Invoice Creative",
+      "description": "Creative invoice with accent sidebar, modern typography, and vibrant color highlights.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-creative.json",
+          "type": "registry:block"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "badge"
+      ]
+    },
+    {
+      "name": "invoice-consultant",
+      "type": "registry:block",
+      "title": "Invoice Consultant",
+      "description": "Consultant-focused invoice with hourly rate breakdown, project summary, and professional styling.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-consultant.json",
+          "type": "registry:block"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "divider"
+      ]
+    },
+    {
+      "name": "invoice-corporate",
+      "type": "registry:block",
+      "title": "Invoice Corporate",
+      "description": "Enterprise invoice with formal layout, purchase order fields, and approval signatures.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-corporate.json",
+          "type": "registry:block"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "signature"
+      ]
+    },
+    {
       "name": "invoice-template",
       "type": "registry:template",
       "title": "Invoice Template",
@@ -777,15 +777,14 @@
         }
       ],
       "dependencies": [
-        "@react-pdf/renderer",
-        "@pdfx/ui"
+        "@react-pdf/renderer"
       ]
     },
     {
       "name": "resume-template",
       "type": "registry:template",
       "title": "Resume Template",
-      "description": "Data-driven resume/CV generator with professional, modern, and minimal variants. Pass experience, education, and skills.",
+      "description": "Data-driven resume/CV generator with professional, modern, and minimal variants.",
       "files": [
         {
           "path": "public/r/templates/resume-template.json",
@@ -793,8 +792,7 @@
         }
       ],
       "dependencies": [
-        "@react-pdf/renderer",
-        "@pdfx/ui"
+        "@react-pdf/renderer"
       ]
     }
   ]
