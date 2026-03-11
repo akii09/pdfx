@@ -1,7 +1,7 @@
 {
   "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
   "name": "invoice-classic",
-  "type": "registry:template",
+  "type": "registry:block",
   "title": "Invoice Classic",
   "description": "Professional A4 invoice with logo-left header, three-column billing section, and zebra-striped grid table. Theme-aware via PdfxThemeProvider.",
   "files": [

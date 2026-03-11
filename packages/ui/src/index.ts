@@ -13,6 +13,27 @@ export {
   type DividerSpacing,
 } from './components/divider';
 export { PageBreak, type PageBreakProps } from './components/page-break';
+export {
+  PdfPageNumber,
+  type PdfPageNumberProps,
+  type PageNumberAlign,
+  type PageNumberSize,
+} from './components/page-number';
+export {
+  PdfWatermark,
+  type PdfWatermarkProps,
+  type WatermarkPosition,
+} from './components/watermark';
+export {
+  PdfQRCode,
+  type PdfQRCodeProps,
+  type QRCodeErrorLevel,
+} from './components/qrcode';
+export {
+  PdfAlert,
+  type PdfAlertProps,
+  type AlertVariant,
+} from './components/alert';
 export { Link, type LinkProps, type LinkVariant, type LinkUnderline } from './components/link';
 export {
   Text,
@@ -116,3 +137,30 @@ export {
   type GraphWidthOptions,
 } from './components/graph/graph';
 export { PdfxThemeProvider, usePdfxTheme, PdfxThemeContext } from './lib/pdfx-theme-context';
+
+// Templates
+export {
+  InvoiceTemplate,
+  type InvoiceClient,
+  type InvoiceCompany,
+  type InvoiceCurrency,
+  type InvoiceLineItem,
+  type InvoicePayment,
+  type InvoiceSummary,
+  type InvoiceTemplateProps,
+  type InvoiceVariant,
+} from './templates/invoice';
+
+export {
+  ResumeTemplate,
+  type ResumeCertification,
+  type ResumeEducation,
+  type ResumeExperience,
+  type ResumeLanguage,
+  type ResumePersonal,
+  type ResumeProject,
+  type ResumeSkillCategory,
+  type ResumeSummary,
+  type ResumeTemplateProps,
+  type ResumeVariant,
+} from './templates/resume';

@@ -377,14 +377,98 @@
       "dependencies": ["@react-pdf/renderer"]
     },
     {
+      "name": "page-number",
+      "type": "registry:ui",
+      "title": "PdfPageNumber",
+      "description": "Dynamic page numbers with customizable format and alignment",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/page-number/page-number.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/page-number/page-number.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/page-number/page-number.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "watermark",
+      "type": "registry:ui",
+      "title": "PdfWatermark",
+      "description": "Diagonal or positioned text overlay for DRAFT, CONFIDENTIAL, PAID, etc.",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/watermark/watermark.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/watermark/watermark.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/watermark/watermark.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "qrcode",
+      "type": "registry:ui",
+      "title": "PdfQRCode",
+      "description": "Native SVG QR code for URLs, payments, and document verification",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/qrcode/qrcode.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/qrcode/qrcode.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/qrcode/qrcode.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer", "qrcode"]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "PdfAlert",
+      "description": "Callout boxes with info, success, warning, and error variants",
+      "files": [
+        {
+          "path": "../../../../packages/ui/src/components/alert/alert.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/alert/alert.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "../../../../packages/ui/src/components/alert/alert.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
       "name": "invoice-classic",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Invoice Classic",
       "description": "Professional A4 invoice with logo-left header, three-column billing section, and zebra-striped grid table.",
       "files": [
         {
           "path": "public/r/templates/invoice-classic.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -400,13 +484,13 @@
     },
     {
       "name": "invoice-modern",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Invoice Modern",
       "description": "Branded full-width banner header, horizontal invoice meta strip, and primary-header table.",
       "files": [
         {
           "path": "public/r/templates/invoice-modern.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -414,13 +498,13 @@
     },
     {
       "name": "invoice-minimal",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Invoice Minimal",
       "description": "Clean minimal layout with inline invoice stamp, two-column billing info, and compact table.",
       "files": [
         {
           "path": "public/r/templates/invoice-minimal.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -428,13 +512,13 @@
     },
     {
       "name": "report-financial",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Financial Report",
       "description": "Executive financial report with KPI cards, trend chart, delivery table, and highlights section.",
       "files": [
         {
           "path": "public/r/templates/report-financial.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -454,13 +538,13 @@
     },
     {
       "name": "report-operations",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Operations Report",
       "description": "Operations and delivery report covering SLA health, throughput trends, and risk tracking.",
       "files": [
         {
           "path": "public/r/templates/report-operations.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -480,13 +564,13 @@
     },
     {
       "name": "report-security",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Security Report",
       "description": "Security posture report with vulnerability trend tracking, remediation table, and risk summary.",
       "files": [
         {
           "path": "public/r/templates/report-security.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -506,13 +590,13 @@
     },
     {
       "name": "report-marketing",
-      "type": "registry:template",
+      "type": "registry:block",
       "title": "Growth Report",
       "description": "Growth and marketing report with acquisition trendline, channel performance, and execution highlights.",
       "files": [
         {
           "path": "public/r/templates/report-marketing.json",
-          "type": "registry:template"
+          "type": "registry:block"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -529,6 +613,98 @@
         "stack",
         "text"
       ]
+    },
+    {
+      "name": "invoice-creative",
+      "type": "registry:block",
+      "title": "Invoice Creative",
+      "description": "Creative invoice with accent sidebar, modern typography, and vibrant color highlights.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-creative.json",
+          "type": "registry:block"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "badge"
+      ]
+    },
+    {
+      "name": "invoice-consultant",
+      "type": "registry:block",
+      "title": "Invoice Consultant",
+      "description": "Consultant-focused invoice with hourly rate breakdown, project summary, and professional styling.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-consultant.json",
+          "type": "registry:block"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "divider"
+      ]
+    },
+    {
+      "name": "invoice-corporate",
+      "type": "registry:block",
+      "title": "Invoice Corporate",
+      "description": "Enterprise invoice with formal layout, purchase order fields, and approval signatures.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-corporate.json",
+          "type": "registry:block"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text",
+        "signature"
+      ]
+    },
+    {
+      "name": "invoice-template",
+      "type": "registry:template",
+      "title": "Invoice Template",
+      "description": "Data-driven invoice generator with classic, modern, and minimal variants. Pass company, client, and line items.",
+      "files": [
+        {
+          "path": "public/r/templates/invoice-template.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
+      "name": "resume-template",
+      "type": "registry:template",
+      "title": "Resume Template",
+      "description": "Data-driven resume/CV generator with professional, modern, and minimal variants.",
+      "files": [
+        {
+          "path": "public/r/templates/resume-template.json",
+          "type": "registry:template"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
     }
   ]
 }

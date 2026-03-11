@@ -26,10 +26,17 @@ const KeyValuePage = lazy(() => import('../pages/components/key-value'));
 const KeepTogetherPage = lazy(() => import('../pages/components/keep-together'));
 const PdfImagePage = lazy(() => import('../pages/components/pdf-image'));
 const GraphPage = lazy(() => import('../pages/components/graph'));
+const PageNumberPage = lazy(() => import('../pages/components/page-number'));
+const WatermarkPage = lazy(() => import('../pages/components/watermark'));
+const QRCodePage = lazy(() => import('../pages/components/qrcode'));
+const AlertPage = lazy(() => import('../pages/components/alert'));
 const InstallationPage = lazy(() => import('../pages/installation'));
 const TemplatesIndexPage = lazy(() => import('../pages/templates/index'));
-const InvoicesIndexPage = lazy(() => import('../pages/templates/invoices/index'));
-const ReportsIndexPage = lazy(() => import('../pages/templates/reports/index'));
+const InvoiceTemplatePage = lazy(() => import('../pages/templates/invoice-template'));
+const ResumeTemplatePage = lazy(() => import('../pages/templates/resume-template'));
+const BlocksIndexPage = lazy(() => import('../pages/blocks/index'));
+const InvoicesIndexPage = lazy(() => import('../pages/blocks/invoices/index'));
+const ReportsIndexPage = lazy(() => import('../pages/blocks/reports/index'));
 
 function PageLoader() {
   return (
@@ -236,6 +243,38 @@ export default function App() {
               </Suspense>
             }
           />
+          <Route
+            path="page-number"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <PageNumberPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="watermark"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <WatermarkPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="qrcode"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <QRCodePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="alert"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <AlertPage />
+              </Suspense>
+            }
+          />
         </Route>
         <Route path="templates">
           <Route
@@ -243,6 +282,32 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader />}>
                 <TemplatesIndexPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="invoice-template"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <InvoiceTemplatePage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="resume-template"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ResumeTemplatePage />
+              </Suspense>
+            }
+          />
+        </Route>
+        <Route path="blocks">
+          <Route
+            index
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <BlocksIndexPage />
               </Suspense>
             }
           />

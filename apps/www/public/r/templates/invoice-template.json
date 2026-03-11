@@ -1,0 +1,23 @@
+{
+  "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
+  "name": "invoice-template",
+  "type": "registry:template",
+  "title": "Invoice Template",
+  "description": "Data-driven invoice generator with classic, modern, and minimal variants. Pass company, client, and line items.",
+  "files": [
+    {
+      "path": "templates/pdfx/invoice-template/invoice-template.tsx",
+      "type": "registry:template",
+      "content": "import { InvoiceTemplate } from '@pdfx/ui';\nimport type { InvoiceTemplateProps } from '@pdfx/ui';\n\n// Re-export for convenience — import directly from @pdfx/ui in your code.\nexport { InvoiceTemplate };\nexport type { InvoiceTemplateProps };\n\n// ─── Quick Usage Example ──────────────────────────────────────────────────────\n//\n// import { InvoiceTemplate } from '@pdfx/ui';\n// import { PDFViewer } from '@react-pdf/renderer';\n//\n// function App() {\n//   return (\n//     <PDFViewer>\n//       <InvoiceTemplate\n//         variant=\"classic\"\n//         invoiceNumber=\"INV-001\"\n//         invoiceDate=\"March 1, 2026\"\n//         dueDate=\"March 31, 2026\"\n//         company={{\n//           name: 'Your Company',\n//           address: '123 Main St, City',\n//           email: 'hello@company.com',\n//         }}\n//         client={{\n//           name: 'Client Corp',\n//           address: '456 Oak Ave, Town',\n//           email: 'contact@client.com',\n//         }}\n//         items={[\n//           { description: 'Web Development', quantity: 1, unitPrice: 5000 },\n//           { description: 'UI Design', quantity: 10, unitPrice: 150 },\n//         ]}\n//         taxRate={7.5}\n//         notes=\"Thank you for your business!\"\n//       />\n//     </PDFViewer>\n//   );\n// }\n//\n// Variants:\n//   classic  — logo-left header, grid table, zebra-stripe rows\n//   modern   — full-width primary banner, horizontal meta strip\n//   minimal  — clean inline invoice stamp, compact layout\n"
+    },
+    {
+      "path": "templates/pdfx/invoice-template/invoice-template.types.ts",
+      "type": "registry:template",
+      "content": "// InvoiceTemplate types are provided by @pdfx/ui\n// Import them directly:\n//\n//   import type { InvoiceTemplateProps, InvoiceVariant, InvoiceCompany,\n//     InvoiceClient, InvoiceLineItem, InvoiceSummary, InvoicePayment,\n//     InvoiceCurrency } from '@pdfx/ui';\n\nexport type {\n  InvoiceTemplateProps,\n  InvoiceVariant,\n  InvoiceCompany,\n  InvoiceClient,\n  InvoiceLineItem,\n  InvoiceSummary,\n  InvoicePayment,\n  InvoiceCurrency,\n} from '@pdfx/ui';\n"
+    }
+  ],
+  "dependencies": [
+    "@react-pdf/renderer",
+    "@pdfx/ui"
+  ]
+}

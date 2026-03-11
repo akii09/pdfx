@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { CommandPalette } from '../command-palette';
-import { DiscordFloatButton } from '../discord-float-button';
+// import { DiscordFloatButton } from '../discord-float-button';
 import { GitHubStarBanner } from '../github-star-banner';
 import { PageTransition } from '../page-transition';
 import { Footer } from './footer';
@@ -32,7 +32,7 @@ export default function Layout() {
       </div>
 
       <Footer />
-      <DiscordFloatButton />
+      {/* <DiscordFloatButton /> */}
     </div>
   );
 }
