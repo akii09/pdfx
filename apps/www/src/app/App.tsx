@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 
 const HomePage = lazy(() => import('../pages/home'));
@@ -31,9 +31,6 @@ const WatermarkPage = lazy(() => import('../pages/components/watermark'));
 const QRCodePage = lazy(() => import('../pages/components/qrcode'));
 const AlertPage = lazy(() => import('../pages/components/alert'));
 const InstallationPage = lazy(() => import('../pages/installation'));
-const TemplatesIndexPage = lazy(() => import('../pages/templates/index'));
-const InvoiceTemplatePage = lazy(() => import('../pages/templates/invoice-template'));
-const ResumeTemplatePage = lazy(() => import('../pages/templates/resume-template'));
 const BlocksIndexPage = lazy(() => import('../pages/blocks/index'));
 const InvoicesIndexPage = lazy(() => import('../pages/blocks/invoices/index'));
 const ReportsIndexPage = lazy(() => import('../pages/blocks/reports/index'));
@@ -276,32 +273,9 @@ export default function App() {
             }
           />
         </Route>
-        <Route path="templates">
-          <Route
-            index
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <TemplatesIndexPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="invoice-template"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <InvoiceTemplatePage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="resume-template"
-            element={
-              <Suspense fallback={<PageLoader />}>
-                <ResumeTemplatePage />
-              </Suspense>
-            }
-          />
-        </Route>
+        {/* Redirect /templates to /blocks */}
+        <Route path="templates" element={<Navigate to="/blocks" replace />} />
+        <Route path="templates/*" element={<Navigate to="/blocks" replace />} />
         <Route path="blocks">
           <Route
             index

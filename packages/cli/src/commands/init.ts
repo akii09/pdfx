@@ -73,6 +73,24 @@ export async function init() {
       },
       {
         type: 'text',
+        name: 'blockDir',
+        message: 'Where should we install blocks?',
+        initial: DEFAULTS.BLOCK_DIR,
+        validate: (value: string) => {
+          if (!value || value.trim().length === 0) {
+            return 'Block directory is required';
+          }
+          if (path.isAbsolute(value)) {
+            return 'Please use a relative path (e.g., ./src/blocks/pdfx)';
+          }
+          if (!value.startsWith('.')) {
+            return 'Path should start with ./ or ../ (e.g., ./src/blocks/pdfx)';
+          }
+          return true;
+        },
+      },
+      {
+        type: 'text',
         name: 'registry',
         message: 'Registry URL:',
         initial: DEFAULTS.REGISTRY_URL,
@@ -145,6 +163,7 @@ export async function init() {
     componentDir: answers.componentDir,
     registry: answers.registry,
     theme: answers.themePath || DEFAULTS.THEME_FILE,
+    blockDir: answers.blockDir || DEFAULTS.BLOCK_DIR,
   };
 
   // Validate the config we're about to write
@@ -179,7 +198,9 @@ export async function init() {
     spinner.succeed(`Created pdfx.json + ${config.theme} (${presetName} theme)`);
     console.log(chalk.green('\nSuccess! You can now run:'));
     console.log(chalk.cyan('  pdfx add heading'));
+    console.log(chalk.cyan('  pdfx block add invoice-classic'));
     console.log(chalk.dim(`\n  Components: ${path.resolve(process.cwd(), answers.componentDir)}`));
+    console.log(chalk.dim(`  Blocks: ${path.resolve(process.cwd(), config.blockDir)}`));
     console.log(chalk.dim(`  Theme: ${path.resolve(process.cwd(), config.theme)}\n`));
   } catch (error: unknown) {
     spinner.fail('Failed to create config');

@@ -4,6 +4,7 @@ export const DEFAULTS = {
   COMPONENT_DIR: './src/components/pdfx',
   THEME_FILE: './src/lib/pdfx-theme.ts',
   TEMPLATE_DIR: './src/templates/pdfx',
+  BLOCK_DIR: './src/blocks/pdfx',
 } as const;
 
 export const REGISTRY_SUBPATHS = {

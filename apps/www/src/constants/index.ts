@@ -24,5 +24,3 @@ export * from './page-number.constant.js';
 export * from './watermark.constant.js';
 export * from './qrcode.constant.js';
 export * from './alert.constant.js';
-export * from './invoice-template.constant.js';
-export * from './resume-template.constant.js';

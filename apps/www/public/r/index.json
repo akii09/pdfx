@@ -764,36 +764,6 @@
         "text",
         "signature"
       ]
-    },
-    {
-      "name": "invoice-template",
-      "type": "registry:template",
-      "title": "Invoice Template",
-      "description": "Data-driven invoice generator with classic, modern, and minimal variants. Pass company, client, and line items.",
-      "files": [
-        {
-          "path": "public/r/templates/invoice-template.json",
-          "type": "registry:template"
-        }
-      ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
-    },
-    {
-      "name": "resume-template",
-      "type": "registry:template",
-      "title": "Resume Template",
-      "description": "Data-driven resume/CV generator with professional, modern, and minimal variants.",
-      "files": [
-        {
-          "path": "public/r/templates/resume-template.json",
-          "type": "registry:template"
-        }
-      ],
-      "dependencies": [
-        "@react-pdf/renderer"
-      ]
     }
   ]
 }

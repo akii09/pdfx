@@ -25,7 +25,7 @@ const TEMPLATES = [
     description: 'Data-driven invoice template. Pass data, get a complete PDF.',
     color: 'text-blue-500',
     bg: 'bg-blue-50 dark:bg-blue-950/40',
-    isDisabled: false,
+    isDisabled: true,
     path: '/templates/invoice-template',
   },
   {
@@ -34,7 +34,7 @@ const TEMPLATES = [
     description: 'Data-driven resume template with professional, modern, and minimal variants.',
     color: 'text-pink-500',
     bg: 'bg-pink-50 dark:bg-pink-950/40',
-    isDisabled: false,
+    isDisabled: true,
     path: '/templates/resume-template',
   },
   {
@@ -440,22 +440,10 @@ export function Header() {
               Data-driven, import from @pdfx/ui
             </p>
             <div className="mt-2 ml-3 flex flex-col gap-1 border-l border-border pl-3">
-              <Link
-                to="/templates/invoice-template"
-                onClick={() => setMobileOpen(false)}
-                className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"
-              >
-                <Receipt className="h-3.5 w-3.5 text-blue-500" />
-                Invoice Template
-              </Link>
-              <Link
-                to="/templates/resume-template"
-                onClick={() => setMobileOpen(false)}
-                className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"
-              >
-                <User className="h-3.5 w-3.5 text-pink-500" />
-                Resume Template
-              </Link>
+              <span className="text-sm text-muted-foreground/60 py-1.5 flex items-center gap-2">
+                <Receipt className="h-3.5 w-3.5 text-muted-foreground/50" />
+                Coming Soon
+              </span>
             </div>
           </div>
           {/* Blocks section (Composition-based) */}

@@ -49,14 +49,12 @@ const sections: SidebarSection[] = [
       { title: 'Text', href: '/components/text' },
     ],
   },
-  {
-    title: 'Templates',
-    links: [
-      { title: 'Overview', href: '/templates' },
-      { title: 'InvoiceTemplate', href: '/templates/invoice-template' },
-      { title: 'ResumeTemplate', href: '/templates/resume-template' },
-    ],
-  },
+  // {
+  //   title: 'Templates',
+  //   links: [
+  //     { title: 'Overview', href: '/templates' },
+  //   ],
+  // },
   {
     title: 'Blocks',
     links: [

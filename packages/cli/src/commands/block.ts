@@ -118,7 +118,7 @@ async function fetchComponent(name: string, registryUrl: string): Promise<Regist
 export function resolveBlockImports(content: string, blockName: string, config: Config): string {
   const cwd = process.cwd();
 
-  const blockSubdir = path.resolve(cwd, config.templateDir ?? DEFAULTS.TEMPLATE_DIR, blockName);
+  const blockSubdir = path.resolve(cwd, config.blockDir ?? DEFAULTS.BLOCK_DIR, blockName);
 
   let result = content.replace(
     /from '\.\.\/\.\.\/components\/pdfx\/([a-z][a-z0-9-]*)\/pdfx-([a-z][a-z0-9-]*)'/g,
@@ -260,7 +260,7 @@ async function installBlock(
   const block = await fetchBlock(name, config.registry);
   const peerResult = await ensurePeerComponents(block, config, force);
 
-  const blockBaseDir = path.resolve(process.cwd(), config.templateDir ?? DEFAULTS.TEMPLATE_DIR);
+  const blockBaseDir = path.resolve(process.cwd(), config.blockDir ?? DEFAULTS.BLOCK_DIR);
   const blockDir = path.join(blockBaseDir, block.name);
   ensureDir(blockDir);
 
@@ -417,7 +417,7 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
   }
 
   if (failed.length < names.length) {
-    const resolvedDir = path.resolve(process.cwd(), config.templateDir ?? DEFAULTS.TEMPLATE_DIR);
+    const resolvedDir = path.resolve(process.cwd(), config.blockDir ?? DEFAULTS.BLOCK_DIR);
     console.log(chalk.green('Done!'));
     console.log(chalk.dim(`Blocks installed to: ${resolvedDir}\n`));
   }
@@ -479,7 +479,7 @@ export async function blockList() {
       return;
     }
 
-    const blockBaseDir = path.resolve(process.cwd(), config.templateDir ?? DEFAULTS.TEMPLATE_DIR);
+    const blockBaseDir = path.resolve(process.cwd(), config.blockDir ?? DEFAULTS.BLOCK_DIR);
 
     console.log(chalk.bold(`\n  Available Blocks (${blocks.length})\n`));
 

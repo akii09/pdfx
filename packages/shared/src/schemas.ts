@@ -112,6 +112,8 @@ export const configSchema = z.object({
   theme: z.string().min(1).optional(),
   /** Directory where templates are installed. Defaults to ./src/templates/pdfx */
   templateDir: z.string().min(1).optional(),
+  /** Directory where blocks are installed. Defaults to ./src/blocks/pdfx */
+  blockDir: z.string().min(1).optional(),
 });
 
 /** Valid file types for registry items */
