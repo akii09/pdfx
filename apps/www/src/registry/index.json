@@ -440,14 +440,6 @@
         {
           "path": "../../../../packages/ui/src/components/alert/alert.tsx",
           "type": "registry:component"
-        },
-        {
-          "path": "../../../../packages/ui/src/components/alert/alert.styles.ts",
-          "type": "registry:component"
-        },
-        {
-          "path": "../../../../packages/ui/src/components/alert/alert.types.ts",
-          "type": "registry:component"
         }
       ],
       "dependencies": ["@react-pdf/renderer"]

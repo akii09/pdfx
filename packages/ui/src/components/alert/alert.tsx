@@ -1,143 +1,191 @@
-import { Circle, G, Line, Text as PDFText, Path, Svg, View } from '@react-pdf/renderer';
+import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
+import { Circle, Line, Text as PDFText, Path, StyleSheet, Svg, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
+import type { ReactNode } from 'react';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
-import { createAlertStyles } from './alert.styles';
-import type { AlertVariant, PdfAlertProps } from './alert.types';
 
-// ─── Icon Colors ───────────────────────────────────────────────────────────────
+export type AlertVariant = 'info' | 'success' | 'warning' | 'error';
 
-const ICON_COLORS: Record<AlertVariant, string> = {
-  info: '#3B82F6',
-  success: '#22C55E',
-  warning: '#F59E0B',
-  error: '#EF4444',
-};
-
-// ─── SVG Icons ─────────────────────────────────────────────────────────────────
-
-function InfoIcon({ color }: { color: string }) {
-  return (
-    <Svg width={16} height={16} viewBox="0 0 16 16">
-      <Circle cx={8} cy={8} r={7} fill="none" stroke={color} strokeWidth={1.5} />
-      <Circle cx={8} cy={4.5} r={1} fill={color} />
-      <Line x1={8} y1={7} x2={8} y2={11.5} stroke={color} strokeWidth={1.5} strokeLinecap="round" />
-    </Svg>
-  );
+export interface PdfAlertProps extends Omit<PDFComponentProps, 'children'> {
+  variant?: AlertVariant;
+  title?: string;
+  children?: ReactNode;
+  showIcon?: boolean;
+  showBorder?: boolean;
 }
 
-function SuccessIcon({ color }: { color: string }) {
-  return (
-    <Svg width={16} height={16} viewBox="0 0 16 16">
-      <Circle cx={8} cy={8} r={7} fill="none" stroke={color} strokeWidth={1.5} />
+const COLORS = {
+  info: { border: '#3B82F6', bg: '#EFF6FF', title: '#1E40AF', desc: '#1E3A8A' },
+  success: { border: '#22C55E', bg: '#F0FDF4', title: '#166534', desc: '#14532D' },
+  warning: { border: '#F59E0B', bg: '#FFFBEB', title: '#92400E', desc: '#78350F' },
+  error: { border: '#EF4444', bg: '#FEF2F2', title: '#991B1B', desc: '#7F1D1D' },
+} as const;
+
+const STROKE_WIDTH = 1.5;
+
+const SvgWrap = ({ children }: { children: ReactNode }) => (
+  <Svg width={16} height={16} viewBox="0 0 16 16">
+    {children}
+  </Svg>
+);
+
+const ICON_MAP = {
+  info: ({ color: c }: { color: string }) => (
+    <SvgWrap>
+      <Circle cx={8} cy={8} r={7} fill="none" stroke={c} strokeWidth={STROKE_WIDTH} />
+      <Circle cx={8} cy={4.5} r={1} fill={c} />
+      <Line
+        x1={8}
+        y1={7}
+        x2={8}
+        y2={11.5}
+        stroke={c}
+        strokeWidth={STROKE_WIDTH}
+        strokeLinecap="round"
+      />
+    </SvgWrap>
+  ),
+  success: ({ color: c }: { color: string }) => (
+    <SvgWrap>
+      <Circle cx={8} cy={8} r={7} fill="none" stroke={c} strokeWidth={STROKE_WIDTH} />
       <Path
         d="M5 8 L7 10 L11 6"
         fill="none"
-        stroke={color}
-        strokeWidth={1.5}
+        stroke={c}
+        strokeWidth={STROKE_WIDTH}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </Svg>
-  );
-}
-
-function WarningIcon({ color }: { color: string }) {
-  return (
-    <Svg width={16} height={16} viewBox="0 0 16 16">
+    </SvgWrap>
+  ),
+  warning: ({ color: c }: { color: string }) => (
+    <SvgWrap>
       <Path
         d="M8 1.5 L15 14.5 L1 14.5 Z"
         fill="none"
-        stroke={color}
-        strokeWidth={1.5}
+        stroke={c}
+        strokeWidth={STROKE_WIDTH}
         strokeLinejoin="round"
       />
-      <G>
-        <Line x1={8} y1={6} x2={8} y2={10} stroke={color} strokeWidth={1.5} strokeLinecap="round" />
-        <Circle cx={8} cy={12.5} r={0.75} fill={color} />
-      </G>
-    </Svg>
-  );
-}
-
-function ErrorIcon({ color }: { color: string }) {
-  return (
-    <Svg width={16} height={16} viewBox="0 0 16 16">
-      <Circle cx={8} cy={8} r={7} fill="none" stroke={color} strokeWidth={1.5} />
-      <G>
-        <Line
-          x1={5.5}
-          y1={5.5}
-          x2={10.5}
-          y2={10.5}
-          stroke={color}
-          strokeWidth={1.5}
-          strokeLinecap="round"
-        />
-        <Line
-          x1={10.5}
-          y1={5.5}
-          x2={5.5}
-          y2={10.5}
-          stroke={color}
-          strokeWidth={1.5}
-          strokeLinecap="round"
-        />
-      </G>
-    </Svg>
-  );
-}
+      <Line
+        x1={8}
+        y1={6}
+        x2={8}
+        y2={10}
+        stroke={c}
+        strokeWidth={STROKE_WIDTH}
+        strokeLinecap="round"
+      />
+      <Circle cx={8} cy={12.5} r={0.75} fill={c} />
+    </SvgWrap>
+  ),
+  error: ({ color: c }: { color: string }) => (
+    <SvgWrap>
+      <Circle cx={8} cy={8} r={7} fill="none" stroke={c} strokeWidth={STROKE_WIDTH} />
+      <Line
+        x1={5.5}
+        y1={5.5}
+        x2={10.5}
+        y2={10.5}
+        stroke={c}
+        strokeWidth={STROKE_WIDTH}
+        strokeLinecap="round"
+      />
+      <Line
+        x1={10.5}
+        y1={5.5}
+        x2={5.5}
+        y2={10.5}
+        stroke={c}
+        strokeWidth={STROKE_WIDTH}
+        strokeLinecap="round"
+      />
+    </SvgWrap>
+  ),
+};
 
 function AlertIcon({ variant }: { variant: AlertVariant }) {
-  const color = ICON_COLORS[variant];
-
-  switch (variant) {
-    case 'info':
-      return <InfoIcon color={color} />;
-    case 'success':
-      return <SuccessIcon color={color} />;
-    case 'warning':
-      return <WarningIcon color={color} />;
-    case 'error':
-      return <ErrorIcon color={color} />;
-  }
+  const Icon = ICON_MAP[variant];
+  return <Icon color={COLORS[variant].border} />;
 }
 
-// ─── PdfAlert Component ────────────────────────────────────────────────────────
+function createAlertStyles(theme: PdfxTheme) {
+  const { typography, colors, primitives } = theme;
+  const bl = (color: string) => ({ borderLeftColor: color, borderLeftWidth: 4 });
 
-/**
- * PdfAlert — Displays info, success, warning, or error callout boxes.
- *
- * Use for important notices, confirmations, cautions, or critical alerts
- * in reports, contracts, and documents.
- *
- * @example Basic info alert
- * ```tsx
- * <PdfAlert variant="info" title="Note">
- *   This document requires a signature before proceeding.
- * </PdfAlert>
- * ```
- *
- * @example Success confirmation
- * ```tsx
- * <PdfAlert variant="success" title="Payment Confirmed">
- *   Your payment of $500.00 has been received.
- * </PdfAlert>
- * ```
- *
- * @example Warning without icon
- * ```tsx
- * <PdfAlert variant="warning" title="Deadline Approaching" showIcon={false}>
- *   Please submit your documents by March 15, 2026.
- * </PdfAlert>
- * ```
- *
- * @example Error alert
- * ```tsx
- * <PdfAlert variant="error" title="Action Required">
- *   Missing required information. Please review and resubmit.
- * </PdfAlert>
- * ```
- */
+  const sheet = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      padding: 12,
+      borderRadius: 4,
+      marginBottom: theme.spacing.componentGap,
+    },
+    borderInfo: bl(colors.info ?? COLORS.info.border),
+    borderSuccess: bl(colors.success ?? COLORS.success.border),
+    borderWarning: bl(colors.warning ?? COLORS.warning.border),
+    borderError: bl(colors.destructive ?? COLORS.error.border),
+    bgInfo: { backgroundColor: COLORS.info.bg },
+    bgSuccess: { backgroundColor: COLORS.success.bg },
+    bgWarning: { backgroundColor: COLORS.warning.bg },
+    bgError: { backgroundColor: COLORS.error.bg },
+    iconContainer: {
+      width: 20,
+      marginRight: 10,
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      paddingTop: 2,
+    },
+    contentContainer: { flex: 1 },
+    title: {
+      fontFamily: typography.heading.fontFamily,
+      fontSize: primitives.typography.sm,
+      fontWeight: primitives.fontWeights.semibold,
+      marginBottom: 4,
+    },
+    titleInfo: { color: COLORS.info.title },
+    titleSuccess: { color: COLORS.success.title },
+    titleWarning: { color: COLORS.warning.title },
+    titleError: { color: COLORS.error.title },
+    description: {
+      fontFamily: typography.body.fontFamily,
+      fontSize: primitives.typography.sm,
+      lineHeight: typography.body.lineHeight,
+    },
+    descriptionInfo: { color: COLORS.info.desc },
+    descriptionSuccess: { color: COLORS.success.desc },
+    descriptionWarning: { color: COLORS.warning.desc },
+    descriptionError: { color: COLORS.error.desc },
+  });
+
+  return {
+    ...sheet,
+    borderMap: {
+      info: sheet.borderInfo,
+      success: sheet.borderSuccess,
+      warning: sheet.borderWarning,
+      error: sheet.borderError,
+    } as Record<AlertVariant, Style>,
+    bgMap: {
+      info: sheet.bgInfo,
+      success: sheet.bgSuccess,
+      warning: sheet.bgWarning,
+      error: sheet.bgError,
+    } as Record<AlertVariant, Style>,
+    titleMap: {
+      info: sheet.titleInfo,
+      success: sheet.titleSuccess,
+      warning: sheet.titleWarning,
+      error: sheet.titleError,
+    } as Record<AlertVariant, Style>,
+    descMap: {
+      info: sheet.descriptionInfo,
+      success: sheet.descriptionSuccess,
+      warning: sheet.descriptionWarning,
+      error: sheet.descriptionError,
+    } as Record<AlertVariant, Style>,
+  };
+}
+
 export function PdfAlert({
   variant = 'info',
   title,
@@ -145,68 +193,31 @@ export function PdfAlert({
   showIcon = true,
   showBorder = true,
   style,
+  ...rest
 }: PdfAlertProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createAlertStyles(theme), [theme]);
 
-  const borderMap: Record<AlertVariant, Style> = {
-    info: styles.borderInfo,
-    success: styles.borderSuccess,
-    warning: styles.borderWarning,
-    error: styles.borderError,
-  };
+  if (!title && !children) return null;
 
-  const bgMap: Record<AlertVariant, Style> = {
-    info: styles.bgInfo,
-    success: styles.bgSuccess,
-    warning: styles.bgWarning,
-    error: styles.bgError,
-  };
-
-  const titleColorMap: Record<AlertVariant, Style> = {
-    info: styles.titleInfo,
-    success: styles.titleSuccess,
-    warning: styles.titleWarning,
-    error: styles.titleError,
-  };
-
-  const descriptionColorMap: Record<AlertVariant, Style> = {
-    info: styles.descriptionInfo,
-    success: styles.descriptionSuccess,
-    warning: styles.descriptionWarning,
-    error: styles.descriptionError,
-  };
-
-  const containerStyles: Style[] = [styles.container, bgMap[variant]];
-
-  if (showBorder) {
-    containerStyles.push(borderMap[variant]);
-  }
-
-  if (style) {
-    containerStyles.push(style);
-  }
-
-  const titleStyles: Style[] = [styles.title, titleColorMap[variant]];
-  const descriptionStyles: Style[] = [styles.description, descriptionColorMap[variant]];
-
-  const hasContent = title || children;
-
-  if (!hasContent) {
-    return null;
-  }
+  const containerStyles: Style[] = [
+    styles.container,
+    styles.bgMap[variant],
+    ...(showBorder ? [styles.borderMap[variant]] : []),
+    ...(style ? [style].flat() : []),
+  ];
 
   return (
-    <View wrap={false} style={containerStyles}>
+    <View wrap={false} style={containerStyles} {...rest}>
       {showIcon && (
         <View style={styles.iconContainer}>
           <AlertIcon variant={variant} />
         </View>
       )}
       <View style={styles.contentContainer}>
-        {title && <PDFText style={titleStyles}>{title}</PDFText>}
+        {title && <PDFText style={[styles.title, styles.titleMap[variant]]}>{title}</PDFText>}
         {typeof children === 'string' ? (
-          <PDFText style={descriptionStyles}>{children}</PDFText>
+          <PDFText style={[styles.description, styles.descMap[variant]]}>{children}</PDFText>
         ) : (
           children
         )}
