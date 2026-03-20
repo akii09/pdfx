@@ -1,202 +1,18 @@
 import {
-  Award,
   ChevronDown,
   Copy,
-  Database,
   FileSpreadsheet,
   Github,
   Menu,
   Receipt,
   Search,
-  User,
   X,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../theme-toggle';
-
-// ─── Template data (Data-driven, import from @pdfx/ui) ────────────────────────
-
-const TEMPLATES = [
-  {
-    icon: Receipt,
-    name: 'Invoice Template',
-    description: 'Data-driven invoice template. Pass data, get a complete PDF.',
-    color: 'text-blue-500',
-    bg: 'bg-blue-50 dark:bg-blue-950/40',
-    isDisabled: true,
-    path: '/templates/invoice-template',
-  },
-  {
-    icon: User,
-    name: 'Resume Template',
-    description: 'Data-driven resume template with professional, modern, and minimal variants.',
-    color: 'text-pink-500',
-    bg: 'bg-pink-50 dark:bg-pink-950/40',
-    isDisabled: true,
-    path: '/templates/resume-template',
-  },
-  {
-    icon: FileSpreadsheet,
-    name: 'Report Template',
-    description: 'Business or analytics report with charts and summary sections.',
-    color: 'text-emerald-500',
-    bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-    isDisabled: true,
-    path: '/templates/report-template',
-  },
-  {
-    icon: Award,
-    name: 'Certificate Template',
-    description: 'Completion or achievement certificate with elegant layout.',
-    color: 'text-yellow-500',
-    bg: 'bg-yellow-50 dark:bg-yellow-950/40',
-    isDisabled: true,
-    path: '/templates/certificate-template',
-  },
-];
-
-// ─── Blocks data (Composition-based, copy-paste) ───────────────────────────────
-
-const BLOCKS = [
-  {
-    icon: Receipt,
-    name: 'Invoices',
-    description: '6 pre-designed invoice layouts. Copy, paste, and customize.',
-    color: 'text-blue-500',
-    bg: 'bg-blue-50 dark:bg-blue-950/40',
-    isDisabled: false,
-    path: '/blocks/invoices',
-    count: 6,
-  },
-  {
-    icon: FileSpreadsheet,
-    name: 'Reports',
-    description: '4 production-ready report designs for various business needs.',
-    color: 'text-emerald-500',
-    bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-    isDisabled: false,
-    path: '/blocks/reports',
-    count: 4,
-  },
-  {
-    icon: User,
-    name: 'Resumes',
-    description: 'Professional resume layouts with multiple styles.',
-    color: 'text-pink-500',
-    bg: 'bg-pink-50 dark:bg-pink-950/40',
-    isDisabled: true,
-    path: '/blocks/resumes',
-    count: 0,
-  },
-  {
-    icon: Award,
-    name: 'Certificates',
-    description: 'Award and achievement certificate designs.',
-    color: 'text-yellow-500',
-    bg: 'bg-yellow-50 dark:bg-yellow-950/40',
-    isDisabled: true,
-    path: '/blocks/certificates',
-    count: 0,
-  },
-];
-
-// ─── Templates dropdown (Data-driven) ────────────────────────────────────
-
-function TemplatesDropdown() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
-
-  // Close on outside click
-  useEffect(() => {
-    function onClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) document.addEventListener('mousedown', onClick);
-    return () => document.removeEventListener('mousedown', onClick);
-  }, [open]);
-
-  return (
-    <>
-      <div ref={ref} className="relative">
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          className={cn(
-            'flex items-center gap-1 text-sm transition-colors',
-            open ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
-          )}
-        >
-          Templates
-          <ChevronDown
-            className={cn('h-3.5 w-3.5 transition-transform duration-200', open && 'rotate-180')}
-          />
-        </button>
-
-        {open && (
-          <div className="absolute left-0 top-full mt-2.5 z-[100] w-[480px] rounded-xl border bg-popover shadow-xl overflow-hidden">
-            {/* Panel header */}
-            <div className="px-4 py-3 border-b bg-muted/30">
-              <div className="flex items-center gap-2">
-                <Database className="h-4 w-4 text-primary" />
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Data-Driven Templates
-                </p>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Import from{' '}
-                <code className="text-[10px] bg-muted px-1 py-0.5 rounded font-mono">@pdfx/ui</code>
-                , pass your data, get a complete PDF.
-              </p>
-            </div>
-
-            {/* Template grid */}
-            <div className="grid grid-cols-2 gap-2 p-4">
-              {TEMPLATES.map((t) => (
-                <button
-                  key={t.name}
-                  type="button"
-                  onClick={() => {
-                    if (!t.isDisabled) {
-                      navigate(t.path);
-                      setOpen(false);
-                    }
-                  }}
-                  className={cn(
-                    'group flex flex-col gap-2 rounded-lg border border-border/60 bg-card p-3 text-left hover:border-border hover:bg-muted/40 hover:shadow-sm transition-all duration-150 cursor-pointer',
-                    t.isDisabled && 'opacity-70 cursor-not-allowed'
-                  )}
-                  title={t.isDisabled ? 'Coming soon' : undefined}
-                >
-                  <div className={cn('rounded-md p-1.5 w-fit', t.bg)}>
-                    <t.icon className={cn('h-4 w-4', t.color)} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold leading-tight">{t.name}</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug line-clamp-2">
-                      {t.description}
-                    </p>
-                  </div>
-                  {t.isDisabled && (
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-primary/70 border border-primary/30 rounded px-1.5 py-0.5 w-fit mt-auto">
-                      Coming Soon
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </>
-  );
-}
-
-// ─── Blocks dropdown (Composition-based) ──────────────────────────────────
+import { BLOCKS } from '../../constants/header.constant';
 
 function BlocksDropdown() {
   const [open, setOpen] = useState(false);
@@ -319,14 +135,9 @@ function BlocksDropdown() {
   );
 }
 
-// ─── Header ─────────────────────────────────────────────────────────────────
-
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { pathname } = useLocation();
-
-  // Close mobile menu on route change
-  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally reset on pathname change
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
@@ -354,7 +165,6 @@ export function Header() {
             >
               Components
             </Link>
-            <TemplatesDropdown />
             <BlocksDropdown />
             {/* Theme Customizer — coming soon */}
             {/* <button
@@ -433,19 +243,6 @@ export function Header() {
           >
             Components
           </Link>
-          {/* Templates section (Data-driven) */}
-          <div className="py-2">
-            <span className="text-sm font-medium text-foreground">Templates</span>
-            <p className="text-[10px] text-muted-foreground/70 mt-0.5">
-              Data-driven, import from @pdfx/ui
-            </p>
-            <div className="mt-2 ml-3 flex flex-col gap-1 border-l border-border pl-3">
-              <span className="text-sm text-muted-foreground/60 py-1.5 flex items-center gap-2">
-                <Receipt className="h-3.5 w-3.5 text-muted-foreground/50" />
-                Coming Soon
-              </span>
-            </div>
-          </div>
           {/* Blocks section (Composition-based) */}
           <div className="py-2">
             <span className="text-sm font-medium text-foreground">Blocks</span>

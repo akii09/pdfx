@@ -105,13 +105,13 @@ export function CommandPalette() {
       />
 
       {/* Dialog content */}
-      <div ref={dialogRef} className="fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-lg">
+      <div ref={dialogRef} className="fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-lg text-primary">
         <Command className="rounded-xl border bg-popover shadow-2xl overflow-hidden">
           <div className="flex items-center border-b px-4">
             <Search className="h-4 w-4 text-muted-foreground shrink-0" aria-hidden="true" />
             <Command.Input
               placeholder="Type a command or search..."
-              className="flex-1 h-12 bg-transparent text-sm outline-none placeholder:text-muted-foreground ml-2"
+              className="flex-1 h-12 bg-transparent text-sm !outline-none placeholder:text-muted-foreground ml-2 caret-white"
               aria-label="Search commands"
             />
           </div>
