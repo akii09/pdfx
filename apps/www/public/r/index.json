@@ -244,14 +244,6 @@
         {
           "path": "../../../../packages/ui/src/components/badge/badge.tsx",
           "type": "registry:component"
-        },
-        {
-          "path": "../../../../packages/ui/src/components/badge/badge.styles.ts",
-          "type": "registry:component"
-        },
-        {
-          "path": "../../../../packages/ui/src/components/badge/badge.types.ts",
-          "type": "registry:component"
         }
       ],
       "dependencies": [
