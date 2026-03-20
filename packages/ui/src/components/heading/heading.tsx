@@ -1,9 +1,85 @@
-import { Text } from '@react-pdf/renderer';
+import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
+import { StyleSheet, Text } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
-import { createHeadingStyles } from './heading.styles';
-import type { HeadingProps } from './heading.types';
+
+export type HeadingWeight = 'normal' | 'medium' | 'semibold' | 'bold';
+export type HeadingTracking = 'tighter' | 'tight' | 'normal' | 'wide' | 'wider';
+
+export interface HeadingProps extends PDFComponentProps {
+  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  align?: 'left' | 'center' | 'right';
+  color?: string;
+  transform?: 'uppercase' | 'lowercase' | 'capitalize' | 'none';
+  weight?: HeadingWeight;
+  tracking?: HeadingTracking;
+  noMargin?: boolean;
+  keepWithNext?: boolean;
+}
+
+function createHeadingStyles(t: PdfxTheme) {
+  const { heading } = t.typography;
+  const { spacing, fontWeights, letterSpacing } = t.primitives;
+  const { sectionGap, componentGap, paragraphGap } = t.spacing;
+  const base = {
+    fontFamily: heading.fontFamily,
+    fontWeight: fontWeights.bold,
+    lineHeight: heading.lineHeight,
+    color: t.colors.foreground,
+  };
+  return StyleSheet.create({
+    h1: {
+      ...base,
+      fontSize: heading.fontSize.h1,
+      marginTop: spacing[0],
+      marginBottom: paragraphGap,
+    },
+    h2: {
+      ...base,
+      fontSize: heading.fontSize.h2,
+      marginTop: sectionGap,
+      marginBottom: paragraphGap,
+    },
+    h3: {
+      ...base,
+      fontSize: heading.fontSize.h3,
+      marginTop: componentGap,
+      marginBottom: paragraphGap,
+    },
+    h4: {
+      ...base,
+      fontSize: heading.fontSize.h4,
+      marginTop: paragraphGap,
+      marginBottom: paragraphGap,
+    },
+    h5: {
+      ...base,
+      fontSize: heading.fontSize.h5,
+      marginTop: paragraphGap,
+      marginBottom: spacing[1],
+    },
+    h6: {
+      ...base,
+      fontSize: heading.fontSize.h6,
+      marginTop: paragraphGap,
+      marginBottom: spacing[1],
+    },
+    weightNormal: { fontWeight: fontWeights.regular },
+    weightMedium: { fontWeight: fontWeights.medium },
+    weightSemibold: { fontWeight: fontWeights.semibold },
+    weightBold: { fontWeight: fontWeights.bold },
+    trackingTighter: { letterSpacing: letterSpacing.tight * 15 },
+    trackingTight: { letterSpacing: letterSpacing.tight * 10 },
+    trackingNormal: { letterSpacing: letterSpacing.normal },
+    trackingWide: { letterSpacing: letterSpacing.wide * 10 },
+    trackingWider: { letterSpacing: letterSpacing.wider * 10 },
+    uppercase: { textTransform: 'uppercase', letterSpacing: letterSpacing.wider * 10 },
+    lowercase: { textTransform: 'lowercase' },
+    capitalize: { textTransform: 'capitalize' },
+    noMargin: { marginTop: 0, marginBottom: 0 },
+  });
+}
 
 export function Heading({
   level = 1,
@@ -19,10 +95,7 @@ export function Heading({
 }: HeadingProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createHeadingStyles(theme), [theme]);
-
-  // Clamp level to valid range (1-6) to prevent runtime errors
   const safeLevel = Math.min(Math.max(Math.round(level), 1), 6) as 1 | 2 | 3 | 4 | 5 | 6;
-
   const weightMap = {
     normal: styles.weightNormal,
     medium: styles.weightMedium,
@@ -36,43 +109,22 @@ export function Heading({
     wide: styles.trackingWide,
     wider: styles.trackingWider,
   };
-  const headingStyle = styles[`h${safeLevel}` as keyof typeof styles];
-  const styleArray: Style[] = [headingStyle as Style];
-
-  if (weight && weight in weightMap) {
-    styleArray.push(weightMap[weight]);
-  }
-
-  if (tracking && tracking in trackingMap) {
-    styleArray.push(trackingMap[tracking]);
-  }
-
-  if (transform) {
-    if (transform === 'uppercase') {
-      styleArray.push(styles.uppercase);
-    } else if (transform === 'lowercase') {
-      styleArray.push(styles.lowercase);
-    } else if (transform === 'capitalize') {
-      styleArray.push(styles.capitalize);
-    }
-  }
-
-  if (noMargin) {
-    styleArray.push(styles.noMargin);
-  }
-
-  const semanticStyle = {} as Style;
-  if (align) semanticStyle.textAlign = align;
-  if (color) semanticStyle.color = resolveColor(color, theme.colors);
-  if (Object.keys(semanticStyle).length > 0) {
-    styleArray.push(semanticStyle);
-  }
-
-  if (style) {
-    styleArray.push(style);
-  }
-
-  // minPresenceAhead keeps the heading from being stranded at the bottom of a page
+  const transformMap = {
+    uppercase: styles.uppercase,
+    lowercase: styles.lowercase,
+    capitalize: styles.capitalize,
+  };
+  const styleArray: Style[] = [styles[`h${safeLevel}` as keyof typeof styles] as Style];
+  if (weight && weight in weightMap) styleArray.push(weightMap[weight]);
+  if (tracking && tracking in trackingMap) styleArray.push(trackingMap[tracking]);
+  if (transform && transform in transformMap)
+    styleArray.push(transformMap[transform as keyof typeof transformMap]);
+  if (noMargin) styleArray.push(styles.noMargin);
+  const semantic = {} as Style;
+  if (align) semantic.textAlign = align;
+  if (color) semantic.color = resolveColor(color, theme.colors);
+  if (Object.keys(semantic).length > 0) styleArray.push(semantic);
+  if (style) styleArray.push(...[style].flat());
   return (
     <Text style={styleArray} minPresenceAhead={keepWithNext ? 80 : undefined}>
       {children}

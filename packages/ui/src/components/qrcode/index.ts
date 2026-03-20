@@ -1,2 +1,1 @@
-export { PdfQRCode } from './qrcode';
-export type { PdfQRCodeProps, QRCodeErrorLevel } from './qrcode.types';
+export { PdfQRCode, type PdfQRCodeProps, type QRCodeErrorLevel } from './qrcode';

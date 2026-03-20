@@ -179,7 +179,7 @@ function resolveColor(value: string, colors: Record<string, string>): string {
   if (result.includes('resolve-color')) {
     // Remove the import
     result = result.replace(
-      /import\s+\{[^}]*resolveColor[^}]*\}\s+from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/resolve-color\.js['"];?\n?/g,
+      /import\s+\{[^}]*resolveColor[^}]*\}\s+from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/resolve-color(?:\.js)?['"];?\n?/g,
       ''
     );
     // Inject before the first exported component function.

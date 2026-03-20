@@ -1,2 +1,6 @@
-export { PdfSignatureBlock } from './signature';
-export type { PdfSignatureBlockProps, SignatureVariant, SignatureSigner } from './signature.types';
+export {
+  PdfSignatureBlock,
+  type PdfSignatureBlockProps,
+  type SignatureVariant,
+  type SignatureSigner,
+} from './signature';

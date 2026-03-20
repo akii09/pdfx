@@ -12,7 +12,6 @@ export type BadgeVariant =
   | 'destructive'
   | 'info'
   | 'outline';
-
 export type BadgeSize = 'sm' | 'md' | 'lg';
 
 export interface BadgeProps extends Omit<PDFComponentProps, 'children'> {
@@ -26,20 +25,17 @@ export interface BadgeProps extends Omit<PDFComponentProps, 'children'> {
 function createBadgeStyles(t: PdfxTheme) {
   const { spacing, borderRadius, fontWeights } = t.primitives;
   const c = t.colors;
-
   const textBase = {
     fontFamily: t.typography.body.fontFamily,
     fontWeight: fontWeights.semibold,
     letterSpacing: 0.3,
   };
-
-  const createBorderedVariant = (borderColor: string, bgColor: string = c.muted) => ({
+  const bv = (borderColor: string, bgColor: string = c.muted) => ({
     backgroundColor: bgColor,
     borderWidth: spacing[0.5],
     borderColor,
     borderStyle: 'solid' as const,
   });
-
   const sheet = StyleSheet.create({
     containerBase: {
       borderRadius: borderRadius.full,
@@ -47,13 +43,13 @@ function createBadgeStyles(t: PdfxTheme) {
       flexDirection: 'row' as const,
       alignItems: 'center' as const,
     },
-    variantDefault: createBorderedVariant(c.border),
-    variantPrimary: createBorderedVariant(c.primary, c.primary),
-    variantSuccess: createBorderedVariant(c.success),
-    variantWarning: createBorderedVariant(c.warning),
-    variantDestructive: createBorderedVariant(c.destructive),
-    variantInfo: createBorderedVariant(c.info),
-    variantOutline: createBorderedVariant(c.border, c.background),
+    variantDefault: bv(c.border),
+    variantPrimary: bv(c.primary, c.primary),
+    variantSuccess: bv(c.success),
+    variantWarning: bv(c.warning),
+    variantDestructive: bv(c.destructive),
+    variantInfo: bv(c.info),
+    variantOutline: bv(c.border, c.background),
     sizeSm: { paddingHorizontal: spacing[2], paddingVertical: spacing[0.5] },
     sizeMd: { paddingHorizontal: spacing[3], paddingVertical: spacing[1] },
     sizeLg: { paddingHorizontal: spacing[4], paddingVertical: spacing[2] },
@@ -68,7 +64,6 @@ function createBadgeStyles(t: PdfxTheme) {
     textMd: { fontSize: t.primitives.typography.xs },
     textLg: { fontSize: t.primitives.typography.sm },
   });
-
   return {
     ...sheet,
     containerVariantMap: {
@@ -89,16 +84,14 @@ function createBadgeStyles(t: PdfxTheme) {
       info: sheet.textInfo,
       outline: sheet.textOutline,
     } as Record<BadgeVariant, Style>,
-    containerSizeMap: {
-      sm: sheet.sizeSm,
-      md: sheet.sizeMd,
-      lg: sheet.sizeLg,
-    } as Record<BadgeSize, Style>,
-    textSizeMap: {
-      sm: sheet.textSm,
-      md: sheet.textMd,
-      lg: sheet.textLg,
-    } as Record<BadgeSize, Style>,
+    containerSizeMap: { sm: sheet.sizeSm, md: sheet.sizeMd, lg: sheet.sizeLg } as Record<
+      BadgeSize,
+      Style
+    >,
+    textSizeMap: { sm: sheet.textSm, md: sheet.textMd, lg: sheet.textLg } as Record<
+      BadgeSize,
+      Style
+    >,
   };
 }
 
@@ -109,27 +102,23 @@ export function Badge({
   background,
   color,
   style,
-  ...rest
 }: BadgeProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createBadgeStyles(theme), [theme]);
-
   const containerStyles: Style[] = [
     styles.containerBase,
     styles.containerVariantMap[variant],
     styles.containerSizeMap[size],
     ...(background ? [{ backgroundColor: resolveColor(background, theme.colors) }] : []),
-    ...(style ? (Array.isArray(style) ? style : [style]) : []),
+    ...(style ? [style].flat() : []),
   ];
-
   const textStyles: Style[] = [
     styles.textVariantMap[variant],
     styles.textSizeMap[size],
     ...(color ? [{ color: resolveColor(color, theme.colors) }] : []),
   ];
-
   return (
-    <View style={containerStyles} {...rest}>
+    <View style={containerStyles}>
       <PDFText style={textStyles}>{label}</PDFText>
     </View>
   );

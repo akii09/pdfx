@@ -1,2 +1,7 @@
-export { Section } from './section';
-export type { SectionProps, SectionSpacing, SectionPadding, SectionVariant } from './section.types';
+export {
+  Section,
+  type SectionProps,
+  type SectionSpacing,
+  type SectionPadding,
+  type SectionVariant,
+} from './section';

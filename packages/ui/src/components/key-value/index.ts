@@ -1,7 +1,7 @@
-export { KeyValue } from './key-value';
-export type {
-  KeyValueProps,
-  KeyValueEntry,
-  KeyValueDirection,
-  KeyValueSize,
-} from './key-value.types';
+export {
+  KeyValue,
+  type KeyValueProps,
+  type KeyValueEntry,
+  type KeyValueDirection,
+  type KeyValueSize,
+} from './key-value';

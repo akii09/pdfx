@@ -1,48 +1,40 @@
-import { Text as PDFText, View } from '@react-pdf/renderer';
+import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
+import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
-import { createPageNumberStyles } from './page-number.styles';
-import type { PageNumberAlign, PageNumberSize, PdfPageNumberProps } from './page-number.types';
 
-/**
- * Formats the page number string by replacing placeholders.
- * @param format - Format string with {page} and {total} placeholders
- * @param pageNumber - Current page number
- * @param totalPages - Total number of pages
- */
+export type PageNumberAlign = 'left' | 'center' | 'right';
+export type PageNumberSize = 'xs' | 'sm' | 'md';
+
+export interface PdfPageNumberProps extends Omit<PDFComponentProps, 'children'> {
+  format?: string;
+  align?: PageNumberAlign;
+  size?: PageNumberSize;
+  fixed?: boolean;
+  muted?: boolean;
+  children?: never;
+}
+
+function createPageNumberStyles(t: PdfxTheme) {
+  const { typography, colors, primitives } = t;
+  return StyleSheet.create({
+    container: { width: '100%' },
+    text: { fontFamily: typography.body.fontFamily },
+    alignLeft: { textAlign: 'left' },
+    alignCenter: { textAlign: 'center' },
+    alignRight: { textAlign: 'right' },
+    sizeXs: { fontSize: primitives.typography.xs },
+    sizeSm: { fontSize: primitives.typography.sm },
+    sizeMd: { fontSize: primitives.typography.base },
+    colorForeground: { color: colors.foreground },
+    colorMuted: { color: colors.mutedForeground },
+  });
+}
+
 function formatPageNumber(format: string, pageNumber: number, totalPages: number): string {
   return format.replace('{page}', String(pageNumber)).replace('{total}', String(totalPages));
 }
 
-/**
- * PdfPageNumber — Displays page numbers with "Page X of Y" format.
- *
- * Uses react-pdf's render prop to access pageNumber and totalPages dynamically.
- * Can be placed inside PageFooter or anywhere in a Page, and supports the `fixed`
- * prop to repeat on every page.
- *
- * @example Basic usage (centered, on every page)
- * ```tsx
- * <Page>
- *   <View style={{ position: 'absolute', bottom: 20, left: 0, right: 0 }}>
- *     <PdfPageNumber fixed />
- *   </View>
- *   {content}
- * </Page>
- * ```
- *
- * @example Custom format
- * ```tsx
- * <PdfPageNumber format="{page} / {total}" align="right" />
- * ```
- *
- * @example Inside a PageFooter (recommended pattern)
- * ```tsx
- * <PageFooter variant="centered">
- *   <PdfPageNumber format="- {page} -" />
- * </PageFooter>
- * ```
- */
 export function PdfPageNumber({
   format = 'Page {page} of {total}',
   align = 'center',
@@ -53,30 +45,22 @@ export function PdfPageNumber({
 }: PdfPageNumberProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createPageNumberStyles(theme), [theme]);
-
-  const alignMap: Record<PageNumberAlign, Style> = {
+  const alignMap = {
     left: styles.alignLeft,
     center: styles.alignCenter,
     right: styles.alignRight,
-  };
-
-  const sizeMap: Record<PageNumberSize, Style> = {
-    xs: styles.sizeXs,
-    sm: styles.sizeSm,
-    md: styles.sizeMd,
-  };
-
+  } as Record<PageNumberAlign, Style>;
+  const sizeMap = { xs: styles.sizeXs, sm: styles.sizeSm, md: styles.sizeMd } as Record<
+    PageNumberSize,
+    Style
+  >;
   const textStyles: Style[] = [
     styles.text,
     alignMap[align],
     sizeMap[size],
     muted ? styles.colorMuted : styles.colorForeground,
   ];
-
-  if (style) {
-    textStyles.push(style);
-  }
-
+  if (style) textStyles.push(...[style].flat());
   return (
     <View style={styles.container} fixed={fixed}>
       <PDFText

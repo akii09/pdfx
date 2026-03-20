@@ -1,40 +1,74 @@
-import { Text as PDFText, View } from '@react-pdf/renderer';
+import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
+import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
-import { resolveColor } from '../../lib/resolve-color';
-import { createWatermarkStyles } from './watermark.styles';
-import type { PdfWatermarkProps, WatermarkPosition } from './watermark.types';
+import { resolveColor } from '../../lib/resolve-color.js';
 
-/**
- * PdfWatermark — Displays a diagonal or positioned text overlay on PDF pages.
- *
- * Common use cases include "DRAFT", "CONFIDENTIAL", "PAID", "VOID", "COPY", etc.
- * The watermark uses absolute positioning and appears behind content.
- * Use the `fixed` prop (default: true) to repeat on every page.
- *
- * @example Basic usage (diagonal "DRAFT" on every page)
- * ```tsx
- * <Page>
- *   <PdfWatermark text="DRAFT" />
- *   {content}
- * </Page>
- * ```
- *
- * @example Confidential document
- * ```tsx
- * <PdfWatermark text="CONFIDENTIAL" color="destructive" opacity={0.1} />
- * ```
- *
- * @example Paid invoice stamp (no rotation)
- * ```tsx
- * <PdfWatermark text="PAID" angle={0} color="success" fontSize={80} />
- * ```
- *
- * @example Corner watermark
- * ```tsx
- * <PdfWatermark text="COPY" position="top-right" angle={0} fontSize={24} />
- * ```
- */
+export type WatermarkPosition =
+  | 'center'
+  | 'top-left'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-right';
+
+export interface PdfWatermarkProps extends Omit<PDFComponentProps, 'children'> {
+  text: string;
+  opacity?: number;
+  fontSize?: number;
+  color?: string;
+  angle?: number;
+  position?: WatermarkPosition;
+  fixed?: boolean;
+  children?: never;
+}
+
+function createWatermarkStyles(t: PdfxTheme) {
+  return StyleSheet.create({
+    container: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: -1,
+      pointerEvents: 'none',
+    },
+    text: {
+      fontFamily: t.typography.heading.fontFamily,
+      fontWeight: 700,
+      textTransform: 'uppercase',
+      letterSpacing: 4,
+    },
+    positionCenter: { justifyContent: 'center', alignItems: 'center' },
+    positionTopLeft: {
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+      paddingTop: 100,
+      paddingLeft: 50,
+    },
+    positionTopRight: {
+      justifyContent: 'flex-start',
+      alignItems: 'flex-end',
+      paddingTop: 100,
+      paddingRight: 50,
+    },
+    positionBottomLeft: {
+      justifyContent: 'flex-end',
+      alignItems: 'flex-start',
+      paddingBottom: 100,
+      paddingLeft: 50,
+    },
+    positionBottomRight: {
+      justifyContent: 'flex-end',
+      alignItems: 'flex-end',
+      paddingBottom: 100,
+      paddingRight: 50,
+    },
+  });
+}
+
 export function PdfWatermark({
   text,
   opacity = 0.15,
@@ -47,7 +81,6 @@ export function PdfWatermark({
 }: PdfWatermarkProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createWatermarkStyles(theme), [theme]);
-
   const positionMap: Record<WatermarkPosition, Style> = {
     center: styles.positionCenter,
     'top-left': styles.positionTopLeft,
@@ -55,25 +88,17 @@ export function PdfWatermark({
     'bottom-left': styles.positionBottomLeft,
     'bottom-right': styles.positionBottomRight,
   };
-
   const containerStyles: Style[] = [styles.container, positionMap[position]];
-
-  if (style) {
-    containerStyles.push(style);
-  }
-
-  const resolvedColor = resolveColor(color, theme.colors);
-
+  if (style) containerStyles.push(...[style].flat());
   const textStyles: Style[] = [
     styles.text,
     {
       fontSize,
-      color: resolvedColor,
+      color: resolveColor(color, theme.colors),
       opacity,
       transform: `rotate(${angle}deg)`,
     },
   ];
-
   return (
     <View style={containerStyles} fixed={fixed}>
       <PDFText style={textStyles}>{text}</PDFText>

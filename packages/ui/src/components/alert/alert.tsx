@@ -21,7 +21,7 @@ const COLORS = {
   error: { border: '#EF4444', bg: '#FEF2F2', title: '#991B1B', desc: '#7F1D1D' },
 } as const;
 
-const STROKE_WIDTH = 1.5;
+const SW = 1.5;
 
 const SvgWrap = ({ children }: { children: ReactNode }) => (
   <Svg width={16} height={16} viewBox="0 0 16 16">
@@ -32,27 +32,19 @@ const SvgWrap = ({ children }: { children: ReactNode }) => (
 const ICON_MAP = {
   info: ({ color: c }: { color: string }) => (
     <SvgWrap>
-      <Circle cx={8} cy={8} r={7} fill="none" stroke={c} strokeWidth={STROKE_WIDTH} />
+      <Circle cx={8} cy={8} r={7} fill="none" stroke={c} strokeWidth={SW} />
       <Circle cx={8} cy={4.5} r={1} fill={c} />
-      <Line
-        x1={8}
-        y1={7}
-        x2={8}
-        y2={11.5}
-        stroke={c}
-        strokeWidth={STROKE_WIDTH}
-        strokeLinecap="round"
-      />
+      <Line x1={8} y1={7} x2={8} y2={11.5} stroke={c} strokeWidth={SW} strokeLinecap="round" />
     </SvgWrap>
   ),
   success: ({ color: c }: { color: string }) => (
     <SvgWrap>
-      <Circle cx={8} cy={8} r={7} fill="none" stroke={c} strokeWidth={STROKE_WIDTH} />
+      <Circle cx={8} cy={8} r={7} fill="none" stroke={c} strokeWidth={SW} />
       <Path
         d="M5 8 L7 10 L11 6"
         fill="none"
         stroke={c}
-        strokeWidth={STROKE_WIDTH}
+        strokeWidth={SW}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -64,31 +56,23 @@ const ICON_MAP = {
         d="M8 1.5 L15 14.5 L1 14.5 Z"
         fill="none"
         stroke={c}
-        strokeWidth={STROKE_WIDTH}
+        strokeWidth={SW}
         strokeLinejoin="round"
       />
-      <Line
-        x1={8}
-        y1={6}
-        x2={8}
-        y2={10}
-        stroke={c}
-        strokeWidth={STROKE_WIDTH}
-        strokeLinecap="round"
-      />
+      <Line x1={8} y1={6} x2={8} y2={10} stroke={c} strokeWidth={SW} strokeLinecap="round" />
       <Circle cx={8} cy={12.5} r={0.75} fill={c} />
     </SvgWrap>
   ),
   error: ({ color: c }: { color: string }) => (
     <SvgWrap>
-      <Circle cx={8} cy={8} r={7} fill="none" stroke={c} strokeWidth={STROKE_WIDTH} />
+      <Circle cx={8} cy={8} r={7} fill="none" stroke={c} strokeWidth={SW} />
       <Line
         x1={5.5}
         y1={5.5}
         x2={10.5}
         y2={10.5}
         stroke={c}
-        strokeWidth={STROKE_WIDTH}
+        strokeWidth={SW}
         strokeLinecap="round"
       />
       <Line
@@ -97,7 +81,7 @@ const ICON_MAP = {
         x2={5.5}
         y2={10.5}
         stroke={c}
-        strokeWidth={STROKE_WIDTH}
+        strokeWidth={SW}
         strokeLinecap="round"
       />
     </SvgWrap>
@@ -112,7 +96,6 @@ function AlertIcon({ variant }: { variant: AlertVariant }) {
 function createAlertStyles(theme: PdfxTheme) {
   const { typography, colors, primitives } = theme;
   const bl = (color: string) => ({ borderLeftColor: color, borderLeftWidth: 4 });
-
   const sheet = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -156,7 +139,6 @@ function createAlertStyles(theme: PdfxTheme) {
     descriptionWarning: { color: COLORS.warning.desc },
     descriptionError: { color: COLORS.error.desc },
   });
-
   return {
     ...sheet,
     borderMap: {
@@ -193,7 +175,6 @@ export function PdfAlert({
   showIcon = true,
   showBorder = true,
   style,
-  ...rest
 }: PdfAlertProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createAlertStyles(theme), [theme]);
@@ -208,7 +189,7 @@ export function PdfAlert({
   ];
 
   return (
-    <View wrap={false} style={containerStyles} {...rest}>
+    <View wrap={false} style={containerStyles}>
       {showIcon && (
         <View style={styles.iconContainer}>
           <AlertIcon variant={variant} />

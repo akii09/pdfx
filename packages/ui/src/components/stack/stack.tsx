@@ -1,8 +1,44 @@
-import { View } from '@react-pdf/renderer';
+import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
+import { StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
-import { createStackStyles } from './stack.styles';
-import type { StackProps } from './stack.types';
+
+export type StackGap = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+export type StackDirection = 'vertical' | 'horizontal';
+export type StackAlign = 'start' | 'center' | 'end' | 'stretch';
+export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around';
+
+export interface StackProps extends PDFComponentProps {
+  gap?: StackGap;
+  direction?: StackDirection;
+  align?: StackAlign;
+  justify?: StackJustify;
+  wrap?: boolean;
+  noWrap?: boolean;
+}
+
+function createStackStyles(t: PdfxTheme) {
+  const { spacing } = t.primitives;
+  return StyleSheet.create({
+    vertical: { flexDirection: 'column' },
+    horizontal: { flexDirection: 'row' },
+    gapNone: { gap: spacing[0] },
+    gapSm: { gap: spacing[2] },
+    gapMd: { gap: spacing[4] },
+    gapLg: { gap: spacing[6] },
+    gapXl: { gap: spacing[8] },
+    alignStart: { alignItems: 'flex-start' },
+    alignCenter: { alignItems: 'center' },
+    alignEnd: { alignItems: 'flex-end' },
+    alignStretch: { alignItems: 'stretch' },
+    justifyStart: { justifyContent: 'flex-start' },
+    justifyCenter: { justifyContent: 'center' },
+    justifyEnd: { justifyContent: 'flex-end' },
+    justifyBetween: { justifyContent: 'space-between' },
+    justifyAround: { justifyContent: 'space-around' },
+    wrap: { flexWrap: 'wrap' },
+  });
+}
 
 export function Stack({
   gap = 'md',
@@ -36,26 +72,14 @@ export function Stack({
     between: styles.justifyBetween,
     around: styles.justifyAround,
   };
-  const directionStyle = direction === 'horizontal' ? styles.horizontal : styles.vertical;
-  const gapStyle = gapMap[gap];
-  const styleArray: Style[] = [directionStyle, gapStyle];
-
-  if (align && align in alignMap) {
-    styleArray.push(alignMap[align]);
-  }
-
-  if (justify && justify in justifyMap) {
-    styleArray.push(justifyMap[justify]);
-  }
-
-  if (wrap) {
-    styleArray.push(styles.wrap);
-  }
-
-  if (style) {
-    styleArray.push(style);
-  }
-
+  const styleArray: Style[] = [
+    direction === 'horizontal' ? styles.horizontal : styles.vertical,
+    gapMap[gap],
+  ];
+  if (align && align in alignMap) styleArray.push(alignMap[align]);
+  if (justify && justify in justifyMap) styleArray.push(justifyMap[justify]);
+  if (wrap) styleArray.push(styles.wrap);
+  if (style) styleArray.push(...[style].flat());
   return (
     <View wrap={noWrap ? false : undefined} style={styleArray}>
       {children}

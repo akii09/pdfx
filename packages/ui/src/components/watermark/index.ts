@@ -1,2 +1,1 @@
-export { PdfWatermark } from './watermark';
-export type { PdfWatermarkProps, WatermarkPosition } from './watermark.types';
+export { PdfWatermark, type PdfWatermarkProps, type WatermarkPosition } from './watermark';
