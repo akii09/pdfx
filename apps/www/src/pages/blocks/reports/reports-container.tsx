@@ -308,9 +308,7 @@ export default function ReportsContainerPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">
-            Report Blocks
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">Report Blocks</h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Production-ready PDF reports for finance, operations, security, and growth teams.
           </p>

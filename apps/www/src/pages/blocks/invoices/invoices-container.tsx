@@ -328,9 +328,7 @@ export default function InvoicesContainerPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">
-            Invoice Blocks
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">Invoice Blocks</h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Ready-to-use PDF invoice layouts built with{' '}
             <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">@pdfx/ui</code>.
