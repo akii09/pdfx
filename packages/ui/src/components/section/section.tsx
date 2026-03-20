@@ -103,6 +103,9 @@ export function Section({
   if (border && variant === 'default') styleArray.push(styles.border);
   if (background) styleArray.push({ backgroundColor: resolveColor(background, theme.colors) });
   if (style) styleArray.push(...[style].flat());
-  const inner = <View style={styleArray}>{children}</View>;
-  return noWrap ? <View wrap={false}>{inner}</View> : inner;
+  return (
+    <View wrap={noWrap ? false : undefined} style={styleArray}>
+      {children}
+    </View>
+  );
 }

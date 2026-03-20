@@ -11,7 +11,7 @@ export interface HeadingProps extends PDFComponentProps {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   align?: 'left' | 'center' | 'right';
   color?: string;
-  transform?: 'uppercase' | 'lowercase' | 'capitalize' | 'none';
+  transform?: 'uppercase' | 'lowercase' | 'capitalize';
   weight?: HeadingWeight;
   tracking?: HeadingTracking;
   noMargin?: boolean;

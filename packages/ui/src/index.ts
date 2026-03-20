@@ -116,14 +116,14 @@ export {
   type SignatureVariant,
   type SignatureSigner,
 } from './components/signature';
-export { KeepTogether, type KeepTogetherProps } from './components/keep-together/keep-together';
+export { KeepTogether, type KeepTogetherProps } from './components/keep-together';
 export {
   PdfImage,
   type PdfImageProps,
   type PdfImageSrc,
   type PdfImageVariant,
   type PdfImageFit,
-} from './components/pdf-image/pdf-image';
+} from './components/pdf-image';
 export {
   PdfGraph,
   getGraphWidth,
@@ -135,7 +135,7 @@ export {
   type GraphSeries,
   type GraphLegendPosition,
   type GraphWidthOptions,
-} from './components/graph/graph';
+} from './components/graph';
 export { PdfxThemeProvider, usePdfxTheme, PdfxThemeContext } from './lib/pdfx-theme-context';
 
 // Templates
