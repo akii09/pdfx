@@ -292,14 +292,14 @@ export default function ReportsContainerPage() {
   const current = TEMPLATES.find((t) => t.id === activeId) ?? TEMPLATES[0];
   const installCmd = `npx @akii09/pdfx-cli block add ${current.id}`;
 
-  useDocumentTitle('Report Templates');
+  useDocumentTitle('Report Blocks');
 
   return (
     <div className="py-6">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-4">
-        <Link to="/templates" className="hover:text-foreground transition-colors">
-          Templates
+        <Link to="/blocks" className="hover:text-foreground transition-colors">
+          Blocks
         </Link>
         <ChevronRight className="h-3 w-3" />
         <span className="text-foreground font-medium">Reports</span>
@@ -309,7 +309,7 @@ export default function ReportsContainerPage() {
       <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">
-            Report Templates
+            Report Blocks
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Production-ready PDF reports for finance, operations, security, and growth teams.
@@ -423,11 +423,11 @@ export default function ReportsContainerPage() {
           </div>
         </div>
 
-        {/* Template files */}
+        {/* Block files */}
         <div className="rounded-lg border border-border bg-card px-4 py-3 flex-1 min-w-[200px]">
           <div className="flex items-center gap-2 mb-2">
             <FileText className="h-3.5 w-3.5 text-primary" />
-            <span className="text-xs font-semibold text-foreground">Template files</span>
+            <span className="text-xs font-semibold text-foreground">Block files</span>
             <span className="ml-auto text-[10px] font-mono text-muted-foreground">
               {current.codeFiles.length} files
             </span>
@@ -443,7 +443,7 @@ export default function ReportsContainerPage() {
             ))}
           </div>
           <p className="text-[10px] text-muted-foreground/60 mt-2">
-            Installs to <code className="font-mono">./src/templates/pdfx/{current.id}/</code>
+            Installs to <code className="font-mono">./src/blocks/pdfx/{current.id}/</code>
           </p>
         </div>
       </div>
