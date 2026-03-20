@@ -1,18 +1,9 @@
-import {
-  ChevronDown,
-  Copy,
-  FileSpreadsheet,
-  Github,
-  Menu,
-  Receipt,
-  Search,
-  X,
-} from 'lucide-react';
+import { ChevronDown, Copy, FileSpreadsheet, Github, Menu, Receipt, Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { BLOCKS } from '../../constants';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../theme-toggle';
-import { BLOCKS } from '../../constants/header.constant';
 
 function BlocksDropdown() {
   const [open, setOpen] = useState(false);
@@ -138,8 +129,11 @@ function BlocksDropdown() {
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { pathname } = useLocation();
+
   useEffect(() => {
-    setMobileOpen(false);
+    if (pathname) {
+      setMobileOpen(false);
+    }
   }, [pathname]);
 
   return (

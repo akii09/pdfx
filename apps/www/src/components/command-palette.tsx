@@ -1,22 +1,10 @@
 import { Command } from 'cmdk';
-import { FileText, Heading, Home, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { commandItems as items } from '../constants';
 
-interface CommandItem {
-  label: string;
-  href: string;
-  icon: React.ElementType;
-  group: string;
-}
-
-const items: CommandItem[] = [
-  { label: 'Home', href: '/', icon: Home, group: 'Pages' },
-  { label: 'Documentation', href: '/docs', icon: FileText, group: 'Pages' },
-  { label: 'Components', href: '/components', icon: Search, group: 'Pages' },
-  { label: 'Heading', href: '/components/heading', icon: Heading, group: 'Components' },
-  { label: 'Text', href: '/components/text', icon: FileText, group: 'Components' },
-];
+const groupOrder = ['Pages', 'Components', 'Blocks'] as const;
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -105,13 +93,16 @@ export function CommandPalette() {
       />
 
       {/* Dialog content */}
-      <div ref={dialogRef} className="fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-lg text-primary">
+      <div
+        ref={dialogRef}
+        className="fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-lg text-primary"
+      >
         <Command className="rounded-xl border bg-popover shadow-2xl overflow-hidden">
           <div className="flex items-center border-b px-4">
             <Search className="h-4 w-4 text-muted-foreground shrink-0" aria-hidden="true" />
             <Command.Input
               placeholder="Type a command or search..."
-              className="flex-1 h-12 bg-transparent text-sm !outline-none placeholder:text-muted-foreground ml-2 caret-white"
+              className="ml-2 h-12 flex-1 bg-transparent text-sm !outline-none placeholder:text-muted-foreground caret-white"
               aria-label="Search commands"
             />
           </div>
@@ -120,7 +111,7 @@ export function CommandPalette() {
               No results found.
             </Command.Empty>
 
-            {['Pages', 'Components'].map((group) => (
+            {groupOrder.map((group) => (
               <Command.Group
                 key={group}
                 heading={group}
@@ -131,7 +122,7 @@ export function CommandPalette() {
                   .map((item) => (
                     <Command.Item
                       key={item.href}
-                      value={item.label}
+                      value={`${item.label} ${item.group} ${item.href} ${item.keywords?.join(' ') ?? ''}`}
                       onSelect={() => handleSelect(item.href)}
                       className="flex items-center gap-3 rounded-md px-3 py-2 text-sm cursor-pointer data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground"
                     >

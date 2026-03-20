@@ -24,3 +24,5 @@ export * from './page-number.constant.js';
 export * from './watermark.constant.js';
 export * from './qrcode.constant.js';
 export * from './alert.constant.js';
+export * from './command.constant.js';
+export * from './header.constant.js';

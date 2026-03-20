@@ -1,9 +1,4 @@
-import {
-  Award,
-  FileSpreadsheet,
-  Receipt,
-  User,
-} from 'lucide-react';
+import { Award, FileSpreadsheet, Receipt, User } from 'lucide-react';
 
 export const BLOCKS = [
   {
