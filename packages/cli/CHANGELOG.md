@@ -1,5 +1,11 @@
 # @akii09/pdfx-cli
 
+## 0.1.7
+
+### Patch Changes
+
+- [#61](https://github.com/akii09/pdfx/pull/61) [`bc8d2e0`](https://github.com/akii09/pdfx/commit/bc8d2e05a7bc3522b06bf70b1baec341d361388b) Thanks [@akii09](https://github.com/akii09)! - feat: 17 components converted into single file component
+
 ## 0.1.6
 
 ### Patch Changes
