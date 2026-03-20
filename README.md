@@ -23,7 +23,8 @@ Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/u
 
 ## Prerequisites
 
-- Node.js ≥ 18.0.0
+- Node.js ≥ 24.0.0
+- pnpm ≥ 10.0.0
 - A React project with `@react-pdf/renderer` installed
 
 ## Quick Start
@@ -65,8 +66,8 @@ export default () => (
 | `npx @akii09/pdfx-cli theme init` | Set up the theme file |
 | `npx @akii09/pdfx-cli theme switch <preset>` | Switch theme preset |
 | `npx @akii09/pdfx-cli theme validate` | Validate your theme file |
-| `npx @akii09/pdfx-cli template add <template-name>` | Add a template (e.g. `invoice-classic`) |
-| `npx @akii09/pdfx-cli template list` | List available templates |
+| `npx @akii09/pdfx-cli block add <block-name>` | Add a block to your project |
+| `npx @akii09/pdfx-cli block list` | List available blocks |
 
 ## Theme Presets
 
@@ -78,15 +79,13 @@ export default () => (
 
 ## Available Components
 
-Run `npx @akii09/pdfx-cli list` to see all components with install status. Current highlights:
+Run `npx @akii09/pdfx-cli list` to see all components with install status.
 
-**Core**: `heading` `text` `divider` `page-break`
+**Core**: `heading` `text` `divider` `page-break` `page-number` `keep-together`
 **Layout**: `stack` `section` `page-header` `page-footer`
 **Data**: `table` `data-table` `list` `key-value`
-**Visual**: `badge` `card` `pdf-image` `graph`
+**Visual**: `alert` `badge` `card` `link` `pdf-image` `graph` `qrcode` `watermark`
 **Forms**: `form` `signature`
-
-See the [component registry](./COMPONENT-INVENTORY-AUDIT.md) for the complete list.
 
 ## Project Structure
 

@@ -98,11 +98,10 @@ This is a complete walkthrough for adding a new PDF component (e.g. `MyWidget`) 
 Create `packages/ui/src/components/my-widget/my-widget.tsx`:
 
 ```tsx
-import type { PDFComponentProps } from '@pdfx/shared';
-import type { PdfxTheme } from '@pdfx/shared';
+import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import { theme } from '../../lib/pdfx-theme';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
 export type MyWidgetVariant = 'default' | 'primary';
@@ -139,15 +138,15 @@ function createMyWidgetStyles(t: PdfxTheme) {
   });
 }
 
-// Module-level styles (built against the default theme)
-const styles = createMyWidgetStyles(theme);
-
 export function MyWidget({
   label,
   variant = 'default',
   background,
   style,
 }: MyWidgetProps) {
+  const theme = usePdfxTheme();
+  const styles = useSafeMemo(() => createMyWidgetStyles(theme), [theme]);
+
   const containerStyles: Style[] = [
     styles.container,
     variant === 'primary' ? styles.variantPrimary : styles.variantDefault,
@@ -171,7 +170,7 @@ export function MyWidget({
 
 - Derive all styles from `t` (the theme) inside `createXStyles(t)` — zero hardcoded pixel values
 - Use `resolveColor(value, theme.colors)` to resolve theme token names (e.g. `'primary'`) **and** pass raw CSS colors through unchanged
-- Build styles at module level: `const styles = createXStyles(theme)` — no runtime recalculation per render
+- Call `usePdfxTheme()` and memoize styles with `useSafeMemo(() => createXStyles(theme), [theme])` inside the component — recalculates only when the theme instance changes
 - Compose style arrays: `[base, variant, dynamic, override]` — style override always last
 - Extend `PDFComponentProps` (from `@pdfx/shared`) which provides `children`, `style`, etc.
 - Use `Omit<PDFComponentProps, 'children'>` when the component does not accept children
@@ -481,7 +480,7 @@ Check that:
 - All styles derived from theme tokens — **no hardcoded pixel values**
 - `resolveColor(value, theme.colors)` for all color props — supports both token names and raw CSS
 - Style arrays composed as `[base, variant, dynamic, override]`
-- Module-level `const styles = createXStyles(theme)` — no per-render recalculation
+- `usePdfxTheme()` + `useSafeMemo(() => createXStyles(theme), [theme])` inside the component — memoized per theme instance, safe for unit tests
 - Extend `PDFComponentProps` from `@pdfx/shared`
 
 ### Naming
