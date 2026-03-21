@@ -673,7 +673,7 @@ const features = [
       'Built directly on @react-pdf/renderer. No wrappers, no shims — pixel-perfect output in every viewer.',
   },
   {
-    title: '20 components',
+    title: '24 components',
     description:
       'Tables, charts, headers, footers, signatures, images and more. Everything real-world PDFs actually need.',
   },
@@ -726,7 +726,7 @@ export default function HomePage() {
               >
                 <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur-sm px-3.5 py-1 text-xs text-muted-foreground mb-8">
                   <span className="h-1.5 w-1.5 rounded-full bg-foreground/50 animate-pulse" />
-                  Open source · MIT · 20 components
+                  Open source · MIT · 24 components
                 </div>
               </motion.div>
 
@@ -786,7 +786,7 @@ export default function HomePage() {
                 transition={{ duration: 0.5, delay: 0.33 }}
                 className="text-xs text-muted-foreground/70 mb-5"
               >
-                Used by 14+ developers · MIT License · No vendor lock-in
+                MIT License · No vendor lock-in
               </motion.p>
 
               <motion.div
@@ -821,7 +821,7 @@ export default function HomePage() {
               >
                 <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur-sm px-2.5 sm:px-3 py-1 text-[10px] sm:text-xs text-muted-foreground mb-4 sm:mb-6">
                   <span className="h-1.5 w-1.5 rounded-full bg-foreground/50 animate-pulse" />
-                  Open source · MIT · 20 components
+                  Open source · MIT · 24 components
                 </div>
               </motion.div>
 
@@ -880,7 +880,7 @@ export default function HomePage() {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="text-xs text-muted-foreground/70 mb-4 sm:mb-5"
               >
-                Used by 14+ developers · MIT License · No vendor lock-in
+                MIT License · No vendor lock-in
               </motion.p>
 
               <motion.div
@@ -938,7 +938,7 @@ export default function HomePage() {
                 to="/components"
                 className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors font-medium flex-shrink-0"
               >
-                View all 20 components <ArrowRight className="h-3.5 w-3.5" />
+                View all 24 components <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </motion.div>
