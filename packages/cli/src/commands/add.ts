@@ -12,7 +12,6 @@ import {
 } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
-import prompts from 'prompts';
 import { validateReactPdfRenderer } from '../utils/dependency-validator.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
@@ -149,15 +148,9 @@ async function installComponent(name: string, config: Config, force: boolean): P
     const existing = filesToWrite.filter((f) => checkFileExists(f.filePath));
     if (existing.length > 0) {
       const fileNames = existing.map((f) => path.basename(f.filePath)).join(', ');
-      const { overwrite } = await prompts({
-        type: 'confirm',
-        name: 'overwrite',
-        message: `${fileNames} already exist(s). Overwrite?`,
-        initial: false,
-      });
-      if (!overwrite) {
-        throw new ValidationError(`Skipped ${name}: user declined overwrite`);
-      }
+      throw new ValidationError(
+        `${name}: already exists (${fileNames}), skipped install (use --force to overwrite)`
+      );
     }
   }
 
@@ -258,7 +251,12 @@ export async function add(
       await installComponent(componentName, config, force);
       spinner.succeed(`Added ${componentName}`);
     } catch (error: unknown) {
-      if (error instanceof ValidationError && error.message.includes('Skipped')) {
+      let shouldMarkAsFailed = true;
+
+      if (error instanceof ValidationError && error.message.includes('already exists')) {
+        spinner.info(error.message);
+        shouldMarkAsFailed = false;
+      } else if (error instanceof ValidationError && error.message.includes('Skipped')) {
         spinner.info(error.message);
       } else if (
         error instanceof NetworkError ||
@@ -274,7 +272,10 @@ export async function add(
         const message = error instanceof Error ? error.message : String(error);
         console.error(chalk.dim(`  ${message}`));
       }
-      failed.push(componentName);
+
+      if (shouldMarkAsFailed) {
+        failed.push(componentName);
+      }
     }
   }
 
