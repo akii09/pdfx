@@ -1,0 +1,162 @@
+# PDFx
+
+> Copy-paste React PDF components like shadcn/ui. Build professional PDFs with @react-pdf/renderer — you own the code.
+
+PDFx is an open-source React PDF component library that follows the shadcn/ui model: run the CLI to add a component, the source lands in your project and you own it fully. No runtime package dependency, no version lock-in, MIT licensed.
+
+Website: https://pdfx.akashpise.dev  
+GitHub: https://github.com/akii09/pdfx  
+npm (CLI): https://www.npmjs.com/package/@akii09/pdfx-cli  
+License: MIT
+
+## Quick Start
+
+```bash
+# Initialise your project (creates pdfx.config.json + theme)
+npx @akii09/pdfx-cli init
+
+# Add a component — source is copied into YOUR codebase
+npx @akii09/pdfx-cli add table
+
+# Add all components at once
+npx @akii09/pdfx-cli add --all
+
+# List available components
+npx @akii09/pdfx-cli list
+
+# Add a full pre-built block (invoice, report)
+npx @akii09/pdfx-cli block add invoice-modern
+npx @akii09/pdfx-cli block list
+```
+
+## What is PDFx?
+
+PDFx provides 24 production-ready PDF components built on top of `@react-pdf/renderer`. Instead of importing from a package you cannot customise, you copy the component source directly into your project via the CLI and modify it however you need.
+
+Key traits:
+- **No runtime dependency** — after `pdfx add`, you own the file
+- **Full TypeScript** — every component is typed with PDFComponentProps
+- **Theme system** — Professional, Modern, and Minimal presets; or define your own
+- **CLI-driven** — `pdfx add`, `pdfx list`, `pdfx diff`, `pdfx theme` commands
+- **MIT licensed** — free forever, no cost
+
+## Theme System
+
+PDFx ships three built-in themes. Switch with:
+
+```bash
+npx @akii09/pdfx-cli theme switch modern
+```
+
+Themes: `professional` (default), `modern`, `minimal`
+
+Each theme exports a token object used inside components:
+```ts
+const theme = usePdfxTheme();
+// theme.colors.primary, theme.spacing.md, theme.font.sizes.base, ...
+```
+
+## Component Reference
+
+All 24 components, their paths, and descriptions:
+
+### Typography
+- **Heading** (`/components/heading`) — H1–H6 hierarchy with theme-aware sizing
+- **Text** (`/components/text`) — Inline and block text with typographic variants
+- **Link** (`/components/link`) — Clickable hyperlinks inside PDF documents
+
+### Layout
+- **Stack** (`/components/stack`) — Flexbox container (row or column)
+- **Section** (`/components/section`) — Top-level document section with optional title
+- **Divider** (`/components/divider`) — Horizontal rule with configurable weight and color
+- **Page Break** (`/components/page-break`) — Force content onto a new PDF page
+- **Keep Together** (`/components/keep-together`) — Prevent a group from splitting across pages
+- **Card** (`/components/card`) — Bordered content card with header and body
+
+### Page Chrome
+- **Page Header** (`/components/page-header`) — Fixed header on every page with logo, title, subtitle
+- **Page Footer** (`/components/page-footer`) — Fixed footer with contact info or legal copy
+- **Page Number** (`/components/page-number`) — Dynamic page X of Y counter
+- **Watermark** (`/components/watermark`) — Diagonal or centered text watermark on every page
+
+### Data Display
+- **Table** (`/components/table`) — HTML-like table with headers, rows, and alternating stripes
+- **Data Table** (`/components/data-table`) — Data-driven table from an object array; columns auto-inferred
+- **List** (`/components/list`) — Ordered and unordered lists with custom bullet styles
+- **Badge** (`/components/badge`) — Small inline label for statuses, tags, or categories
+- **Key Value** (`/components/key-value`) — Two-column label/value pairs (perfect for invoice metadata)
+- **Alert** (`/components/alert`) — Info, warning, error, and success callout boxes
+
+### Media & Visuals
+- **PDF Image** (`/components/pdf-image`) — Embed raster images with sizing and aspect-ratio control
+- **Graph** (`/components/graph`) — SVG bar, line, and pie charts rendered as native PDF vectors
+- **QR Code** (`/components/qrcode`) — Scannable QR codes as native PDF vector graphics
+
+### Forms & Documents
+- **Form** (`/components/form`) — Labeled field groups for invoices, contracts, and agreements
+- **Signature** (`/components/signature`) — Signature block with name, role, date, and underline
+
+## Pre-built Blocks
+
+Blocks are complete multi-component PDF documents you can add with a single command.
+
+### Invoice Blocks
+```bash
+npx @akii09/pdfx-cli block add invoice-classic
+npx @akii09/pdfx-cli block add invoice-modern
+npx @akii09/pdfx-cli block add invoice-minimal
+npx @akii09/pdfx-cli block add invoice-corporate
+npx @akii09/pdfx-cli block add invoice-creative
+npx @akii09/pdfx-cli block add invoice-consultant
+```
+
+### Report Blocks
+```bash
+npx @akii09/pdfx-cli block add report-analytics
+npx @akii09/pdfx-cli block add report-financial
+```
+
+## CLI Command Reference
+
+| Command | Description |
+|---|---|
+| `pdfx init` | Scaffold config + theme in your project |
+| `pdfx add <component>` | Copy component source into your project |
+| `pdfx add --all` | Copy all components at once |
+| `pdfx list` | List all available components |
+| `pdfx diff <component>` | Show diff between your local copy and latest upstream |
+| `pdfx theme init` | Create a custom theme file |
+| `pdfx theme switch <name>` | Switch to professional / modern / minimal |
+| `pdfx theme validate` | Validate your theme token file |
+| `pdfx block add <id>` | Copy a pre-built block into your project |
+| `pdfx block list` | List all available blocks |
+
+## Tech Stack
+
+- **Rendering**: `@react-pdf/renderer` v4
+- **Language**: TypeScript (strict)
+- **Package manager**: pnpm v10 (workspace monorepo)
+- **Build**: Vite + Turborepo
+- **Linter**: Biome
+- **Node.js**: ≥ 24.0.0
+
+## Repository Structure
+
+```
+pdfx/
+├── apps/
+│   ├── playground/   # Dev sandbox for testing components
+│   └── www/          # Docs site (Vite React SPA)
+├── packages/
+│   ├── ui/           # The 24 PDF components (source of truth)
+│   ├── cli/          # @akii09/pdfx-cli — the add/init/theme commands
+│   └── shared/       # Shared types, errors, schema validation
+└── docs/             # Architecture and decision docs
+```
+
+## Optional: Full documentation pages
+
+- Docs: https://pdfx.akashpise.dev/docs
+- Installation: https://pdfx.akashpise.dev/installation
+- Components: https://pdfx.akashpise.dev/components
+- Blocks: https://pdfx.akashpise.dev/blocks

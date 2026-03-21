@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && tsx scripts/generate-seo-html.ts",
     "build:registry": "tsx src/lib/build-registry.ts",
     "preview": "vite preview",
     "clean": "rimraf dist public/r",
