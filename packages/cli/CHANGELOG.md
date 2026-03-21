@@ -1,5 +1,11 @@
 # @akii09/pdfx-cli
 
+## 0.1.8
+
+### Patch Changes
+
+- [#66](https://github.com/akii09/pdfx/pull/66) [`bef608b`](https://github.com/akii09/pdfx/commit/bef608b95b23e9798914abac53238e155baca8b6) Thanks [@akii09](https://github.com/akii09)! - fix: already exist component fallback fixed
+
 ## 0.1.7
 
 ### Patch Changes
