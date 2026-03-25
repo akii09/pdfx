@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-// ─── Theme Schemas ──────────────────────────────────────────────────────────
-
 /** Schema for semantic color tokens */
 export const colorTokensSchema = z.object({
   foreground: z.string().min(1),
@@ -102,15 +100,12 @@ export const themeSchema = z.object({
   page: pageTokensSchema,
 });
 
-// ─── Config & Registry Schemas ──────────────────────────────────────────────
-
 /** Schema for pdfx.json config file */
 export const configSchema = z.object({
   $schema: z.string().optional(),
   componentDir: z.string().min(1, 'componentDir must not be empty'),
   registry: z.string().url('registry must be a valid URL'),
   theme: z.string().min(1).optional(),
-  /** Directory where blocks are installed. Defaults to ./src/blocks/pdfx */
   blockDir: z.string().min(1).optional(),
 });
 
@@ -139,7 +134,6 @@ export const registryItemSchema = z.object({
   files: z.array(registryFileSchema).min(1, 'Component must have at least one file'),
   dependencies: z.array(z.string()).optional(),
   registryDependencies: z.array(z.string()).optional(),
-  /** Peer components that must be installed alongside this item (used by blocks) */
   peerComponents: z.array(z.string()).optional(),
 });
 
