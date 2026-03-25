@@ -35,7 +35,7 @@ Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/c
 
 ```bash
 # Initialize PDFx in your project
-npx @akii09/pdfx-cli@alpha init
+npx @akii09/pdfx-cli@beta init
 
 # Add components
 npx @akii09/pdfx-cli add heading
