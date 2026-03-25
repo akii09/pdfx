@@ -3,15 +3,15 @@ import { Check, ChevronRight, Code2, Eye, FileText, Layers, Terminal } from 'luc
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// ── Template registry files ──────────────────────────────────────────────────
-import invoice01Registry from '../../../../public/r/templates/invoice-classic.json';
-import invoice06Registry from '../../../../public/r/templates/invoice-consultant.json';
-import invoice04Registry from '../../../../public/r/templates/invoice-corporate.json';
-import invoice05Registry from '../../../../public/r/templates/invoice-creative.json';
-import invoice03Registry from '../../../../public/r/templates/invoice-minimal.json';
-import invoice02Registry from '../../../../public/r/templates/invoice-modern.json';
+// Blocks registry files
+import invoice01Registry from '../../../../public/r/blocks/invoice-classic.json';
+import invoice06Registry from '../../../../public/r/blocks/invoice-consultant.json';
+import invoice04Registry from '../../../../public/r/blocks/invoice-corporate.json';
+import invoice05Registry from '../../../../public/r/blocks/invoice-creative.json';
+import invoice03Registry from '../../../../public/r/blocks/invoice-minimal.json';
+import invoice02Registry from '../../../../public/r/blocks/invoice-modern.json';
 
-// ── Component registry files ─────────────────────────────────────────────────
+// Component registry files
 import keyValueRegistry from '../../../../public/r/key-value.json';
 import pageFooterRegistry from '../../../../public/r/page-footer.json';
 import pageHeaderRegistry from '../../../../public/r/page-header.json';
@@ -45,7 +45,7 @@ type TemplateId =
 type ThemePreset = 'professional' | 'modern' | 'minimal';
 type ViewMode = 'preview' | 'code';
 
-// ── Component file map ───────────────────────────────────────────────────────
+// Component file map
 const INVOICE_COMPONENT_FILES: TemplateCodeFile[] = [
   keyValueRegistry,
   pageFooterRegistry,

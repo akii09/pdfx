@@ -35,6 +35,11 @@ const routes: Record<string, RouteMeta> = {
     description:
       'Get started with PDFx. Learn how to install, configure themes, and add PDF components to your React project using the CLI.',
   },
+  '/docs/server-side': {
+    title: 'Server-side / Node.js — PDFx',
+    description:
+      'Generate PDFs in Node.js with PDFx. Full guide covering renderToBuffer, renderToStream, Express.js, Next.js App Router, and standalone scripts.',
+  },
   '/installation': {
     title: 'Installation — PDFx',
     description:

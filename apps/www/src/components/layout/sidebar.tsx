@@ -14,7 +14,10 @@ interface SidebarSection {
 const sections: SidebarSection[] = [
   {
     title: 'Getting Started',
-    links: [{ title: 'Introduction', href: '/docs' }],
+    links: [
+      { title: 'Introduction', href: '/docs' },
+      { title: 'Server-side / Node.js', href: '/docs/server-side' },
+    ],
   },
   {
     title: 'Installation',

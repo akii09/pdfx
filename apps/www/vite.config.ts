@@ -13,6 +13,18 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
-    allowedHosts: ['brantley-nonchimerical-speedfully.ngrok-free.dev'], // Allow both localhost and pdfx.local for development
+    allowedHosts: process.env.VITE_ALLOWED_HOST ? [process.env.VITE_ALLOWED_HOST] : undefined,
+  },
+  build: {
+    reportCompressedSize: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-react-pdf': ['@react-pdf/renderer'],
+          'vendor-router': ['react-router-dom'],
+        },
+      },
+    },
   },
 });

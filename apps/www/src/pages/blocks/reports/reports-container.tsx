@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // ── Template registry files ──────────────────────────────────────────────────
-import reportFinancialRegistry from '../../../../public/r/templates/report-financial.json';
-import reportMarketingRegistry from '../../../../public/r/templates/report-marketing.json';
-import reportOperationsRegistry from '../../../../public/r/templates/report-operations.json';
-import reportSecurityRegistry from '../../../../public/r/templates/report-security.json';
+import reportFinancialRegistry from '../../../../public/r/blocks/report-financial.json';
+import reportMarketingRegistry from '../../../../public/r/blocks/report-marketing.json';
+import reportOperationsRegistry from '../../../../public/r/blocks/report-operations.json';
+import reportSecurityRegistry from '../../../../public/r/blocks/report-security.json';
 
 // ── Component registry files ─────────────────────────────────────────────────
 import badgeRegistry from '../../../../public/r/badge.json';

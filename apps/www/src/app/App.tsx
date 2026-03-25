@@ -31,6 +31,7 @@ const WatermarkPage = lazy(() => import('../pages/components/watermark'));
 const QRCodePage = lazy(() => import('../pages/components/qrcode'));
 const AlertPage = lazy(() => import('../pages/components/alert'));
 const InstallationPage = lazy(() => import('../pages/installation'));
+const ServerSidePage = lazy(() => import('../pages/docs/server-side'));
 const BlocksIndexPage = lazy(() => import('../pages/blocks/index'));
 const InvoicesIndexPage = lazy(() => import('../pages/blocks/invoices/index'));
 const ReportsIndexPage = lazy(() => import('../pages/blocks/reports/index'));
@@ -55,14 +56,24 @@ export default function App() {
             </Suspense>
           }
         />
-        <Route
-          path="docs"
-          element={
-            <Suspense fallback={<PageLoader />}>
-              <DocsPage />
-            </Suspense>
-          }
-        />
+        <Route path="docs">
+          <Route
+            index
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <DocsPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="server-side"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ServerSidePage />
+              </Suspense>
+            }
+          />
+        </Route>
         <Route
           path="installation"
           element={

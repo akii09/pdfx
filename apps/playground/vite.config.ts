@@ -14,4 +14,15 @@ export default defineConfig({
     port: 3001,
     open: true,
   },
+  build: {
+    reportCompressedSize: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-react-pdf': ['@react-pdf/renderer'],
+        },
+      },
+    },
+  },
 });
