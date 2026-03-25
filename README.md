@@ -98,7 +98,7 @@ pdfx/
 ├── apps/
 │   └── www/                    # Documentation site + component registry
 │       └── src/registry/
-│           ├── ui/             # Component source (copy-paste target)
+│           ├── components/     # Component source (copy-paste target)
 │           ├── blocks/         # Block templates
 │           └── index.json      # Registry manifest
 ├── packages/

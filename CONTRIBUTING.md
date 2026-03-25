@@ -239,9 +239,9 @@ Edit `apps/www/src/registry/index.json` and add an entry to `items`:
   "title": "MyWidget",
   "description": "Short description.",
   "files": [
-    { "path": "ui/my-widget/my-widget.tsx", "type": "registry:component" },
-    { "path": "ui/my-widget/my-widget.styles.ts", "type": "registry:component" },
-    { "path": "ui/my-widget/my-widget.types.ts", "type": "registry:component" }
+    { "path": "components/my-widget/my-widget.tsx", "type": "registry:component" },
+    { "path": "components/my-widget/my-widget.styles.ts", "type": "registry:component" },
+    { "path": "components/my-widget/my-widget.types.ts", "type": "registry:component" }
   ],
   "dependencies": [],
   "registryDependencies": []

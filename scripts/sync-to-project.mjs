@@ -7,7 +7,7 @@
  * producing the exact same files a developer receives from `pdfx add <name>`.
  *
  * Run this script whenever you:
- *  - Add or update a component in packages/ui and rebuild the registry
+ *  - Add or update a component in apps/www/src/registry/components and rebuild the registry
  *  - Want to keep a local test/demo project in sync with the latest registry
  *
  * ─── Path resolution priority (highest → lowest) ────────────────────────────
