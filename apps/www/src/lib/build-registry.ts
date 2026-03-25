@@ -293,13 +293,9 @@ async function buildRegistry() {
   // resolve relative paths from the registry dir to get absolute paths.
   const registryBaseDir = path.dirname(registryPath);
 
-  // Separate pre-built items (template + block = pre-built JSON, just copy) from component items (source → transform)
-  const componentItems = registry.items.filter(
-    (item) => item.type !== 'registry:template' && item.type !== 'registry:block'
-  );
-  const prebuiltItems = registry.items.filter(
-    (item) => item.type === 'registry:template' || item.type === 'registry:block'
-  );
+  // Separate pre-built block items (hand-crafted JSON, just verify) from component items (source → transform)
+  const componentItems = registry.items.filter((item) => item.type !== 'registry:block');
+  const prebuiltItems = registry.items.filter((item) => item.type === 'registry:block');
 
   // Process component items in parallel
   const results = await Promise.allSettled(
@@ -313,22 +309,22 @@ async function buildRegistry() {
     throw new Error(`Registry build had failures:\n  ${messages}`);
   }
 
-  // Template/block items are pre-built hand-crafted JSON files already living in
-  // public/r/templates/.  We just verify they exist and log them — no source
+  // Block items are pre-built hand-crafted JSON files already living in
+  // public/r/blocks/.  We just verify they exist and log them — no source
   // transformation needed.
   const appDir = path.join(__dirname, '../..');
-  const templateFailures: string[] = [];
+  const blockFailures: string[] = [];
   for (const item of prebuiltItems) {
-    const templatePath = path.join(appDir, 'public', 'r', 'templates', `${item.name}.json`);
-    if (await fileExistsAsync(templatePath)) {
+    const blockPath = path.join(appDir, 'public', 'r', 'blocks', `${item.name}.json`);
+    if (await fileExistsAsync(blockPath)) {
       console.log(`  ${item.name}.json (${item.type.replace('registry:', '')}, pre-built)`);
     } else {
-      templateFailures.push(`Missing pre-built file: public/r/templates/${item.name}.json`);
+      blockFailures.push(`Missing pre-built file: public/r/blocks/${item.name}.json`);
     }
   }
 
-  if (templateFailures.length > 0) {
-    throw new Error(`Registry build had failures:\n  ${templateFailures.join('\n  ')}`);
+  if (blockFailures.length > 0) {
+    throw new Error(`Registry build had failures:\n  ${blockFailures.join('\n  ')}`);
   }
 
   const indexOutputPath = path.join(outputDir, 'index.json');

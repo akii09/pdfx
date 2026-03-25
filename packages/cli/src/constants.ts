@@ -7,11 +7,11 @@ export const DEFAULTS = {
 } as const;
 
 export const REGISTRY_SUBPATHS = {
-  TEMPLATES: 'templates',
+  BLOCKS: 'blocks',
 } as const;
 
 export const REQUIRED_VERSIONS = {
   '@react-pdf/renderer': '>=3.0.0',
   react: '>=16.8.0',
-  node: '>=24.0.0',
+  node: '>=20.0.0',
 };

@@ -113,12 +113,10 @@ describe('dependency-validator', () => {
       const result = validateNodeVersion();
       expect(result.installed).toBe(true);
       expect(result.currentVersion).toBeDefined();
-      expect(result.requiredVersion).toBe('>=24.0.0');
+      expect(result.requiredVersion).toBe('>=20.0.0');
 
-      // This test may fail if running on Node < 24
-      // That's expected and intentional
       const currentMajor = Number.parseInt(process.version.slice(1).split('.')[0]);
-      expect(result.valid).toBe(currentMajor >= 24);
+      expect(result.valid).toBe(currentMajor >= 20);
     });
   });
 

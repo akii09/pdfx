@@ -9,6 +9,7 @@ import { DEFAULTS } from '../constants.js';
 import { checkFileExists, ensureDir } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
+import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
 
 /**
  * Interactive theme initialization.
@@ -56,6 +57,8 @@ export async function themeInit() {
         name: 'themePath',
         message: 'Where should we create the theme file?',
         initial: DEFAULTS.THEME_FILE,
+        format: normalizeThemePath,
+        validate: validateThemePath,
       },
     ],
     {
@@ -165,6 +168,7 @@ export async function themeSwitch(presetName: string) {
   try {
     const preset = themePresets[validatedPreset];
     const absThemePath = path.resolve(process.cwd(), config.theme);
+    ensureDir(path.dirname(absThemePath));
     fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
 
     const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');

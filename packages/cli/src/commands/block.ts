@@ -21,7 +21,7 @@ import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
 type OverwriteDecision = 'skip' | 'overwrite' | 'overwrite-all';
 
 async function fetchBlock(name: string, registryUrl: string): Promise<RegistryItem> {
-  const url = `${registryUrl}/${REGISTRY_SUBPATHS.TEMPLATES}/${name}.json`;
+  const url = `${registryUrl}/${REGISTRY_SUBPATHS.BLOCKS}/${name}.json`;
   let response: Response;
 
   try {
@@ -37,7 +37,8 @@ async function fetchBlock(name: string, registryUrl: string): Promise<RegistryIt
     throw new RegistryError(
       response.status === 404
         ? `Block "${name}" not found in registry`
-        : `Registry returned HTTP ${response.status}`
+        : `Registry returned HTTP ${response.status}`,
+      response.status === 404 ? 'Run "pdfx block list" to see all available blocks' : undefined
     );
   }
 

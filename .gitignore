@@ -39,3 +39,4 @@ coverage/
 # Other
 docs
 PDFx-DESIGN-SYSTEM
+.venv

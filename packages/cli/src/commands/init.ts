@@ -9,6 +9,7 @@ import { ensureDir } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
 import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
+import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
 
 export async function init() {
   console.log(chalk.bold.cyan('\n  Welcome to the pdfx cli\n'));
@@ -125,20 +126,8 @@ export async function init() {
         name: 'themePath',
         message: 'Where should we create the theme file?',
         initial: DEFAULTS.THEME_FILE,
-        validate: (value: string) => {
-          if (!value || value.trim().length === 0) {
-            return 'Theme path is required';
-          }
-          // Validate it's a relative path
-          if (path.isAbsolute(value)) {
-            return 'Please use a relative path (e.g., ./src/lib/pdfx-theme.ts)';
-          }
-          // Ensure it has .ts or .tsx extension
-          if (!value.endsWith('.ts') && !value.endsWith('.tsx')) {
-            return 'Theme file must have .ts or .tsx extension (e.g., ./src/lib/pdfx-theme.ts)';
-          }
-          return true;
-        },
+        format: normalizeThemePath,
+        validate: validateThemePath,
       },
     ],
     {

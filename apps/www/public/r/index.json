@@ -406,7 +406,7 @@
       "description": "Professional A4 invoice with logo-left header, three-column billing section, and zebra-striped grid table.",
       "files": [
         {
-          "path": "public/r/templates/invoice-classic.json",
+          "path": "public/r/blocks/invoice-classic.json",
           "type": "registry:block"
         }
       ],
@@ -430,7 +430,7 @@
       "description": "Consultant-focused invoice with hourly rate breakdown, project summary, and professional styling.",
       "files": [
         {
-          "path": "public/r/templates/invoice-consultant.json",
+          "path": "public/r/blocks/invoice-consultant.json",
           "type": "registry:block"
         }
       ],
@@ -454,7 +454,7 @@
       "description": "Enterprise invoice with formal layout, purchase order fields, and approval signatures.",
       "files": [
         {
-          "path": "public/r/templates/invoice-corporate.json",
+          "path": "public/r/blocks/invoice-corporate.json",
           "type": "registry:block"
         }
       ],
@@ -478,7 +478,7 @@
       "description": "Creative invoice with accent sidebar, modern typography, and vibrant color highlights.",
       "files": [
         {
-          "path": "public/r/templates/invoice-creative.json",
+          "path": "public/r/blocks/invoice-creative.json",
           "type": "registry:block"
         }
       ],
@@ -502,7 +502,7 @@
       "description": "Clean minimal layout with inline invoice stamp, two-column billing info, and compact table.",
       "files": [
         {
-          "path": "public/r/templates/invoice-minimal.json",
+          "path": "public/r/blocks/invoice-minimal.json",
           "type": "registry:block"
         }
       ],
@@ -525,7 +525,7 @@
       "description": "Branded full-width banner header, horizontal invoice meta strip, and primary-header table.",
       "files": [
         {
-          "path": "public/r/templates/invoice-modern.json",
+          "path": "public/r/blocks/invoice-modern.json",
           "type": "registry:block"
         }
       ],
@@ -548,7 +548,7 @@
       "description": "Executive financial report with KPI cards, trend chart, delivery table, and highlights section.",
       "files": [
         {
-          "path": "public/r/templates/report-financial.json",
+          "path": "public/r/blocks/report-financial.json",
           "type": "registry:block"
         }
       ],
@@ -576,7 +576,7 @@
       "description": "Growth and marketing report with acquisition trendline, channel performance, and execution highlights.",
       "files": [
         {
-          "path": "public/r/templates/report-marketing.json",
+          "path": "public/r/blocks/report-marketing.json",
           "type": "registry:block"
         }
       ],
@@ -604,7 +604,7 @@
       "description": "Operations and delivery report covering SLA health, throughput trends, and risk tracking.",
       "files": [
         {
-          "path": "public/r/templates/report-operations.json",
+          "path": "public/r/blocks/report-operations.json",
           "type": "registry:block"
         }
       ],
@@ -632,7 +632,7 @@
       "description": "Security posture report with vulnerability trend tracking, remediation table, and risk summary.",
       "files": [
         {
-          "path": "public/r/templates/report-security.json",
+          "path": "public/r/blocks/report-security.json",
           "type": "registry:block"
         }
       ],

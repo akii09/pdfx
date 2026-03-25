@@ -6,7 +6,7 @@ export default defineConfig({
   dts: true,
   sourcemap: false,
   clean: true,
-  target: 'node24',
+  target: 'node20',
   noExternal: ['@pdfx/shared'],
   banner: {
     js: '#!/usr/bin/env node',

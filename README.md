@@ -23,7 +23,7 @@ Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/u
 
 ## Prerequisites
 
-- Node.js ≥ 24.0.0
+- Node.js ≥ 20.0.0
 - pnpm ≥ 10.0.0
 - A React project with `@react-pdf/renderer` installed
 
