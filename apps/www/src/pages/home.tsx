@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight, Copy, Github } from 'lucide-react';
+import { ArrowRight, Copy, Github, Server, Zap } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -1008,6 +1008,132 @@ export default function HomePage() {
                 </p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── COMPATIBILITY & SERVER-SIDE ───────────────────────────────── */}
+      <section
+        className="py-20 sm:py-28 px-4 sm:px-6 border-t border-border/60"
+        aria-label="Compatibility and server-side support"
+      >
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5 }}
+            className="mb-12 sm:mb-14"
+          >
+            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">
+              Compatibility
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight max-w-md">
+              Works where you work
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Compatibility matrix */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4 }}
+              className="rounded-xl border border-border/60 bg-card p-6"
+            >
+              <div className="flex items-center gap-2 mb-5">
+                <Zap className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-semibold text-foreground">Requirements</h3>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { label: 'Node.js', value: '≥ 20.0.0', note: 'LTS or later' },
+                  { label: 'React', value: '≥ 16.8', note: 'hooks required' },
+                  { label: '@react-pdf/renderer', value: '≥ 3.x', note: 'peer dependency' },
+                  { label: 'TypeScript', value: '≥ 4.7', note: 'optional but recommended' },
+                ].map(({ label, value, note }) => (
+                  <div
+                    key={label}
+                    className="flex items-center justify-between py-2.5 border-b border-border/40 last:border-0"
+                  >
+                    <div>
+                      <span className="text-sm font-medium text-foreground">{label}</span>
+                      <span className="ml-2 text-xs text-muted-foreground">{note}</span>
+                    </div>
+                    <code className="text-xs font-mono bg-muted/70 text-foreground rounded px-2 py-0.5">
+                      {value}
+                    </code>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-xs text-muted-foreground">
+                Works with npm, pnpm, yarn, and bun. Monorepo-aware — installs to your app, not the
+                workspace root.
+              </p>
+            </motion.div>
+
+            {/* Server-side callout */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.08 }}
+              className="rounded-xl border border-border/60 bg-card p-6 flex flex-col"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Server className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-semibold text-foreground">Server-side ready</h3>
+                <span className="ml-auto rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary border border-primary/20">
+                  Node.js
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                Generate PDFs in Node.js, Express, or Next.js App Router — no browser APIs required.
+                PDFx components work identically on the server and in the browser.
+              </p>
+              <div className="rounded-lg bg-muted/60 border border-border/60 p-4 font-mono text-xs text-muted-foreground mb-5 flex-1">
+                <div className="text-foreground/40 mb-1.5 text-[10px] uppercase tracking-widest">
+                  Next.js App Router
+                </div>
+                <div>
+                  <span className="text-blue-500 dark:text-blue-400">import</span>
+                  {' { renderToBuffer } '}
+                  <span className="text-blue-500 dark:text-blue-400">from</span>{' '}
+                  <span className="text-green-600 dark:text-green-400">
+                    &apos;@react-pdf/renderer&apos;
+                  </span>
+                  ;
+                </div>
+                <div className="mt-1">
+                  <span className="text-blue-500 dark:text-blue-400">export async function</span>{' '}
+                  <span className="text-yellow-600 dark:text-yellow-400">GET</span>() {'{'}
+                </div>
+                <div className="ml-4">
+                  <span className="text-blue-500 dark:text-blue-400">const</span> buf ={' '}
+                  <span className="text-blue-500 dark:text-blue-400">await</span>{' '}
+                  <span className="text-yellow-600 dark:text-yellow-400">renderToBuffer</span>
+                  {'(<MyDoc />)'}
+                </div>
+                <div className="ml-4">
+                  <span className="text-blue-500 dark:text-blue-400">return new</span>{' '}
+                  <span className="text-yellow-600 dark:text-yellow-400">Response</span>(buf, {'{'}{' '}
+                  headers: {'{ '}
+                  <span className="text-green-600 dark:text-green-400">
+                    &apos;Content-Type&apos;
+                  </span>
+                  : <span className="text-green-600 dark:text-green-400">&apos;…pdf&apos;</span>{' '}
+                  {'}'} {'}'})
+                </div>
+                <div>{'}'}</div>
+              </div>
+              <Link
+                to="/docs/server-side"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-primary transition-colors mt-auto"
+              >
+                Read the server-side guide <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>

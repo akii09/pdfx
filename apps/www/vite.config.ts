@@ -1,9 +1,15 @@
 import path from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import cliPkg from '../../packages/cli/package.json';
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    // Injected at build time — reads the CLI package.json as the single source of truth.
+    // Access in components via the global `__PDFX_VERSION__` (declared in vite-env.d.ts).
+    __PDFX_VERSION__: JSON.stringify(cliPkg.version),
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

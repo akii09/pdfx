@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { type Registry, registrySchema } from '@pdfx/shared';
+import { type Registry, registryItemSchema, registrySchema } from '@pdfx/shared';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -251,6 +251,15 @@ async function processItem(
     output.registryDependencies = ['theme', ...sourceDeps.filter((d) => d !== 'theme')];
   } else if (sourceDeps.length > 0) {
     output.registryDependencies = sourceDeps;
+  }
+
+  // Validate output against registryItemSchema before writing — catches silent
+  // transform regressions that drop required fields.
+  const validation = registryItemSchema.safeParse(output);
+  if (!validation.success) {
+    throw new Error(
+      `Output schema validation failed for "${item.name}":\n${validation.error.message}`
+    );
   }
 
   const outputPath = path.join(outputDir, `${item.name}.json`);

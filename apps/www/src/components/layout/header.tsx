@@ -143,6 +143,9 @@ export function Header() {
         <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2 font-bold text-xl shrink-0">
             <img src="/pdfx.png" alt="PDFx" className="h-10 w-auto dark:invert dark:brightness-0" />
+            <span className="hidden sm:inline-flex items-center rounded-full border border-border/70 bg-muted/50 px-2 py-0.5 text-[10px] font-mono text-muted-foreground">
+              v{__PDFX_VERSION__}
+            </span>
           </Link>
 
           {/* Desktop primary nav — left side */}

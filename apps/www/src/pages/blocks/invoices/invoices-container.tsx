@@ -1,4 +1,5 @@
 import { type PdfxTheme, minimalTheme, modernTheme, professionalTheme } from '@pdfx/shared';
+import { track } from '@vercel/analytics';
 import { Check, ChevronRight, Code2, Eye, FileText, Layers, Terminal } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -340,6 +341,7 @@ export default function InvoicesContainerPage() {
           <CopyButton
             value={installCmd}
             className="ml-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded p-1 transition-colors"
+            onCopy={(cmd) => track('block_install_copied', { block: current.id, cmd })}
           />
         </div>
       </div>

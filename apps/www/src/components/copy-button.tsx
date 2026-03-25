@@ -5,16 +5,18 @@ import { cn } from '../lib/utils';
 interface CopyButtonProps {
   value: string;
   className?: string;
+  onCopy?: (value: string) => void;
 }
 
-export function CopyButton({ value, className }: CopyButtonProps) {
+export function CopyButton({ value, className, onCopy }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(value);
     setCopied(true);
+    onCopy?.(value);
     setTimeout(() => setCopied(false), 2000);
-  }, [value]);
+  }, [value, onCopy]);
 
   return (
     <button
