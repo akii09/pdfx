@@ -1,5 +1,5 @@
 import { dataTableProps, dataTableUsageCode, users } from '@/constants/data-table.constant';
-import { DataTable, Heading } from '@pdfx/ui';
+import { DataTable, Heading } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

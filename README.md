@@ -6,7 +6,7 @@
 
 **Beautiful PDF components for React. Copy-paste. No lock-in.**
 
-Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/ui](https://ui.shadcn.com/) — PDFx gives you pre-built, themeable document components and a CLI to add them directly into your codebase.
+Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/components](https://components.shadcn.com/) — PDFx gives you pre-built, themeable document components and a CLI to add them directly into your codebase.
 
 ---
 
@@ -107,7 +107,7 @@ pdfx/
 └── turbo.json
 ```
 
-Components live in `apps/www/src/registry/ui/` — the same directory the registry serves from. No separate private package. This is the true shadcn/ui model: the website and the registry are the same thing.
+Components live in `apps/www/src/registry/components/` — the same directory the registry serves from. No separate private package. This is the true shadcn/components model: the website and the registry are the same thing.
 
 ## Contributing
 

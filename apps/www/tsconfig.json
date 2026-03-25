@@ -7,7 +7,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@pdfx/ui": ["./src/registry/ui"]
+      "@pdfx/components": ["./src/registry/components"]
     }
   },
   "include": ["src"],

@@ -1,4 +1,3 @@
-import type { PdfxTheme } from '@pdfx/shared';
 import {
   Badge,
   DataTable,
@@ -11,7 +10,8 @@ import {
   Section,
   Text,
   usePdfxTheme,
-} from '@pdfx/ui';
+} from '@pdfx/components';
+import type { PdfxTheme } from '@pdfx/shared';
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
 import type { BaseReportData } from './report.types';
 

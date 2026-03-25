@@ -1,5 +1,5 @@
 import { headingProps, headingUsageCode } from '@/constants';
-import { Heading } from '@pdfx/ui';
+import { Heading } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

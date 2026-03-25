@@ -190,7 +190,7 @@ async function processItem(
 
   const fileResults = await Promise.all(
     item.files.map(async (file) => {
-      // Source files are in src/registry/ui/<component>/ and referenced by relative path.
+      // Source files are in src/registry/components/<component>/ and referenced by relative path.
       // We resolve from the registry base dir. The ensureWithinDir check is used for output paths only.
       const filePath = path.resolve(registryBaseDir, file.path);
 
@@ -247,7 +247,7 @@ async function processItem(
 }
 
 /**
- * Maps @pdfx/ui exported names to their consumer component file paths.
+ * Maps @pdfx/components exported names to their consumer component file paths.
  * Key: export name, Value: component folder name (used to build the pdfx- prefixed path).
  */
 const PDFX_UI_COMPONENT_MAP: Record<string, string> = {
@@ -289,14 +289,14 @@ const PDFX_UI_COMPONENT_MAP: Record<string, string> = {
 /**
  * Transforms a block source file for consumer distribution.
  *
- * Block source files use workspace imports (`@pdfx/ui`, `@pdfx/shared`) so they
+ * Block source files use workspace imports (`@pdfx/components`, `@pdfx/shared`) so they
  * resolve in the monorepo and can be type-checked and linted. This function
  * rewrites those imports to consumer-relative paths so installed blocks work
  * without any workspace packages.
  *
  * Transforms:
  * - `from '@pdfx/shared'` (PdfxTheme type) → `from '../../lib/pdfx-theme'`
- * - `from '@pdfx/ui'` → split into per-component imports:
+ * - `from '@pdfx/components'` → split into per-component imports:
  *     theme context exports  → `from '../../lib/pdfx-theme-context'`
  *     component exports      → `from '../../components/pdfx/<name>/pdfx-<name>'`
  *       (components sharing a file, e.g. Table/TableRow/TableCell, are merged into one import)
@@ -310,8 +310,10 @@ export function transformBlockForRegistry(content: string): string {
     "import type {$1} from '../../lib/pdfx-theme';"
   );
 
-  // ── 2. @pdfx/ui → per-component consumer paths ───────────────────────────
-  const uiImportMatch = result.match(/import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+'@pdfx\/ui';?/);
+  // ── 2. @pdfx/components → per-component consumer paths ───────────────────────────
+  const uiImportMatch = result.match(
+    /import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+'@pdfx\/components';?/
+  );
 
   if (uiImportMatch) {
     const rawNames = uiImportMatch[1]
@@ -327,7 +329,7 @@ export function transformBlockForRegistry(content: string): string {
     for (const name of rawNames) {
       const folder = PDFX_UI_COMPONENT_MAP[name];
       if (!folder) {
-        console.warn(`  Warning: unknown @pdfx/ui export "${name}" — skipping`);
+        console.warn(`  Warning: unknown @pdfx/components export "${name}" — skipping`);
         continue;
       }
       if (folder === 'theme-context') {
@@ -354,7 +356,7 @@ export function transformBlockForRegistry(content: string): string {
     }
 
     result = result.replace(
-      /import\s+(?:type\s+)?\{[^}]+\}\s+from\s+'@pdfx\/ui';?\n?/,
+      /import\s+(?:type\s+)?\{[^}]+\}\s+from\s+'@pdfx\/components';?\n?/,
       `${newImports.join('\n')}\n`
     );
   }
@@ -365,7 +367,7 @@ export function transformBlockForRegistry(content: string): string {
 /**
  * Builds a block registry item from real source .tsx/.ts files.
  *
- * Block source files use workspace imports (@pdfx/ui, @pdfx/shared) that
+ * Block source files use workspace imports (@pdfx/components, @pdfx/shared) that
  * resolve in the monorepo. transformBlockForRegistry rewrites those to
  * consumer-relative paths before packaging into public/r/blocks/*.json.
  */
@@ -453,7 +455,7 @@ async function buildRegistry() {
   await fs.mkdir(outputDir, { recursive: true });
 
   // Use registry dir as base for relative paths to resolve source files
-  // (e.g., src/registry/ui/badge/badge.tsx) to absolute paths.
+  // (e.g., src/registry/components/badge/badge.tsx) to absolute paths.
   const registryBaseDir = path.dirname(registryPath);
 
   // Separate block items (source .tsx → generated JSON) from component items (source → transform)

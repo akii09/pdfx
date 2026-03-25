@@ -1,5 +1,5 @@
 import { signatureProps, signatureUsageCode } from '@/constants';
-import { PdfSignatureBlock } from '@pdfx/ui';
+import { PdfSignatureBlock } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

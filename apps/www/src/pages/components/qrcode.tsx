@@ -1,5 +1,5 @@
 import { qrcodeProps, qrcodeUsageCode } from '@/constants';
-import { Heading, PdfQRCode, Section, Stack, Text } from '@pdfx/ui';
+import { Heading, PdfQRCode, Section, Stack, Text } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

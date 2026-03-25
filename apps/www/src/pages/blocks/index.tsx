@@ -69,7 +69,9 @@ export default function BlocksIndex() {
               <p className="font-medium">Built with PDFx Components</p>
               <p className="text-muted-foreground">
                 Uses Heading, Table, Badge, Card, and other{' '}
-                <code className="text-[10px] bg-muted px-1 py-0.5 rounded font-mono">@pdfx/ui</code>{' '}
+                <code className="text-[10px] bg-muted px-1 py-0.5 rounded font-mono">
+                  @pdfx/components
+                </code>{' '}
                 components.
               </p>
             </div>

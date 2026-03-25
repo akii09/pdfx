@@ -1,5 +1,5 @@
 import { listProps, listUsageCode } from '@/constants';
-import { PdfList } from '@pdfx/ui';
+import { PdfList } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

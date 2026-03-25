@@ -171,23 +171,23 @@ describe('transformBlockForRegistry: @pdfx/shared rewriting', () => {
   });
 });
 
-describe('transformBlockForRegistry: @pdfx/ui splitting', () => {
+describe('transformBlockForRegistry: @pdfx/components splitting', () => {
   it('rewrites a single component import to its consumer path', () => {
-    const input = `import { Heading } from '@pdfx/ui';`;
+    const input = `import { Heading } from '@pdfx/components';`;
     const result = transformBlockForRegistry(input);
     expect(result).toContain("from '../../components/pdfx/heading/pdfx-heading'");
-    expect(result).not.toContain("'@pdfx/ui'");
+    expect(result).not.toContain("'@pdfx/components'");
   });
 
   it('rewrites theme context exports to ../../lib/pdfx-theme-context', () => {
-    const input = `import { usePdfxTheme } from '@pdfx/ui';`;
+    const input = `import { usePdfxTheme } from '@pdfx/components';`;
     const result = transformBlockForRegistry(input);
     expect(result).toContain("from '../../lib/pdfx-theme-context'");
-    expect(result).not.toContain("'@pdfx/ui'");
+    expect(result).not.toContain("'@pdfx/components'");
   });
 
   it('groups multiple exports for the same component file into one import', () => {
-    const input = `import { Table, TableRow, TableCell, TableBody, TableHeader } from '@pdfx/ui';`;
+    const input = `import { Table, TableRow, TableCell, TableBody, TableHeader } from '@pdfx/components';`;
     const result = transformBlockForRegistry(input);
     // All table exports map to the same file — must be a single import
     const tableImports = result.split('\n').filter((line) => line.includes('pdfx-table'));
@@ -198,18 +198,18 @@ describe('transformBlockForRegistry: @pdfx/ui splitting', () => {
   });
 
   it('splits mixed imports: theme context + multiple components', () => {
-    const input = `import { Heading, usePdfxTheme, PdfAlert } from '@pdfx/ui';`;
+    const input = `import { Heading, usePdfxTheme, PdfAlert } from '@pdfx/components';`;
     const result = transformBlockForRegistry(input);
     expect(result).toContain("from '../../lib/pdfx-theme-context'");
     expect(result).toContain("from '../../components/pdfx/heading/pdfx-heading'");
     expect(result).toContain("from '../../components/pdfx/alert/pdfx-alert'");
-    expect(result).not.toContain("'@pdfx/ui'");
+    expect(result).not.toContain("'@pdfx/components'");
   });
 
   it('preserves unrelated imports alongside rewritten ones', () => {
     const input = [
       `import { Document } from '@react-pdf/renderer';`,
-      `import { Heading } from '@pdfx/ui';`,
+      `import { Heading } from '@pdfx/components';`,
     ].join('\n');
     const result = transformBlockForRegistry(input);
     expect(result).toContain("from '@react-pdf/renderer'");

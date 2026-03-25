@@ -1,5 +1,5 @@
 import { pageNumberProps, pageNumberUsageCode } from '@/constants';
-import { Heading, PdfPageNumber, Text } from '@pdfx/ui';
+import { Heading, PdfPageNumber, Text } from '@pdfx/components';
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

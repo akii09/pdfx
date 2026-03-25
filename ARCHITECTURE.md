@@ -1,6 +1,6 @@
 # PDFx Architecture
 
-PDFx follows the same model as [shadcn/ui](https://ui.shadcn.com/): the website that documents the components **is** the registry that serves them. There is no separate component package published to npm.
+PDFx follows the same model as [shadcn/components](https://components.shadcn.com/): the website that documents the components **is** the registry that serves them. There is no separate component package published to npm.
 
 ## Package Layout
 
@@ -10,7 +10,7 @@ packages/shared/      — types, Zod schemas, theme presets
 
 packages/cli/         — pdfx CLI (pdfx add, pdfx block add, pdfx theme …)
                         fetches component JSON from HTTPS registry
-                        never imports @pdfx/ui or any www source
+                        never imports @pdfx/components or any www source
 
 apps/www/             — documentation site + component registry
   src/
@@ -20,7 +20,7 @@ apps/www/             — documentation site + component registry
       blocks/         — block template source
       index.json      — registry manifest (name, type, files, deps)
     lib/
-      build-registry.ts   — transforms registry/ui/ → public/r/*.json
+      build-registry.ts   — transforms registry/components/ → public/r/*.json
   public/
     r/                — HTTP-served JSON consumed by the CLI
 ```
@@ -28,7 +28,7 @@ apps/www/             — documentation site + component registry
 ## Data Flow
 
 ```
-apps/www/src/registry/ui/<name>/<name>.tsx   (source of truth)
+apps/www/src/registry/components/<name>/<name>.tsx   (source of truth)
          │
          └─ build-registry.ts (pnpm build:registry)
                │  transforms: strips @pdfx/shared imports, inlines helpers
@@ -45,13 +45,13 @@ apps/www/src/registry/ui/<name>/<name>.tsx   (source of truth)
 1. **No runtime dependency** — `pdfx add` writes files into the user's project. The user owns the code.
 2. **Theme system lives with the user** — `pdfx theme init` writes `pdfx-theme.ts` locally. All components read from it at compile-time via `usePdfxTheme()`.
 3. **`packages/shared` is the only cross-package contract** — it contains the Zod schemas that validate registry JSON, the TypeScript types shared between www and cli, and the theme presets.
-4. **`@pdfx/ui` is a dev-time alias only** — `apps/www` uses `@pdfx/ui → src/registry/ui` as a TypeScript path alias so block source files can import components without long relative paths. This alias is stripped by `build-registry.ts` before the JSON is served.
+4. **`@pdfx/components` is a dev-time alias only** — `apps/www` uses `@pdfx/components → src/registry/components` as a TypeScript path alias so block source files can import components without long relative paths. This alias is stripped by `build-registry.ts` before the JSON is served.
 
 ## Testing
 
 | Layer | Location | Pattern |
 |---|---|---|
-| Components | `apps/www/src/registry/ui/**/*.test.tsx` | 2 smoke tests per component (plain function call) |
+| Components | `apps/www/src/registry/components/**/*.test.tsx` | 2 smoke tests per component (plain function call) |
 | Registry transforms | `apps/www/src/lib/__tests__/build-registry.test.ts` | Pure function unit tests |
 | CLI commands | `packages/cli/src/commands/*.test.ts` | Unit + integration (temp dirs, stubbed fetch) |
 | CLI utilities | `packages/cli/src/utils/*.test.ts` | Unit tests |

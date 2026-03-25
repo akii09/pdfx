@@ -332,7 +332,10 @@ export default function InvoicesContainerPage() {
           <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">Invoice Blocks</h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
             Ready-to-use PDF invoice layouts built with{' '}
-            <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">@pdfx/ui</code>.
+            <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">
+              @pdfx/components
+            </code>
+            .
           </p>
         </div>
         <div className="shrink-0 flex items-center gap-1.5 bg-muted/60 rounded-lg px-3 py-2 border border-border text-xs font-mono text-muted-foreground">

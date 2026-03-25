@@ -1,6 +1,6 @@
 import { pageHeaderProps, pageHeaderUsageCode } from '@/constants';
-import { type PageHeaderVariant, Text } from '@pdfx/ui';
-import { PageHeader } from '@pdfx/ui';
+import { type PageHeaderVariant, Text } from '@pdfx/components';
+import { PageHeader } from '@pdfx/components';
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

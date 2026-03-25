@@ -1,6 +1,6 @@
 import { pageFooterProps, pageFooterUsageCode } from '@/constants';
-import { type PageFooterVariant, Text } from '@pdfx/ui';
-import { PageFooter } from '@pdfx/ui';
+import { type PageFooterVariant, Text } from '@pdfx/components';
+import { PageFooter } from '@pdfx/components';
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

@@ -82,12 +82,12 @@ This is a complete walkthrough for adding a new PDF component (e.g. `MyWidget`) 
 
 | File | Action |
 |------|--------|
-| `apps/www/src/registry/ui/my-widget/my-widget.tsx` | Create — component source |
-| `apps/www/src/registry/ui/my-widget/my-widget.styles.ts` | Create — StyleSheet factory |
-| `apps/www/src/registry/ui/my-widget/my-widget.types.ts` | Create — TypeScript interfaces |
-| `apps/www/src/registry/ui/my-widget/my-widget.test.tsx` | Create — smoke tests |
-| `apps/www/src/registry/ui/my-widget/index.ts` | Create — barrel re-export |
-| `apps/www/src/registry/ui/index.ts` | Edit — re-export the component |
+| `apps/www/src/registry/components/my-widget/my-widget.tsx` | Create — component source |
+| `apps/www/src/registry/components/my-widget/my-widget.styles.ts` | Create — StyleSheet factory |
+| `apps/www/src/registry/components/my-widget/my-widget.types.ts` | Create — TypeScript interfaces |
+| `apps/www/src/registry/components/my-widget/my-widget.test.tsx` | Create — smoke tests |
+| `apps/www/src/registry/components/my-widget/index.ts` | Create — barrel re-export |
+| `apps/www/src/registry/components/index.ts` | Edit — re-export the component |
 | `apps/www/src/registry/index.json` | Edit — register the component |
 | `apps/www/src/constants/my-widget.constant.ts` | Create — usage code + props table |
 | `apps/www/src/constants/index.ts` | Edit — re-export constants |
@@ -99,7 +99,7 @@ This is a complete walkthrough for adding a new PDF component (e.g. `MyWidget`) 
 
 ### Step 1: Create the Component
 
-Create `apps/www/src/registry/ui/my-widget/my-widget.types.ts`:
+Create `apps/www/src/registry/components/my-widget/my-widget.types.ts`:
 
 ```ts
 import type { PDFComponentProps } from '@pdfx/shared';
@@ -116,7 +116,7 @@ export interface MyWidgetProps extends Omit<PDFComponentProps, 'children'> {
 }
 ```
 
-Create `apps/www/src/registry/ui/my-widget/my-widget.styles.ts`:
+Create `apps/www/src/registry/components/my-widget/my-widget.styles.ts`:
 
 ```ts
 import type { PdfxTheme } from '@pdfx/shared';
@@ -142,7 +142,7 @@ export function createMyWidgetStyles(t: PdfxTheme) {
 }
 ```
 
-Create `apps/www/src/registry/ui/my-widget/my-widget.tsx`:
+Create `apps/www/src/registry/components/my-widget/my-widget.tsx`:
 
 ```tsx
 import { Text as PDFText, View } from '@react-pdf/renderer';
@@ -180,7 +180,7 @@ export function MyWidget({
 }
 ```
 
-Create `apps/www/src/registry/ui/my-widget/index.ts`:
+Create `apps/www/src/registry/components/my-widget/index.ts`:
 
 ```ts
 export { MyWidget } from './my-widget';
@@ -199,7 +199,7 @@ export type { MyWidgetProps, MyWidgetVariant } from './my-widget.types';
 
 ### Step 2: Write Smoke Tests
 
-Create `apps/www/src/registry/ui/my-widget/my-widget.test.tsx`:
+Create `apps/www/src/registry/components/my-widget/my-widget.test.tsx`:
 
 ```tsx
 import { describe, expect, it } from 'vitest';
@@ -221,7 +221,7 @@ Two assertions per component is the target. TypeScript handles prop validation s
 
 ### Step 3: Export from the Registry
 
-Edit `apps/www/src/registry/ui/index.ts` and add:
+Edit `apps/www/src/registry/components/index.ts` and add:
 
 ```ts
 export { MyWidget } from './my-widget/index';
@@ -309,9 +309,9 @@ Create `apps/www/src/pages/components/my-widget.tsx`:
 
 ```tsx
 import { myWidgetProps, myWidgetUsageCode } from '@/constants';
-// @pdfx/ui is a tsconfig path alias that resolves to apps/www/src/registry/ui/
+// @pdfx/components is a tsconfig path alias that resolves to apps/www/src/registry/components/
 // Components live in the registry, not a separate package.
-import { MyWidget } from '@pdfx/ui';
+import { MyWidget } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

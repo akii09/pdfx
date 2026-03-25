@@ -10,7 +10,7 @@
       "description": "Callout boxes with info, success, warning, and error variants",
       "files": [
         {
-          "path": "ui/alert/alert.tsx",
+          "path": "components/alert/alert.tsx",
           "type": "registry:component"
         }
       ],
@@ -23,7 +23,7 @@
       "description": "Inline status badge with 7 color variants and 3 sizes",
       "files": [
         {
-          "path": "ui/badge/badge.tsx",
+          "path": "components/badge/badge.tsx",
           "type": "registry:component"
         }
       ],
@@ -36,7 +36,7 @@
       "description": "Bordered container card with title, 3 variants and padding control",
       "files": [
         {
-          "path": "ui/card/card.tsx",
+          "path": "components/card/card.tsx",
           "type": "registry:component"
         }
       ],
@@ -49,15 +49,15 @@
       "description": "Convenience API: columns + data array. Uses Table/TableRow/TableCell internally.",
       "files": [
         {
-          "path": "ui/data-table/data-table.tsx",
+          "path": "components/data-table/data-table.tsx",
           "type": "registry:component"
         },
         {
-          "path": "ui/data-table/data-table.styles.ts",
+          "path": "components/data-table/data-table.styles.ts",
           "type": "registry:component"
         },
         {
-          "path": "ui/data-table/data-table.types.ts",
+          "path": "components/data-table/data-table.types.ts",
           "type": "registry:component"
         }
       ],
@@ -71,7 +71,7 @@
       "description": "Horizontal rule with theme-based spacing",
       "files": [
         {
-          "path": "ui/divider/divider.tsx",
+          "path": "components/divider/divider.tsx",
           "type": "registry:component"
         }
       ],
@@ -84,15 +84,15 @@
       "description": "Form layout with labeled fields in single, two-column, or three-column layouts",
       "files": [
         {
-          "path": "ui/form/form.tsx",
+          "path": "components/form/form.tsx",
           "type": "registry:component"
         },
         {
-          "path": "ui/form/form.styles.ts",
+          "path": "components/form/form.styles.ts",
           "type": "registry:component"
         },
         {
-          "path": "ui/form/form.types.ts",
+          "path": "components/form/form.types.ts",
           "type": "registry:component"
         }
       ],
@@ -105,7 +105,7 @@
       "description": "SVG chart component with bar, line, area, pie, donut, and horizontal-bar variants",
       "files": [
         {
-          "path": "ui/graph/graph.tsx",
+          "path": "components/graph/graph.tsx",
           "type": "registry:component"
         }
       ],
@@ -118,7 +118,7 @@
       "description": "PDF heading component with 6 levels (h1-h6)",
       "files": [
         {
-          "path": "ui/heading/heading.tsx",
+          "path": "components/heading/heading.tsx",
           "type": "registry:component"
         }
       ],
@@ -131,7 +131,7 @@
       "description": "Prevents page breaks within wrapped content",
       "files": [
         {
-          "path": "ui/keep-together/keep-together.tsx",
+          "path": "components/keep-together/keep-together.tsx",
           "type": "registry:component"
         }
       ],
@@ -144,7 +144,7 @@
       "description": "Label-value pair display with horizontal/vertical layout and dividers",
       "files": [
         {
-          "path": "ui/key-value/key-value.tsx",
+          "path": "components/key-value/key-value.tsx",
           "type": "registry:component"
         }
       ],
@@ -157,7 +157,7 @@
       "description": "PDF link component for hyperlinks",
       "files": [
         {
-          "path": "ui/link/link.tsx",
+          "path": "components/link/link.tsx",
           "type": "registry:component"
         }
       ],
@@ -170,15 +170,15 @@
       "description": "List component with bullet, numbered, checklist, icon, multi-level, and descriptive variants",
       "files": [
         {
-          "path": "ui/list/list.tsx",
+          "path": "components/list/list.tsx",
           "type": "registry:component"
         },
         {
-          "path": "ui/list/list.styles.ts",
+          "path": "components/list/list.styles.ts",
           "type": "registry:component"
         },
         {
-          "path": "ui/list/list.types.ts",
+          "path": "components/list/list.types.ts",
           "type": "registry:component"
         }
       ],
@@ -191,7 +191,7 @@
       "description": "Forces content after it to start on a new page",
       "files": [
         {
-          "path": "ui/page-break/page-break.tsx",
+          "path": "components/page-break/page-break.tsx",
           "type": "registry:component"
         }
       ],
@@ -204,7 +204,7 @@
       "description": "Fixed or inline page footer with 6 layout variants and contact info support",
       "files": [
         {
-          "path": "ui/page-footer/page-footer.tsx",
+          "path": "components/page-footer/page-footer.tsx",
           "type": "registry:component"
         }
       ],
@@ -217,7 +217,7 @@
       "description": "Fixed or inline page header with 7 layout variants including logo support",
       "files": [
         {
-          "path": "ui/page-header/page-header.tsx",
+          "path": "components/page-header/page-header.tsx",
           "type": "registry:component"
         }
       ],
@@ -230,7 +230,7 @@
       "description": "Dynamic page numbers with customizable format and alignment",
       "files": [
         {
-          "path": "ui/page-number/page-number.tsx",
+          "path": "components/page-number/page-number.tsx",
           "type": "registry:component"
         }
       ],
@@ -243,7 +243,7 @@
       "description": "Image component with 7 display variants, fit modes, and optional captions",
       "files": [
         {
-          "path": "ui/pdf-image/pdf-image.tsx",
+          "path": "components/pdf-image/pdf-image.tsx",
           "type": "registry:component"
         }
       ],
@@ -256,7 +256,7 @@
       "description": "Native SVG QR code for URLs, payments, and document verification",
       "files": [
         {
-          "path": "ui/qrcode/qrcode.tsx",
+          "path": "components/qrcode/qrcode.tsx",
           "type": "registry:component"
         }
       ],
@@ -269,7 +269,7 @@
       "description": "Logical section with theme-based spacing",
       "files": [
         {
-          "path": "ui/section/section.tsx",
+          "path": "components/section/section.tsx",
           "type": "registry:component"
         }
       ],
@@ -282,7 +282,7 @@
       "description": "Signature block with single, double, and inline variants",
       "files": [
         {
-          "path": "ui/signature/signature.tsx",
+          "path": "components/signature/signature.tsx",
           "type": "registry:component"
         }
       ],
@@ -295,7 +295,7 @@
       "description": "Vertical layout with theme-based gap",
       "files": [
         {
-          "path": "ui/stack/stack.tsx",
+          "path": "components/stack/stack.tsx",
           "type": "registry:component"
         }
       ],
@@ -308,15 +308,15 @@
       "description": "Composable table with Table, TableRow, TableCell",
       "files": [
         {
-          "path": "ui/table/table.tsx",
+          "path": "components/table/table.tsx",
           "type": "registry:component"
         },
         {
-          "path": "ui/table/table.styles.ts",
+          "path": "components/table/table.styles.ts",
           "type": "registry:component"
         },
         {
-          "path": "ui/table/table.types.ts",
+          "path": "components/table/table.types.ts",
           "type": "registry:component"
         }
       ],
@@ -329,7 +329,7 @@
       "description": "PDF text component for paragraphs",
       "files": [
         {
-          "path": "ui/text/text.tsx",
+          "path": "components/text/text.tsx",
           "type": "registry:component"
         }
       ],
@@ -342,7 +342,7 @@
       "description": "Diagonal or positioned text overlay for DRAFT, CONFIDENTIAL, PAID, etc.",
       "files": [
         {
-          "path": "ui/watermark/watermark.tsx",
+          "path": "components/watermark/watermark.tsx",
           "type": "registry:component"
         }
       ],

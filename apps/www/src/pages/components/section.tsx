@@ -1,5 +1,5 @@
 import { sectionProps, sectionUsageCode } from '@/constants';
-import { Heading, Section, Text } from '@pdfx/ui';
+import { Heading, Section, Text } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

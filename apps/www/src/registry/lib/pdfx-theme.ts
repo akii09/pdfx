@@ -1,5 +1,5 @@
 /**
- * Development theme file for @pdfx/ui.
+ * Development theme file for @pdfx/components.
  *
  * Uses the professional preset for local development and testing.
  * When components are distributed via the registry, this import

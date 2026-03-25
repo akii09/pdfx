@@ -1,5 +1,5 @@
 import { badgeProps, badgeUsageCode } from '@/constants';
-import { Badge } from '@pdfx/ui';
+import { Badge } from '@pdfx/components';
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

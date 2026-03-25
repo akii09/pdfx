@@ -1,5 +1,5 @@
 import { formProps, formUsageCode } from '@/constants';
-import { PdfForm } from '@pdfx/ui';
+import { PdfForm } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

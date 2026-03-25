@@ -1,5 +1,5 @@
 import { tableProps, tableUsageCode } from '@/constants';
-import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from '@pdfx/ui';
+import { Table, TableBody, TableCell, TableFooter, TableHeader, TableRow } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

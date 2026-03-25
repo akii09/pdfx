@@ -1,5 +1,5 @@
 import { linkProps, linkUsageCode } from '@/constants';
-import { Link } from '@pdfx/ui';
+import { Link } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';
 import { PDFPreview } from '../../components/pdf-preview';

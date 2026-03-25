@@ -1,4 +1,3 @@
-import type { PdfxTheme } from '@pdfx/shared';
 import {
   KeyValue,
   PageFooter,
@@ -12,7 +11,8 @@ import {
   TableRow,
   Text,
   usePdfxTheme,
-} from '@pdfx/ui';
+} from '@pdfx/components';
+import type { PdfxTheme } from '@pdfx/shared';
 import { Document, Page, StyleSheet, View } from '@react-pdf/renderer';
 import type { InvoiceCorporateData } from './invoice-corporate.types';
 

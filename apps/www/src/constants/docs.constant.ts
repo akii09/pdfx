@@ -279,7 +279,7 @@ export const manualStep6AddComponent = `# Now you can copy components from each 
 # Or use the CLI to add them:
 npx @akii09/pdfx-cli add heading text table`;
 
-export const themeProviderUsage = `import { PdfxThemeProvider } from '@pdfx/ui';
+export const themeProviderUsage = `import { PdfxThemeProvider } from '@pdfx/components';
 import { modernTheme, minimalTheme } from '@pdfx/shared';
 
 // Renders the entire document with the Modern theme
