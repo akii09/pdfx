@@ -79,6 +79,7 @@ describe('registryItemSchema', () => {
         },
       ],
       dependencies: ['@react-pdf/renderer'],
+      devDependencies: ['@types/react'],
     });
     expect(result.success).toBe(true);
   });

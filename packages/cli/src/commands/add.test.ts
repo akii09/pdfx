@@ -2,7 +2,12 @@ import path from 'node:path';
 import { componentNameSchema } from '@pdfx/shared';
 import { describe, expect, it } from 'vitest';
 import { isPathWithinDirectory, safePath } from '../utils/file-system.js';
-import { resolveThemeImport } from './add.js';
+import {
+  collectComponentDependencies,
+  findMissingDependencies,
+  resolveDependencyInstallMode,
+  resolveThemeImport,
+} from './add.js';
 
 describe('isPathWithinDirectory', () => {
   it('should return true when paths are equal', () => {
@@ -122,5 +127,48 @@ describe('componentNameSchema', () => {
 
   it('should reject uppercase names', () => {
     expect(componentNameSchema.safeParse('Heading').success).toBe(false);
+  });
+});
+
+describe('component dependency planning', () => {
+  it('collects and deduplicates runtime and dev dependency lists', () => {
+    const result = collectComponentDependencies([
+      {
+        name: 'qrcode',
+        files: [{ path: 'x.tsx', content: '', type: 'registry:component' }],
+        dependencies: ['qrcode', '@react-pdf/renderer'],
+        devDependencies: ['@types/qrcode'],
+      },
+      {
+        name: 'badge',
+        files: [{ path: 'y.tsx', content: '', type: 'registry:component' }],
+        dependencies: ['@react-pdf/renderer'],
+      },
+    ]);
+
+    expect(result.runtime.sort()).toEqual(['@react-pdf/renderer', 'qrcode']);
+    expect(result.dev).toEqual(['@types/qrcode']);
+  });
+
+  it('detects missing dependencies from package.json-like object', () => {
+    const missing = findMissingDependencies(
+      {
+        runtime: ['@react-pdf/renderer', 'qrcode'],
+        dev: ['@types/qrcode'],
+      },
+      {
+        dependencies: { '@react-pdf/renderer': '^4.0.0' },
+        devDependencies: {},
+      }
+    );
+
+    expect(missing.runtime).toEqual(['qrcode']);
+    expect(missing.dev).toEqual(['@types/qrcode']);
+  });
+
+  it('resolves install mode based on flags', () => {
+    expect(resolveDependencyInstallMode({ installDeps: true })).toBe('always');
+    expect(resolveDependencyInstallMode({ installDeps: false })).toBe('never');
+    expect(resolveDependencyInstallMode({})).toBe('prompt');
   });
 });

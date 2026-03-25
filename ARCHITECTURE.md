@@ -1,6 +1,6 @@
 # PDFx Architecture
 
-PDFx follows the same model as [shadcn/components](https://components.shadcn.com/): the website that documents the components **is** the registry that serves them. There is no separate component package published to npm.
+PDFx follows the same model as shadcn/components: the website that documents the components **is** the registry that serves them. There is no separate component package published to npm.
 
 ## Package Layout
 

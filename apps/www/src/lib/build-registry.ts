@@ -15,6 +15,7 @@ interface SourceRegistryFile {
 interface SourceRegistryItem {
   name: string;
   type: string;
+  devDependencies?: string[];
   title: string;
   description: string;
   files: SourceRegistryFile[];
@@ -222,6 +223,10 @@ async function processItem(
     dependencies: item.dependencies || [],
   };
 
+  if (item.devDependencies && item.devDependencies.length > 0) {
+    output.devDependencies = item.devDependencies;
+  }
+
   // Build registryDependencies: always include "theme" for theme-aware components
   // and preserve any component-to-component dependencies declared in index.json.
   const sourceDeps = item.registryDependencies ?? [];
@@ -411,6 +416,10 @@ async function processBlockItem(
     files,
     dependencies: item.dependencies ?? [],
   };
+
+  if (item.devDependencies && item.devDependencies.length > 0) {
+    output.devDependencies = item.devDependencies;
+  }
 
   if (item.peerComponents && item.peerComponents.length > 0) {
     output.peerComponents = item.peerComponents;

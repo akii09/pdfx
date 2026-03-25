@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import {
   type Config,
@@ -11,12 +12,38 @@ import {
   registryItemSchema,
 } from '@pdfx/shared';
 import chalk from 'chalk';
+import { execa } from 'execa';
 import ora from 'ora';
+import prompts from 'prompts';
 import { FETCH_TIMEOUT_MS } from '../constants.js';
 import { validateReactPdfRenderer } from '../utils/dependency-validator.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
+import {
+  detectPackageManager,
+  findPackageRoot,
+  getInstallCommand,
+} from '../utils/package-manager.js';
 import { readJsonFile } from '../utils/read-json.js';
+
+type DependencyInstallMode = 'prompt' | 'always' | 'never';
+
+interface AddOptions {
+  force?: boolean;
+  registry?: string;
+  installDeps?: boolean;
+  strictDeps?: boolean;
+}
+
+interface DependencyRequirements {
+  runtime: string[];
+  dev: string[];
+}
+
+interface MissingDependencies {
+  runtime: string[];
+  dev: string[];
+}
 
 export function readConfig(configPath: string): Config {
   const raw = readJsonFile(configPath);
@@ -115,8 +142,201 @@ export function resolveThemeImport(
   return content;
 }
 
-async function installComponent(name: string, config: Config, force: boolean): Promise<void> {
-  const component = await fetchComponent(name, config.registry);
+export function collectComponentDependencies(items: RegistryItem[]): DependencyRequirements {
+  const runtime = new Set<string>();
+  const dev = new Set<string>();
+
+  for (const item of items) {
+    for (const dep of item.dependencies ?? []) {
+      runtime.add(dep);
+    }
+    for (const dep of item.devDependencies ?? []) {
+      dev.add(dep);
+    }
+  }
+
+  return {
+    runtime: [...runtime],
+    dev: [...dev],
+  };
+}
+
+function getDeclaredDependencies(pkg: Record<string, unknown>): Set<string> {
+  const deps = (pkg.dependencies as Record<string, string> | undefined) ?? {};
+  const devDeps = (pkg.devDependencies as Record<string, string> | undefined) ?? {};
+  return new Set([...Object.keys(deps), ...Object.keys(devDeps)]);
+}
+
+export function findMissingDependencies(
+  requirements: DependencyRequirements,
+  pkg: Record<string, unknown>
+): MissingDependencies {
+  const installed = getDeclaredDependencies(pkg);
+  return {
+    runtime: requirements.runtime.filter((dep) => !installed.has(dep)),
+    dev: requirements.dev.filter((dep) => !installed.has(dep)),
+  };
+}
+
+export function resolveDependencyInstallMode(options: AddOptions): DependencyInstallMode {
+  if (options.installDeps === true) return 'always';
+  if (options.installDeps === false) return 'never';
+  return 'prompt';
+}
+
+async function installDependencySet(
+  packageRoot: string,
+  runtimeDeps: string[],
+  devDeps: string[]
+): Promise<void> {
+  const pm = detectPackageManager(packageRoot);
+  const installArgs = pm.installCommand.split(' ').slice(1);
+
+  if (runtimeDeps.length > 0) {
+    await execa(pm.name, [...installArgs, ...runtimeDeps], {
+      cwd: packageRoot,
+      stdio: 'pipe',
+    });
+  }
+
+  if (devDeps.length > 0) {
+    const devFlag = pm.name === 'npm' ? '--save-dev' : '-D';
+    await execa(pm.name, [...installArgs, ...devDeps, devFlag], {
+      cwd: packageRoot,
+      stdio: 'pipe',
+    });
+  }
+}
+
+function formatDependencyInstallHint(
+  packageRoot: string,
+  runtimeDeps: string[],
+  devDeps: string[]
+): string {
+  const pm = detectPackageManager(packageRoot);
+  const commands: string[] = [];
+
+  if (runtimeDeps.length > 0) {
+    commands.push(getInstallCommand(pm.name, runtimeDeps));
+  }
+  if (devDeps.length > 0) {
+    commands.push(getInstallCommand(pm.name, devDeps, true));
+  }
+
+  return commands.map((cmd) => `  ${cmd}`).join('\n');
+}
+
+async function ensureComponentDependencies(
+  requirements: DependencyRequirements,
+  options: AddOptions
+): Promise<void> {
+  const packageRoot = findPackageRoot(process.cwd());
+  const pkgPath = path.join(packageRoot, 'package.json');
+
+  if (!fs.existsSync(pkgPath)) {
+    throw new ValidationError(
+      `Missing package.json at ${packageRoot}`,
+      'Run this command inside a Node.js project'
+    );
+  }
+
+  const pkg = readJsonFile(pkgPath) as Record<string, unknown>;
+  const missing = findMissingDependencies(requirements, pkg);
+
+  if (missing.runtime.length === 0 && missing.dev.length === 0) {
+    return;
+  }
+
+  const installMode = resolveDependencyInstallMode(options);
+  const strictDeps = options.strictDeps ?? false;
+  const installHint = formatDependencyInstallHint(packageRoot, missing.runtime, missing.dev);
+
+  if (installMode === 'never') {
+    const hasBlocking = missing.runtime.length > 0 || (strictDeps && missing.dev.length > 0);
+    const missingMessage = [
+      missing.runtime.length > 0 ? `runtime: ${missing.runtime.join(', ')}` : undefined,
+      missing.dev.length > 0 ? `dev: ${missing.dev.join(', ')}` : undefined,
+    ]
+      .filter(Boolean)
+      .join('; ');
+
+    if (hasBlocking) {
+      throw new ValidationError(
+        `Missing component dependencies (${missingMessage})`,
+        `Install manually:\n${installHint}`
+      );
+    }
+
+    console.log(
+      chalk.yellow(
+        `\n  ⚠ Missing devDependencies (${missing.dev.join(', ')})\n  ${chalk.dim('→')} Install manually:\n${chalk.cyan(installHint)}\n`
+      )
+    );
+    return;
+  }
+
+  let shouldInstall = installMode === 'always';
+  if (installMode === 'prompt') {
+    const interactive = Boolean(process.stdin.isTTY && process.stdout.isTTY);
+    if (!interactive) {
+      throw new ValidationError(
+        'Missing component dependencies in non-interactive mode',
+        `Use --install-deps or install manually:\n${installHint}`
+      );
+    }
+
+    const depSummary = [
+      missing.runtime.length > 0 ? `runtime: ${missing.runtime.join(', ')}` : undefined,
+      missing.dev.length > 0 ? `dev: ${missing.dev.join(', ')}` : undefined,
+    ]
+      .filter(Boolean)
+      .join('\n  ');
+
+    console.log(chalk.yellow('\n  Missing component dependencies detected:\n'));
+    console.log(chalk.dim(`  ${depSummary}\n`));
+
+    const response = await prompts({
+      type: 'confirm',
+      name: 'install',
+      message: 'Install missing dependencies now?',
+      initial: true,
+    });
+    shouldInstall = response.install === true;
+  }
+
+  if (!shouldInstall) {
+    throw new ValidationError(
+      'Dependency installation cancelled',
+      `Install manually:\n${installHint}`
+    );
+  }
+
+  const spinner = ora('Installing missing component dependencies...').start();
+  try {
+    await installDependencySet(packageRoot, missing.runtime, missing.dev);
+    spinner.succeed('Installed component dependencies');
+  } catch (error: unknown) {
+    spinner.fail('Failed to install component dependencies');
+    const message = error instanceof Error ? error.message : String(error);
+    if (strictDeps || missing.runtime.length > 0) {
+      throw new ValidationError(
+        `Dependency installation failed: ${message}`,
+        `Install manually:\n${installHint}`
+      );
+    }
+    console.log(
+      chalk.yellow(
+        `\n  ⚠ Could not install devDependencies automatically\n  ${chalk.dim('→')} Install manually:\n${chalk.cyan(installHint)}\n`
+      )
+    );
+  }
+}
+
+async function installComponent(
+  component: RegistryItem,
+  config: Config,
+  force: boolean
+): Promise<void> {
   const targetDir = path.resolve(process.cwd(), config.componentDir);
 
   // Each component lives in its own subdirectory: {componentDir}/{name}/
@@ -150,7 +370,7 @@ async function installComponent(name: string, config: Config, force: boolean): P
     if (existing.length > 0) {
       const fileNames = existing.map((f) => path.basename(f.filePath)).join(', ');
       throw new ValidationError(
-        `${name}: already exists (${fileNames}), skipped install (use --force to overwrite)`
+        `${component.name}: already exists (${fileNames}), skipped install (use --force to overwrite)`
       );
     }
   }
@@ -172,10 +392,7 @@ async function installComponent(name: string, config: Config, force: boolean): P
   }
 }
 
-export async function add(
-  components: string[],
-  options: { force?: boolean; registry?: string } = {}
-) {
+export async function add(components: string[], options: AddOptions = {}) {
   // Validate arguments
   if (!components || components.length === 0) {
     console.error(chalk.red('Error: Component name required'));
@@ -233,8 +450,10 @@ export async function add(
   const failed: string[] = [];
   let installedCount = 0;
 
+  const resolvedComponents: RegistryItem[] = [];
+  const validNames: string[] = [];
+
   for (const componentName of components) {
-    // Validate component name
     const nameResult = componentNameSchema.safeParse(componentName);
     if (!nameResult.success) {
       console.error(chalk.red(`Invalid component name: "${componentName}"`));
@@ -244,13 +463,44 @@ export async function add(
       failed.push(componentName);
       continue;
     }
+    validNames.push(componentName);
+  }
 
-    const spinner = ora(`Adding ${componentName}...`).start();
+  for (const componentName of validNames) {
+    const spinner = ora(`Resolving ${componentName}...`).start();
+    try {
+      const component = await fetchComponent(componentName, config.registry);
+      resolvedComponents.push(component);
+      spinner.succeed(`Resolved ${componentName}`);
+    } catch (error: unknown) {
+      spinner.fail(`Failed to resolve ${componentName}`);
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(chalk.dim(`  ${message}`));
+      failed.push(componentName);
+    }
+  }
+
+  if (resolvedComponents.length > 0) {
+    try {
+      const requirements = collectComponentDependencies(resolvedComponents);
+      await ensureComponentDependencies(requirements, options);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(message));
+      if (error instanceof ValidationError && error.suggestion) {
+        console.log(chalk.yellow(`  Hint: ${error.suggestion}`));
+      }
+      process.exit(1);
+    }
+  }
+
+  for (const component of resolvedComponents) {
+    const spinner = ora(`Adding ${component.name}...`).start();
 
     try {
-      await installComponent(componentName, config, force);
+      await installComponent(component, config, force);
       installedCount++;
-      spinner.succeed(`Added ${componentName}`);
+      spinner.succeed(`Added ${component.name}`);
     } catch (error: unknown) {
       let shouldMarkAsFailed = true;
 
@@ -267,13 +517,13 @@ export async function add(
           console.log(chalk.dim(`  Hint: ${error.suggestion}`));
         }
       } else {
-        spinner.fail(`Failed to add ${componentName}`);
+        spinner.fail(`Failed to add ${component.name}`);
         const message = error instanceof Error ? error.message : String(error);
         console.error(chalk.dim(`  ${message}`));
       }
 
       if (shouldMarkAsFailed) {
-        failed.push(componentName);
+        failed.push(component.name);
       }
     }
   }

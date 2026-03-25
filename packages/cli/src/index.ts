@@ -38,8 +38,18 @@ program
   .description('Add components to your project')
   .option('-f, --force', 'Overwrite existing files without prompting')
   .option('-r, --registry <url>', 'Override registry URL')
-  .action((components: string[], options: { force?: boolean; registry?: string }) =>
-    add(components, options)
+  .option('--install-deps', 'Install missing component dependencies without prompting')
+  .option('--strict-deps', 'Fail when any runtime or dev dependency is missing')
+  .action(
+    (
+      components: string[],
+      options: {
+        force?: boolean;
+        registry?: string;
+        installDeps?: boolean;
+        strictDeps?: boolean;
+      }
+    ) => add(components, options)
   );
 
 program.command('list').description('List available components from registry').action(list);

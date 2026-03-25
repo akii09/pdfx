@@ -260,7 +260,8 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer", "qrcode"]
+      "dependencies": ["@react-pdf/renderer", "qrcode"],
+      "devDependencies": ["@types/qrcode"]
     },
     {
       "name": "section",
