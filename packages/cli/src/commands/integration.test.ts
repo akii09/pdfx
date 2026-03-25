@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import { resolveThemeImport } from './add.js';
-import { resolveTemplateImports } from './template.js';
 
 /**
  * CLI Integration Tests
@@ -54,35 +53,6 @@ export function Button() { return null; }
       // Should contain rewritten theme imports (exact path depends on implementation)
       expect(result).toContain('pdfx-theme');
       expect(result).toContain('pdfx-theme-context');
-    });
-  });
-
-  describe('resolveTemplateImports', () => {
-    const templateContent = `
-import { theme } from '../../lib/pdfx-theme';
-import { usePdfxTheme } from '../../lib/pdfx-theme-context';
-import { Heading } from '../../components/pdfx/heading/pdfx-heading';
-import { Text } from '../../components/pdfx/text/pdfx-text';
-import { Table } from '../../components/pdfx/table/pdfx-table';
-
-export function InvoiceTemplate() {}
-`;
-
-    it('should rewrite import paths for template content', () => {
-      const config = {
-        componentDir: './src/components/pdfx',
-        registry: 'https://example.com/r',
-        theme: './src/lib/pdfx-theme.ts',
-        templateDir: './src/templates/pdfx',
-      };
-
-      const result = resolveTemplateImports(templateContent, 'invoice', config);
-
-      // All expected imports should still be present (rewritten)
-      expect(result).toContain('pdfx-theme');
-      expect(result).toContain('heading');
-      expect(result).toContain('text');
-      expect(result).toContain('table');
     });
   });
 });

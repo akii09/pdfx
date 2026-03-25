@@ -1,23 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {
-  type Config,
-  NetworkError,
-  RegistryError,
-  componentNameSchema,
-  configSchema,
-  registryItemSchema,
-} from '@pdfx/shared';
+import { type Config, componentNameSchema } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import { checkFileExists, safePath } from '../utils/file-system.js';
-import { readJsonFile } from '../utils/read-json.js';
-import { resolveThemeImport } from './add.js';
-
-const FETCH_TIMEOUT_MS = 10_000;
+import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
 
 export async function diff(components: string[]) {
   const configPath = path.join(process.cwd(), 'pdfx.json');
+  let hasFailures = false;
 
   if (!checkFileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
@@ -25,55 +16,29 @@ export async function diff(components: string[]) {
     process.exit(1);
   }
 
-  const raw = readJsonFile(configPath);
-  const configResult = configSchema.safeParse(raw);
-  if (!configResult.success) {
-    console.error(chalk.red('Invalid pdfx.json'));
+  let config: Config;
+  try {
+    config = readConfig(configPath);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(message));
     process.exit(1);
   }
 
-  const config: Config = configResult.data;
   const targetDir = path.resolve(process.cwd(), config.componentDir);
 
   for (const componentName of components) {
     const nameResult = componentNameSchema.safeParse(componentName);
     if (!nameResult.success) {
       console.error(chalk.red(`Invalid component name: "${componentName}"`));
+      hasFailures = true;
       continue;
     }
 
     const spinner = ora(`Comparing ${componentName}...`).start();
 
     try {
-      let response: Response;
-      try {
-        response = await fetch(`${config.registry}/${componentName}.json`, {
-          signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-        });
-      } catch (err) {
-        const isTimeout = err instanceof Error && err.name === 'TimeoutError';
-        throw new NetworkError(
-          isTimeout
-            ? `Registry request timed out after 10 seconds.\n  ${chalk.dim('Check your internet connection or try again later.')}`
-            : `Could not reach registry at ${config.registry}\n  ${chalk.dim('Verify the URL is correct and you have internet access.')}`
-        );
-      }
-
-      if (!response.ok) {
-        throw new RegistryError(
-          response.status === 404
-            ? `Component "${componentName}" not found in registry`
-            : `Registry returned HTTP ${response.status}`
-        );
-      }
-
-      const data = await response.json();
-      const result = registryItemSchema.safeParse(data);
-      if (!result.success) {
-        throw new RegistryError(`Invalid registry entry for "${componentName}"`);
-      }
-
-      const component = result.data;
+      const component = await fetchComponent(componentName, config.registry);
       spinner.stop();
 
       // Components are installed under {componentDir}/{name}/pdfx-{name}.tsx
@@ -124,6 +89,11 @@ export async function diff(components: string[]) {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       spinner.fail(message);
+      hasFailures = true;
     }
+  }
+
+  if (hasFailures) {
+    process.exit(1);
   }
 }

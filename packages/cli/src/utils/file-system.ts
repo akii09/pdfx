@@ -2,9 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export function ensureDir(dir: string) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+  fs.mkdirSync(dir, { recursive: true });
 }
 
 export function writeFile(filePath: string, content: string) {

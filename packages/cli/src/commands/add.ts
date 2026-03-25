@@ -17,7 +17,7 @@ import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-s
 import { generateThemeContextFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
 
-function readConfig(configPath: string): Config {
+export function readConfig(configPath: string): Config {
   const raw = readJsonFile(configPath);
   const result = configSchema.safeParse(raw);
 
@@ -32,7 +32,7 @@ function readConfig(configPath: string): Config {
   return result.data;
 }
 
-async function fetchComponent(name: string, registryUrl: string): Promise<RegistryItem> {
+export async function fetchComponent(name: string, registryUrl: string): Promise<RegistryItem> {
   const url = `${registryUrl}/${name}.json`;
 
   let response: Response;
@@ -169,8 +169,6 @@ async function installComponent(name: string, config: Config, force: boolean): P
       writeFile(contextPath, generateThemeContextFile());
     }
   }
-
-  return;
 }
 
 export async function add(
@@ -232,6 +230,7 @@ export async function add(
 
   const force = options.force ?? false;
   const failed: string[] = [];
+  let installedCount = 0;
 
   for (const componentName of components) {
     // Validate component name
@@ -249,6 +248,7 @@ export async function add(
 
     try {
       await installComponent(componentName, config, force);
+      installedCount++;
       spinner.succeed(`Added ${componentName}`);
     } catch (error: unknown) {
       let shouldMarkAsFailed = true;
@@ -256,8 +256,6 @@ export async function add(
       if (error instanceof ValidationError && error.message.includes('already exists')) {
         spinner.info(error.message);
         shouldMarkAsFailed = false;
-      } else if (error instanceof ValidationError && error.message.includes('Skipped')) {
-        spinner.info(error.message);
       } else if (
         error instanceof NetworkError ||
         error instanceof RegistryError ||
@@ -283,7 +281,7 @@ export async function add(
   if (failed.length > 0) {
     console.log(chalk.yellow(`Failed to add: ${failed.join(', ')}`));
   }
-  if (failed.length < components.length) {
+  if (installedCount > 0) {
     const resolvedDir = path.resolve(process.cwd(), config.componentDir);
     console.log(chalk.green('Done!'));
     console.log(chalk.dim(`Components installed to: ${resolvedDir}\n`));

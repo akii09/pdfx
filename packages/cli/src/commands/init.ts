@@ -13,11 +13,9 @@ import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight
 export async function init() {
   console.log(chalk.bold.cyan('\n  Welcome to the pdfx cli\n'));
 
-  // Run pre-flight checks
   const preFlightResult = runPreFlightChecks();
   displayPreFlightResults(preFlightResult);
 
-  // Exit if there are blocking errors
   if (!preFlightResult.canProceed) {
     console.error(
       chalk.red('\n  Cannot proceed due to blocking issues. Please fix them and try again.\n')
@@ -25,7 +23,6 @@ export async function init() {
     process.exit(1);
   }
 
-  // Check and install @react-pdf/renderer if needed
   const hasReactPdf = await ensureReactPdfRenderer(preFlightResult.dependencies.reactPdfRenderer);
   if (!hasReactPdf) {
     console.error(
@@ -34,7 +31,6 @@ export async function init() {
     process.exit(1);
   }
 
-  // L8: Warn if pdfx.json already exists
   const existingConfig = path.join(process.cwd(), 'pdfx.json');
   if (fs.existsSync(existingConfig)) {
     const { overwrite } = await prompts({
@@ -60,11 +56,11 @@ export async function init() {
           if (!value || value.trim().length === 0) {
             return 'Component directory is required';
           }
-          // Validate it's a relative path
+
           if (path.isAbsolute(value)) {
             return 'Please use a relative path (e.g., ./src/components/pdfx)';
           }
-          // Validate it looks like a directory path
+
           if (!value.startsWith('.')) {
             return 'Path should start with ./ or ../ (e.g., ./src/components/pdfx)';
           }
@@ -177,21 +173,16 @@ export async function init() {
   const spinner = ora('Creating config and theme files...').start();
 
   try {
-    // Create component directory
     const componentDirPath = path.resolve(process.cwd(), answers.componentDir);
     ensureDir(componentDirPath);
-
-    // Write pdfx.json
     fs.writeFileSync(path.join(process.cwd(), 'pdfx.json'), JSON.stringify(config, null, 2));
 
-    // Generate and write theme file + context file
     const presetName = (answers.themePreset || 'professional') as ThemePresetName;
     const preset = themePresets[presetName];
     const themePath = path.resolve(process.cwd(), config.theme);
     ensureDir(path.dirname(themePath));
     fs.writeFileSync(themePath, generateThemeFile(preset), 'utf-8');
 
-    // Scaffold the context file alongside the theme file
     const contextPath = path.join(path.dirname(themePath), 'pdfx-theme-context.tsx');
     fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
 

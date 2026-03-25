@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { detectPackageManager, getInstallCommand } from './package-manager.js';
+import { detectPackageManager, findPackageRoot, getInstallCommand } from './package-manager.js';
 
 describe('package-manager', () => {
   let testDir: string;
@@ -44,6 +44,12 @@ describe('package-manager', () => {
       expect(result.installCommand).toBe('bun add');
     });
 
+    it('should detect bun from bun.lock (bun >=1.1)', () => {
+      fs.writeFileSync(path.join(testDir, 'bun.lock'), '');
+      const result = detectPackageManager(testDir);
+      expect(result.name).toBe('bun');
+    });
+
     it('should detect npm from package-lock.json', () => {
       fs.writeFileSync(path.join(testDir, 'package-lock.json'), '');
       const result = detectPackageManager(testDir);
@@ -65,6 +71,117 @@ describe('package-manager', () => {
 
       const result = detectPackageManager(testDir);
       expect(result.name).toBe('pnpm');
+    });
+
+    it('should walk up to find a lockfile in a parent directory', () => {
+      // Simulate running from a subdirectory (e.g. src/components)
+      const subDir = path.join(testDir, 'src', 'components');
+      fs.mkdirSync(subDir, { recursive: true });
+      // Lockfile lives at the project root, not the subdirectory
+      fs.writeFileSync(path.join(testDir, 'pnpm-lock.yaml'), '');
+
+      const result = detectPackageManager(subDir);
+      expect(result.name).toBe('pnpm');
+    });
+
+    it('should find monorepo lockfile when run from a nested app directory', () => {
+      // Structure: testDir/ (workspace root with pnpm-lock.yaml)
+      //              apps/my-app/ (consumer app, no lockfile)
+      const appDir = path.join(testDir, 'apps', 'my-app');
+      fs.mkdirSync(appDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(testDir, 'package.json'),
+        JSON.stringify({ name: 'root', workspaces: ['apps/*'] })
+      );
+      fs.writeFileSync(path.join(testDir, 'pnpm-lock.yaml'), '');
+      fs.writeFileSync(
+        path.join(appDir, 'package.json'),
+        JSON.stringify({ name: 'my-app', version: '1.0.0' })
+      );
+
+      const result = detectPackageManager(appDir);
+      expect(result.name).toBe('pnpm');
+    });
+  });
+
+  describe('findPackageRoot', () => {
+    it('should return the directory containing a non-workspace package.json', () => {
+      fs.writeFileSync(
+        path.join(testDir, 'package.json'),
+        JSON.stringify({ name: 'my-app', version: '1.0.0' })
+      );
+
+      const result = findPackageRoot(testDir);
+      expect(result).toBe(testDir);
+    });
+
+    it('should walk up from a subdirectory to find the package root', () => {
+      const srcDir = path.join(testDir, 'src', 'components');
+      fs.mkdirSync(srcDir, { recursive: true });
+      fs.writeFileSync(
+        path.join(testDir, 'package.json'),
+        JSON.stringify({ name: 'my-app', version: '1.0.0' })
+      );
+
+      const result = findPackageRoot(srcDir);
+      expect(result).toBe(testDir);
+    });
+
+    it('should skip a workspace root and return the nested app as package root', () => {
+      // Structure: testDir/ (workspace root)
+      //              apps/my-app/ (consumer app, should be returned)
+      const appDir = path.join(testDir, 'apps', 'my-app');
+      fs.mkdirSync(appDir, { recursive: true });
+
+      // Workspace root: has "workspaces" field
+      fs.writeFileSync(
+        path.join(testDir, 'package.json'),
+        JSON.stringify({ name: 'root', workspaces: ['apps/*'] })
+      );
+      // App: no workspaces field
+      fs.writeFileSync(
+        path.join(appDir, 'package.json'),
+        JSON.stringify({ name: 'my-app', version: '1.0.0' })
+      );
+
+      const result = findPackageRoot(appDir);
+      expect(result).toBe(appDir);
+    });
+
+    it('should skip a pnpm workspace root and return the nested app', () => {
+      const appDir = path.join(testDir, 'apps', 'my-app');
+      fs.mkdirSync(appDir, { recursive: true });
+
+      // pnpm workspace root: has pnpm-workspace.yaml
+      fs.writeFileSync(path.join(testDir, 'package.json'), JSON.stringify({ name: 'root' }));
+      fs.writeFileSync(path.join(testDir, 'pnpm-workspace.yaml'), 'packages:\n  - apps/*\n');
+      fs.writeFileSync(
+        path.join(appDir, 'package.json'),
+        JSON.stringify({ name: 'my-app', version: '1.0.0' })
+      );
+
+      const result = findPackageRoot(appDir);
+      expect(result).toBe(appDir);
+    });
+
+    it('should return startDir as fallback when no package.json exists in tree', () => {
+      // No package.json anywhere in the temp hierarchy
+      const deepDir = path.join(testDir, 'a', 'b', 'c');
+      fs.mkdirSync(deepDir, { recursive: true });
+
+      // Result must be startDir (not crash)
+      const result = findPackageRoot(deepDir);
+      expect(result).toBe(deepDir);
+    });
+
+    it('should return startDir itself when it is the package root', () => {
+      fs.writeFileSync(
+        path.join(testDir, 'package.json'),
+        JSON.stringify({ name: 'my-app', version: '1.0.0' })
+      );
+
+      const result = findPackageRoot(testDir);
+      expect(result).toBe(testDir);
     });
   });
 

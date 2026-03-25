@@ -6,7 +6,7 @@ import ora from 'ora';
 import prompts from 'prompts';
 import ts from 'typescript';
 import { DEFAULTS } from '../constants.js';
-import { ensureDir } from '../utils/file-system.js';
+import { checkFileExists, ensureDir } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
 
@@ -15,9 +15,8 @@ import { readJsonFile } from '../utils/read-json.js';
  * Prompts for preset selection and theme file path, then scaffolds the theme file.
  */
 export async function themeInit() {
-  // Check if pdfx.json exists - block if not present
   const configPath = path.join(process.cwd(), 'pdfx.json');
-  if (!fs.existsSync(configPath)) {
+  if (!checkFileExists(configPath)) {
     console.error(chalk.red('\nError: pdfx.json not found'));
     console.log(chalk.yellow('\n  PDFx is not initialized in this project.\n'));
     console.log(chalk.cyan('  Run: pdfx init'));
@@ -83,15 +82,12 @@ export async function themeInit() {
     ensureDir(path.dirname(absThemePath));
     fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
 
-    // Scaffold the context file alongside the theme file (idempotent — safe to overwrite)
     const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
     fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
 
     spinner.succeed(`Created ${themePath} with ${presetName} theme`);
 
-    // Update pdfx.json if it exists
-    const configPath = path.join(process.cwd(), 'pdfx.json');
-    if (fs.existsSync(configPath)) {
+    if (checkFileExists(configPath)) {
       try {
         const rawConfig = readJsonFile(configPath);
         const result = configSchema.safeParse(rawConfig);
@@ -119,7 +115,6 @@ export async function themeInit() {
  * Overwrites the existing theme file with the selected preset.
  */
 export async function themeSwitch(presetName: string) {
-  // Resolve 'default' alias to 'professional'
   const resolvedPreset = presetName === 'default' ? 'professional' : presetName;
 
   const validPresets = Object.keys(themePresets);
@@ -130,11 +125,10 @@ export async function themeSwitch(presetName: string) {
     process.exit(1);
   }
 
-  // Safe: validated above via validPresets.includes()
   const validatedPreset = resolvedPreset as ThemePresetName;
 
   const configPath = path.join(process.cwd(), 'pdfx.json');
-  if (!fs.existsSync(configPath)) {
+  if (!checkFileExists(configPath)) {
     console.error(chalk.red('No pdfx.json found. Run "pdfx init" first.'));
     process.exit(1);
   }
@@ -173,9 +167,8 @@ export async function themeSwitch(presetName: string) {
     const absThemePath = path.resolve(process.cwd(), config.theme);
     fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
 
-    // Ensure the context file is present after a switch (idempotent — only creates if missing)
     const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
-    if (!fs.existsSync(contextPath)) {
+    if (!checkFileExists(contextPath)) {
       ensureDir(path.dirname(contextPath));
       fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
     }
@@ -280,7 +273,7 @@ function parseThemeObject(themePath: string): unknown {
  */
 export async function themeValidate() {
   const configPath = path.join(process.cwd(), 'pdfx.json');
-  if (!fs.existsSync(configPath)) {
+  if (!checkFileExists(configPath)) {
     console.error(chalk.red('No pdfx.json found. Run "pdfx init" first.'));
     process.exit(1);
   }
@@ -300,7 +293,7 @@ export async function themeValidate() {
   }
 
   const absThemePath = path.resolve(process.cwd(), configResult.data.theme);
-  if (!fs.existsSync(absThemePath)) {
+  if (!checkFileExists(absThemePath)) {
     console.error(chalk.red(`Theme file not found: ${configResult.data.theme}`));
     process.exit(1);
   }

@@ -7,40 +7,23 @@ import {
   type RegistryItem,
   ValidationError,
   componentNameSchema,
-  configSchema,
   registryItemSchema,
   registrySchema,
 } from '@pdfx/shared';
 import chalk from 'chalk';
-import ora from 'ora';
+import ora, { type Ora } from 'ora';
 import prompts from 'prompts';
 import { DEFAULTS, REGISTRY_SUBPATHS } from '../constants.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
-import { readJsonFile } from '../utils/read-json.js';
-import { resolveThemeImport } from './add.js';
+import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-function readConfig(configPath: string): Config {
-  const raw = readJsonFile(configPath);
-  const result = configSchema.safeParse(raw);
-
-  if (!result.success) {
-    const issues = result.error.issues.map((i) => i.message).join(', ');
-    throw new ConfigError(
-      `Invalid pdfx.json: ${issues}`,
-      `Fix the config or re-run ${chalk.cyan('pdfx init')}`
-    );
-  }
-
-  return result.data;
-}
+type OverwriteDecision = 'skip' | 'overwrite' | 'overwrite-all';
 
 async function fetchBlock(name: string, registryUrl: string): Promise<RegistryItem> {
   const url = `${registryUrl}/${REGISTRY_SUBPATHS.TEMPLATES}/${name}.json`;
-
   let response: Response;
+
   try {
     response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
   } catch (err) {
@@ -75,51 +58,9 @@ async function fetchBlock(name: string, registryUrl: string): Promise<RegistryIt
   return result.data;
 }
 
-async function fetchComponent(name: string, registryUrl: string): Promise<RegistryItem> {
-  const url = `${registryUrl}/${name}.json`;
-
-  let response: Response;
-  try {
-    response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
-  } catch (err) {
-    const isTimeout = err instanceof Error && err.name === 'TimeoutError';
-    throw new NetworkError(
-      isTimeout ? 'Registry request timed out' : `Could not reach ${registryUrl}`
-    );
-  }
-
-  if (!response.ok) {
-    throw new RegistryError(
-      response.status === 404
-        ? `Component "${name}" not found in registry`
-        : `Registry returned HTTP ${response.status}`
-    );
-  }
-
-  let data: unknown;
-  try {
-    data = await response.json();
-  } catch {
-    throw new RegistryError(`Invalid response for "${name}": not valid JSON`);
-  }
-
-  const result = registryItemSchema.safeParse(data);
-  if (!result.success) {
-    throw new RegistryError(
-      `Invalid registry entry for "${name}": ${result.error.issues[0]?.message}`
-    );
-  }
-
-  return result.data;
-}
-
-// ─── Import path rewriting ───────────────────────────────────────────────────
-
 export function resolveBlockImports(content: string, blockName: string, config: Config): string {
   const cwd = process.cwd();
-
   const blockSubdir = path.resolve(cwd, config.blockDir ?? DEFAULTS.BLOCK_DIR, blockName);
-
   let result = content.replace(
     /from '\.\.\/\.\.\/components\/pdfx\/([a-z][a-z0-9-]*)\/pdfx-([a-z][a-z0-9-]*)'/g,
     (_match, componentName) => {
@@ -154,8 +95,6 @@ export function resolveBlockImports(content: string, blockName: string, config: 
   return result;
 }
 
-type OverwriteDecision = 'skip' | 'overwrite' | 'overwrite-all';
-
 async function resolveConflict(
   fileName: string,
   currentDecision: OverwriteDecision | null
@@ -183,11 +122,19 @@ async function resolveConflict(
   return action as OverwriteDecision;
 }
 
-// ─── Install a single block ──────────────────────────────────────────────────
-
 interface InstallBlockResult {
   installedPeers: string[];
   peerWarnings: string[];
+  allSkipped: boolean;
+}
+
+interface PendingBlockFile {
+  filePath: string;
+  content: string;
+}
+
+interface ResolvedBlockFile extends PendingBlockFile {
+  skip: boolean;
 }
 
 async function ensurePeerComponents(
@@ -199,7 +146,7 @@ async function ensurePeerComponents(
   const peerWarnings: string[] = [];
 
   if (!block.peerComponents || block.peerComponents.length === 0) {
-    return { installedPeers, peerWarnings };
+    return { installedPeers, peerWarnings, allSkipped: false };
   }
 
   const componentBaseDir = path.resolve(process.cwd(), config.componentDir);
@@ -213,12 +160,15 @@ async function ensurePeerComponents(
         peerWarnings.push(
           `${componentName}: directory exists but expected file missing (${path.basename(expectedMain)})`
         );
-      } else {
+        continue;
+      }
+
+      if (!force) {
         peerWarnings.push(
           `${componentName}: already exists, skipped install (use "pdfx diff ${componentName}" to verify freshness)`
         );
+        continue;
       }
-      continue;
     }
 
     const component = await fetchComponent(componentName, config.registry);
@@ -236,35 +186,31 @@ async function ensurePeerComponents(
         content = resolveThemeImport(componentRelDir, config.theme, content);
       }
 
-      if (checkFileExists(filePath) && !force) {
-        peerWarnings.push(
-          `${componentName}: skipped writing ${fileName} because it already exists (use --force to overwrite)`
-        );
-        continue;
-      }
-
       writeFile(filePath, content);
     }
 
     installedPeers.push(componentName);
   }
 
-  return { installedPeers, peerWarnings };
+  return { installedPeers, peerWarnings, allSkipped: false };
 }
 
 async function installBlock(
   name: string,
   config: Config,
-  force: boolean
+  force: boolean,
+  spinner: Ora
 ): Promise<InstallBlockResult> {
   const block = await fetchBlock(name, config.registry);
   const peerResult = await ensurePeerComponents(block, config, force);
-
   const blockBaseDir = path.resolve(process.cwd(), config.blockDir ?? DEFAULTS.BLOCK_DIR);
   const blockDir = path.join(blockBaseDir, block.name);
   ensureDir(blockDir);
+  const filesToWrite: PendingBlockFile[] = [];
+  let allSkipped = false;
+  let globalDecision: OverwriteDecision | null = null;
+  const resolved: ResolvedBlockFile[] = [];
 
-  const filesToWrite: Array<{ filePath: string; content: string }> = [];
   for (const file of block.files) {
     const fileName = path.basename(file.path);
     const filePath = safePath(blockDir, fileName);
@@ -276,8 +222,10 @@ async function installBlock(
   }
 
   if (!force) {
-    let globalDecision: OverwriteDecision | null = null;
-    const resolved: Array<{ filePath: string; content: string; skip: boolean }> = [];
+    const hasConflicts = filesToWrite.some((f) => checkFileExists(f.filePath));
+    if (hasConflicts) {
+      spinner.stop();
+    }
 
     for (const file of filesToWrite) {
       if (checkFileExists(file.filePath)) {
@@ -290,6 +238,8 @@ async function installBlock(
         resolved.push({ ...file, skip: false });
       }
     }
+
+    allSkipped = resolved.every((f) => f.skip);
 
     for (const file of resolved) {
       if (!file.skip) {
@@ -304,26 +254,6 @@ async function installBlock(
     }
   }
 
-  if (block.peerComponents && block.peerComponents.length > 0) {
-    const componentBaseDir = path.resolve(process.cwd(), config.componentDir);
-    const missing: string[] = [];
-
-    for (const comp of block.peerComponents) {
-      const compDir = path.join(componentBaseDir, comp);
-      if (!checkFileExists(compDir)) {
-        missing.push(comp);
-      }
-    }
-
-    if (missing.length > 0) {
-      console.log();
-      console.log(chalk.yellow('  Missing peer components:'));
-      for (const comp of missing) {
-        console.log(chalk.dim(`    ${comp}  →  run: ${chalk.cyan(`pdfx add ${comp}`)}`));
-      }
-    }
-  }
-
   if (config.theme) {
     const absThemePath = path.resolve(process.cwd(), config.theme);
     const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
@@ -333,13 +263,15 @@ async function installBlock(
     }
   }
 
-  return peerResult;
+  return { ...peerResult, allSkipped };
 }
-
-// ─── Public commands ─────────────────────────────────────────────────────────
 
 export async function blockAdd(names: string[], options: { force?: boolean } = {}) {
   const configPath = path.join(process.cwd(), 'pdfx.json');
+  let config: Config;
+  const force = options.force ?? false;
+  const failed: string[] = [];
+  let installedCount = 0;
 
   if (!checkFileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
@@ -347,7 +279,6 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
     process.exit(1);
   }
 
-  let config: Config;
   try {
     config = readConfig(configPath);
   } catch (error: unknown) {
@@ -360,9 +291,6 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
     }
     process.exit(1);
   }
-
-  const force = options.force ?? false;
-  const failed: string[] = [];
 
   for (const blockName of names) {
     const nameResult = componentNameSchema.safeParse(blockName);
@@ -378,15 +306,23 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
     const spinner = ora(`Adding block ${blockName}...`).start();
 
     try {
-      const result = await installBlock(blockName, config, force);
-      spinner.succeed(`Added block ${chalk.cyan(blockName)}`);
-      if (result.installedPeers.length > 0) {
-        console.log(
-          chalk.green(`  Installed required components: ${result.installedPeers.join(', ')}`)
+      const result = await installBlock(blockName, config, force, spinner);
+
+      if (result.allSkipped) {
+        spinner.info(
+          `Skipped ${chalk.cyan(blockName)} — all files already exist (use ${chalk.cyan('--force')} to overwrite)`
         );
-      }
-      for (const warning of result.peerWarnings) {
-        console.log(chalk.yellow(`  Warning: ${warning}`));
+      } else {
+        installedCount++;
+        spinner.succeed(`Added block ${chalk.cyan(blockName)}`);
+        if (result.installedPeers.length > 0) {
+          console.log(
+            chalk.green(`  Installed required components: ${result.installedPeers.join(', ')}`)
+          );
+        }
+        for (const warning of result.peerWarnings) {
+          console.log(chalk.yellow(`  Warning: ${warning}`));
+        }
       }
     } catch (error: unknown) {
       if (error instanceof ValidationError && error.message.includes('Cancelled')) {
@@ -416,7 +352,7 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
     console.log(chalk.yellow(`Failed: ${failed.join(', ')}`));
   }
 
-  if (failed.length < names.length) {
+  if (installedCount > 0) {
     const resolvedDir = path.resolve(process.cwd(), config.blockDir ?? DEFAULTS.BLOCK_DIR);
     console.log(chalk.green('Done!'));
     console.log(chalk.dim(`Blocks installed to: ${resolvedDir}\n`));
@@ -436,14 +372,15 @@ export async function blockList() {
     process.exit(1);
   }
 
-  const raw = readJsonFile(configPath);
-  const configResult = configSchema.safeParse(raw);
-  if (!configResult.success) {
-    console.error(chalk.red('Invalid pdfx.json'));
+  let config: Config;
+  try {
+    config = readConfig(configPath);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(message));
     process.exit(1);
   }
 
-  const config: Config = configResult.data;
   const spinner = ora('Fetching block list...').start();
 
   try {
@@ -463,7 +400,12 @@ export async function blockList() {
       throw new RegistryError(`Registry returned HTTP ${response.status}`);
     }
 
-    const data = await response.json();
+    let data: unknown;
+    try {
+      data = await response.json();
+    } catch {
+      throw new RegistryError('Invalid response from registry: not valid JSON');
+    }
     const result = registrySchema.safeParse(data);
 
     if (!result.success) {

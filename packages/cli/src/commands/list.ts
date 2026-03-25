@@ -8,6 +8,7 @@ import {
 } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
+import { DEFAULTS } from '../constants.js';
 import { checkFileExists, safePath } from '../utils/file-system.js';
 import { readJsonFile } from '../utils/read-json.js';
 
@@ -18,7 +19,6 @@ export async function list() {
   let config: Config;
   let hasLocalProject = false;
 
-  // Try to load config, but don't require it
   if (checkFileExists(configPath)) {
     const raw = readJsonFile(configPath);
     const configResult = configSchema.safeParse(raw);
@@ -29,14 +29,15 @@ export async function list() {
     config = configResult.data;
     hasLocalProject = true;
   } else {
-    // Use default registry when no config exists
     config = {
-      registry: 'https://pdfx.akashpise.dev/r',
-      componentDir: './src/components/pdfx',
-      theme: './src/lib/pdfx-theme.ts',
+      registry: DEFAULTS.REGISTRY_URL,
+      componentDir: DEFAULTS.COMPONENT_DIR,
+      theme: DEFAULTS.THEME_FILE,
+      blockDir: DEFAULTS.BLOCK_DIR,
     };
     console.log(chalk.dim('No pdfx.json found. Listing from default registry.\n'));
   }
+
   const spinner = ora('Fetching registry...').start();
 
   try {
@@ -67,15 +68,12 @@ export async function list() {
 
     spinner.stop();
 
-    // Categorize items
     const components = result.data.items.filter((item) => item.type === 'registry:ui');
-    const templates = result.data.items.filter((item) => item.type === 'registry:template');
     const blocks = result.data.items.filter((item) => item.type === 'registry:block');
 
     const componentBaseDir = path.resolve(process.cwd(), config.componentDir);
-    const templateBaseDir = path.resolve(process.cwd(), config.templateDir ?? './src/templates');
+    const blockBaseDir = path.resolve(process.cwd(), config.blockDir ?? DEFAULTS.BLOCK_DIR);
 
-    // ─── Components Section ─────────────────────────────────────────────────
     console.log(chalk.bold(`\n  Components (${components.length})`));
     console.log(chalk.dim('  Install with: pdfx add <component>\n'));
 
@@ -92,28 +90,11 @@ export async function list() {
       console.log();
     }
 
-    // ─── Templates Section ──────────────────────────────────────────────────
-    console.log(chalk.bold(`  Templates (${templates.length})`));
-    console.log(chalk.dim('  Data-driven. Install with: pdfx template add <template>\n'));
-
-    for (const item of templates) {
-      const templateDir = path.join(templateBaseDir, item.name);
-      const installed = hasLocalProject && checkFileExists(templateDir);
-      const status = installed ? chalk.green('[installed]') : chalk.dim('[not installed]');
-
-      console.log(`  ${chalk.cyan(item.name.padEnd(22))} ${item.description ?? ''}`);
-      if (hasLocalProject) {
-        console.log(`  ${''.padEnd(22)} ${status}`);
-      }
-      console.log();
-    }
-
-    // ─── Blocks Section ─────────────────────────────────────────────────────
     console.log(chalk.bold(`  Blocks (${blocks.length})`));
     console.log(chalk.dim('  Copy-paste designs. Install with: pdfx block add <block>\n'));
 
     for (const item of blocks) {
-      const blockDir = path.join(templateBaseDir, item.name);
+      const blockDir = path.join(blockBaseDir, item.name);
       const installed = hasLocalProject && checkFileExists(blockDir);
       const status = installed ? chalk.green('[installed]') : chalk.dim('[not installed]');
 
@@ -127,16 +108,10 @@ export async function list() {
       console.log();
     }
 
-    // ─── Summary ────────────────────────────────────────────────────────────
     console.log(chalk.dim('  Quick Start:'));
+    console.log(chalk.dim(`    pdfx add heading table         ${chalk.dim('# Add components')}`));
     console.log(
-      chalk.dim(`    pdfx add heading table            ${chalk.dim('# Add components')}`)
-    );
-    console.log(
-      chalk.dim(`    pdfx template add invoice-template ${chalk.dim('# Add data-driven template')}`)
-    );
-    console.log(
-      chalk.dim(`    pdfx block add invoice-classic    ${chalk.dim('# Add copy-paste block')}`)
+      chalk.dim(`    pdfx block add invoice-classic ${chalk.dim('# Add copy-paste block')}`)
     );
     console.log();
   } catch (error: unknown) {

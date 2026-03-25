@@ -110,8 +110,6 @@ export const configSchema = z.object({
   componentDir: z.string().min(1, 'componentDir must not be empty'),
   registry: z.string().url('registry must be a valid URL'),
   theme: z.string().min(1).optional(),
-  /** Directory where templates are installed. Defaults to ./src/templates/pdfx */
-  templateDir: z.string().min(1).optional(),
   /** Directory where blocks are installed. Defaults to ./src/blocks/pdfx */
   blockDir: z.string().min(1).optional(),
 });
@@ -141,7 +139,7 @@ export const registryItemSchema = z.object({
   files: z.array(registryFileSchema).min(1, 'Component must have at least one file'),
   dependencies: z.array(z.string()).optional(),
   registryDependencies: z.array(z.string()).optional(),
-  /** For templates: peerDependencies are @pdfx/ui components that must be available */
+  /** Peer components that must be installed alongside this item (used by blocks) */
   peerComponents: z.array(z.string()).optional(),
 });
 

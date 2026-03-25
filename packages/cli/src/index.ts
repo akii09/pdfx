@@ -1,30 +1,35 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import chalk from 'chalk';
 import { Command } from 'commander';
 import { add } from './commands/add.js';
 import { blockAdd, blockList } from './commands/block.js';
 import { diff } from './commands/diff.js';
 import { init } from './commands/init.js';
 import { list } from './commands/list.js';
-import { templateAdd, templateList } from './commands/template.js';
 import { themeInit, themeSwitch, themeValidate } from './commands/theme.js';
+
+function getVersion(): string {
+  try {
+    const pkgPath = join(dirname(fileURLToPath(import.meta.url)), '../package.json');
+    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { version?: string };
+    return pkg.version ?? '0.0.0';
+  } catch {
+    return '0.0.0';
+  }
+}
 
 const program = new Command();
 
-// Read version from package.json
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = join(__filename, '..');
-const packageJsonPath = join(__dirname, '../package.json');
-let version = '0.1.3'; // fallback
-try {
-  const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-  version = pkg.version;
-} catch {
-  // Use fallback version
-}
+program.name('pdfx').description('CLI for PDFx components').version(getVersion());
 
-program.name('pdfx').description('CLI for PDFx components').version(version);
+program.configureOutput({
+  writeErr: (str) => {
+    const message = str.replace(/^error:\s*/i, '').trimEnd();
+    process.stderr.write(chalk.red(`✖ ${message}\n`));
+  },
+});
 
 program.command('init').description('Initialize pdfx in your project').action(init);
 
@@ -55,27 +60,20 @@ themeCmd
 
 themeCmd.command('validate').description('Validate your theme file').action(themeValidate);
 
-const templateCmd = program.command('template').description('Manage PDF templates');
-
-templateCmd
-  .command('add <templates...>')
-  .description('Add a template to your project')
-  .option('-f, --force', 'Overwrite existing files without prompting')
-  .action((templates: string[], options: { force?: boolean }) => templateAdd(templates, options));
-
-templateCmd
-  .command('list')
-  .description('List available templates from registry')
-  .action(templateList);
-
 const blockCmd = program.command('block').description('Manage PDF blocks (copy-paste designs)');
 
 blockCmd
   .command('add <blocks...>')
-  .description('Add a block to your project')
+  .description('Add blocks to your project')
   .option('-f, --force', 'Overwrite existing files without prompting')
   .action((blocks: string[], options: { force?: boolean }) => blockAdd(blocks, options));
 
 blockCmd.command('list').description('List available blocks from registry').action(blockList);
 
-program.parse();
+try {
+  await program.parseAsync();
+} catch (err) {
+  const message = err instanceof Error ? err.message : String(err);
+  process.stderr.write(chalk.red(`✖ ${message}\n`));
+  process.exitCode = 1;
+}

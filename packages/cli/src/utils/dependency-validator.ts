@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import semver from 'semver';
+import { REQUIRED_VERSIONS } from '../constants.js';
 import { readJsonFile } from './read-json.js';
 
 export interface DependencyValidation {
@@ -15,18 +16,8 @@ export interface DependencyCheckResult {
   reactPdfRenderer: DependencyValidation;
   react: DependencyValidation;
   nodeJs: DependencyValidation;
-  typescript?: DependencyValidation;
 }
 
-const REQUIRED_VERSIONS = {
-  '@react-pdf/renderer': '>=3.0.0',
-  react: '>=16.8.0',
-  node: '>=24.0.0',
-};
-
-/**
- * Read package.json from current working directory
- */
 function getPackageJson(cwd: string = process.cwd()): Record<string, unknown> | null {
   const pkgPath = path.join(cwd, 'package.json');
   if (!fs.existsSync(pkgPath)) {
@@ -35,30 +26,33 @@ function getPackageJson(cwd: string = process.cwd()): Record<string, unknown> | 
   return readJsonFile(pkgPath) as Record<string, unknown>;
 }
 
-/**
- * Get installed version of a package from package.json
- */
-function getInstalledVersion(packageName: string, cwd: string = process.cwd()): string | null {
-  const pkg = getPackageJson(cwd);
-  if (!pkg) return null;
+function getInstalledVersion(
+  packageName: string,
+  cwd: string = process.cwd(),
+  pkg?: Record<string, unknown> | null
+): string | null {
+  const resolved = pkg !== undefined ? pkg : getPackageJson(cwd);
+  if (!resolved) return null;
 
   const deps = {
-    ...(pkg.dependencies as Record<string, string> | undefined),
-    ...(pkg.devDependencies as Record<string, string> | undefined),
+    ...(resolved.dependencies as Record<string, string> | undefined),
+    ...(resolved.devDependencies as Record<string, string> | undefined),
   };
 
   const version = deps[packageName];
   if (!version) return null;
 
-  // Clean version string (remove ^, ~, etc.)
   return semver.clean(version) || semver.coerce(version)?.version || null;
 }
 
 /**
  * Validate @react-pdf/renderer installation and version
  */
-export function validateReactPdfRenderer(cwd: string = process.cwd()): DependencyValidation {
-  const version = getInstalledVersion('@react-pdf/renderer', cwd);
+export function validateReactPdfRenderer(
+  cwd: string = process.cwd(),
+  pkg?: Record<string, unknown> | null
+): DependencyValidation {
+  const version = getInstalledVersion('@react-pdf/renderer', cwd, pkg);
   const required = REQUIRED_VERSIONS['@react-pdf/renderer'];
 
   if (!version) {
@@ -85,8 +79,11 @@ export function validateReactPdfRenderer(cwd: string = process.cwd()): Dependenc
 /**
  * Validate React installation and version
  */
-export function validateReact(cwd: string = process.cwd()): DependencyValidation {
-  const version = getInstalledVersion('react', cwd);
+export function validateReact(
+  cwd: string = process.cwd(),
+  pkg?: Record<string, unknown> | null
+): DependencyValidation {
+  const version = getInstalledVersion('react', cwd, pkg);
   const required = REQUIRED_VERSIONS.react;
 
   if (!version) {
@@ -140,35 +137,11 @@ export function validateNodeVersion(): DependencyValidation {
   };
 }
 
-/**
- * Check if TypeScript is installed and if types are needed
- */
-export function validateTypeScript(cwd: string = process.cwd()): DependencyValidation | null {
-  const tsVersion = getInstalledVersion('typescript', cwd);
-  if (!tsVersion) {
-    return null; // Not a TypeScript project
-  }
-
-  const typesInstalled = getInstalledVersion('@types/react-pdf', cwd);
-  return {
-    valid: !!typesInstalled,
-    installed: !!typesInstalled,
-    currentVersion: typesInstalled || undefined,
-    requiredVersion: 'latest',
-    message: typesInstalled
-      ? 'TypeScript types for @react-pdf/renderer are installed'
-      : '@types/react-pdf is recommended for TypeScript projects',
-  };
-}
-
-/**
- * Run all dependency checks
- */
 export function validateDependencies(cwd: string = process.cwd()): DependencyCheckResult {
+  const pkg = getPackageJson(cwd); // read package.json once for all sub-validators
   return {
-    reactPdfRenderer: validateReactPdfRenderer(cwd),
-    react: validateReact(cwd),
+    reactPdfRenderer: validateReactPdfRenderer(cwd, pkg),
+    react: validateReact(cwd, pkg),
     nodeJs: validateNodeVersion(),
-    typescript: validateTypeScript(cwd) || undefined,
   };
 }

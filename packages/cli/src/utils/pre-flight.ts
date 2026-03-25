@@ -10,9 +10,6 @@ export interface PreFlightResult {
   canProceed: boolean;
 }
 
-/**
- * Run all pre-flight checks and return structured results
- */
 export function runPreFlightChecks(cwd: string = process.cwd()): PreFlightResult {
   const environment = validateEnvironment(cwd);
   const dependencies = validateDependencies(cwd);
@@ -20,19 +17,15 @@ export function runPreFlightChecks(cwd: string = process.cwd()): PreFlightResult
   const blockingErrors: string[] = [];
   const warnings: string[] = [];
 
-  // Check environment (blocking)
   if (!environment.hasPackageJson.valid) {
     blockingErrors.push(
       `${environment.hasPackageJson.message}\n  ${chalk.dim('→')} ${environment.hasPackageJson.fixCommand}`
     );
-    // Early exit - if no package.json, skip React check
   } else if (!environment.isReactProject.valid) {
     blockingErrors.push(
       `${environment.isReactProject.message}\n  ${chalk.dim('→')} ${environment.isReactProject.fixCommand}`
     );
-    // Early exit - if not React project, skip React install check
   } else {
-    // Only check React installation if we have a React project
     if (!dependencies.react.valid && dependencies.react.installed) {
       warnings.push(
         `${dependencies.react.message}\n  ${chalk.dim('→')} Current: ${dependencies.react.currentVersion}, Required: ${dependencies.react.requiredVersion}`
@@ -44,27 +37,15 @@ export function runPreFlightChecks(cwd: string = process.cwd()): PreFlightResult
     }
   }
 
-  // Check Node.js version (blocking)
   if (!dependencies.nodeJs.valid) {
     blockingErrors.push(
       `${dependencies.nodeJs.message}\n  ${chalk.dim('→')} Current: ${dependencies.nodeJs.currentVersion}, Required: ${dependencies.nodeJs.requiredVersion}\n  ${chalk.dim('→')} Visit https://nodejs.org to upgrade`
     );
   }
 
-  // Check @react-pdf/renderer (handled separately in install flow)
-  // We don't add it to blockingErrors here because we'll offer to install it
-
-  // Check @react-pdf/renderer version compatibility (warning if installed but wrong version)
   if (dependencies.reactPdfRenderer.installed && !dependencies.reactPdfRenderer.valid) {
     warnings.push(
       `${dependencies.reactPdfRenderer.message}\n  ${chalk.dim('→')} Consider upgrading: npm install @react-pdf/renderer@latest`
-    );
-  }
-
-  // Check TypeScript types (warning only)
-  if (dependencies.typescript && !dependencies.typescript.valid) {
-    warnings.push(
-      `${dependencies.typescript.message}\n  ${chalk.dim('→')} Install types: npm install -D @types/react-pdf`
     );
   }
 
@@ -77,13 +58,9 @@ export function runPreFlightChecks(cwd: string = process.cwd()): PreFlightResult
   };
 }
 
-/**
- * Display pre-flight check results with nice formatting
- */
 export function displayPreFlightResults(result: PreFlightResult): void {
   console.log(chalk.bold('\n  Pre-flight Checks:\n'));
 
-  // Show blocking errors
   if (result.blockingErrors.length > 0) {
     console.log(chalk.red('  ✗ Blocking Issues:\n'));
     for (const error of result.blockingErrors) {
@@ -91,7 +68,6 @@ export function displayPreFlightResults(result: PreFlightResult): void {
     }
   }
 
-  // Show warnings
   if (result.warnings.length > 0) {
     console.log(chalk.yellow('  ⚠ Warnings:\n'));
     for (const warning of result.warnings) {
@@ -99,7 +75,6 @@ export function displayPreFlightResults(result: PreFlightResult): void {
     }
   }
 
-  // Show success if no issues
   if (result.blockingErrors.length === 0 && result.warnings.length === 0) {
     console.log(chalk.green('  ✓ All checks passed!\n'));
   }

@@ -3,21 +3,17 @@ import { execa } from 'execa';
 import ora from 'ora';
 import prompts from 'prompts';
 import type { DependencyValidation } from './dependency-validator.js';
-import { detectPackageManager, getInstallCommand } from './package-manager.js';
+import { detectPackageManager, findPackageRoot, getInstallCommand } from './package-manager.js';
 
 export interface InstallResult {
   success: boolean;
   message: string;
 }
 
-/**
- * Prompt user and install @react-pdf/renderer if they agree
- */
 export async function promptAndInstallReactPdf(
   validation: DependencyValidation,
   cwd: string = process.cwd()
 ): Promise<InstallResult> {
-  // If already installed and compatible, no need to install
   if (validation.installed && validation.valid) {
     return {
       success: true,
@@ -25,11 +21,13 @@ export async function promptAndInstallReactPdf(
     };
   }
 
+  const packageRoot = findPackageRoot(cwd);
   const pm = detectPackageManager(cwd);
   const packageName = '@react-pdf/renderer';
   const installCmd = getInstallCommand(pm.name, [packageName]);
 
   console.log(chalk.yellow('\n  ⚠ @react-pdf/renderer is required but not installed\n'));
+  console.log(chalk.dim(`    Package root: ${packageRoot}`));
   console.log(chalk.dim(`    This command will run: ${installCmd}\n`));
 
   const { shouldInstall } = await prompts({
@@ -46,12 +44,12 @@ export async function promptAndInstallReactPdf(
     };
   }
 
-  // Install the package
   const spinner = ora('Installing @react-pdf/renderer...').start();
 
   try {
-    await execa(pm.name, ['add', packageName], {
-      cwd,
+    const installArgs = pm.installCommand.split(' ').slice(1); // ['add'] or ['install']
+    await execa(pm.name, [...installArgs, packageName], {
+      cwd: packageRoot,
       stdio: 'pipe',
     });
 
@@ -70,14 +68,10 @@ export async function promptAndInstallReactPdf(
   }
 }
 
-/**
- * Check and offer to install @react-pdf/renderer if needed
- */
 export async function ensureReactPdfRenderer(
   validation: DependencyValidation,
   cwd: string = process.cwd()
 ): Promise<boolean> {
-  // If not installed, prompt to install
   if (!validation.installed) {
     const result = await promptAndInstallReactPdf(validation, cwd);
     if (!result.success) {
@@ -87,7 +81,6 @@ export async function ensureReactPdfRenderer(
     return true;
   }
 
-  // If installed but incompatible version, warn but allow to continue
   if (!validation.valid) {
     console.log(
       chalk.yellow(

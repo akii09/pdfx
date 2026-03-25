@@ -7,7 +7,6 @@ import {
   validateNodeVersion,
   validateReact,
   validateReactPdfRenderer,
-  validateTypeScript,
 } from './dependency-validator.js';
 
 describe('dependency-validator', () => {
@@ -123,39 +122,6 @@ describe('dependency-validator', () => {
     });
   });
 
-  describe('validateTypeScript', () => {
-    it('should return null if TypeScript not installed', () => {
-      createPackageJson({
-        dependencies: { react: '^18.0.0' },
-      });
-      const result = validateTypeScript(testDir);
-      expect(result).toBeNull();
-    });
-
-    it('should return invalid if TypeScript installed but no types', () => {
-      createPackageJson({
-        devDependencies: { typescript: '^5.0.0' },
-      });
-      const result = validateTypeScript(testDir);
-      expect(result).not.toBeNull();
-      expect(result?.valid).toBe(false);
-      expect(result?.message).toContain('recommended');
-    });
-
-    it('should return valid if both TypeScript and types installed', () => {
-      createPackageJson({
-        devDependencies: {
-          typescript: '^5.0.0',
-          '@types/react-pdf': '^7.0.0',
-        },
-      });
-      const result = validateTypeScript(testDir);
-      expect(result).not.toBeNull();
-      expect(result?.valid).toBe(true);
-      expect(result?.installed).toBe(true);
-    });
-  });
-
   describe('validateDependencies', () => {
     it('should run all dependency checks', () => {
       createPackageJson({
@@ -172,7 +138,6 @@ describe('dependency-validator', () => {
       expect(result.react).toBeDefined();
       expect(result.reactPdfRenderer).toBeDefined();
       expect(result.nodeJs).toBeDefined();
-      expect(result.typescript).toBeDefined();
     });
 
     it('should handle missing package.json', () => {

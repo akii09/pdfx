@@ -11,7 +11,6 @@ export interface EnvironmentValidation {
 export interface EnvironmentCheckResult {
   hasPackageJson: EnvironmentValidation;
   isReactProject: EnvironmentValidation;
-  hasPdfxConfig: EnvironmentValidation;
 }
 
 /**
@@ -64,28 +63,9 @@ export function validateReactProject(cwd: string = process.cwd()): EnvironmentVa
   }
 }
 
-/**
- * Check if pdfx.json already exists (warn, but not blocking)
- */
-export function validatePdfxConfig(cwd: string = process.cwd()): EnvironmentValidation {
-  const configPath = path.join(cwd, 'pdfx.json');
-  const exists = fs.existsSync(configPath);
-
-  return {
-    valid: true, // Not blocking
-    message: exists
-      ? 'pdfx.json already exists (will prompt to overwrite)'
-      : 'No existing pdfx.json',
-  };
-}
-
-/**
- * Run all environment checks
- */
 export function validateEnvironment(cwd: string = process.cwd()): EnvironmentCheckResult {
   return {
     hasPackageJson: validatePackageJson(cwd),
     isReactProject: validateReactProject(cwd),
-    hasPdfxConfig: validatePdfxConfig(cwd),
   };
 }
