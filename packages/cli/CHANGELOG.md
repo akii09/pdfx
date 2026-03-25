@@ -1,5 +1,11 @@
 # @akii09/pdfx-cli
 
+## 0.2.0
+
+### Minor Changes
+
+- [#71](https://github.com/akii09/pdfx/pull/71) [`61e6c54`](https://github.com/akii09/pdfx/commit/61e6c54d107051e5e20a22a52a363566fffef71c) Thanks [@akii09](https://github.com/akii09)! - feat: improve CLI component install reliability with dependency resolution
+
 ## 0.1.8
 
 ### Patch Changes
