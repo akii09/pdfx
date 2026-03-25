@@ -7,7 +7,7 @@
   "files": [
     {
       "path": "components/pdfx/keep-together/pdfx-keep-together.tsx",
-      "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\nimport type { ReactNode } from 'react';\n\nexport interface KeepTogetherProps {\n  children?: ReactNode;\n  minPresenceAhead?: number;\n  style?: Style;\n}\n\nexport function KeepTogether({ children, minPresenceAhead, style }: KeepTogetherProps) {\n  return (\n    <View wrap={false} minPresenceAhead={minPresenceAhead} style={style}>\n      {children}\n    </View>\n  );\n}\n",
+      "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\nimport type { ReactNode } from 'react';\n\n/** Props for the KeepTogether layout wrapper. */\nexport interface KeepTogetherProps {\n  /** Content to keep together on the same PDF page. */\n  children?: ReactNode;\n  /**\n   * Minimum space in points that must be available on the current page before\n   * the group is placed. If insufficient space remains, the group moves to the next page.\n   */\n  minPresenceAhead?: number;\n  /** Custom @react-pdf/renderer styles applied to the container view. */\n  style?: Style;\n}\n\nexport function KeepTogether({ children, minPresenceAhead, style }: KeepTogetherProps) {\n  return (\n    <View wrap={false} minPresenceAhead={minPresenceAhead} style={style}>\n      {children}\n    </View>\n  );\n}\n",
       "type": "registry:component"
     }
   ],
