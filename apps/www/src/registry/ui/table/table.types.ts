@@ -19,7 +19,7 @@ export interface TableProps extends PDFComponentProps {
   noWrap?: boolean;
 }
 
-export interface TableSectionProps extends PDFComponentProps {}
+export type TableSectionProps = PDFComponentProps;
 
 export interface TableRowProps extends PDFComponentProps {
   /** Render this row as a header row — applies bold text and variant header background. */

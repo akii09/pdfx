@@ -23,13 +23,6 @@ interface SourceRegistryItem {
   peerComponents?: string[];
 }
 
-// interface Registry {
-//   $schema: string;
-//   name: string;
-//   homepage: string;
-//   items: RegistryItem[];
-// }
-
 async function fileExistsAsync(filePath: string): Promise<boolean> {
   try {
     await fs.access(filePath);

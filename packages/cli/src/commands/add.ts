@@ -12,6 +12,7 @@ import {
 } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
+import { FETCH_TIMEOUT_MS } from '../constants.js';
 import { validateReactPdfRenderer } from '../utils/dependency-validator.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
@@ -37,7 +38,7 @@ export async function fetchComponent(name: string, registryUrl: string): Promise
 
   let response: Response;
   try {
-    response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+    response = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
   } catch (err) {
     const isTimeout = err instanceof Error && err.name === 'TimeoutError';
     throw new NetworkError(

@@ -1,5 +1,5 @@
-import fs from 'node:fs';
 import path from 'node:path';
+import { checkFileExists } from './file-system.js';
 import { readJsonFile } from './read-json.js';
 
 export interface EnvironmentValidation {
@@ -18,7 +18,7 @@ export interface EnvironmentCheckResult {
  */
 export function validatePackageJson(cwd: string = process.cwd()): EnvironmentValidation {
   const pkgPath = path.join(cwd, 'package.json');
-  const exists = fs.existsSync(pkgPath);
+  const exists = checkFileExists(pkgPath);
 
   return {
     valid: exists,
@@ -33,7 +33,7 @@ export function validatePackageJson(cwd: string = process.cwd()): EnvironmentVal
 export function validateReactProject(cwd: string = process.cwd()): EnvironmentValidation {
   const pkgPath = path.join(cwd, 'package.json');
 
-  if (!fs.existsSync(pkgPath)) {
+  if (!checkFileExists(pkgPath)) {
     return {
       valid: false,
       message: 'Cannot validate React project without package.json',

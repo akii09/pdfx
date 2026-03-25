@@ -6,7 +6,7 @@ import ora from 'ora';
 import prompts from 'prompts';
 import ts from 'typescript';
 import { DEFAULTS } from '../constants.js';
-import { checkFileExists, ensureDir } from '../utils/file-system.js';
+import { checkFileExists, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { readJsonFile } from '../utils/read-json.js';
 import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
@@ -82,11 +82,10 @@ export async function themeInit() {
 
   try {
     const absThemePath = path.resolve(process.cwd(), themePath);
-    ensureDir(path.dirname(absThemePath));
-    fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
+    writeFile(absThemePath, generateThemeFile(preset));
 
     const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
-    fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
+    writeFile(contextPath, generateThemeContextFile());
 
     spinner.succeed(`Created ${themePath} with ${presetName} theme`);
 
@@ -96,7 +95,7 @@ export async function themeInit() {
         const result = configSchema.safeParse(rawConfig);
         if (result.success) {
           const updatedConfig = { ...result.data, theme: themePath };
-          fs.writeFileSync(configPath, JSON.stringify(updatedConfig, null, 2), 'utf-8');
+          writeFile(configPath, JSON.stringify(updatedConfig, null, 2));
           console.log(chalk.green('  Updated pdfx.json with theme path'));
         }
       } catch {
@@ -168,13 +167,11 @@ export async function themeSwitch(presetName: string) {
   try {
     const preset = themePresets[validatedPreset];
     const absThemePath = path.resolve(process.cwd(), config.theme);
-    ensureDir(path.dirname(absThemePath));
-    fs.writeFileSync(absThemePath, generateThemeFile(preset), 'utf-8');
+    writeFile(absThemePath, generateThemeFile(preset));
 
     const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
     if (!checkFileExists(contextPath)) {
-      ensureDir(path.dirname(contextPath));
-      fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
+      writeFile(contextPath, generateThemeContextFile());
     }
 
     spinner.succeed(`Switched to ${validatedPreset} theme`);

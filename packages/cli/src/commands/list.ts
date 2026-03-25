@@ -1,18 +1,16 @@
 import path from 'node:path';
 import {
   type Config,
+  ConfigError,
   NetworkError,
   RegistryError,
-  configSchema,
   registrySchema,
 } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
-import { DEFAULTS } from '../constants.js';
+import { DEFAULTS, FETCH_TIMEOUT_MS } from '../constants.js';
 import { checkFileExists, safePath } from '../utils/file-system.js';
-import { readJsonFile } from '../utils/read-json.js';
-
-const FETCH_TIMEOUT_MS = 10_000;
+import { readConfig } from './add.js';
 
 export async function list() {
   const configPath = path.join(process.cwd(), 'pdfx.json');
@@ -20,14 +18,18 @@ export async function list() {
   let hasLocalProject = false;
 
   if (checkFileExists(configPath)) {
-    const raw = readJsonFile(configPath);
-    const configResult = configSchema.safeParse(raw);
-    if (!configResult.success) {
-      console.error(chalk.red('Invalid pdfx.json'));
+    try {
+      config = readConfig(configPath);
+      hasLocalProject = true;
+    } catch (error: unknown) {
+      if (error instanceof ConfigError) {
+        console.error(chalk.red(error.message));
+        if (error.suggestion) console.log(chalk.yellow(`  Hint: ${error.suggestion}`));
+      } else {
+        console.error(chalk.red('Invalid pdfx.json'));
+      }
       process.exit(1);
     }
-    config = configResult.data;
-    hasLocalProject = true;
   } else {
     config = {
       registry: DEFAULTS.REGISTRY_URL,

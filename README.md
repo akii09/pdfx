@@ -23,9 +23,13 @@ Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/u
 
 ## Prerequisites
 
+**To use PDFx (consumers):**
 - Node.js ≥ 20.0.0
-- pnpm ≥ 10.0.0
 - A React project with `@react-pdf/renderer` installed
+
+**To develop PDFx (contributors):**
+- Node.js ≥ 24.0.0
+- pnpm ≥ 10.0.0
 
 ## Quick Start
 
@@ -110,6 +114,10 @@ Components live in `apps/www/src/registry/ui/` — the same directory the regist
 Contributions are welcome — bug fixes, new components, docs improvements, or ideas.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started.
+
+## Releases
+
+See [Releases](https://github.com/akii09/pdfx/releases) for changelogs and version history.
 
 ## License
 

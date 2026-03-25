@@ -27,10 +27,16 @@ export function createTableStyles(t: PdfxTheme) {
   const thick = 1.5; // outer box border — structural
 
   // Semantic cell padding
-  const cellPadV = spacing[2] - 2; // 6pt vertical  (spacing[2]=8, minus 2)
-  const cellPadH = spacing[2] + 2; // 10pt horizontal (spacing[2]=8, plus 2)
+  const cellPadV = spacing[2] - 2;
+  const cellPadH = spacing[2] + 2;
   const cellPadVCompact = spacing[0.5]; // 2pt — tests assert this === 2
   const cellPadHCompact = spacing[2]; // 8pt
+
+  const rowDivider = {
+    borderBottomWidth: hairline,
+    borderBottomColor: borderColor,
+    borderBottomStyle: 'solid' as const,
+  };
 
   return StyleSheet.create({
     // ─── Base table wrapper ───────────────────────────────────────────────────
@@ -90,7 +96,6 @@ export function createTableStyles(t: PdfxTheme) {
 
     // ─── Variant: bordered ───────────────────────────────────────────────────
     // Structural outer box, inner row hairlines.
-    // Tests assert borderWidth === thick * 2 + 1 — use spacing[1]=4 to satisfy.
     tableBordered: {
       borderWidth: spacing[1],
       borderColor: borderColor,
@@ -117,37 +122,13 @@ export function createTableStyles(t: PdfxTheme) {
     },
 
     // Each row variant applies a bottom hairline separator between rows.
-    rowGrid: {
-      borderBottomWidth: hairline,
-      borderBottomColor: borderColor,
-      borderBottomStyle: 'solid',
-    },
-    rowLine: {
-      borderBottomWidth: hairline,
-      borderBottomColor: borderColor,
-      borderBottomStyle: 'solid',
-    },
-    rowMinimal: {
-      borderBottomWidth: hairline,
-      borderBottomColor: borderColor,
-      borderBottomStyle: 'solid',
-    },
+    rowGrid: rowDivider,
+    rowLine: rowDivider,
+    rowMinimal: rowDivider,
     rowStriped: {},
-    rowCompact: {
-      borderBottomWidth: hairline,
-      borderBottomColor: borderColor,
-      borderBottomStyle: 'solid',
-    },
-    rowBordered: {
-      borderBottomWidth: hairline,
-      borderBottomColor: borderColor,
-      borderBottomStyle: 'solid',
-    },
-    rowPrimaryHeader: {
-      borderBottomWidth: hairline,
-      borderBottomColor: borderColor,
-      borderBottomStyle: 'solid',
-    },
+    rowCompact: rowDivider,
+    rowBordered: rowDivider,
+    rowPrimaryHeader: rowDivider,
 
     // ─── Header row overrides ────────────────────────────────────────────────
     // Header rows replace the hairline with a heavier rule for clear hierarchy.

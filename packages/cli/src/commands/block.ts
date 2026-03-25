@@ -13,7 +13,7 @@ import {
 import chalk from 'chalk';
 import ora, { type Ora } from 'ora';
 import prompts from 'prompts';
-import { DEFAULTS, REGISTRY_SUBPATHS } from '../constants.js';
+import { DEFAULTS, FETCH_TIMEOUT_MS, REGISTRY_SUBPATHS } from '../constants.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
 import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
@@ -25,7 +25,7 @@ async function fetchBlock(name: string, registryUrl: string): Promise<RegistryIt
   let response: Response;
 
   try {
-    response = await fetch(url, { signal: AbortSignal.timeout(10_000) });
+    response = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
   } catch (err) {
     const isTimeout = err instanceof Error && err.name === 'TimeoutError';
     throw new NetworkError(
@@ -377,8 +377,13 @@ export async function blockList() {
   try {
     config = readConfig(configPath);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(chalk.red(message));
+    if (error instanceof ConfigError) {
+      console.error(chalk.red(error.message));
+      if (error.suggestion) console.log(chalk.yellow(`  Hint: ${error.suggestion}`));
+    } else {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(message));
+    }
     process.exit(1);
   }
 
@@ -388,7 +393,7 @@ export async function blockList() {
     let response: Response;
     try {
       response = await fetch(`${config.registry}/index.json`, {
-        signal: AbortSignal.timeout(10_000),
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       });
     } catch (err) {
       const isTimeout = err instanceof Error && err.name === 'TimeoutError';

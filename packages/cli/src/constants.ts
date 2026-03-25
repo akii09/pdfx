@@ -15,3 +15,5 @@ export const REQUIRED_VERSIONS = {
   react: '>=16.8.0',
   node: '>=20.0.0',
 };
+
+export const FETCH_TIMEOUT_MS = 10_000;

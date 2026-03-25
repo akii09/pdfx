@@ -22,7 +22,7 @@ const PACKAGE_MANAGERS: Record<PackageManager, PackageManagerInfo> = {
   },
   bun: {
     name: 'bun',
-    lockfile: 'bun.lockb',
+    lockfile: 'bun.lock',
     installCommand: 'bun add',
   },
   npm: {
@@ -87,7 +87,7 @@ export function detectPackageManager(startDir: string = process.cwd()): PackageM
       }
     }
 
-    if (fs.existsSync(path.join(dir, 'bun.lock'))) {
+    if (fs.existsSync(path.join(dir, 'bun.lockb'))) {
       return PACKAGE_MANAGERS.bun;
     }
     dir = path.dirname(dir);

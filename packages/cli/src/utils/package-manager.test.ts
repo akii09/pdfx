@@ -36,11 +36,11 @@ describe('package-manager', () => {
       expect(result.installCommand).toBe('yarn add');
     });
 
-    it('should detect bun from bun.lockb', () => {
+    it('should detect bun from bun.lockb (legacy)', () => {
       fs.writeFileSync(path.join(testDir, 'bun.lockb'), '');
       const result = detectPackageManager(testDir);
       expect(result.name).toBe('bun');
-      expect(result.lockfile).toBe('bun.lockb');
+      expect(result.lockfile).toBe('bun.lock');
       expect(result.installCommand).toBe('bun add');
     });
 
@@ -48,6 +48,7 @@ describe('package-manager', () => {
       fs.writeFileSync(path.join(testDir, 'bun.lock'), '');
       const result = detectPackageManager(testDir);
       expect(result.name).toBe('bun');
+      expect(result.lockfile).toBe('bun.lock');
     });
 
     it('should detect npm from package-lock.json', () => {

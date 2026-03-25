@@ -13,7 +13,7 @@ The following versions of PDFX currently receive security updates:
 
 **Please do not report security vulnerabilities through public GitHub Issues.**
 
-If you discover a security vulnerability in PDFX, please report it responsibly by opening a [GitHub Discussion](https://github.com/akii09/pdfx/discussions) using the **Security** category, or by opening a private security advisory via the GitHub Security tab.
+If you discover a security vulnerability in PDFX, please report it responsibly by opening a private security advisory via the [GitHub Security tab](https://github.com/akii09/pdfx/security/advisories/new).
 
 Please include the following in your report:
 
@@ -35,7 +35,6 @@ We will keep you informed throughout the process and credit you in the release n
 This policy covers the following:
 
 - `@akii09/pdfx-cli` — the PDFX command-line interface
-- `@pdfx/ui` — the PDF component library
 - `@pdfx/shared` — shared types, schemas, and theme system
 - The PDFX documentation site (`apps/www`)
 

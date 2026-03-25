@@ -22,7 +22,8 @@ This project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUC
 ## Development Setup
 
 ```bash
-# Prerequisites: Node 24+, pnpm 10+
+# Prerequisites: Node 24+ (dev), pnpm 10+
+# Note: The CLI validates consumers against Node 20+, but development requires Node 24+.
 # Clone your fork
 git clone https://github.com/YOUR_USERNAME/pdfx.git
 cd pdfx
@@ -308,6 +309,8 @@ Create `apps/www/src/pages/components/my-widget.tsx`:
 
 ```tsx
 import { myWidgetProps, myWidgetUsageCode } from '@/constants';
+// @pdfx/ui is a tsconfig path alias that resolves to apps/www/src/registry/ui/
+// Components live in the registry, not a separate package.
 import { MyWidget } from '@pdfx/ui';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
 import { ComponentPage } from '../../components/component-page';

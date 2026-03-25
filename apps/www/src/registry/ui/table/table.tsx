@@ -1,6 +1,6 @@
 import { Text as PDFText, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
-import React from 'react';
+import { Children, type ReactElement, type ReactNode, cloneElement, isValidElement } from 'react';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { createTableStyles } from './table.styles';
 import type {
@@ -12,20 +12,20 @@ import type {
 } from './table.types';
 
 function processTableChildren(
-  children: React.ReactNode,
+  children: ReactNode,
   variant: TableVariant,
   zebraStripe: boolean
-): React.ReactNode {
+): ReactNode {
   let bodyRowIndex = 0;
 
-  return React.Children.map(children, (child) => {
-    if (!React.isValidElement(child)) return child;
+  return Children.map(children, (child) => {
+    if (!isValidElement(child)) return child;
 
     if (child.type === TableHeader || child.type === TableBody || child.type === TableFooter) {
       const isBody = child.type === TableBody;
-      const sectionChild = child as React.ReactElement<TableSectionProps>;
-      const sectionChildren = React.Children.map(sectionChild.props.children, (rowChild) => {
-        if (React.isValidElement(rowChild) && rowChild.type === TableRow) {
+      const sectionChild = child as ReactElement<TableSectionProps>;
+      const sectionChildren = Children.map(sectionChild.props.children, (rowChild) => {
+        if (isValidElement(rowChild) && rowChild.type === TableRow) {
           const rowProps: Partial<TableRowProps> = { variant };
 
           if (isBody && zebraStripe) {
@@ -36,16 +36,16 @@ function processTableChildren(
             }
           }
 
-          return React.cloneElement(rowChild as React.ReactElement<TableRowProps>, rowProps);
+          return cloneElement(rowChild as ReactElement<TableRowProps>, rowProps);
         }
         return rowChild;
       });
 
-      return React.cloneElement(child, {}, sectionChildren);
+      return cloneElement(child, {}, sectionChildren);
     }
 
     if (child.type === TableRow) {
-      return React.cloneElement(child as React.ReactElement<TableRowProps>, { variant });
+      return cloneElement(child as ReactElement<TableRowProps>, { variant });
     }
 
     return child;
@@ -149,10 +149,10 @@ export function TableRow({
   }
 
   const styleArray = style ? [...rowStyles, style] : rowStyles;
-  const childArray = React.Children.toArray(children);
+  const childArray = Children.toArray(children);
   const processedChildren = childArray.map((child, i) => {
-    if (React.isValidElement(child) && child.type === TableCell) {
-      return React.cloneElement(child as React.ReactElement<TableCellProps>, {
+    if (isValidElement(child) && child.type === TableCell) {
+      return cloneElement(child as ReactElement<TableCellProps>, {
         variant,
         header,
         footer,
