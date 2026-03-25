@@ -23,23 +23,6 @@ interface SourceRegistryItem {
   peerComponents?: string[];
 }
 
-// Output types: what we generate (with content)
-interface RegistryFile {
-  path: string;
-  content: string;
-  type: string;
-}
-
-interface RegistryItem {
-  name: string;
-  type: string;
-  title: string;
-  description: string;
-  files: RegistryFile[];
-  dependencies?: string[];
-  registryDependencies?: string[];
-}
-
 // interface Registry {
 //   $schema: string;
 //   name: string;
@@ -73,11 +56,11 @@ async function fileExistsAsync(filePath: string): Promise<boolean> {
  *   usePdfxTheme import + ReturnType alias so the file is independent
  * - Normalizes theme & context import paths to '../lib/pdfx-theme[-context]'
  * - Rewrites intra-component imports: `./X.styles` → `./pdfx-X.styles`, `./X.types` → `./pdfx-X.types`
- * - Rewrites cross-component type imports: `../table/table.types` → `./pdfx-table.types`
- * - Rewrites data-table's table component import: `../table` → `./pdfx-table`
+ * - Rewrites cross-component type imports: `../foo/foo.types` → `../foo/pdfx-foo.types`
+ * - Rewrites cross-component component imports: `../table` → `../table/pdfx-table`
  * - Inlines resolveColor helper and removes its import (avoids separate lib file)
  */
-function transformForRegistry(content: string): { content: string; usesTheme: boolean } {
+export function transformForRegistry(content: string): { content: string; usesTheme: boolean } {
   let result = content;
   const usesTheme = result.includes('pdfx-theme');
 
@@ -164,12 +147,15 @@ function transformForRegistry(content: string): { content: string; usesTheme: bo
   result = result.replace(/from\s+['"]\.\/([^'"]+)\.types['"]/g, "from './pdfx-$1.types'");
 
   // ── 6. Rewrite cross-component type imports ───────────────────────────────
-  // ../foo/foo.types  →  ./pdfx-foo.types  (e.g. data-table.types imports TableVariant)
-  result = result.replace(/from\s+['"]\.\.\/([^/'"]+)\/\1\.types['"]/g, "from './pdfx-$1.types'");
+  // ../foo/foo.types  →  ../foo/pdfx-foo.types  (e.g. data-table.types imports TableVariant)
+  result = result.replace(
+    /from\s+['"]\.\.\/([^/'"]+)\/\1\.types['"]/g,
+    "from '../$1/pdfx-$1.types'"
+  );
 
   // ── 7. data-table: rewrite table component import ─────────────────────────
-  // ../table  or  ./table  →  ./pdfx-table
-  result = result.replace(/from\s+['"](?:\.\.\/|\.\/)table['"]/g, "from './pdfx-table'");
+  // ../table  or  ./table  →  ../table/pdfx-table
+  result = result.replace(/from\s+['"](?:\.\.\/|\.\/)table['"]/g, "from '../table/pdfx-table'");
 
   // ── 8. Inline resolveColor ────────────────────────────────────────────────
   const resolveColorInline = `const THEME_COLOR_KEYS = ['foreground','muted','mutedForeground','primary','primaryForeground','accent','destructive','success','warning','info'] as const;
@@ -211,10 +197,8 @@ async function processItem(
 
   const fileResults = await Promise.all(
     item.files.map(async (file) => {
-      // Source files may reference workspace packages via relative paths
-      // (e.g., ../../../../packages/ui/src/heading.tsx), so we resolve from
-      // the registry base dir without the traversal check. The ensureWithinDir
-      // check is used for output paths only.
+      // Source files are in src/registry/ui/<component>/ and referenced by relative path.
+      // We resolve from the registry base dir. The ensureWithinDir check is used for output paths only.
       const filePath = path.resolve(registryBaseDir, file.path);
 
       if (!(await fileExistsAsync(filePath))) {
@@ -324,7 +308,7 @@ const PDFX_UI_COMPONENT_MAP: Record<string, string> = {
  *     component exports      → `from '../../components/pdfx/<name>/pdfx-<name>'`
  *       (components sharing a file, e.g. Table/TableRow/TableCell, are merged into one import)
  */
-function transformBlockForRegistry(content: string): string {
+export function transformBlockForRegistry(content: string): string {
   let result = content;
 
   // ── 1. @pdfx/shared → ../../lib/pdfx-theme ───────────────────────────────
@@ -475,9 +459,8 @@ async function buildRegistry() {
   const outputDir = path.join(__dirname, '../../public/r');
   await fs.mkdir(outputDir, { recursive: true });
 
-  // Use registry dir as base for relative paths. Source files may reference
-  // workspace packages (e.g., ../../../../packages/ui/src/heading.tsx), so we
-  // resolve relative paths from the registry dir to get absolute paths.
+  // Use registry dir as base for relative paths to resolve source files
+  // (e.g., src/registry/ui/badge/badge.tsx) to absolute paths.
   const registryBaseDir = path.dirname(registryPath);
 
   // Separate block items (source .tsx → generated JSON) from component items (source → transform)
@@ -519,8 +502,11 @@ async function buildRegistry() {
   console.log(`\nRegistry built successfully! Output: ${outputDir}\n`);
 }
 
-buildRegistry().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error('Registry build failed:', message);
-  process.exit(1);
-});
+// Only run when executed directly (not when imported by tests)
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  buildRegistry().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('Registry build failed:', message);
+    process.exit(1);
+  });
+}

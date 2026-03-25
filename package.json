@@ -8,7 +8,6 @@
     "preinstall": "npx only-allow pnpm",
     "dev": "turbo dev",
     "dev:www": "turbo dev --filter=www",
-    "dev:playground": "turbo dev --filter=playground",
     "build": "turbo build",
     "build:registry": "turbo build:registry",
     "test": "turbo test",

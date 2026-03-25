@@ -12,6 +12,7 @@
       "dependsOn": ["^build"],
       "inputs": [
         "src/registry/index.json",
+        "src/registry/ui/**",
         "src/registry/blocks/**",
         "src/lib/build-registry.ts"
       ],

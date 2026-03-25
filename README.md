@@ -1,6 +1,6 @@
 # PDFx
 
-![Alpha](https://img.shields.io/badge/status-alpha-orange?style=flat-square)
+![Beta](https://img.shields.io/badge/status-beta-blue?style=flat-square)
 ![npm](https://img.shields.io/npm/v/@akii09/pdfx-cli?style=flat-square&label=cli)
 ![Downloads](https://img.shields.io/npm/dm/@akii09/pdfx-cli?style=flat-square)
 
@@ -92,14 +92,18 @@ Run `npx @akii09/pdfx-cli list` to see all components with install status.
 ```
 pdfx/
 ├── apps/
-│   ├── www/          # Documentation site
-│   └── playground/   # Component playground
+│   └── www/                    # Documentation site + component registry
+│       └── src/registry/
+│           ├── ui/             # Component source (copy-paste target)
+│           ├── blocks/         # Block templates
+│           └── index.json      # Registry manifest
 ├── packages/
-│   ├── ui/           # PDF components
-│   ├── shared/       # Types, schemas, theme system
+│   ├── shared/       # Types, schemas, theme system (used by CLI + www)
 │   └── cli/          # pdfx CLI
 └── turbo.json
 ```
+
+Components live in `apps/www/src/registry/ui/` — the same directory the registry serves from. No separate private package. This is the true shadcn/ui model: the website and the registry are the same thing.
 
 ## Contributing
 

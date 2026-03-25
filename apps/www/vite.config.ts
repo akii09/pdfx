@@ -13,7 +13,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@pdfx/ui': path.resolve(__dirname, '../../packages/ui/src'),
+      '@pdfx/ui': path.resolve(__dirname, './src/registry/ui'),
     },
   },
   server: {

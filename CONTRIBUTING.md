@@ -36,7 +36,6 @@ pnpm build
 # Run dev servers
 pnpm dev              # All apps in parallel
 pnpm dev:www          # Docs site only  (http://localhost:5173)
-pnpm dev:playground   # Playground only (http://localhost:5174)
 ```
 
 ### Quality checks (run before submitting a PR)
@@ -76,15 +75,19 @@ pnpm build       # Full monorepo build
 
 ## Adding a New Component
 
-This is a complete walkthrough for adding a new PDF component (e.g. `MyWidget`) to the library.
+This is a complete walkthrough for adding a new PDF component (e.g. `MyWidget`) to the registry.
 
 ### Overview of Files to Create/Modify
 
 | File | Action |
 |------|--------|
-| `packages/ui/src/components/my-widget/my-widget.tsx` | Create — component source |
-| `packages/ui/src/components/my-widget/my-widget.test.tsx` | Create — unit tests |
-| `packages/ui/src/index.ts` | Edit — re-export the component |
+| `apps/www/src/registry/ui/my-widget/my-widget.tsx` | Create — component source |
+| `apps/www/src/registry/ui/my-widget/my-widget.styles.ts` | Create — StyleSheet factory |
+| `apps/www/src/registry/ui/my-widget/my-widget.types.ts` | Create — TypeScript interfaces |
+| `apps/www/src/registry/ui/my-widget/my-widget.test.tsx` | Create — smoke tests |
+| `apps/www/src/registry/ui/my-widget/index.ts` | Create — barrel re-export |
+| `apps/www/src/registry/ui/index.ts` | Edit — re-export the component |
+| `apps/www/src/registry/index.json` | Edit — register the component |
 | `apps/www/src/constants/my-widget.constant.ts` | Create — usage code + props table |
 | `apps/www/src/constants/index.ts` | Edit — re-export constants |
 | `apps/www/src/pages/components/my-widget.tsx` | Create — documentation page |
@@ -95,14 +98,10 @@ This is a complete walkthrough for adding a new PDF component (e.g. `MyWidget`) 
 
 ### Step 1: Create the Component
 
-Create `packages/ui/src/components/my-widget/my-widget.tsx`:
+Create `apps/www/src/registry/ui/my-widget/my-widget.types.ts`:
 
-```tsx
-import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
-import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
-import type { Style } from '@react-pdf/types';
-import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
-import { resolveColor } from '../../lib/resolve-color.js';
+```ts
+import type { PDFComponentProps } from '@pdfx/shared';
 
 export type MyWidgetVariant = 'default' | 'primary';
 
@@ -114,8 +113,15 @@ export interface MyWidgetProps extends Omit<PDFComponentProps, 'children'> {
   /** Custom background color. Use a theme token or CSS color. */
   background?: string;
 }
+```
 
-function createMyWidgetStyles(t: PdfxTheme) {
+Create `apps/www/src/registry/ui/my-widget/my-widget.styles.ts`:
+
+```ts
+import type { PdfxTheme } from '@pdfx/shared';
+import { StyleSheet } from '@react-pdf/renderer';
+
+export function createMyWidgetStyles(t: PdfxTheme) {
   const { spacing } = t.primitives;
   const c = t.colors;
 
@@ -124,12 +130,8 @@ function createMyWidgetStyles(t: PdfxTheme) {
       padding: spacing[3],
       borderRadius: t.primitives.borderRadius.md,
     },
-    variantDefault: {
-      backgroundColor: c.muted,
-    },
-    variantPrimary: {
-      backgroundColor: c.primary,
-    },
+    variantDefault: { backgroundColor: c.muted },
+    variantPrimary: { backgroundColor: c.primary },
     text: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
@@ -137,6 +139,17 @@ function createMyWidgetStyles(t: PdfxTheme) {
     },
   });
 }
+```
+
+Create `apps/www/src/registry/ui/my-widget/my-widget.tsx`:
+
+```tsx
+import { Text as PDFText, View } from '@react-pdf/renderer';
+import type { Style } from '@react-pdf/types';
+import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
+import { resolveColor } from '../../lib/resolve-color';
+import { createMyWidgetStyles } from './my-widget.styles';
+import type { MyWidgetProps } from './my-widget.types';
 
 export function MyWidget({
   label,
@@ -166,103 +179,73 @@ export function MyWidget({
 }
 ```
 
+Create `apps/www/src/registry/ui/my-widget/index.ts`:
+
+```ts
+export { MyWidget } from './my-widget';
+export type { MyWidgetProps, MyWidgetVariant } from './my-widget.types';
+```
+
 **Key patterns to follow:**
 
-- Derive all styles from `t` (the theme) inside `createXStyles(t)` — zero hardcoded pixel values
-- Use `resolveColor(value, theme.colors)` to resolve theme token names (e.g. `'primary'`) **and** pass raw CSS colors through unchanged
-- Call `usePdfxTheme()` and memoize styles with `useSafeMemo(() => createXStyles(theme), [theme])` inside the component — recalculates only when the theme instance changes
+- Derive all styles from `t` (the theme) inside the styles factory — zero hardcoded pixel values
+- Use `resolveColor(value, theme.colors)` to resolve theme token names **and** pass raw CSS colors through unchanged
+- Call `usePdfxTheme()` and memoize styles with `useSafeMemo(() => createXStyles(theme), [theme])`
 - Compose style arrays: `[base, variant, dynamic, override]` — style override always last
-- Extend `PDFComponentProps` (from `@pdfx/shared`) which provides `children`, `style`, etc.
-- Use `Omit<PDFComponentProps, 'children'>` when the component does not accept children
+- Extend `PDFComponentProps` from `@pdfx/shared`; use `Omit<PDFComponentProps, 'children'>` for leaf nodes
 
 ---
 
-### Step 2: Write Unit Tests
+### Step 2: Write Smoke Tests
 
-Create `packages/ui/src/components/my-widget/my-widget.test.tsx`:
+Create `apps/www/src/registry/ui/my-widget/my-widget.test.tsx`:
 
 ```tsx
 import { describe, expect, it } from 'vitest';
-import { theme } from '../../lib/pdfx-theme';
 import { MyWidget } from './my-widget';
 
-/** Recursively search a react-pdf element tree for a text value. */
-function findText(node: unknown, value: string): boolean {
-  if (!node || typeof node !== 'object') return false;
-  const n = node as { props?: { children?: unknown } };
-  if (n.props?.children === value) return true;
-  const children = Array.isArray(n.props?.children) ? n.props.children : [n.props?.children];
-  return children.some((c: unknown) => findText(c, value));
-}
-
 describe('MyWidget', () => {
-  it('renders without crashing', () => {
-    const result = MyWidget({ label: 'Hello' });
-    expect(result).toBeDefined();
+  it('renders without throwing', () => {
+    expect(() => MyWidget({ label: 'Hello' })).not.toThrow();
   });
-
-  it('renders the label text', () => {
-    const result = MyWidget({ label: 'Test Label' });
-    expect(findText(result, 'Test Label')).toBe(true);
-  });
-
-  it('defaults to default variant', () => {
-    const result = MyWidget({ label: 'Test' });
-    const containerStyles = Array.isArray(result.props.style)
-      ? result.props.style
-      : [result.props.style];
-    expect(
-      containerStyles.some(
-        (s: { backgroundColor?: string }) => s.backgroundColor === theme.colors.muted
-      )
-    ).toBe(true);
-  });
-
-  it('applies primary variant background', () => {
-    const result = MyWidget({ label: 'Test', variant: 'primary' });
-    const containerStyles = Array.isArray(result.props.style)
-      ? result.props.style
-      : [result.props.style];
-    expect(
-      containerStyles.some(
-        (s: { backgroundColor?: string }) => s.backgroundColor === theme.colors.primary
-      )
-    ).toBe(true);
-  });
-
-  it('applies custom background override', () => {
-    const result = MyWidget({ label: 'Test', background: '#ff0000' });
-    const containerStyles = Array.isArray(result.props.style)
-      ? result.props.style
-      : [result.props.style];
-    expect(
-      containerStyles.some((s: { backgroundColor?: string }) => s.backgroundColor === '#ff0000')
-    ).toBe(true);
-  });
-
-  it('applies style override last', () => {
-    const result = MyWidget({ label: 'Test', style: { opacity: 0.5 } });
-    const containerStyles = Array.isArray(result.props.style)
-      ? result.props.style
-      : [result.props.style];
-    const last = containerStyles[containerStyles.length - 1] as { opacity?: number };
-    expect(last.opacity).toBe(0.5);
+  it('accepts variant prop', () => {
+    expect(() => MyWidget({ label: 'Hello', variant: 'primary' })).not.toThrow();
   });
 });
 ```
 
+Two assertions per component is the target. TypeScript handles prop validation statically; the smoke test catches import/runtime breakage.
+
 ---
 
-### Step 3: Export from the Package
+### Step 3: Export from the Registry
 
-Edit `packages/ui/src/index.ts` and add:
+Edit `apps/www/src/registry/ui/index.ts` and add:
 
 ```ts
-export type { MyWidgetProps, MyWidgetVariant } from './components/my-widget/my-widget.js';
-export { MyWidget } from './components/my-widget/my-widget.js';
+export { MyWidget } from './my-widget/index';
+export type { MyWidgetProps, MyWidgetVariant } from './my-widget/index';
 ```
 
-Keep exports alphabetically ordered within their section.
+Keep exports alphabetically ordered.
+
+Edit `apps/www/src/registry/index.json` and add an entry to `items`:
+
+```json
+{
+  "name": "my-widget",
+  "type": "registry:ui",
+  "title": "MyWidget",
+  "description": "Short description.",
+  "files": [
+    { "path": "ui/my-widget/my-widget.tsx", "type": "registry:component" },
+    { "path": "ui/my-widget/my-widget.styles.ts", "type": "registry:component" },
+    { "path": "ui/my-widget/my-widget.types.ts", "type": "registry:component" }
+  ],
+  "dependencies": [],
+  "registryDependencies": []
+}
+```
 
 ---
 

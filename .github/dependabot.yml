@@ -45,24 +45,6 @@ updates:
         patterns: ["*"]
         update-types: ["minor", "patch"]
 
-  # UI package
-  - package-ecosystem: "npm"
-    directory: "/packages/ui"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "ui"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-    groups:
-      ui-all:
-        patterns: ["*"]
-        update-types: ["minor", "patch"]
-
   # Shared package
   - package-ecosystem: "npm"
     directory: "/packages/shared"
