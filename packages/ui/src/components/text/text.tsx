@@ -9,13 +9,21 @@ export type TextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 export type TextDecoration = 'underline' | 'line-through' | 'none';
 
 export interface TextProps extends PDFComponentProps {
+  /** Font size preset mapped from the theme typography scale. @default 'base' */
   variant?: TextVariant;
+  /** Horizontal text alignment. @default 'left' */
   align?: 'left' | 'center' | 'right' | 'justify';
+  /** Text color — accepts a theme token ('primary', 'muted') or any hex/rgb value. */
   color?: string;
+  /** Font weight override. @default 'normal' */
   weight?: TextWeight;
+  /** Render text in italic style. @default false */
   italic?: boolean;
+  /** Text decoration style. @default 'none' */
   decoration?: TextDecoration;
+  /** CSS text-transform applied to the text. */
   transform?: 'uppercase' | 'lowercase' | 'capitalize';
+  /** When true, removes the default bottom margin. @default false */
   noMargin?: boolean;
 }
 

@@ -198,11 +198,7 @@ export function generateThemeContextFile(): string {
 // Intentional: this module exports both a component and hooks/context.
 // Keeping a single import surface preserves the generated public API.
 
-/* eslint-disable react-hooks/rules-of-hooks */
-// Intentional: hooks are wrapped in try/catch to support non-React invocation
-// paths used in unit tests (plain function calls).
-
-import { type DependencyList, type ReactNode, createContext, useContext, useMemo } from 'react';
+import { type DependencyList, type ReactNode, createContext, useContext } from 'react';
 import { theme as defaultTheme } from './pdfx-theme';
 
 type PdfxTheme = typeof defaultTheme;
@@ -215,7 +211,7 @@ export interface PdfxThemeProviderProps {
 }
 
 export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
-  const resolvedTheme = useMemo(() => theme ?? defaultTheme, [theme]);
+  const resolvedTheme = theme ?? defaultTheme;
   return <PdfxThemeContext.Provider value={resolvedTheme}>{children}</PdfxThemeContext.Provider>;
 }
 
@@ -242,21 +238,12 @@ export function usePdfxTheme(): PdfxTheme {
 }
 
 /**
- * Memoizes factory() using useMemo when React hooks are available.
- * Falls back to direct execution in non-React invocation paths.
+ * Calls factory() and returns the result.
+ * The deps parameter is accepted for API compatibility with existing callers.
  */
-export function useSafeMemo<T>(factory: () => T, deps: DependencyList): T {
-  try {
-    return useMemo(factory, deps);
-  } catch (error) {
-    if (
-      error instanceof Error &&
-      /invalid hook call|useMemo|cannot read properties of null/i.test(error.message)
-    ) {
-      return factory();
-    }
-    throw error;
-  }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function useSafeMemo<T>(factory: () => T, _deps: DependencyList): T {
+  return factory();
 }
 `;
 }

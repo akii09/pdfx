@@ -8,13 +8,21 @@ export type HeadingWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 export type HeadingTracking = 'tighter' | 'tight' | 'normal' | 'wide' | 'wider';
 
 export interface HeadingProps extends PDFComponentProps {
+  /** Heading level, maps to h1–h6 font sizes from the theme. @default 1 */
   level?: 1 | 2 | 3 | 4 | 5 | 6;
+  /** Horizontal text alignment. @default 'left' */
   align?: 'left' | 'center' | 'right';
+  /** Text color — accepts a theme token ('primary', 'muted') or any hex/rgb value. */
   color?: string;
+  /** CSS text-transform applied to the heading text. */
   transform?: 'uppercase' | 'lowercase' | 'capitalize';
+  /** Font weight override. @default 'bold' */
   weight?: HeadingWeight;
+  /** Letter-spacing preset. @default 'normal' */
   tracking?: HeadingTracking;
+  /** When true, removes the default bottom margin. @default false */
   noMargin?: boolean;
+  /** Prevents a page break between this heading and the following element. @default false */
   keepWithNext?: boolean;
 }
 

@@ -5,20 +5,38 @@ import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type SignatureVariant = 'single' | 'double' | 'inline';
 
+/** A single signer definition used in the `double` and `inline` variants. */
 export interface SignatureSigner {
+  /** Label above the signature line (e.g. "Authorized By"). */
   label?: string;
+  /** Pre-filled name below the signature line. */
   name?: string;
+  /** Job title or role displayed below the name. */
   title?: string;
+  /** Date string displayed below the title. */
   date?: string;
 }
 
 export interface PdfSignatureBlockProps {
+  /**
+   * Layout variant.
+   * - `single` — one signature block (uses top-level label/name/title/date)
+   * - `double` — two blocks side by side (uses the `signers` tuple)
+   * - `inline` — two blocks in a compact horizontal row (uses the `signers` tuple)
+   * @default 'single'
+   */
   variant?: SignatureVariant;
+  /** Label above the signature line. Used by the `single` variant. */
   label?: string;
+  /** Pre-filled name below the signature line. Used by the `single` variant. */
   name?: string;
+  /** Job title or role. Used by the `single` variant. */
   title?: string;
+  /** Date string. Used by the `single` variant. */
   date?: string;
+  /** Two signer definitions for the `double` and `inline` variants. */
   signers?: [SignatureSigner, SignatureSigner];
+  /** Custom @react-pdf/renderer styles applied to the outer container. */
   style?: Style;
 }
 
@@ -80,11 +98,6 @@ function createSignatureStyles(t: PdfxTheme) {
   });
 }
 
-const DEFAULT_SIGNERS: [SignatureSigner, SignatureSigner] = [
-  { label: 'Authorized by', name: '', title: '', date: '' },
-  { label: 'Approved by', name: '', title: '', date: '' },
-];
-
 function renderSignerBlock(
   signer: SignatureSigner,
   styles: ReturnType<typeof createSignatureStyles>
@@ -127,7 +140,10 @@ export function PdfSignatureBlock({
   }
 
   if (variant === 'double') {
-    const [first, second] = signers ?? DEFAULT_SIGNERS;
+    const [first, second] = signers ?? [
+      { label: 'Authorized by', name: '', title: '', date: '' },
+      { label: 'Approved by', name: '', title: '', date: '' },
+    ];
     return (
       <View wrap={false} style={containerStyles}>
         <View style={styles.doubleRow}>

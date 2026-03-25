@@ -23,6 +23,9 @@ export interface PdfWatermarkProps extends Omit<PDFComponentProps, 'children'> {
 }
 
 function createWatermarkStyles(t: PdfxTheme) {
+  const { fontWeights } = t.primitives;
+  // Use page margins as corner insets so watermark position adapts to the active theme.
+  const { marginTop, marginBottom, marginLeft, marginRight } = t.spacing.page;
   return StyleSheet.create({
     container: {
       position: 'absolute',
@@ -37,7 +40,7 @@ function createWatermarkStyles(t: PdfxTheme) {
     },
     text: {
       fontFamily: t.typography.heading.fontFamily,
-      fontWeight: 700,
+      fontWeight: fontWeights.bold,
       textTransform: 'uppercase',
       letterSpacing: 4,
     },
@@ -45,26 +48,26 @@ function createWatermarkStyles(t: PdfxTheme) {
     positionTopLeft: {
       justifyContent: 'flex-start',
       alignItems: 'flex-start',
-      paddingTop: 100,
-      paddingLeft: 50,
+      paddingTop: marginTop,
+      paddingLeft: marginLeft,
     },
     positionTopRight: {
       justifyContent: 'flex-start',
       alignItems: 'flex-end',
-      paddingTop: 100,
-      paddingRight: 50,
+      paddingTop: marginTop,
+      paddingRight: marginRight,
     },
     positionBottomLeft: {
       justifyContent: 'flex-end',
       alignItems: 'flex-start',
-      paddingBottom: 100,
-      paddingLeft: 50,
+      paddingBottom: marginBottom,
+      paddingLeft: marginLeft,
     },
     positionBottomRight: {
       justifyContent: 'flex-end',
       alignItems: 'flex-end',
-      paddingBottom: 100,
-      paddingRight: 50,
+      paddingBottom: marginBottom,
+      paddingRight: marginRight,
     },
   });
 }

@@ -1,7 +1,7 @@
-import type { PDFComponentProps } from '@pdfx/shared';
-import type { PdfxTheme } from '@pdfx/shared';
+import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
+import type { ReactNode } from 'react';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
@@ -15,21 +15,33 @@ export type PageHeaderVariant =
   | 'two-column';
 
 export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
+  /** Main heading text displayed prominently in the header. */
   title: string;
+  /** Secondary line rendered below the title. */
   subtitle?: string;
+  /** Right-aligned primary text (e.g., date, document number). */
   rightText?: string;
+  /** Right-aligned secondary text rendered below `rightText` (e.g., "Confidential"). */
   rightSubText?: string;
+  /** Visual layout variant. @default 'simple' */
   variant?: PageHeaderVariant;
+  /** Background color override — accepts a theme token key or a hex string. */
   background?: string;
+  /** Title text color override — accepts a theme token key or a hex string. */
   titleColor?: string;
+  /** Bottom margin in PDF points. Defaults to `theme.spacing.sectionGap`. */
   marginBottom?: number;
+  /** Street / mailing address line — used by `two-column` variant. */
   address?: string;
+  /** Phone number — used by `two-column` variant. */
   phone?: string;
+  /** Email address — used by `two-column` variant. */
   email?: string;
   /**
+   * Logo element rendered alongside text in `logo-left` and `logo-right` variants.
    * @example <Image src="/logo.png" style={{ width: 48, height: 48 }} />
    */
-  logo?: React.ReactNode;
+  logo?: ReactNode;
 
   /**
    * Fix this header to the top of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.

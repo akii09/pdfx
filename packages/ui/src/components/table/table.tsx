@@ -82,21 +82,17 @@ export function Table({
   const tableStyles: Style[] = [styles.table];
   const effectiveZebra = variant === 'striped' ? true : zebraStripe;
 
-  if (variant === 'grid') {
-    tableStyles.push(styles.tableGrid);
-  } else if (variant === 'line') {
-    tableStyles.push(styles.tableLine);
-  } else if (variant === 'minimal') {
-    tableStyles.push(styles.tableMinimal);
-  } else if (variant === 'striped') {
-    tableStyles.push(styles.tableStriped);
-  } else if (variant === 'compact') {
-    tableStyles.push(styles.tableCompact);
-  } else if (variant === 'bordered') {
-    tableStyles.push(styles.tableBordered);
-  } else if (variant === 'primary-header') {
-    tableStyles.push(styles.tablePrimaryHeader);
-  }
+  tableStyles.push(
+    {
+      grid: styles.tableGrid,
+      line: styles.tableLine,
+      minimal: styles.tableMinimal,
+      striped: styles.tableStriped,
+      compact: styles.tableCompact,
+      bordered: styles.tableBordered,
+      'primary-header': styles.tablePrimaryHeader,
+    }[variant]
+  );
 
   const styleArray = style ? [...tableStyles, style] : tableStyles;
   const processedChildren = processTableChildren(children, variant, effectiveZebra);
@@ -117,30 +113,30 @@ export function TableRow({
   const styles = useSafeMemo(() => createTableStyles(theme), [theme]);
   const rowStyles: Style[] = [styles.row];
 
-  if (variant === 'grid') {
-    rowStyles.push(styles.rowGrid);
-  } else if (variant === 'line') {
-    rowStyles.push(styles.rowLine);
-  } else if (variant === 'minimal') {
-    rowStyles.push(styles.rowMinimal);
-  } else if (variant === 'striped') {
-    rowStyles.push(styles.rowStriped);
-  } else if (variant === 'compact') {
-    rowStyles.push(styles.rowCompact);
-  } else if (variant === 'bordered') {
-    rowStyles.push(styles.rowBordered);
-  } else if (variant === 'primary-header') {
-    rowStyles.push(styles.rowPrimaryHeader);
-  }
+  rowStyles.push(
+    {
+      grid: styles.rowGrid,
+      line: styles.rowLine,
+      minimal: styles.rowMinimal,
+      striped: styles.rowStriped,
+      compact: styles.rowCompact,
+      bordered: styles.rowBordered,
+      'primary-header': styles.rowPrimaryHeader,
+    }[variant]
+  );
 
   if (header) {
-    if (variant === 'line') rowStyles.push(styles.rowHeaderLine);
-    else if (variant === 'minimal') rowStyles.push(styles.rowHeaderMinimal);
-    else if (variant === 'striped') rowStyles.push(styles.rowHeaderStriped);
-    else if (variant === 'compact') rowStyles.push(styles.rowHeaderCompact);
-    else if (variant === 'bordered') rowStyles.push(styles.rowHeaderBordered);
-    else if (variant === 'primary-header') rowStyles.push(styles.rowHeaderPrimaryHeader);
-    else rowStyles.push(styles.rowHeaderGrid);
+    rowStyles.push(
+      {
+        grid: styles.rowHeaderGrid,
+        line: styles.rowHeaderLine,
+        minimal: styles.rowHeaderMinimal,
+        striped: styles.rowHeaderStriped,
+        compact: styles.rowHeaderCompact,
+        bordered: styles.rowHeaderBordered,
+        'primary-header': styles.rowHeaderPrimaryHeader,
+      }[variant]
+    );
   }
 
   if (footer) {
@@ -193,17 +189,17 @@ export function TableCell({
     cellStyles.push({ width } as Style);
   }
 
-  if (variant === 'minimal') {
-    cellStyles.push(styles.cellMinimal);
-  } else if (variant === 'striped') {
-    cellStyles.push(styles.cellStriped);
-  } else if (variant === 'compact') {
-    cellStyles.push(styles.cellCompact);
-  } else if (variant === 'bordered') {
-    cellStyles.push(styles.cellBordered);
-  } else if (variant === 'primary-header') {
-    cellStyles.push(styles.cellPrimaryHeader);
-  }
+  // Only certain variants carry a cell-level style override; grid/line use the base cell style.
+  const cellVariantStyle = (
+    {
+      minimal: styles.cellMinimal,
+      striped: styles.cellStriped,
+      compact: styles.cellCompact,
+      bordered: styles.cellBordered,
+      'primary-header': styles.cellPrimaryHeader,
+    } as Partial<Record<TableVariant, Style>>
+  )[variant];
+  if (cellVariantStyle) cellStyles.push(cellVariantStyle);
 
   if (variant === 'grid' && !_last) {
     cellStyles.push(styles.cellGridBorder);
@@ -219,13 +215,15 @@ export function TableCell({
 
   let textStyle: Style = styles.cellText;
   if (header) {
-    if (variant === 'line') textStyle = styles.cellTextHeaderLine;
-    else if (variant === 'minimal') textStyle = styles.cellTextHeaderMinimal;
-    else if (variant === 'striped') textStyle = styles.cellTextHeaderStriped;
-    else if (variant === 'compact') textStyle = styles.cellTextHeaderCompact;
-    else if (variant === 'bordered') textStyle = styles.cellTextHeaderBordered;
-    else if (variant === 'primary-header') textStyle = styles.cellTextHeaderPrimaryHeader;
-    else textStyle = styles.cellTextHeaderGrid;
+    textStyle = {
+      grid: styles.cellTextHeaderGrid,
+      line: styles.cellTextHeaderLine,
+      minimal: styles.cellTextHeaderMinimal,
+      striped: styles.cellTextHeaderStriped,
+      compact: styles.cellTextHeaderCompact,
+      bordered: styles.cellTextHeaderBordered,
+      'primary-header': styles.cellTextHeaderPrimaryHeader,
+    }[variant];
   } else if (footer) {
     textStyle = styles.cellTextFooter;
   } else if (variant === 'compact') {

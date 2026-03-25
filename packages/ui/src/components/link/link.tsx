@@ -8,10 +8,15 @@ export type LinkVariant = 'default' | 'muted' | 'primary';
 export type LinkUnderline = 'always' | 'none';
 
 export interface LinkProps extends PDFComponentProps {
+  /** The URL the link navigates to when clicked. */
   href: string;
+  /** Horizontal text alignment. @default 'left' */
   align?: 'left' | 'center' | 'right';
+  /** Text color — accepts a theme token ('primary', 'muted') or any hex/rgb value. Overrides `variant` color. */
   color?: string;
+  /** Color preset for the link. @default 'default' */
   variant?: LinkVariant;
+  /** When to show the underline decoration. @default 'always' */
   underline?: LinkUnderline;
 }
 

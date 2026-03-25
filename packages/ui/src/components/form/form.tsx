@@ -31,7 +31,7 @@ function renderFieldLeft(
   idx: number,
   styles: ReturnType<typeof createFormStyles>
 ) {
-  const areaHeight = field.height ?? 16;
+  const areaHeight = field.height ?? 18;
   const areaStyle: Style[] = [styles.fieldArea, styles.fieldLeftArea, { minHeight: areaHeight }];
 
   return (

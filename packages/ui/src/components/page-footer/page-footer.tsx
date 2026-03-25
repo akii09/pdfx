@@ -1,5 +1,4 @@
-import type { PDFComponentProps } from '@pdfx/shared';
-import type { PdfxTheme } from '@pdfx/shared';
+import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
@@ -14,16 +13,27 @@ export type PageFooterVariant =
   | 'detailed';
 
 export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
+  /** Left-aligned footer text (e.g., company name, copyright notice). */
   leftText?: string;
+  /** Right-aligned footer text (e.g., page number, document version). */
   rightText?: string;
+  /** Center-aligned footer text — used by `simple` and `centered` variants. */
   centerText?: string;
+  /** Visual layout variant. @default 'simple' */
   variant?: PageFooterVariant;
+  /** Background color override — accepts a theme token key or a hex string. */
   background?: string;
+  /** Text color override applied to all footer text — accepts a theme token key or a hex string. */
   textColor?: string;
+  /** Top margin in PDF points. Defaults to `theme.spacing.sectionGap`. */
   marginTop?: number;
+  /** Street / mailing address — used by `three-column` and `detailed` variants. */
   address?: string;
+  /** Phone number — used by `three-column` and `detailed` variants. */
   phone?: string;
+  /** Email address — used by `three-column` and `detailed` variants. */
   email?: string;
+  /** Website URL — used by `three-column` and `detailed` variants. */
   website?: string;
   /**
    *  Fix this footer to the bottom of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.
@@ -173,6 +183,7 @@ function createPageFooterStyles(t: PdfxTheme) {
     contactInfoCenter: {
       ...textBase,
       textAlign: 'center',
+      // Slightly smaller than xs to keep multi-line contact info compact in the center column.
       fontSize: t.primitives.typography.xs - 1,
       marginTop: spacing[0.5],
     },

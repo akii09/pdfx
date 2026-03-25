@@ -9,11 +9,21 @@ export type StackAlign = 'start' | 'center' | 'end' | 'stretch';
 export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around';
 
 export interface StackProps extends PDFComponentProps {
+  /** Space between child elements. @default 'md' */
   gap?: StackGap;
+  /** Layout direction. @default 'vertical' */
   direction?: StackDirection;
+  /** Cross-axis alignment (align-items). @default 'start' */
   align?: StackAlign;
+  /** Main-axis distribution (justify-content). @default 'start' */
   justify?: StackJustify;
+  /** Allow children to wrap onto multiple lines when the container is full. @default false */
   wrap?: boolean;
+  /**
+   * Prevent the stack from splitting across PDF pages.
+   * Use for short groups that should always stay on one page.
+   * @default false
+   */
   noWrap?: boolean;
 }
 

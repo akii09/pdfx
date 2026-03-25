@@ -1,4 +1,4 @@
-import type { PdfxTheme } from '@pdfx/shared';
+import type { PDFComponentProps, PdfxTheme } from '@pdfx/shared';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import type { ReactNode } from 'react';
@@ -6,13 +6,17 @@ import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type CardVariant = 'default' | 'bordered' | 'muted';
 
-export interface PdfCardProps {
+export interface PdfCardProps extends Omit<PDFComponentProps, 'children'> {
+  /** Optional card heading rendered above the content. */
   title?: string;
+  /** Card body content. */
   children?: ReactNode;
+  /** Visual style variant. @default 'default' */
   variant?: CardVariant;
+  /** Internal padding preset. @default 'md' */
   padding?: 'sm' | 'md' | 'lg';
+  /** Allow the card to split across PDF pages. @default true */
   wrap?: boolean;
-  style?: Style;
 }
 
 function createCardStyles(t: PdfxTheme) {

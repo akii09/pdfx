@@ -1,21 +1,14 @@
+/* eslint-disable react-refresh/only-export-components */
+// graph.tsx intentionally exports utility functions (getGraphWidth, GRAPH_SAFE_WIDTHS)
+// alongside the PdfGraph component. These helpers are part of the component's public API
+// and are needed by consumers in the same import. Splitting them into a separate file
+// would break the copy-paste workflow this library is designed around.
+
 import type { PdfxTheme } from '@pdfx/shared';
-import {
-  Circle,
-  Defs,
-  G,
-  Line,
-  LinearGradient,
-  Path,
-  Rect,
-  Stop,
-  Svg,
-  Text as SvgText,
-} from '@react-pdf/renderer';
+import { Circle, G, Line, Path, Rect, Svg, Text as SvgText } from '@react-pdf/renderer';
 import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
-
-// ─── Graph Width Utilities ────────────────────────────────────────────────────
 
 /**
  * A4 page width in points (595pt).
@@ -52,14 +45,10 @@ export interface GraphWidthOptions {
  */
 export function getGraphWidth(theme: PdfxTheme, options: GraphWidthOptions = {}): number {
   const { containerPadding = 0, wrapperPadding = 0, pageWidth = A4_WIDTH } = options;
-
   const { marginLeft, marginRight } = theme.spacing.page;
-
-  // Calculate available width:
   // pageWidth - page margins - container padding (both sides) - wrapper padding (both sides)
   const availableWidth =
     pageWidth - marginLeft - marginRight - containerPadding * 2 - wrapperPadding * 2;
-
   // Return floored value to avoid sub-pixel overflow, with minimum width guard
   return Math.max(Math.floor(availableWidth), 100);
 }
@@ -77,26 +66,15 @@ export const GRAPH_SAFE_WIDTHS = {
   inSectionWithWrapper: 380,
 } as const;
 
-/**
- * Internal layout constants for chart margins.
- * These values ensure proper spacing for axis labels and legends.
- */
+/** Internal layout constants for chart margins. */
 const CHART_MARGINS = {
-  /** Left margin for charts with Y-axis labels */
   axisLeft: 40,
-  /** Left margin for pie/donut charts (no axis) */
   pieLeft: 10,
-  /** Right margin for all chart types */
   right: 10,
-  /** Top margin for all chart types */
   top: 10,
-  /** Bottom margin for charts with X-axis labels */
   axisBottom: 24,
-  /** Bottom margin for pie/donut charts (no axis) */
   pieBottom: 10,
 } as const;
-
-// ─── Public Types ─────────────────────────────────────────────────────────────
 
 export type GraphVariant = 'bar' | 'horizontal-bar' | 'line' | 'area' | 'pie' | 'donut';
 
@@ -188,8 +166,6 @@ export interface GraphProps {
   style?: Style;
 }
 
-// ─── Internal Layout ──────────────────────────────────────────────────────────
-
 interface ChartLayout {
   svgW: number;
   svgH: number;
@@ -257,8 +233,6 @@ function createGraphStyles(t: PdfxTheme) {
   });
 }
 
-// ─── Utilities ────────────────────────────────────────────────────────────────
-
 /** Normalize to always work with GraphSeries[]. */
 function normalizeData(data: GraphDataPoint[] | GraphSeries[]): GraphSeries[] {
   if (data.length === 0) return [];
@@ -309,14 +283,11 @@ function arcPath(
   // Clamp to prevent degenerate arcs (full 360°)
   const safeEnd = Math.min(endAngle, startAngle + 359.999);
   const large = safeEnd - startAngle > 180 ? 1 : 0;
-
   const s = polarToCartesian(cx, cy, r, safeEnd);
   const e = polarToCartesian(cx, cy, r, startAngle);
-
   if (innerR === 0) {
     return `M ${cx} ${cy} L ${s.x} ${s.y} A ${r} ${r} 0 ${large} 0 ${e.x} ${e.y} Z`;
   }
-
   const si = polarToCartesian(cx, cy, innerR, safeEnd);
   const ei = polarToCartesian(cx, cy, innerR, startAngle);
   return [
@@ -349,8 +320,6 @@ function smoothPath(points: { x: number; y: number }[], tension = 0.4): string {
   return parts.join(' ');
 }
 
-// ─── Default palette ──────────────────────────────────────────────────────────
-
 function getDefaultPalette(t: PdfxTheme): string[] {
   return [
     t.colors.primary,
@@ -364,32 +333,56 @@ function getDefaultPalette(t: PdfxTheme): string[] {
   ];
 }
 
-// ─── Render: Bar Chart ────────────────────────────────────────────────────────
-
-function renderBarChart(
+/** Derive ChartLayout from series data, SVG dimensions, and variant. */
+function buildLayout(
   series: GraphSeries[],
-  layout: ChartLayout,
-  palette: string[],
-  showGrid: boolean,
-  showValues: boolean,
-  theme: PdfxTheme
-) {
-  const { chartX, chartY, chartW, chartH, yMin, yMax, yTicks, xLabels } = layout;
-  const nCategories = xLabels.length;
-  const nSeries = series.length;
-  const groupGap = 0.25;
-  const groupW = chartW / nCategories;
-  const barW = (groupW * (1 - groupGap)) / nSeries;
-  const textColor = theme.colors.mutedForeground;
-  const gridColor = theme.colors.border;
-  const axisColor = theme.colors.foreground;
-  const range = yMax - yMin || 1;
+  width: number,
+  height: number,
+  isPieOrDonut: boolean,
+  yTickCount: number
+): ChartLayout {
+  const mL = isPieOrDonut ? CHART_MARGINS.pieLeft : CHART_MARGINS.axisLeft;
+  const mB = isPieOrDonut ? CHART_MARGINS.pieBottom : CHART_MARGINS.axisBottom;
+  const chartX = mL;
+  const chartY = CHART_MARGINS.top;
+  const chartW = width - mL - CHART_MARGINS.right;
+  const chartH = height - CHART_MARGINS.top - mB;
+  const allValues = series.flatMap((s) => s.data.map((d) => d.value));
+  const rawMin = Math.min(...allValues, 0);
+  const rawMax = Math.max(...allValues, 1);
+  const yMin = rawMin >= 0 ? 0 : rawMin;
+  const yMax = rawMax + (rawMax - yMin) * 0.08; // 8% headroom
+  return {
+    svgW: width,
+    svgH: height,
+    chartX,
+    chartY,
+    chartW,
+    chartH,
+    yMin,
+    yMax,
+    yTicks: computeYTicks(yMin, yMax, yTickCount),
+    xLabels: series[0]?.data.map((d) => d.label) ?? [],
+  };
+}
 
+/**
+ * Shared Y-axis grid lines and tick labels for cartesian charts (bar, line, area).
+ * Extracted to avoid duplicating the identical block across render functions.
+ */
+function renderGridAndYAxis(
+  ticks: number[],
+  toY: (v: number) => number,
+  chartX: number,
+  chartW: number,
+  showGrid: boolean,
+  gridColor: string,
+  textColor: string
+) {
   return (
     <>
-      {/* Grid lines + Y-axis labels */}
-      {yTicks.map((tick) => {
-        const ty = chartY + chartH - ((tick - yMin) / range) * chartH;
+      {ticks.map((tick) => {
+        const ty = toY(tick);
         return (
           <G key={`grid-${tick}`}>
             {showGrid && (
@@ -415,8 +408,34 @@ function renderBarChart(
           </G>
         );
       })}
+    </>
+  );
+}
 
-      {/* Baseline */}
+function renderBarChart(
+  series: GraphSeries[],
+  layout: ChartLayout,
+  palette: string[],
+  showGrid: boolean,
+  showValues: boolean,
+  theme: PdfxTheme
+) {
+  const { chartX, chartY, chartW, chartH, yMin, yMax, yTicks, xLabels } = layout;
+  const nCategories = xLabels.length;
+  const nSeries = series.length;
+  const groupGap = 0.25;
+  const groupW = chartW / nCategories;
+  const barW = (groupW * (1 - groupGap)) / nSeries;
+  const textColor = theme.colors.mutedForeground;
+  const gridColor = theme.colors.border;
+  const axisColor = theme.colors.foreground;
+  const range = yMax - yMin || 1;
+  const toY = (v: number) => chartY + chartH - ((v - yMin) / range) * chartH;
+
+  return (
+    <>
+      {renderGridAndYAxis(yTicks, toY, chartX, chartW, showGrid, gridColor, textColor)}
+
       <Line
         x1={chartX}
         y1={chartY + chartH}
@@ -426,7 +445,6 @@ function renderBarChart(
         strokeWidth={1}
       />
 
-      {/* Bars + X labels */}
       {xLabels.map((label, ci) => {
         const groupLeft = chartX + ci * groupW + groupW * (groupGap / 2);
         return (
@@ -472,8 +490,6 @@ function renderBarChart(
   );
 }
 
-// ─── Render: Horizontal Bar Chart ────────────────────────────────────────────
-
 function renderHorizontalBarChart(
   series: GraphSeries[],
   layout: ChartLayout,
@@ -502,7 +518,6 @@ function renderHorizontalBarChart(
         return (
           // biome-ignore lint/suspicious/noArrayIndexKey: static PDF chart data — index is the stable identity
           <G key={`hbar-${ci}`}>
-            {/* Row label */}
             <SvgText
               x={chartX + labelW - 4}
               y={rowY + rowH / 2 + 3}
@@ -512,7 +527,6 @@ function renderHorizontalBarChart(
             >
               {truncate(label, 14)}
             </SvgText>
-            {/* Bar */}
             <Rect
               x={chartX + labelW}
               y={rowY + (rowH - barH) / 2}
@@ -520,7 +534,6 @@ function renderHorizontalBarChart(
               height={barH}
               fill={color}
             />
-            {/* Value label */}
             {showValues && (
               <SvgText
                 x={chartX + labelW + barW + 3}
@@ -535,7 +548,6 @@ function renderHorizontalBarChart(
           </G>
         );
       })}
-      {/* Baseline */}
       <Line
         x1={chartX + labelW}
         y1={chartY}
@@ -547,8 +559,6 @@ function renderHorizontalBarChart(
     </>
   );
 }
-
-// ─── Render: Line / Area Chart ───────────────────────────────────────────────
 
 function renderLineAreaChart(
   series: GraphSeries[],
@@ -573,36 +583,8 @@ function renderLineAreaChart(
 
   return (
     <>
-      {/* Grid + Y-axis labels */}
-      {yTicks.map((tick) => {
-        const ty = yFor(tick);
-        return (
-          <G key={`grid-${tick}`}>
-            {showGrid && (
-              <Line
-                x1={chartX}
-                y1={ty}
-                x2={chartX + chartW}
-                y2={ty}
-                stroke={gridColor}
-                strokeWidth={0.5}
-                strokeDasharray="3 3"
-              />
-            )}
-            <SvgText
-              x={chartX - 4}
-              y={ty + 3}
-              fill={textColor}
-              textAnchor="end"
-              style={{ fontSize: 7 }}
-            >
-              {fmtNum(tick)}
-            </SvgText>
-          </G>
-        );
-      })}
+      {renderGridAndYAxis(yTicks, yFor, chartX, chartW, showGrid, gridColor, textColor)}
 
-      {/* Baseline */}
       <Line
         x1={chartX}
         y1={chartY + chartH}
@@ -612,7 +594,6 @@ function renderLineAreaChart(
         strokeWidth={1}
       />
 
-      {/* Series lines / areas */}
       {series.map((s, si) => {
         const color = s.color ?? palette[si % palette.length];
         const points = s.data.map((d, i) => ({ x: xFor(i), y: yFor(d.value) }));
@@ -656,7 +637,6 @@ function renderLineAreaChart(
         );
       })}
 
-      {/* X-axis labels */}
       {xLabels.map((label, i) => (
         <SvgText
           key={`xlabel-${label}`}
@@ -672,8 +652,6 @@ function renderLineAreaChart(
     </>
   );
 }
-
-// ─── Render: Pie / Donut Chart ───────────────────────────────────────────────
 
 function renderPieDonutChart(
   series: GraphSeries[],
@@ -729,7 +707,6 @@ function renderPieDonutChart(
         );
       })}
 
-      {/* Donut center label */}
       {isDonut && centerLabel && (
         <>
           <Circle cx={cx} cy={cy} r={innerR} fill="white" />
@@ -747,8 +724,6 @@ function renderPieDonutChart(
     </>
   );
 }
-
-// ─── Legend ───────────────────────────────────────────────────────────────────
 
 function Legend({
   series,
@@ -776,8 +751,6 @@ function Legend({
     </View>
   );
 }
-
-// ─── PdfGraph ─────────────────────────────────────────────────────────────────
 
 /**
  * PdfGraph — renders bar, horizontal-bar, line, area, pie, and donut charts
@@ -846,52 +819,15 @@ export function PdfGraph({
   const palette = colors ?? getDefaultPalette(theme);
   const series = normalizeData(data);
 
-  // ── Calculate width ─────────────────────────────────────────────────
-  // If fullWidth is enabled, calculate based on theme; otherwise use explicit or default
   const width = useSafeMemo(() => {
-    if (fullWidth) {
-      return getGraphWidth(theme, { containerPadding, wrapperPadding });
-    }
+    if (fullWidth) return getGraphWidth(theme, { containerPadding, wrapperPadding });
     return explicitWidth ?? GRAPH_SAFE_WIDTHS.default;
   }, [fullWidth, explicitWidth, theme, containerPadding, wrapperPadding]);
 
-  // ── Compute layout ────────────────────────────────────────────────
   const isPieOrDonut = variant === 'pie' || variant === 'donut';
+  const layout = buildLayout(series, width, height, isPieOrDonut, yTickCount);
+  const { chartX, chartW } = layout;
 
-  // Use layout constants for margins
-  const marginLeft = isPieOrDonut ? CHART_MARGINS.pieLeft : CHART_MARGINS.axisLeft;
-  const marginRight = CHART_MARGINS.right;
-  const marginTop = CHART_MARGINS.top;
-  const marginBottom = isPieOrDonut ? CHART_MARGINS.pieBottom : CHART_MARGINS.axisBottom;
-
-  const chartX = marginLeft;
-  const chartY = marginTop;
-  const chartW = width - marginLeft - marginRight;
-  const chartH = height - marginTop - marginBottom;
-
-  const allValues = series.flatMap((s) => s.data.map((d) => d.value));
-  const rawMin = Math.min(...allValues, 0);
-  const rawMax = Math.max(...allValues, 1);
-  const yMin = rawMin >= 0 ? 0 : rawMin;
-  const yMax = rawMax + (rawMax - yMin) * 0.08; // 8% headroom
-
-  const yTickValues = computeYTicks(yMin, yMax, yTickCount);
-  const xLabels = series[0]?.data.map((d) => d.label) ?? [];
-
-  const layout: ChartLayout = {
-    svgW: width,
-    svgH: height,
-    chartX,
-    chartY,
-    chartW,
-    chartH,
-    yMin,
-    yMax,
-    yTicks: yTickValues,
-    xLabels,
-  };
-
-  // ── Render chart body ─────────────────────────────────────────────
   let chartContent: React.ReactNode = null;
 
   switch (variant) {
@@ -902,18 +838,6 @@ export function PdfGraph({
       chartContent = renderHorizontalBarChart(series, layout, palette, showValues, theme);
       break;
     case 'line':
-      chartContent = renderLineAreaChart(
-        series,
-        layout,
-        palette,
-        showGrid,
-        showValues,
-        showDots,
-        smooth,
-        false,
-        theme
-      );
-      break;
     case 'area':
       chartContent = renderLineAreaChart(
         series,
@@ -923,7 +847,7 @@ export function PdfGraph({
         showValues,
         showDots,
         smooth,
-        true,
+        variant === 'area',
         theme
       );
       break;
@@ -946,12 +870,6 @@ export function PdfGraph({
       {subtitle && <PDFText style={styles.subtitle}>{subtitle}</PDFText>}
       <View style={legend === 'right' ? styles.chartWithRightLegend : undefined}>
         <Svg width={width} height={height}>
-          <Defs>
-            <LinearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0%" stopColor={theme.colors.background} stopOpacity={0} />
-              <Stop offset="100%" stopColor={theme.colors.background} stopOpacity={0} />
-            </LinearGradient>
-          </Defs>
           {chartContent}
           {!isPieOrDonut && xLabel && (
             <SvgText

@@ -8,24 +8,32 @@ import { resolveColor } from '../../lib/resolve-color.js';
 export type QRCodeErrorLevel = 'L' | 'M' | 'Q' | 'H';
 
 export interface PdfQRCodeProps extends Omit<PDFComponentProps, 'children'> {
+  /** The URL or string encoded in the QR code. */
   value: string;
+  /** Width and height of the rendered QR code in PDF points. @default 100 */
   size?: number;
+  /** Module (dot) color — accepts a theme token or any hex/rgb value. @default theme foreground */
   color?: string;
+  /** Background color behind the QR code — accepts a theme token or hex/rgb value. Pass `'transparent'` to render no background. @default 'background' */
   backgroundColor?: string;
+  /** Reed-Solomon error correction level. Higher levels tolerate more damage. @default 'M' */
   errorLevel?: QRCodeErrorLevel;
+  /** Quiet zone (empty border) width in modules. @default 1 */
   margin?: number;
+  /** Optional caption text rendered below the QR code. */
   caption?: string;
   children?: never;
 }
 
 function createQRCodeStyles(t: PdfxTheme) {
+  const { spacing } = t.primitives;
   return StyleSheet.create({
     container: { alignItems: 'center' },
     caption: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.primitives.typography.xs,
       color: t.colors.mutedForeground,
-      marginTop: 4,
+      marginTop: spacing[1],
       textAlign: 'center',
     },
   });
@@ -75,14 +83,14 @@ export function PdfQRCode({
   const moduleSize = size / matrix.length;
   const resolvedColor = resolveColor(color, theme.colors);
   const resolvedBgColor =
-    backgroundColor === 'transparent' ? 'transparent' : resolveColor(backgroundColor, theme.colors);
+    backgroundColor === 'transparent' ? undefined : resolveColor(backgroundColor, theme.colors);
   const containerStyles: Style[] = [styles.container];
   if (style) containerStyles.push(...[style].flat());
 
   return (
     <View style={containerStyles}>
       <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {resolvedBgColor !== 'transparent' && (
+        {resolvedBgColor !== undefined && (
           <Rect x={0} y={0} width={size} height={size} fill={resolvedBgColor} />
         )}
         {matrix

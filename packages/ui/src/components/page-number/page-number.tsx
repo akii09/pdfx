@@ -7,10 +7,19 @@ export type PageNumberAlign = 'left' | 'center' | 'right';
 export type PageNumberSize = 'xs' | 'sm' | 'md';
 
 export interface PdfPageNumberProps extends Omit<PDFComponentProps, 'children'> {
+  /**
+   * Format string for the page number text.
+   * Use `{page}` for the current page and `{total}` for the total page count.
+   * @default '{page} / {total}'
+   */
   format?: string;
+  /** Horizontal alignment. @default 'center' */
   align?: PageNumberAlign;
+  /** Font size preset. @default 'sm' */
   size?: PageNumberSize;
+  /** Repeat on every page (PDF fixed element). @default true */
   fixed?: boolean;
+  /** Use muted (lighter) text color instead of the default foreground. @default false */
   muted?: boolean;
   children?: never;
 }

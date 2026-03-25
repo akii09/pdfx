@@ -8,7 +8,7 @@ import { StyleSheet } from '@react-pdf/renderer';
  * @param t - The resolved PdfxTheme instance.
  */
 export function createListStyles(t: PdfxTheme) {
-  const { spacing, fontWeights, typography } = t.primitives;
+  const { borderRadius, spacing, fontWeights, typography } = t.primitives;
 
   return StyleSheet.create({
     container: {
@@ -27,7 +27,7 @@ export function createListStyles(t: PdfxTheme) {
     // ── Bullet markers ────────────────────────────────────────────────
     markerBulletWrap: {
       width: spacing[4],
-      paddingTop: 4,
+      paddingTop: spacing[1],
       alignItems: 'center',
     },
     markerBulletDot: {
@@ -95,7 +95,7 @@ export function createListStyles(t: PdfxTheme) {
     iconBox: {
       width: spacing[5],
       height: spacing[5],
-      borderRadius: 4,
+      borderRadius: borderRadius.md,
       backgroundColor: t.colors.primary,
       alignItems: 'center',
       justifyContent: 'center',
@@ -142,10 +142,10 @@ export function createListStyles(t: PdfxTheme) {
     },
     descriptiveAccent: {
       width: 3,
-      borderRadius: 2,
+      borderRadius: borderRadius.sm,
       backgroundColor: t.colors.primary,
       marginRight: spacing[3],
-      minHeight: 16,
+      minHeight: spacing[4],
     },
     descriptiveContent: {
       flex: 1,

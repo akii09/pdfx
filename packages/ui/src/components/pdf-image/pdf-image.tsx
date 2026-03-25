@@ -3,6 +3,7 @@ import { Image, Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
+/** HTTP method used when fetching the image from a URL. */
 export type PdfImageHTTPMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 export type PdfImageSrc =
@@ -21,16 +22,27 @@ export type PdfImageVariant =
   | 'rounded';
 
 export interface PdfImageProps {
+  /** Image source — a URL string, file path, base64 data URI, or a request object with HTTP method/headers. */
   src: PdfImageSrc;
+  /** Layout and sizing preset. @default 'default' */
   variant?: PdfImageVariant;
+  /** Override the variant's default width. Accepts PDF points or CSS-like string (e.g. '100%'). */
   width?: number | string;
+  /** Override the variant's default height in PDF points. */
   height?: number | string;
+  /** Object-fit mode for how the image fills its container. Defaults to the variant's preset. */
   fit?: PdfImageFit;
+  /** Object-position for the image within its container (e.g. '50% 50%', 'top left'). @default '50% 50%' */
   position?: string;
+  /** Optional caption text rendered below the image. */
   caption?: string;
+  /** Derive height from width using this ratio (width / aspectRatio). Ignored when `height` is set. */
   aspectRatio?: number;
+  /** Border radius in PDF points. Overrides the variant's default radius. */
   borderRadius?: number;
+  /** Prevent the image and its caption from splitting across pages. @default true */
   noWrap?: boolean;
+  /** Custom @react-pdf/renderer styles applied to the image element. */
   style?: Style;
 }
 

@@ -14,11 +14,17 @@ export type BadgeVariant =
   | 'outline';
 export type BadgeSize = 'sm' | 'md' | 'lg';
 
+/** Visual style variant for the badge. */
 export interface BadgeProps extends Omit<PDFComponentProps, 'children'> {
+  /** Text content of the badge. */
   label: string;
+  /** Color scheme of the badge. @default 'default' */
   variant?: BadgeVariant;
+  /** Badge size — controls font size and padding. @default 'md' */
   size?: BadgeSize;
+  /** Custom background color — accepts a theme token or any hex/rgb value. Overrides `variant` background. */
   background?: string;
+  /** Custom text color — accepts a theme token or any hex/rgb value. Overrides `variant` text color. */
   color?: string;
 }
 
