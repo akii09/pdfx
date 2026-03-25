@@ -355,8 +355,12 @@
       "description": "Professional A4 invoice with logo-left header, three-column billing section, and zebra-striped grid table.",
       "files": [
         {
-          "path": "public/r/blocks/invoice-classic.json",
-          "type": "registry:block"
+          "path": "blocks/invoice-classic/invoice-classic.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/invoice-classic/invoice-classic.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -377,8 +381,12 @@
       "description": "Consultant-focused invoice with hourly rate breakdown, project summary, and professional styling.",
       "files": [
         {
-          "path": "public/r/blocks/invoice-consultant.json",
-          "type": "registry:block"
+          "path": "blocks/invoice-consultant/invoice-consultant.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/invoice-consultant/invoice-consultant.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -399,8 +407,12 @@
       "description": "Enterprise invoice with formal layout, purchase order fields, and approval signatures.",
       "files": [
         {
-          "path": "public/r/blocks/invoice-corporate.json",
-          "type": "registry:block"
+          "path": "blocks/invoice-corporate/invoice-corporate.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/invoice-corporate/invoice-corporate.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -413,8 +425,12 @@
       "description": "Creative invoice with accent sidebar, modern typography, and vibrant color highlights.",
       "files": [
         {
-          "path": "public/r/blocks/invoice-creative.json",
-          "type": "registry:block"
+          "path": "blocks/invoice-creative/invoice-creative.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/invoice-creative/invoice-creative.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -435,8 +451,12 @@
       "description": "Clean minimal layout with inline invoice stamp, two-column billing info, and compact table.",
       "files": [
         {
-          "path": "public/r/blocks/invoice-minimal.json",
-          "type": "registry:block"
+          "path": "blocks/invoice-minimal/invoice-minimal.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/invoice-minimal/invoice-minimal.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -449,8 +469,12 @@
       "description": "Branded full-width banner header, horizontal invoice meta strip, and primary-header table.",
       "files": [
         {
-          "path": "public/r/blocks/invoice-modern.json",
-          "type": "registry:block"
+          "path": "blocks/invoice-modern/invoice-modern.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/invoice-modern/invoice-modern.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -463,8 +487,16 @@
       "description": "Executive financial report with KPI cards, trend chart, delivery table, and highlights section.",
       "files": [
         {
-          "path": "public/r/blocks/report-financial.json",
-          "type": "registry:block"
+          "path": "blocks/report-financial/report-financial.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/report-financial/report-layout.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/report-financial/report.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -489,8 +521,16 @@
       "description": "Growth and marketing report with acquisition trendline, channel performance, and execution highlights.",
       "files": [
         {
-          "path": "public/r/blocks/report-marketing.json",
-          "type": "registry:block"
+          "path": "blocks/report-marketing/report-marketing.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/report-marketing/report-layout.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/report-marketing/report.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -515,8 +555,16 @@
       "description": "Operations and delivery report covering SLA health, throughput trends, and risk tracking.",
       "files": [
         {
-          "path": "public/r/blocks/report-operations.json",
-          "type": "registry:block"
+          "path": "blocks/report-operations/report-operations.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/report-operations/report-layout.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/report-operations/report.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
@@ -541,8 +589,16 @@
       "description": "Security posture report with vulnerability trend tracking, remediation table, and risk summary.",
       "files": [
         {
-          "path": "public/r/blocks/report-security.json",
-          "type": "registry:block"
+          "path": "blocks/report-security/report-security.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/report-security/report-layout.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/report-security/report.types.ts",
+          "type": "registry:file"
         }
       ],
       "dependencies": ["@react-pdf/renderer"],

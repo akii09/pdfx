@@ -132,7 +132,6 @@ function createAlertStyles(theme: PdfxTheme) {
       borderRadius: 4,
       marginBottom: theme.spacing.componentGap,
     },
-    // Single theme-aware background; the left border provides variant color identity.
     bg: {
       backgroundColor: colors.muted,
     },

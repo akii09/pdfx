@@ -20,6 +20,7 @@ interface SourceRegistryItem {
   files: SourceRegistryFile[];
   dependencies?: string[];
   registryDependencies?: string[];
+  peerComponents?: string[];
 }
 
 // Output types: what we generate (with content)
@@ -268,6 +269,183 @@ async function processItem(
   console.log(`  ${item.name}.json`);
 }
 
+/**
+ * Maps @pdfx/ui exported names to their consumer component file paths.
+ * Key: export name, Value: component folder name (used to build the pdfx- prefixed path).
+ */
+const PDFX_UI_COMPONENT_MAP: Record<string, string> = {
+  // Components
+  Badge: 'badge',
+  Card: 'card',
+  DataTable: 'data-table',
+  Divider: 'divider',
+  Heading: 'heading',
+  KeepTogether: 'keep-together',
+  KeyValue: 'key-value',
+  Link: 'link',
+  PdfAlert: 'alert',
+  PdfGraph: 'graph',
+  PdfImage: 'pdf-image',
+  PdfList: 'list',
+  PdfPageNumber: 'page-number',
+  PdfQRCode: 'qrcode',
+  PdfWatermark: 'watermark',
+  PageBreak: 'page-break',
+  PageFooter: 'page-footer',
+  PageHeader: 'page-header',
+  Section: 'section',
+  Signature: 'signature',
+  Stack: 'stack',
+  Table: 'table',
+  TableBody: 'table',
+  TableCell: 'table',
+  TableHeader: 'table',
+  TableRow: 'table',
+  Text: 'text',
+  // Theme context
+  PdfxThemeContext: 'theme-context',
+  PdfxThemeProvider: 'theme-context',
+  usePdfxTheme: 'theme-context',
+  useSafeMemo: 'theme-context',
+};
+
+/**
+ * Transforms a block source file for consumer distribution.
+ *
+ * Block source files use workspace imports (`@pdfx/ui`, `@pdfx/shared`) so they
+ * resolve in the monorepo and can be type-checked and linted. This function
+ * rewrites those imports to consumer-relative paths so installed blocks work
+ * without any workspace packages.
+ *
+ * Transforms:
+ * - `from '@pdfx/shared'` (PdfxTheme type) → `from '../../lib/pdfx-theme'`
+ * - `from '@pdfx/ui'` → split into per-component imports:
+ *     theme context exports  → `from '../../lib/pdfx-theme-context'`
+ *     component exports      → `from '../../components/pdfx/<name>/pdfx-<name>'`
+ *       (components sharing a file, e.g. Table/TableRow/TableCell, are merged into one import)
+ */
+function transformBlockForRegistry(content: string): string {
+  let result = content;
+
+  // ── 1. @pdfx/shared → ../../lib/pdfx-theme ───────────────────────────────
+  result = result.replace(
+    /import\s+type\s+\{([^}]+)\}\s+from\s+'@pdfx\/shared';?/g,
+    "import type {$1} from '../../lib/pdfx-theme';"
+  );
+
+  // ── 2. @pdfx/ui → per-component consumer paths ───────────────────────────
+  const uiImportMatch = result.match(/import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+'@pdfx\/ui';?/);
+
+  if (uiImportMatch) {
+    const rawNames = uiImportMatch[1]
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    // Separate theme context names from component names
+    const themeContextNames: string[] = [];
+    // Map: folder → [export names]
+    const componentGroups: Record<string, string[]> = {};
+
+    for (const name of rawNames) {
+      const folder = PDFX_UI_COMPONENT_MAP[name];
+      if (!folder) {
+        console.warn(`  Warning: unknown @pdfx/ui export "${name}" — skipping`);
+        continue;
+      }
+      if (folder === 'theme-context') {
+        themeContextNames.push(name);
+      } else {
+        if (!componentGroups[folder]) componentGroups[folder] = [];
+        componentGroups[folder].push(name);
+      }
+    }
+
+    const newImports: string[] = [];
+
+    if (themeContextNames.length > 0) {
+      newImports.push(
+        `import { ${themeContextNames.join(', ')} } from '../../lib/pdfx-theme-context';`
+      );
+    }
+
+    for (const [folder, names] of Object.entries(componentGroups).sort()) {
+      const importNames = names.join(', ');
+      newImports.push(
+        `import { ${importNames} } from '../../components/pdfx/${folder}/pdfx-${folder}';`
+      );
+    }
+
+    result = result.replace(
+      /import\s+(?:type\s+)?\{[^}]+\}\s+from\s+'@pdfx\/ui';?\n?/,
+      `${newImports.join('\n')}\n`
+    );
+  }
+
+  return result;
+}
+
+/**
+ * Builds a block registry item from real source .tsx/.ts files.
+ *
+ * Block source files use workspace imports (@pdfx/ui, @pdfx/shared) that
+ * resolve in the monorepo. transformBlockForRegistry rewrites those to
+ * consumer-relative paths before packaging into public/r/blocks/*.json.
+ */
+async function processBlockItem(
+  item: SourceRegistryItem,
+  registryBaseDir: string,
+  outputDir: string
+): Promise<void> {
+  console.log(`Processing block ${item.name}...`);
+
+  const files = await Promise.all(
+    item.files.map(async (file) => {
+      const filePath = path.resolve(registryBaseDir, file.path);
+
+      if (!(await fileExistsAsync(filePath))) {
+        throw new Error(`Missing block source file: ${file.path}`);
+      }
+
+      const rawContent = await fs.readFile(filePath, 'utf-8');
+      const fileName = path.basename(file.path);
+
+      // Only transform .tsx files — .types.ts files have no workspace imports
+      const content = fileName.endsWith('.tsx')
+        ? transformBlockForRegistry(rawContent)
+        : rawContent;
+
+      return {
+        path: `templates/pdfx/${item.name}/${fileName}`,
+        content,
+        type: 'registry:file' as const,
+      };
+    })
+  );
+
+  const output: Record<string, unknown> = {
+    $schema: 'https://pdfx.akashpise.dev/schema/registry-item.json',
+    name: item.name,
+    type: item.type,
+    title: item.title,
+    description: item.description,
+    files,
+    dependencies: item.dependencies ?? [],
+  };
+
+  if (item.peerComponents && item.peerComponents.length > 0) {
+    output.peerComponents = item.peerComponents;
+  }
+
+  const blockOutputDir = path.join(outputDir, 'blocks');
+  await fs.mkdir(blockOutputDir, { recursive: true });
+
+  const outputPath = path.join(blockOutputDir, `${item.name}.json`);
+  await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`);
+
+  console.log(`  ${item.name}.json (block)`);
+}
+
 async function buildRegistry() {
   console.log('Building registry...\n');
 
@@ -302,38 +480,36 @@ async function buildRegistry() {
   // resolve relative paths from the registry dir to get absolute paths.
   const registryBaseDir = path.dirname(registryPath);
 
-  // Separate pre-built block items (hand-crafted JSON, just verify) from component items (source → transform)
+  // Separate block items (source .tsx → generated JSON) from component items (source → transform)
   const componentItems = registry.items.filter((item) => item.type !== 'registry:block');
-  const prebuiltItems = registry.items.filter((item) => item.type === 'registry:block');
+  const blockItems = registry.items.filter((item) => item.type === 'registry:block');
 
   // Process component items in parallel
-  const results = await Promise.allSettled(
+  const componentResults = await Promise.allSettled(
     componentItems.map((item) => processItem(item, registryBaseDir, outputDir))
   );
 
-  const failures = results.filter((r): r is PromiseRejectedResult => r.status === 'rejected');
+  const componentFailures = componentResults.filter(
+    (r): r is PromiseRejectedResult => r.status === 'rejected'
+  );
 
-  if (failures.length > 0) {
-    const messages = failures.map((f) => String(f.reason)).join('\n  ');
+  if (componentFailures.length > 0) {
+    const messages = componentFailures.map((f) => String(f.reason)).join('\n  ');
     throw new Error(`Registry build had failures:\n  ${messages}`);
   }
 
-  // Block items are pre-built hand-crafted JSON files already living in
-  // public/r/blocks/.  We just verify they exist and log them — no source
-  // transformation needed.
-  const appDir = path.join(__dirname, '../..');
-  const blockFailures: string[] = [];
-  for (const item of prebuiltItems) {
-    const blockPath = path.join(appDir, 'public', 'r', 'blocks', `${item.name}.json`);
-    if (await fileExistsAsync(blockPath)) {
-      console.log(`  ${item.name}.json (${item.type.replace('registry:', '')}, pre-built)`);
-    } else {
-      blockFailures.push(`Missing pre-built file: public/r/blocks/${item.name}.json`);
-    }
-  }
+  // Process block items from source .tsx/.ts files — generates public/r/blocks/*.json
+  const blockResults = await Promise.allSettled(
+    blockItems.map((item) => processBlockItem(item, registryBaseDir, outputDir))
+  );
+
+  const blockFailures = blockResults.filter(
+    (r): r is PromiseRejectedResult => r.status === 'rejected'
+  );
 
   if (blockFailures.length > 0) {
-    throw new Error(`Registry build had failures:\n  ${blockFailures.join('\n  ')}`);
+    const messages = blockFailures.map((f) => String(f.reason)).join('\n  ');
+    throw new Error(`Registry build had failures:\n  ${messages}`);
   }
 
   const indexOutputPath = path.join(outputDir, 'index.json');

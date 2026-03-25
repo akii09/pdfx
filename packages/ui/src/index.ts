@@ -137,30 +137,3 @@ export {
   type GraphWidthOptions,
 } from './components/graph';
 export { PdfxThemeProvider, usePdfxTheme, PdfxThemeContext } from './lib/pdfx-theme-context';
-
-// Templates
-export {
-  InvoiceTemplate,
-  type InvoiceClient,
-  type InvoiceCompany,
-  type InvoiceCurrency,
-  type InvoiceLineItem,
-  type InvoicePayment,
-  type InvoiceSummary,
-  type InvoiceTemplateProps,
-  type InvoiceVariant,
-} from './templates/invoice';
-
-export {
-  ResumeTemplate,
-  type ResumeCertification,
-  type ResumeEducation,
-  type ResumeExperience,
-  type ResumeLanguage,
-  type ResumePersonal,
-  type ResumeProject,
-  type ResumeSkillCategory,
-  type ResumeSummary,
-  type ResumeTemplateProps,
-  type ResumeVariant,
-} from './templates/resume';
