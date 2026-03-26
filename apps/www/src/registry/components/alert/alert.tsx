@@ -7,18 +7,24 @@ import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 export type AlertVariant = 'info' | 'success' | 'warning' | 'error';
 
 /**
- * Props for the PdfAlert component.
+ * Alert box with severity variants for info, success, warning, and error states.
+ * Props - `variant` | `title` | `children` | `showIcon` | `showBorder` | `style`
+ * @see {@link PdfAlertProps}
  */
 export interface PdfAlertProps extends Omit<PDFComponentProps, 'children'> {
-  /** Alert severity — controls the left border color and icon. @default 'info' */
+  /**
+   * @default 'info'
+   */
   variant?: AlertVariant;
-  /** Bold heading text rendered above the description. */
   title?: string;
-  /** Body content. A plain string is auto-wrapped in a Text node; a ReactNode is rendered as-is. */
   children?: ReactNode;
-  /** Show the semantic icon on the left side. @default true */
+  /**
+   * @default true
+   */
   showIcon?: boolean;
-  /** Show the left accent border. @default true */
+  /**
+   * @default true
+   */
   showBorder?: boolean;
 }
 
@@ -114,8 +120,6 @@ function AlertIcon({ variant, color }: { variant: AlertVariant; color: string })
 function createAlertStyles(theme: PdfxTheme) {
   const { typography, colors, primitives } = theme;
 
-  // Semantic border/icon colors resolved from theme tokens, with fallbacks for
-  // themes that do not define all semantic color keys.
   const variantColors = {
     info: colors.info ?? '#3B82F6',
     success: colors.success ?? '#22C55E',

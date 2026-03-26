@@ -4,27 +4,34 @@ import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
-/** Vertical margin preset applied above and below the section. */
 export type SectionSpacing = 'none' | 'sm' | 'md' | 'lg' | 'xl';
-/** Internal padding preset for the section container. */
 export type SectionPadding = 'none' | 'sm' | 'md' | 'lg';
-/** Visual style variant that controls background, border, and accent decoration. */
 export type SectionVariant = 'default' | 'callout' | 'highlight' | 'card';
 
+/**
+ * Layout container with spacing, padding, and visual style variants.
+ * Props - `spacing` | `padding` | `background` | `border` | `variant` | `accentColor` | `noWrap` | `children` | `style`
+ * @see {@link SectionProps}
+ */
 export interface SectionProps extends PDFComponentProps {
-  /** Vertical margin applied above and below the section. @default 'md' */
+  /**
+   * @default 'md'
+   */
   spacing?: SectionSpacing;
-  /** Internal padding preset. Defaults to the variant's built-in padding when omitted. */
   padding?: SectionPadding;
-  /** Background fill color — accepts a theme token or any hex/rgb value. */
   background?: string;
-  /** Add a full rectangle border around the section (only applies to the `default` variant). @default false */
+  /**
+   * @default false
+   */
   border?: boolean;
-  /** Visual style preset. @default 'default' */
+  /**
+   * @default 'default'
+   */
   variant?: SectionVariant;
-  /** Override the accent bar color for `callout` and `highlight` variants. */
   accentColor?: string;
-  /** Prevent the section from splitting across PDF pages. @default false */
+  /**
+   * @default false
+   */
   noWrap?: boolean;
 }
 

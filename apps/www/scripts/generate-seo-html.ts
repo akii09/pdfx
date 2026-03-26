@@ -174,51 +174,48 @@ function injectMeta(html: string, route: string, meta: RouteMeta): string {
   const { title, description } = meta;
 
   // Replace <title>
-  let out = html.replace(
-    /<title>[^<]*<\/title>/,
-    `<title>${title}</title>`,
-  );
+  let out = html.replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`);
 
   // Replace <meta name="description">
   out = out.replace(
     /<meta name="description" content="[^"]*"/,
-    `<meta name="description" content="${description}"`,
+    `<meta name="description" content="${description}"`
   );
 
   // Replace canonical href
   out = out.replace(
     /<link rel="canonical" href="[^"]*"/,
-    `<link rel="canonical" href="${canonical}"`,
+    `<link rel="canonical" href="${canonical}"`
   );
 
   // Replace OG url
   out = out.replace(
     /<meta property="og:url" content="[^"]*"/,
-    `<meta property="og:url" content="${canonical}"`,
+    `<meta property="og:url" content="${canonical}"`
   );
 
   // Replace OG title
   out = out.replace(
     /<meta property="og:title" content="[^"]*"/,
-    `<meta property="og:title" content="${title}"`,
+    `<meta property="og:title" content="${title}"`
   );
 
   // Replace OG description
   out = out.replace(
     /<meta property="og:description" content="[^"]*"/,
-    `<meta property="og:description" content="${description}"`,
+    `<meta property="og:description" content="${description}"`
   );
 
   // Replace Twitter title
   out = out.replace(
     /<meta name="twitter:title" content="[^"]*"/,
-    `<meta name="twitter:title" content="${title}"`,
+    `<meta name="twitter:title" content="${title}"`
   );
 
   // Replace Twitter description
   out = out.replace(
     /<meta name="twitter:description" content="[^"]*"/,
-    `<meta name="twitter:description" content="${description}"`,
+    `<meta name="twitter:description" content="${description}"`
   );
 
   return out;

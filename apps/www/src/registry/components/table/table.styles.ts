@@ -3,34 +3,20 @@ import { StyleSheet } from '@react-pdf/renderer';
 
 /**
  * Creates all table styles derived from the active theme.
- *
- * Border philosophy (PDF points ≠ CSS pixels):
- *   hairline = 0.5pt — nearly invisible separator, used for row dividers
- *   rule     = 1pt   — visible rule, used for header/footer separators
- *   border   = 1.5pt — used for outer box borders (grid, bordered)
- *
- * Cell padding:
- *   default  = 6pt vertical × 10pt horizontal — clean, professional PDF table
- *   compact  = 2pt vertical × 8pt horizontal  — dense, data-heavy tables
- *   minimal  = 5pt vertical × 6pt horizontal  — light whitespace
- *
- * All values derived from theme tokens; 0 hardcoded values.
  * @param t - The resolved PdfxTheme instance.
  */
 export function createTableStyles(t: PdfxTheme) {
   const { spacing, borderRadius, fontWeights, typography } = t.primitives;
   const borderColor = t.colors.border;
 
-  // Semantic border widths (in PDF points)
-  const hairline = 0.5; // row divider — barely visible
-  const rule = 1; // header/footer separator — clearly visible
-  const thick = 1.5; // outer box border — structural
+  const hairline = 0.5;
+  const rule = 1;
+  const thick = 1.5;
 
-  // Semantic cell padding
   const cellPadV = spacing[2] - 2;
   const cellPadH = spacing[2] + 2;
-  const cellPadVCompact = spacing[0.5]; // 2pt — tests assert this === 2
-  const cellPadHCompact = spacing[2]; // 8pt
+  const cellPadVCompact = spacing[0.5];
+  const cellPadHCompact = spacing[2];
 
   const rowDivider = {
     borderBottomWidth: hairline,
@@ -39,7 +25,6 @@ export function createTableStyles(t: PdfxTheme) {
   };
 
   return StyleSheet.create({
-    // ─── Base table wrapper ───────────────────────────────────────────────────
     table: {
       display: 'flex',
       flexDirection: 'column',
@@ -47,8 +32,6 @@ export function createTableStyles(t: PdfxTheme) {
       marginBottom: t.spacing.componentGap,
     },
 
-    // ─── Variant: grid ────────────────────────────────────────────────────────
-    // Outer box + row dividers + vertical column dividers.
     tableGrid: {
       borderWidth: thick,
       borderColor: borderColor,
@@ -60,23 +43,16 @@ export function createTableStyles(t: PdfxTheme) {
       overflow: 'hidden' as const,
     },
 
-    // ─── Variant: line ────────────────────────────────────────────────────────
-    // Clean horizontal lines only. Header bold rule → body hairlines.
-    // No outer box. A thin bottom border anchors the table.
     tableLine: {
       borderBottomWidth: hairline,
       borderBottomColor: borderColor,
       borderBottomStyle: 'solid',
     },
 
-    // ─── Variant: minimal ─────────────────────────────────────────────────────
-    // No outer borders. Subtle hairline row separators. Generous vertical rhythm.
     tableMinimal: {
       paddingVertical: spacing[2],
     },
 
-    // ─── Variant: striped ─────────────────────────────────────────────────────
-    // Top + bottom rules bookend the table. Alternating row fill.
     tableStriped: {
       borderTopWidth: hairline,
       borderTopColor: borderColor,
@@ -86,16 +62,12 @@ export function createTableStyles(t: PdfxTheme) {
       borderBottomStyle: 'solid',
     },
 
-    // ─── Variant: compact ────────────────────────────────────────────────────
-    // Dense rows, uppercase headers, bottom rule.
     tableCompact: {
       borderBottomWidth: hairline,
       borderBottomColor: borderColor,
       borderBottomStyle: 'solid',
     },
 
-    // ─── Variant: bordered ───────────────────────────────────────────────────
-    // Structural outer box, inner row hairlines.
     tableBordered: {
       borderWidth: spacing[1],
       borderColor: borderColor,
@@ -107,21 +79,17 @@ export function createTableStyles(t: PdfxTheme) {
       overflow: 'hidden' as const,
     },
 
-    // ─── Variant: primary-header ─────────────────────────────────────────────
-    // Filled header bar, body hairlines, bottom rule.
     tablePrimaryHeader: {
       borderBottomWidth: hairline,
       borderBottomColor: borderColor,
       borderBottomStyle: 'solid',
     },
 
-    // ─── Row base ────────────────────────────────────────────────────────────
     row: {
       flexDirection: 'row',
       display: 'flex',
     },
 
-    // Each row variant applies a bottom hairline separator between rows.
     rowGrid: rowDivider,
     rowLine: rowDivider,
     rowMinimal: rowDivider,
@@ -130,8 +98,6 @@ export function createTableStyles(t: PdfxTheme) {
     rowBordered: rowDivider,
     rowPrimaryHeader: rowDivider,
 
-    // ─── Header row overrides ────────────────────────────────────────────────
-    // Header rows replace the hairline with a heavier rule for clear hierarchy.
     rowHeaderGrid: {
       backgroundColor: t.colors.muted,
       borderBottomWidth: rule,
@@ -170,7 +136,6 @@ export function createTableStyles(t: PdfxTheme) {
       backgroundColor: t.colors.primary,
     },
 
-    // ─── Footer row overrides ────────────────────────────────────────────────
     rowFooter: {
       borderTopWidth: rule,
       borderTopColor: borderColor,
@@ -183,13 +148,10 @@ export function createTableStyles(t: PdfxTheme) {
       backgroundColor: t.colors.muted,
     },
 
-    // ─── Zebra stripe ────────────────────────────────────────────────────────
     rowStripe: {
       backgroundColor: t.colors.muted,
     },
 
-    // ─── Cell base ───────────────────────────────────────────────────────────
-    // 6pt vertical, 10pt horizontal — balanced professional PDF table spacing.
     cell: {
       flex: 1,
       paddingVertical: cellPadV,
@@ -198,18 +160,21 @@ export function createTableStyles(t: PdfxTheme) {
     },
     cellFixed: {
       flex: 0,
+      flexGrow: 0,
+      flexShrink: 0,
+      paddingVertical: cellPadV,
+      paddingHorizontal: cellPadH,
+      justifyContent: 'center',
     },
 
-    // Cell variant padding overrides
     cellMinimal: {
-      paddingVertical: spacing[1] + 1, // 5pt
-      paddingHorizontal: spacing[2] - 2, // 6pt
+      paddingVertical: spacing[1] + 1,
+      paddingHorizontal: spacing[2] - 2,
     },
     cellStriped: {
       paddingVertical: cellPadV,
       paddingHorizontal: cellPadH,
     },
-    // spacing[0.5] = 2pt — tests assert paddingVertical === 2
     cellCompact: {
       paddingVertical: cellPadVCompact,
       paddingHorizontal: cellPadHCompact,
@@ -223,28 +188,17 @@ export function createTableStyles(t: PdfxTheme) {
       paddingHorizontal: cellPadH,
     },
 
-    // Column divider for grid — hairline between cells, not on last cell
     cellGridBorder: {
       borderRightWidth: hairline,
       borderRightColor: borderColor,
       borderRightStyle: 'solid',
     },
-    // Column divider for bordered — tests assert borderRightWidth === spacing[1] = 4
     cellBorderedBorder: {
       borderRightWidth: spacing[1],
       borderRightColor: borderColor,
       borderRightStyle: 'solid',
     },
 
-    // ─── Cell text ───────────────────────────────────────────────────────────
-    //
-    // lineHeight: 1 is intentional and critical for all cell text styles.
-    //
-    // react-pdf adds EXTRA leading space below the text box when lineHeight > 1,
-    // making rows appear to have more bottom padding than top padding. Since cells
-    // already use symmetric paddingVertical on their <View> wrapper, text nodes
-    // must use lineHeight: 1 so the text box is exactly fontSize tall with no
-    // extra leading that would skew the visual vertical alignment.
     cellText: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
@@ -252,7 +206,6 @@ export function createTableStyles(t: PdfxTheme) {
       color: t.colors.foreground,
     },
 
-    // Header text styles — semibold for hierarchy
     cellTextHeaderGrid: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
@@ -267,7 +220,6 @@ export function createTableStyles(t: PdfxTheme) {
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
-    // Minimal uses muted header text (softer hierarchy)
     cellTextHeaderMinimal: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
@@ -282,7 +234,6 @@ export function createTableStyles(t: PdfxTheme) {
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
-    // Compact uses uppercase + small text for dense data headers
     cellTextHeaderCompact: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
@@ -292,7 +243,6 @@ export function createTableStyles(t: PdfxTheme) {
       textTransform: 'uppercase',
       letterSpacing: 0.6,
     },
-    // Bordered uses bold text — tests assert fontWeight === 700
     cellTextHeaderBordered: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
@@ -300,7 +250,6 @@ export function createTableStyles(t: PdfxTheme) {
       color: t.colors.foreground,
       fontWeight: fontWeights.bold,
     },
-    // Primary-header uses xs uppercase on colored background
     cellTextHeaderPrimaryHeader: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
@@ -311,7 +260,6 @@ export function createTableStyles(t: PdfxTheme) {
       letterSpacing: 0.6,
     },
 
-    // Footer text — semibold for summary row prominence
     cellTextFooter: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
@@ -320,7 +268,6 @@ export function createTableStyles(t: PdfxTheme) {
       fontWeight: fontWeights.semibold,
     },
 
-    // Compact data cell — xs font to match dense header
     cellTextCompact: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,

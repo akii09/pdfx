@@ -9,32 +9,36 @@ export type ListVariant =
   | 'multi-level'
   | 'descriptive';
 
-/** A single list item, optionally with nested children. */
+/**
+ * A single list item, optionally with nested children.
+ * Props - `text` | `description` | `checked` | `children`
+ * @see {@link ListItem}
+ */
 export interface ListItem {
-  /** Primary text / title of the item. */
   text: string;
-  /** Optional description shown below the title (used by descriptive variant). */
   description?: string;
-  /** Optional checked state (used by checklist variant). */
   checked?: boolean;
-  /** Optional nested children (used by multi-level variant). */
   children?: ListItem[];
 }
 
+/**
+ * List of items with multiple style variants including bullet, numbered, checklist, and descriptive.
+ * Props - `items` | `variant` | `gap` | `style` | `_level` | `noWrap`
+ * @see {@link PdfListProps}
+ */
 export interface PdfListProps {
-  /** Array of list items. */
   items: ListItem[];
-  /** Visual style of the list. @default 'bullet' */
+  /**
+   * @default 'bullet'
+   */
   variant?: ListVariant;
-  /** Spacing between list items. @default 'sm' */
+  /**
+   * @default 'sm'
+   */
   gap?: 'xs' | 'sm' | 'md';
-  /** Custom style override applied to the outer container. */
   style?: Style;
-  /** Indent level for nested rendering (internal use). */
   _level?: number;
   /**
-   * Prevent the List from being split across PDF pages.
-   * Useful for short lists that should always stay together on a single page.
    * @default false
    */
   noWrap?: boolean;

@@ -6,20 +6,32 @@ import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 export type PageNumberAlign = 'left' | 'center' | 'right';
 export type PageNumberSize = 'xs' | 'sm' | 'md';
 
+/**
+ * Auto page number rendered with a configurable format string at a fixed or inline position.
+ * Props - `format` | `align` | `size` | `fixed` | `muted` | `style`
+ * @see {@link PdfPageNumberProps}
+ */
 export interface PdfPageNumberProps extends Omit<PDFComponentProps, 'children'> {
   /**
-   * Format string for the page number text.
-   * Use `{page}` for the current page and `{total}` for the total page count.
-   * @default '{page} / {total}'
+   * Format string — use `{page}` for current page and `{total}` for total page count.
+   * @default 'Page {page} of {total}'
    */
   format?: string;
-  /** Horizontal alignment. @default 'center' */
+  /**
+   * @default 'center'
+   */
   align?: PageNumberAlign;
-  /** Font size preset. @default 'sm' */
+  /**
+   * @default 'sm'
+   */
   size?: PageNumberSize;
-  /** Repeat on every page (PDF fixed element). @default true */
+  /**
+   * @default false
+   */
   fixed?: boolean;
-  /** Use muted (lighter) text color instead of the default foreground. @default false */
+  /**
+   * @default true
+   */
   muted?: boolean;
   children?: never;
 }

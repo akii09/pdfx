@@ -8,16 +8,20 @@ import type { ListItem, ListVariant, PdfListProps } from './list.types';
 type Styles = ReturnType<typeof createListStyles>;
 type GapProp = 'xs' | 'sm' | 'md';
 
-// ─── Shared helpers ───────────────────────────────────────────────────────────
-
 function getGapStyle(gap: GapProp, styles: Styles): Style {
   if (gap === 'xs') return styles.itemRowGapXs;
   if (gap === 'md') return styles.itemRowGapMd;
   return styles.itemRowGapSm;
 }
 
-function buildRowStyles(index: number, total: number, gap: GapProp, styles: Styles): Style[] {
-  const row: Style[] = [styles.itemRow];
+function buildRowStyles(
+  index: number,
+  total: number,
+  gap: GapProp,
+  styles: Styles,
+  align: 'start' | 'center' = 'start'
+): Style[] {
+  const row: Style[] = [align === 'center' ? styles.itemRowCenter : styles.itemRow];
   if (index !== total - 1) row.push(getGapStyle(gap, styles));
   return row;
 }
@@ -34,8 +38,6 @@ function dotMarker(level: number, styles: Styles): React.ReactElement {
     </View>
   );
 }
-
-// ─── Per-variant renderers ────────────────────────────────────────────────────
 
 function renderBulletItem(
   item: ListItem,
@@ -68,7 +70,7 @@ function renderNumberedItem(
   styles: Styles
 ): React.ReactElement {
   return (
-    <View key={index} style={buildRowStyles(index, total, gap, styles)}>
+    <View key={index} style={buildRowStyles(index, total, gap, styles, 'center')}>
       <View style={styles.markerNumberBadge}>
         <PDFText style={styles.markerNumberText}>{`${index + 1}`}</PDFText>
       </View>
@@ -86,7 +88,7 @@ function renderChecklistItem(
 ): React.ReactElement {
   const isChecked = item.checked ?? true;
   return (
-    <View key={index} style={buildRowStyles(index, total, gap, styles)}>
+    <View key={index} style={buildRowStyles(index, total, gap, styles, 'center')}>
       <View style={[styles.checkBox, isChecked ? styles.checkBoxChecked : {}]}>
         {isChecked ? <PDFText style={styles.checkMark}>✓</PDFText> : null}
       </View>
@@ -103,7 +105,7 @@ function renderIconItem(
   styles: Styles
 ): React.ReactElement {
   return (
-    <View key={index} style={buildRowStyles(index, total, gap, styles)}>
+    <View key={index} style={buildRowStyles(index, total, gap, styles, 'center')}>
       <View style={styles.iconBox}>
         <PDFText style={styles.iconMark}>★</PDFText>
       </View>
@@ -160,8 +162,6 @@ function renderDescriptiveItem(
   );
 }
 
-// ─── Variant dispatch ─────────────────────────────────────────────────────────
-
 function renderItem(
   item: ListItem,
   index: number,
@@ -202,8 +202,6 @@ function renderItemList(
     </View>
   );
 }
-
-// ─── PdfList ──────────────────────────────────────────────────────────────────
 
 export function PdfList({
   items,

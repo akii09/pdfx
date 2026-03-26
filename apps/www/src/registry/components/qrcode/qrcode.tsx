@@ -7,20 +7,18 @@ import { resolveColor } from '../../lib/resolve-color.js';
 
 export type QRCodeErrorLevel = 'L' | 'M' | 'Q' | 'H';
 
+/**
+ * QR code rendered as an SVG grid for use in PDF documents.
+ * Props - `value` | `size` | `color` | `backgroundColor` | `errorLevel` | `margin` | `caption` | `style`
+ * @see {@link PdfQRCodeProps}
+ */
 export interface PdfQRCodeProps extends Omit<PDFComponentProps, 'children'> {
-  /** The URL or string encoded in the QR code. */
   value: string;
-  /** Width and height of the rendered QR code in PDF points. @default 100 */
   size?: number;
-  /** Module (dot) color — accepts a theme token or any hex/rgb value. @default theme foreground */
   color?: string;
-  /** Background color behind the QR code — accepts a theme token or hex/rgb value. Pass `'transparent'` to render no background. @default 'background' */
   backgroundColor?: string;
-  /** Reed-Solomon error correction level. Higher levels tolerate more damage. @default 'M' */
   errorLevel?: QRCodeErrorLevel;
-  /** Quiet zone (empty border) width in modules. @default 1 */
   margin?: number;
-  /** Optional caption text rendered below the QR code. */
   caption?: string;
   children?: never;
 }
@@ -67,8 +65,8 @@ function generateQRMatrix(
 export function PdfQRCode({
   value,
   size = 100,
-  color = 'foreground',
-  backgroundColor = 'background',
+  color = '#000000',
+  backgroundColor = '#ffffff',
   errorLevel = 'M',
   margin = 2,
   caption,

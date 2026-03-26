@@ -1,9 +1,84 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight, Copy, Github, Server, Zap } from 'lucide-react';
+import { ArrowRight, Copy, Github, PlayCircle, Server, Zap } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { SocialProofStats } from '../components/social-proof-stats';
 
-// ─── PDF Mock Cards ───────────────────────────────────────────────────────────
+function VideoModal() {
+  const [open, setOpen] = useState(false);
+  const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
+  const [thumbnailError, setThumbnailError] = useState(false);
+  const videoId = 'L6hBJR0LelM';
+
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false);
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
+
+  const thumbnailSrc = thumbnailError
+    ? 'https://pdfx.akashpise.dev/og-image.png'
+    : '/og-image-ss.png';
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="group relative w-full overflow-hidden rounded-xl border border-border bg-muted/30 aspect-video flex items-center justify-center transition-all hover:border-border/60 hover:bg-muted/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        aria-label="Play demo video"
+        style={{
+          backgroundImage: !thumbnailLoaded ? 'url(/og-image.png)' : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <img
+          src={thumbnailSrc}
+          alt="PDFx demo video thumbnail"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${thumbnailLoaded ? 'opacity-100' : 'opacity-0'}`}
+          onLoad={() => setThumbnailLoaded(true)}
+          onError={() => {
+            setThumbnailError(true);
+            setThumbnailLoaded(true);
+          }}
+        />
+        <div className="relative z-10 flex flex-col items-center gap-3">
+          <div className="h-16 w-16 rounded-full bg-background/90 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+            <PlayCircle className="h-8 w-8 text-foreground" />
+          </div>
+          <span className="text-sm font-medium text-white drop-shadow">Watch demo</span>
+        </div>
+      </button>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          onClick={() => setOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setOpen(false);
+          }}
+        >
+          <div
+            className="relative w-full max-w-3xl aspect-video rounded-xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            <iframe
+              src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+              title="PDFx demo video"
+              allow="autoplay; fullscreen"
+              className="w-full h-full border-0"
+            />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 
 function InvoiceCard() {
   return (
@@ -228,8 +303,6 @@ function ContractCard() {
   );
 }
 
-// ─── Floating card wrapper ────────────────────────────────────────────────────
-
 interface FloatingCardProps {
   children: React.ReactNode;
   motionStyle?: Record<string, unknown>;
@@ -276,8 +349,6 @@ function FloatingCard({
     </motion.div>
   );
 }
-
-// ─── Desktop parallax hero ────────────────────────────────────────────────────
 
 function HeroCardsDesktop() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -370,8 +441,6 @@ function HeroCardsDesktop() {
   );
 }
 
-// ─── Mobile stacked cards preview ────────────────────────────────────────────
-
 function HeroCardsMobile() {
   return (
     <div
@@ -420,8 +489,6 @@ function HeroCardsMobile() {
   );
 }
 
-// ─── Quick install ────────────────────────────────────────────────────────────
-
 function QuickInstall() {
   const [copied, setCopied] = useState(false);
   const cmd = 'npx @akii09/pdfx-cli init';
@@ -447,8 +514,6 @@ function QuickInstall() {
     </button>
   );
 }
-
-// ─── Component preview strip ──────────────────────────────────────────────────
 
 const componentPreviews = [
   {
@@ -649,8 +714,6 @@ const componentPreviews = [
   },
 ];
 
-// ─── Features ─────────────────────────────────────────────────────────────────
-
 const features = [
   {
     title: 'Copy & own',
@@ -683,8 +746,6 @@ const features = [
       'MIT licensed. Free for personal and commercial projects. Contributions always welcome.',
   },
 ];
-
-// ─── Main Home Page ───────────────────────────────────────────────────────────
 
 export default function HomePage() {
   return (
@@ -747,7 +808,7 @@ export default function HomePage() {
                 transition={{ duration: 0.5, delay: 0.12 }}
                 className="text-base xl:text-lg text-muted-foreground mb-8 leading-relaxed"
               >
-                Copy, paste, customize. Professional PDFs with a component library you fully own —
+                Copy, paste, customize. Professional PDFs with a component library you fully own
                 built on @react-pdf/renderer.
               </motion.p>
 
@@ -793,6 +854,14 @@ export default function HomePage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.38 }}
+              >
+                <SocialProofStats />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
               >
                 <a
                   href="https://github.com/akii09/pdfx"
@@ -910,6 +979,35 @@ export default function HomePage() {
               <HeroCardsMobile />
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* ── DEMO VIDEO ──────────────────────────────────────────────────────── */}
+      <section
+        className="py-16 sm:py-20 px-4 sm:px-6 border-t border-border/60"
+        aria-label="See PDFx in action"
+      >
+        <div className="max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-8"
+          >
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">See it in action</h2>
+            <p className="text-muted-foreground">
+              Watch how to create a PDF invoice from scratch in just a few steps.
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.55, delay: 0.1 }}
+          >
+            <VideoModal />
+          </motion.div>
         </div>
       </section>
 

@@ -11,6 +11,11 @@ export type WatermarkPosition =
   | 'bottom-left'
   | 'bottom-right';
 
+/**
+ * Diagonal watermark overlaid across the full page using absolute positioning.
+ * Props - `text` | `opacity` | `fontSize` | `color` | `angle` | `position` | `fixed` | `style`
+ * @see {@link PdfWatermarkProps}
+ */
 export interface PdfWatermarkProps extends Omit<PDFComponentProps, 'children'> {
   text: string;
   opacity?: number;
@@ -18,6 +23,9 @@ export interface PdfWatermarkProps extends Omit<PDFComponentProps, 'children'> {
   color?: string;
   angle?: number;
   position?: WatermarkPosition;
+  /**
+   * @default true
+   */
   fixed?: boolean;
   children?: never;
 }

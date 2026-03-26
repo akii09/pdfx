@@ -12,49 +12,39 @@ export type PageFooterVariant =
   | 'three-column'
   | 'detailed';
 
+/**
+ * Footer row with layout variants, optional sticky or fixed positioning, and contact info support.
+ * Props - `leftText` | `rightText` | `centerText` | `variant` | `background` | `textColor` | `marginTop` | `address` | `phone` | `email` | `website` | `fixed` | `sticky` | `pagePadding` | `noWrap` | `style`
+ * @see {@link PageFooterProps}
+ */
 export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
-  /** Left-aligned footer text (e.g., company name, copyright notice). */
   leftText?: string;
-  /** Right-aligned footer text (e.g., page number, document version). */
   rightText?: string;
-  /** Center-aligned footer text — used by `simple` and `centered` variants. */
   centerText?: string;
-  /** Visual layout variant. @default 'simple' */
+  /**
+   * @default 'simple'
+   */
   variant?: PageFooterVariant;
-  /** Background color override — accepts a theme token key or a hex string. */
   background?: string;
-  /** Text color override applied to all footer text — accepts a theme token key or a hex string. */
   textColor?: string;
-  /** Top margin in PDF points. Defaults to `theme.spacing.sectionGap`. */
   marginTop?: number;
-  /** Street / mailing address — used by `three-column` and `detailed` variants. */
   address?: string;
-  /** Phone number — used by `three-column` and `detailed` variants. */
   phone?: string;
-  /** Email address — used by `three-column` and `detailed` variants. */
   email?: string;
-  /** Website URL — used by `three-column` and `detailed` variants. */
   website?: string;
   /**
-   *  Fix this footer to the bottom of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.
    * @default false
    */
   fixed?: boolean;
-
   /**
-   * Render this footer at the bottom of the page, but allow it to scroll with the content if the page is long enough. This is achieved using absolute positioning with `position: 'absolute'` and `bottom: 0`.
    * @default false
    */
   sticky?: boolean;
-
   /**
-   * When using `sticky`, this value sets the `left` and `right` offsets to match the page's horizontal padding, ensuring the footer content is aligned with the rest of the page content.
    * @default 0
    */
   pagePadding?: number;
-
   /**
-   * Prevent the footer from being split across PDF pages when placed inline.
    * @default true
    */
   noWrap?: boolean;
@@ -73,7 +63,6 @@ function createPageFooterStyles(t: PdfxTheme) {
   };
 
   return StyleSheet.create({
-    // ── Simple variant ──────────────────────────────────────────────────
     simpleContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -85,7 +74,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       borderTopStyle: 'solid',
     },
 
-    // ── Centered variant ────────────────────────────────────────────────
     centeredContainer: {
       display: 'flex',
       flexDirection: 'column',
@@ -96,7 +84,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       borderTopStyle: 'solid',
     },
 
-    // ── Minimal variant ─────────────────────────────────────────────────
     minimalContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -106,7 +93,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       paddingBottom: spacing[1],
     },
 
-    // ── Branded variant ─────────────────────────────────────────────────
     brandedContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -117,7 +103,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       paddingVertical: spacing[3],
     },
 
-    // ── Text styles ─────────────────────────────────────────────────────
     textLeft: {
       ...textBase,
       flex: 1,
@@ -147,7 +132,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       textAlign: 'right',
     },
 
-    // ── Three-column variant ──────────────────────────────────────────
     threeColumnContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -183,12 +167,10 @@ function createPageFooterStyles(t: PdfxTheme) {
     contactInfoCenter: {
       ...textBase,
       textAlign: 'center',
-      // Slightly smaller than xs to keep multi-line contact info compact in the center column.
       fontSize: t.primitives.typography.xs - 1,
       marginTop: spacing[0.5],
     },
 
-    // ── Detailed variant ──────────────────────────────────────────────
     detailedContainer: {
       display: 'flex',
       flexDirection: 'column',
@@ -254,18 +236,10 @@ export function PageFooter({
   const isFixed = fixed || sticky;
   const mt = sticky ? 0 : (marginTop ?? theme.spacing.sectionGap);
   const resolvedTextColor = textColor ? resolveColor(textColor, theme.colors) : undefined;
-  /**
-   * The sticky style is built dynamically so `pagePadding` is reflected in
-   * `left`/`right`, matching the page's horizontal padding exactly.
-   */
   const stickyStyle: Style = sticky
     ? { position: 'absolute', bottom: pagePadding, left: pagePadding, right: pagePadding }
     : {};
 
-  /**
-   * Appends background + custom style + sticky overrides to a container style array.
-   * sticky style is always last so it wins over all other overrides.
-   */
   function applyOverrides(base: Style[]): Style[] {
     if (background) base.push({ backgroundColor: resolveColor(background, theme.colors) });
     if (style) base.push(style);
@@ -273,7 +247,6 @@ export function PageFooter({
     return base;
   }
 
-  // ── Branded ──────────────────────────────────────────────────────────
   if (variant === 'branded') {
     const containerStyles = applyOverrides([styles.brandedContainer, { marginTop: mt }]);
 
@@ -292,7 +265,6 @@ export function PageFooter({
     );
   }
 
-  // ── Centered ─────────────────────────────────────────────────────────
   if (variant === 'centered') {
     const containerStyles = applyOverrides([styles.centeredContainer, { marginTop: mt }]);
 
@@ -307,7 +279,6 @@ export function PageFooter({
     );
   }
 
-  // ── Three-column ────────────────────────────────────────────────────
   if (variant === 'three-column') {
     const containerStyles = applyOverrides([styles.threeColumnContainer, { marginTop: mt }]);
 
@@ -338,7 +309,6 @@ export function PageFooter({
     );
   }
 
-  // ── Detailed ─────────────────────────────────────────────────────────
   if (variant === 'detailed') {
     const containerStyles = applyOverrides([styles.detailedContainer, { marginTop: mt }]);
 
@@ -371,7 +341,6 @@ export function PageFooter({
     );
   }
 
-  // ── Minimal ──────────────────────────────────────────────────────────
   if (variant === 'minimal') {
     const containerStyles = applyOverrides([styles.minimalContainer, { marginTop: mt }]);
 
@@ -390,7 +359,6 @@ export function PageFooter({
     );
   }
 
-  // ── Simple (default) ─────────────────────────────────────────────────
   const containerStyles = applyOverrides([styles.simpleContainer, { marginTop: mt }]);
 
   const lStyle: Style[] = [styles.textLeft];

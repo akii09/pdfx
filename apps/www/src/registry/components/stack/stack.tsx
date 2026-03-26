@@ -8,20 +8,33 @@ export type StackDirection = 'vertical' | 'horizontal';
 export type StackAlign = 'start' | 'center' | 'end' | 'stretch';
 export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'around';
 
+/**
+ * Flex layout container with gap and direction control.
+ * Props - `gap` | `direction` | `align` | `justify` | `wrap` | `noWrap` | `children` | `style`
+ * @see {@link StackProps}
+ */
 export interface StackProps extends PDFComponentProps {
-  /** Space between child elements. @default 'md' */
+  /**
+   * @default 'md'
+   */
   gap?: StackGap;
-  /** Layout direction. @default 'vertical' */
+  /**
+   * @default 'vertical'
+   */
   direction?: StackDirection;
-  /** Cross-axis alignment (align-items). @default 'start' */
+  /**
+   * @default 'start'
+   */
   align?: StackAlign;
-  /** Main-axis distribution (justify-content). @default 'start' */
+  /**
+   * @default 'start'
+   */
   justify?: StackJustify;
-  /** Allow children to wrap onto multiple lines when the container is full. @default false */
+  /**
+   * @default false
+   */
   wrap?: boolean;
   /**
-   * Prevent the stack from splitting across PDF pages.
-   * Use for short groups that should always stay on one page.
    * @default false
    */
   noWrap?: boolean;

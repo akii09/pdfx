@@ -8,22 +8,37 @@ export type TextVariant = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl';
 export type TextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 export type TextDecoration = 'underline' | 'line-through' | 'none';
 
+/**
+ * Body text with typography scale, alignment, and decoration options.
+ * Props - `variant` | `align` | `color` | `weight` | `italic` | `decoration` | `transform` | `noMargin` | `children` | `style`
+ * @see {@link TextProps}
+ */
 export interface TextProps extends PDFComponentProps {
-  /** Font size preset mapped from the theme typography scale. @default 'base' */
+  /**
+   * @default 'base'
+   */
   variant?: TextVariant;
-  /** Horizontal text alignment. @default 'left' */
+  /**
+   * @default 'left'
+   */
   align?: 'left' | 'center' | 'right' | 'justify';
-  /** Text color — accepts a theme token ('primary', 'muted') or any hex/rgb value. */
   color?: string;
-  /** Font weight override. @default 'normal' */
+  /**
+   * @default 'normal'
+   */
   weight?: TextWeight;
-  /** Render text in italic style. @default false */
+  /**
+   * @default false
+   */
   italic?: boolean;
-  /** Text decoration style. @default 'none' */
+  /**
+   * @default 'none'
+   */
   decoration?: TextDecoration;
-  /** CSS text-transform applied to the text. */
   transform?: 'uppercase' | 'lowercase' | 'capitalize';
-  /** When true, removes the default bottom margin. @default false */
+  /**
+   * @default false
+   */
   noMargin?: boolean;
 }
 

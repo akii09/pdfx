@@ -4,120 +4,39 @@
 ![npm](https://img.shields.io/npm/v/@akii09/pdfx-cli?style=flat-square&label=cli)
 ![Downloads](https://img.shields.io/npm/dm/@akii09/pdfx-cli?style=flat-square)
 
-**Beautiful PDF components for React. Copy-paste. No lock-in.**
-
-Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by shadcn/ui — PDFx gives you pre-built, themeable document components and a CLI to add them directly into your codebase.
-
----
+Pre-built PDF components for React. Copy them into your project, own them completely. Built on [@react-pdf/renderer](https://react-pdf.org/). No runtime dependency on PDFx.
 
 [![PDFx Demo](https://pdfx.akashpise.dev/og-image.png)](https://pdfx.akashpise.dev/)
 
----
-
-## Features
-
-- **Copy-paste components** — Components live in your project. No PDFx runtime dependency.
-- **Theme system** — Control typography, spacing, colors, and page settings from a single config.
-- **CLI** — `npx @akii09/pdfx-cli init`, `add`, `theme switch` for instant setup.
-- **TypeScript** — Full type safety with Zod validation throughout.
-
-## Prerequisites
-
-**To use PDFx (consumers):**
-- Node.js ≥ 20.0.0
-- A React project with `@react-pdf/renderer` installed
-
-**To develop PDFx (contributors):**
-- Node.js ≥ 24.0.0
-- pnpm ≥ 10.0.0
-
-## Quick Start
+## Get started
 
 ```bash
-# Initialize PDFx in your project
-npx @akii09/pdfx-cli@beta init
-
-# Add components
-npx @akii09/pdfx-cli add heading
-npx @akii09/pdfx-cli add text table
-
-# Use them in your React component
+npx @akii09/pdfx-cli init
+npx @akii09/pdfx-cli add heading text badge
 ```
 
 ```tsx
 import { Document, Page } from '@react-pdf/renderer';
-import { Heading, Text } from './components/pdfx';
+import { Heading, Text, Badge } from './components/pdfx';
 
 export default () => (
   <Document>
     <Page>
-      <Heading level={1}>Hello PDFx</Heading>
-      <Text>Beautiful PDFs with minimal effort.</Text>
+      <Heading level={1}>Invoice #1042</Heading>
+      <Badge label="Paid" variant="success" />
+      <Text>Thank you for your business.</Text>
     </Page>
   </Document>
 );
 ```
 
-## CLI
+## Documentation
 
-| Command | Description |
-|---------|-------------|
-| `npx @akii09/pdfx-cli init` | Initialize PDFx in your project |
-| `npx @akii09/pdfx-cli add <component-name>` | Add a component from the registry |
-| `npx @akii09/pdfx-cli add <component-name> --force` | Overwrite an existing component |
-| `npx @akii09/pdfx-cli list` | List all available components |
-| `npx @akii09/pdfx-cli diff <component-name>` | Compare local vs registry version |
-| `npx @akii09/pdfx-cli theme init` | Set up the theme file |
-| `npx @akii09/pdfx-cli theme switch <preset>` | Switch theme preset |
-| `npx @akii09/pdfx-cli theme validate` | Validate your theme file |
-| `npx @akii09/pdfx-cli block add <block-name>` | Add a block to your project |
-| `npx @akii09/pdfx-cli block list` | List available blocks |
-
-## Theme Presets
-
-| Preset | Best for |
-|--------|----------|
-| `professional` | Business documents, reports, formal content |
-| `modern` | Tech-forward docs, vibrant colors |
-| `minimal` | Clean documentation, simple layouts |
-
-## Available Components
-
-Run `npx @akii09/pdfx-cli list` to see all components with install status.
-
-**Core**: `heading` `text` `divider` `page-break` `page-number` `keep-together`
-**Layout**: `stack` `section` `page-header` `page-footer`
-**Data**: `table` `data-table` `list` `key-value`
-**Visual**: `alert` `badge` `card` `link` `pdf-image` `graph` `qrcode` `watermark`
-**Forms**: `form` `signature`
-
-## Project Structure
-
-```
-pdfx/
-├── apps/
-│   └── www/                    # Documentation site + component registry
-│       └── src/registry/
-│           ├── components/     # Component source (copy-paste target)
-│           ├── blocks/         # Block templates
-│           └── index.json      # Registry manifest
-├── packages/
-│   ├── shared/       # Types, schemas, theme system (used by CLI + www)
-│   └── cli/          # pdfx CLI
-└── turbo.json
-```
-
-Components live in `apps/www/src/registry/components/` — the same directory the registry serves from. No separate private package. This is the true shadcn/components model: the website and the registry are the same thing.
+Visit [pdfx.akashpise.dev](https://pdfx.akashpise.dev/docs) for the full docs, component previews, and block templates.
 
 ## Contributing
 
-Contributions are welcome — bug fixes, new components, docs improvements, or ideas.
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started.
-
-## Releases
-
-See [Releases](https://github.com/akii09/pdfx/releases) for changelogs and version history.
+Please read the [contributing guide](./CONTRIBUTING.md) before opening a PR.
 
 ## License
 

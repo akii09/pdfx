@@ -2,16 +2,14 @@ import { View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import type { ReactNode } from 'react';
 
-/** Props for the KeepTogether layout wrapper. */
+/**
+ * Layout wrapper that prevents its children from splitting across PDF pages.
+ * Props - `children` | `minPresenceAhead` | `style`
+ * @see {@link KeepTogetherProps}
+ */
 export interface KeepTogetherProps {
-  /** Content to keep together on the same PDF page. */
   children?: ReactNode;
-  /**
-   * Minimum space in points that must be available on the current page before
-   * the group is placed. If insufficient space remains, the group moves to the next page.
-   */
   minPresenceAhead?: number;
-  /** Custom @react-pdf/renderer styles applied to the container view. */
   style?: Style;
 }
 

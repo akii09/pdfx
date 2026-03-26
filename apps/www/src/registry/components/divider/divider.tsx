@@ -4,25 +4,30 @@ import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { resolveColor } from '../../lib/resolve-color.js';
 
-/** Line style of the divider. */
 export type DividerVariant = 'solid' | 'dashed' | 'dotted';
-/** Visual weight of the divider line. */
 export type DividerThickness = 'thin' | 'medium' | 'thick';
-/** Vertical margin preset applied above and below the divider. */
 export type DividerSpacing = 'none' | 'sm' | 'md' | 'lg';
 
+/**
+ * Horizontal rule with optional label, style variants, and spacing presets.
+ * Props - `spacing` | `variant` | `color` | `thickness` | `label` | `width` | `style`
+ * @see {@link DividerProps}
+ */
 export interface DividerProps extends Omit<PDFComponentProps, 'children'> {
-  /** Vertical margin above and below the divider. @default 'md' */
+  /**
+   * @default 'md'
+   */
   spacing?: DividerSpacing;
-  /** Line style of the divider. @default 'solid' */
+  /**
+   * @default 'solid'
+   */
   variant?: DividerVariant;
-  /** Line and label color — accepts a theme token ('primary', 'muted') or any hex/rgb value. */
   color?: string;
-  /** Line weight. @default 'thin' */
+  /**
+   * @default 'thin'
+   */
   thickness?: DividerThickness;
-  /** Optional centered label text rendered on top of the divider line. */
   label?: string;
-  /** Fixed width of the divider. Omit to span full width. */
   width?: string | number;
 }
 

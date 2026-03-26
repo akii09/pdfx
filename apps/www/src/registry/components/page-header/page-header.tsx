@@ -14,43 +14,32 @@ export type PageHeaderVariant =
   | 'logo-right'
   | 'two-column';
 
+/**
+ * Header row with layout variants, logo support, and optional fixed positioning.
+ * Props - `title` | `subtitle` | `rightText` | `rightSubText` | `variant` | `background` | `titleColor` | `marginBottom` | `address` | `phone` | `email` | `logo` | `fixed` | `noWrap` | `style`
+ * @see {@link PageHeaderProps}
+ */
 export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
-  /** Main heading text displayed prominently in the header. */
   title: string;
-  /** Secondary line rendered below the title. */
   subtitle?: string;
-  /** Right-aligned primary text (e.g., date, document number). */
   rightText?: string;
-  /** Right-aligned secondary text rendered below `rightText` (e.g., "Confidential"). */
   rightSubText?: string;
-  /** Visual layout variant. @default 'simple' */
-  variant?: PageHeaderVariant;
-  /** Background color override — accepts a theme token key or a hex string. */
-  background?: string;
-  /** Title text color override — accepts a theme token key or a hex string. */
-  titleColor?: string;
-  /** Bottom margin in PDF points. Defaults to `theme.spacing.sectionGap`. */
-  marginBottom?: number;
-  /** Street / mailing address line — used by `two-column` variant. */
-  address?: string;
-  /** Phone number — used by `two-column` variant. */
-  phone?: string;
-  /** Email address — used by `two-column` variant. */
-  email?: string;
   /**
-   * Logo element rendered alongside text in `logo-left` and `logo-right` variants.
-   * @example <Image src="/logo.png" style={{ width: 48, height: 48 }} />
+   * @default 'simple'
    */
+  variant?: PageHeaderVariant;
+  background?: string;
+  titleColor?: string;
+  marginBottom?: number;
+  address?: string;
+  phone?: string;
+  email?: string;
   logo?: ReactNode;
-
   /**
-   * Fix this header to the top of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.
    * @default false
    */
   fixed?: boolean;
-
   /**
-   * Prevent the header from being split across PDF pages when placed inline. A partially-rendered header is always visually broken, so this defaults to true. Set to false only for decorative banners that can tolerate splitting.
    * @default true
    */
   noWrap?: boolean;
@@ -62,7 +51,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
   const { heading, body } = t.typography;
 
   return StyleSheet.create({
-    // ── Simple variant ──────────────────────────────────────────────────
     simpleContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -84,7 +72,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       alignItems: 'flex-end',
     },
 
-    // ── Centered variant ────────────────────────────────────────────────
     centeredContainer: {
       display: 'flex',
       flexDirection: 'column',
@@ -95,7 +82,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       borderBottomStyle: 'solid',
     },
 
-    // ── Minimal variant ─────────────────────────────────────────────────
     minimalContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -113,7 +99,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       alignItems: 'flex-end',
     },
 
-    // ── Branded variant ─────────────────────────────────────────────────
     brandedContainer: {
       display: 'flex',
       flexDirection: 'column',
@@ -123,7 +108,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       borderRadius: borderRadius.sm,
     },
 
-    // ── Typography ──────────────────────────────────────────────────────
     title: {
       fontFamily: heading.fontFamily,
       fontSize: heading.fontSize.h3,
@@ -173,7 +157,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       marginTop: spacing[1],
     },
 
-    // ── Logo-left variant ───────────────────────────────────────────────
     logoLeftContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -194,7 +177,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       flexDirection: 'column',
     },
 
-    // ── Logo-right variant ──────────────────────────────────────────────
     logoRightContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -216,7 +198,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       height: 48,
     },
 
-    // ── Two-column variant ──────────────────────────────────────────────
     twoColumnContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -268,7 +249,6 @@ export function PageHeader({
   const styles = useSafeMemo(() => createPageHeaderStyles(theme), [theme]);
   const mb = marginBottom ?? theme.spacing.sectionGap;
 
-  // ── Branded ─────────────────────────────────────────────────────────
   if (variant === 'branded') {
     const containerStyles: Style[] = [styles.brandedContainer, { marginBottom: mb }];
     if (background) {
@@ -289,7 +269,6 @@ export function PageHeader({
     );
   }
 
-  // ── Centered ────────────────────────────────────────────────────────
   if (variant === 'centered') {
     const containerStyles: Style[] = [styles.centeredContainer, { marginBottom: mb }];
     if (background) {
@@ -310,7 +289,6 @@ export function PageHeader({
     );
   }
 
-  // ── Logo-right ──────────────────────────────────────────────────────
   if (variant === 'logo-right') {
     const containerStyles: Style[] = [styles.logoRightContainer, { marginBottom: mb }];
     if (background) {
@@ -332,7 +310,6 @@ export function PageHeader({
     );
   }
 
-  // ── Logo-left ───────────────────────────────────────────────────────
   if (variant === 'logo-left') {
     const containerStyles: Style[] = [styles.logoLeftContainer, { marginBottom: mb }];
     if (background) {
@@ -360,7 +337,6 @@ export function PageHeader({
     );
   }
 
-  // ── Two-column ──────────────────────────────────────────────────────
   if (variant === 'two-column') {
     const containerStyles: Style[] = [styles.twoColumnContainer, { marginBottom: mb }];
     if (background) {
@@ -388,7 +364,6 @@ export function PageHeader({
     );
   }
 
-  // ── Minimal ─────────────────────────────────────────────────────────
   if (variant === 'minimal') {
     const containerStyles: Style[] = [styles.minimalContainer, { marginBottom: mb }];
     if (background) {
@@ -415,7 +390,6 @@ export function PageHeader({
     );
   }
 
-  // ── Simple (default) ────────────────────────────────────────────────
   const containerStyles: Style[] = [styles.simpleContainer, { marginBottom: mb }];
   if (background) {
     containerStyles.push({ backgroundColor: resolveColor(background, theme.colors) });

@@ -1,150 +1,172 @@
 # Contributing to PDFx
 
-Thank you for your interest in contributing to PDFx. This guide covers everything you need to get started, including the full step-by-step process for adding new components.
-
-## Table of Contents
-
-- [Code of Conduct](#code-of-conduct)
-- [Development Setup](#development-setup)
-- [How to Contribute](#how-to-contribute)
-- [Adding a New Component](#adding-a-new-component)
-- [Adding a New Theme Preset](#adding-a-new-theme-preset)
-- [Project Conventions](#project-conventions)
+PDFx is a copy-paste PDF component library built on react-pdf. Before anything else, read the [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ---
 
-## Code of Conduct
+## Before You Start
 
-This project follows the [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you agree to uphold it. Please report unacceptable behavior via [GitHub Discussions](https://github.com/akii09/pdfx/discussions).
+For anything beyond a typo fix, open an issue first. It takes 2 minutes and saves you from building something that won't be merged. Describe what you want to change and why if it fits the project direction, we'll say so and you can proceed.
 
 ---
 
-## Development Setup
+## Setup
+
+You need a **fork**. You don't have push access to this repo, so all PRs must come from your own fork.
+
+**Requirements:** Node.js 24+, pnpm 10+
 
 ```bash
-# Prerequisites: Node 24+ (dev), pnpm 10+
-# Note: The CLI validates consumers against Node 20+, but development requires Node 24+.
-# Clone your fork
-git clone https://github.com/YOUR_USERNAME/pdfx.git
+# 1. Fork on GitHub (click the Fork button on github.com/akii09/pdfx)
+
+# 2. Clone your fork
+git clone https://github.com/<your-username>/pdfx.git
 cd pdfx
 
-# Install all dependencies (pnpm workspaces)
+# 3. Add upstream so you can sync later
+git remote add upstream https://github.com/akii09/pdfx.git
+
+# 4. Install and build
 pnpm install
-
-# Build all packages first (required before running apps)
 pnpm build
-
-# Run dev servers
-pnpm dev              # All apps in parallel
-pnpm dev:www          # Docs site only  (http://localhost:5173)
+pnpm dev
 ```
 
-### Quality checks (run before submitting a PR)
+**Keeping your fork in sync** -  always do this before starting new work:
 
 ```bash
-pnpm lint        # Biome lint + format check
-pnpm typecheck   # TypeScript strict check across all packages
-pnpm test        # Vitest unit tests
-pnpm build       # Full monorepo build
+git fetch upstream
+git rebase upstream/main
+```
+
+### Commands
+
+| Command | What it does |
+|---------|-------------|
+| `pnpm dev` | Start docs site + CLI watch mode |
+| `pnpm dev:www` | Docs site only at localhost:3000 |
+| `pnpm build` | Build all packages |
+| `pnpm build:registry` | Rebuild the component registry JSON |
+| `pnpm test` | Run all tests |
+| `pnpm lint` | Biome lint + format check |
+| `pnpm typecheck` | TypeScript strict check |
+| `pnpm format` | Auto-format with Biome |
+
+Run this before opening a PR:
+
+```bash
+pnpm lint && pnpm typecheck && pnpm test && pnpm build
 ```
 
 ---
 
-## How to Contribute
+## Project Structure
 
-### Reporting Bugs
+```
+apps/
+  www/                        # Docs site + component registry
+    src/
+      registry/
+        components/           # 24 PDF components (alert, badge, table, ...)
+        blocks/               # Pre-built PDF templates (invoices, reports)
+        index.json            # Registry manifest consumed by the CLI
+      constants/              # Usage code + props tables for each docs page
+      pages/components/       # Individual component docs pages
 
-- Open a [GitHub Issue](https://github.com/akii09/pdfx/issues) using the Bug Report template
-- Include: steps to reproduce, expected vs. actual behavior, your environment (Node, pnpm, OS)
+packages/
+  shared/                     # Shared types, theme system, theme presets
+  cli/                        # `pdfx add <component>` CLI tool
+```
 
-### Suggesting Features
+### How the registry works
 
-- Open an issue with the `enhancement` label
-- Describe the use case and why it would benefit other developers
-
-### Pull Requests
-
-1. **Fork** the repo and clone it
-2. **Install** dependencies: `pnpm install`
-3. **Create a branch**: `git checkout -b feat/your-feature` or `fix/your-fix`
-4. **Make changes** following the project conventions below
-5. **Test**: `pnpm lint && pnpm typecheck && pnpm test && pnpm build`
-6. **Commit** using [Conventional Commits](https://www.conventionalcommits.org/) (e.g. `feat: add Badge component`)
-7. **Push** and open a PR against `main`
-
----
-
-## Adding a New Component
-
-This is a complete walkthrough for adding a new PDF component (e.g. `MyWidget`) to the registry.
-
-### Overview of Files to Create/Modify
-
-| File | Action |
-|------|--------|
-| `apps/www/src/registry/components/my-widget/my-widget.tsx` | Create — component source |
-| `apps/www/src/registry/components/my-widget/my-widget.styles.ts` | Create — StyleSheet factory |
-| `apps/www/src/registry/components/my-widget/my-widget.types.ts` | Create — TypeScript interfaces |
-| `apps/www/src/registry/components/my-widget/my-widget.test.tsx` | Create — smoke tests |
-| `apps/www/src/registry/components/my-widget/index.ts` | Create — barrel re-export |
-| `apps/www/src/registry/components/index.ts` | Edit — re-export the component |
-| `apps/www/src/registry/index.json` | Edit — register the component |
-| `apps/www/src/constants/my-widget.constant.ts` | Create — usage code + props table |
-| `apps/www/src/constants/index.ts` | Edit — re-export constants |
-| `apps/www/src/pages/components/my-widget.tsx` | Create — documentation page |
-| `apps/www/src/app/App.tsx` | Edit — add route |
-| `apps/www/src/pages/components/index.tsx` | Edit — add to component list |
+The docs site (`apps/www`) serves component source files as JSON. When someone runs `pdfx add badge`, the CLI fetches the badge entry from `registry/index.json`, resolves the file list, and copies the source directly into their project. No runtime dependency on PDFx, the files are theirs once installed.
 
 ---
 
-### Step 1: Create the Component
+## Monorepo Packages
 
-Create `apps/www/src/registry/components/my-widget/my-widget.types.ts`:
+### `packages/shared`
+
+Shared TypeScript types, the theme interface, primitives, and the three built-in theme presets: `professional`, `modern`, `minimal`. All components consume `PdfxTheme` from here, no component imports its own colors directly.
+
+### `packages/cli`
+
+The `pdfx` CLI. Handles `pdfx init`, `pdfx add <component>`, and `pdfx list`. Fetches from the live registry by default; can target a local registry with `--registry`.
+
+### `apps/www`
+
+The docs site and the registry server. Built with Vite + React. The registry build step (`pnpm build:registry`) reads `src/registry/components/` and writes `src/registry/index.json`.
+
+---
+
+## Adding a Component
+
+Each component lives in its own folder under `apps/www/src/registry/components/<name>/`.
+
+### Files
+
+```
+components/my-widget/
+  my-widget.types.ts      # TypeScript interfaces
+  my-widget.styles.ts     # StyleSheet factory function
+  my-widget.tsx           # Component
+  my-widget.test.tsx      # Smoke tests
+  index.ts                # Barrel export
+```
+
+### 1. Types
 
 ```ts
+// my-widget.types.ts
 import type { PDFComponentProps } from '@pdfx/shared';
 
 export type MyWidgetVariant = 'default' | 'primary';
 
+/**
+ * Short description of what this component renders.
+ * Props - `label` | `variant` | `style`
+ * @see {@link MyWidgetProps}
+ */
 export interface MyWidgetProps extends Omit<PDFComponentProps, 'children'> {
-  /** The content to display */
   label: string;
-  /** Visual variant */
+  /**
+   * @default 'default'
+   */
   variant?: MyWidgetVariant;
-  /** Custom background color. Use a theme token or CSS color. */
-  background?: string;
 }
 ```
 
-Create `apps/www/src/registry/components/my-widget/my-widget.styles.ts`:
+### 2. Styles
 
 ```ts
+// my-widget.styles.ts
 import type { PdfxTheme } from '@pdfx/shared';
 import { StyleSheet } from '@react-pdf/renderer';
 
 export function createMyWidgetStyles(t: PdfxTheme) {
   const { spacing } = t.primitives;
-  const c = t.colors;
 
   return StyleSheet.create({
     container: {
       padding: spacing[3],
       borderRadius: t.primitives.borderRadius.md,
     },
-    variantDefault: { backgroundColor: c.muted },
-    variantPrimary: { backgroundColor: c.primary },
+    variantDefault: { backgroundColor: t.colors.muted },
+    variantPrimary: { backgroundColor: t.colors.primary },
     text: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      color: c.foreground,
+      color: t.colors.foreground,
     },
   });
 }
 ```
 
-Create `apps/www/src/registry/components/my-widget/my-widget.tsx`:
+### 3. Component
 
 ```tsx
+// my-widget.tsx
 import { Text as PDFText, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
@@ -152,12 +174,7 @@ import { resolveColor } from '../../lib/resolve-color';
 import { createMyWidgetStyles } from './my-widget.styles';
 import type { MyWidgetProps } from './my-widget.types';
 
-export function MyWidget({
-  label,
-  variant = 'default',
-  background,
-  style,
-}: MyWidgetProps) {
+export function MyWidget({ label, variant = 'default', style }: MyWidgetProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createMyWidgetStyles(theme), [theme]);
 
@@ -165,12 +182,7 @@ export function MyWidget({
     styles.container,
     variant === 'primary' ? styles.variantPrimary : styles.variantDefault,
   ];
-
-  if (background) {
-    containerStyles.push({ backgroundColor: resolveColor(background, theme.colors) });
-  }
-
-  if (style) containerStyles.push(style);
+  if (style) containerStyles.push(...[style].flat());
 
   return (
     <View style={containerStyles}>
@@ -180,28 +192,10 @@ export function MyWidget({
 }
 ```
 
-Create `apps/www/src/registry/components/my-widget/index.ts`:
-
-```ts
-export { MyWidget } from './my-widget';
-export type { MyWidgetProps, MyWidgetVariant } from './my-widget.types';
-```
-
-**Key patterns to follow:**
-
-- Derive all styles from `t` (the theme) inside the styles factory — zero hardcoded pixel values
-- Use `resolveColor(value, theme.colors)` to resolve theme token names **and** pass raw CSS colors through unchanged
-- Call `usePdfxTheme()` and memoize styles with `useSafeMemo(() => createXStyles(theme), [theme])`
-- Compose style arrays: `[base, variant, dynamic, override]` — style override always last
-- Extend `PDFComponentProps` from `@pdfx/shared`; use `Omit<PDFComponentProps, 'children'>` for leaf nodes
-
----
-
-### Step 2: Write Smoke Tests
-
-Create `apps/www/src/registry/components/my-widget/my-widget.test.tsx`:
+### 4. Smoke tests
 
 ```tsx
+// my-widget.test.tsx
 import { describe, expect, it } from 'vitest';
 import { MyWidget } from './my-widget';
 
@@ -209,28 +203,31 @@ describe('MyWidget', () => {
   it('renders without throwing', () => {
     expect(() => MyWidget({ label: 'Hello' })).not.toThrow();
   });
+
   it('accepts variant prop', () => {
     expect(() => MyWidget({ label: 'Hello', variant: 'primary' })).not.toThrow();
   });
 });
 ```
 
-Two assertions per component is the target. TypeScript handles prop validation statically; the smoke test catches import/runtime breakage.
+### 5. Barrel export
 
----
+```ts
+// index.ts
+export { MyWidget } from './my-widget';
+export type { MyWidgetProps, MyWidgetVariant } from './my-widget.types';
+```
 
-### Step 3: Export from the Registry
+### 6. Register the component
 
-Edit `apps/www/src/registry/components/index.ts` and add:
+Add to `apps/www/src/registry/components/index.ts`:
 
 ```ts
 export { MyWidget } from './my-widget/index';
 export type { MyWidgetProps, MyWidgetVariant } from './my-widget/index';
 ```
 
-Keep exports alphabetically ordered.
-
-Edit `apps/www/src/registry/index.json` and add an entry to `items`:
+Add to `apps/www/src/registry/index.json` under `items`:
 
 ```json
 {
@@ -248,263 +245,69 @@ Edit `apps/www/src/registry/index.json` and add an entry to `items`:
 }
 ```
 
----
+### 7. Docs page
 
-### Step 4: Create the Constants File
+Create `apps/www/src/constants/my-widget.constant.ts` with `myWidgetUsageCode` and `myWidgetProps`, then register it in `apps/www/src/constants/index.ts`.
 
-Create `apps/www/src/constants/my-widget.constant.ts`:
+Create `apps/www/src/pages/components/my-widget.tsx` using `ComponentPage` + `PDFPreview`.
 
-```ts
-export const myWidgetUsageCode = `import { Document, Page } from '@react-pdf/renderer';
-import { MyWidget } from '@/components/pdfx/pdfx-my-widget';
+Add the lazy route in `apps/www/src/app/App.tsx` and add the component entry in `apps/www/src/pages/components/index.tsx`.
 
-export function MyDocument() {
-  return (
-    <Document>
-      <Page size="A4" style={{ padding: 40 }}>
-        <MyWidget label="Hello World" />
-        <MyWidget label="Primary Style" variant="primary" />
-      </Page>
-    </Document>
-  );
-}`;
-
-export const myWidgetProps = [
-  {
-    name: 'label',
-    type: 'string',
-    required: true,
-    description: 'The text content to display inside the widget.',
-  },
-  {
-    name: 'variant',
-    type: "'default' | 'primary'",
-    defaultValue: "'default'",
-    description: 'Visual style variant.',
-  },
-  {
-    name: 'background',
-    type: 'string',
-    description: 'Custom background color. Use a theme token (e.g. "muted") or any CSS color.',
-  },
-  {
-    name: 'style',
-    type: 'Style',
-    description: 'Custom @react-pdf/renderer styles applied to the container.',
-  },
-];
-```
-
-Then register in `apps/www/src/constants/index.ts`:
-
-```ts
-export * from './my-widget.constant.js';
-```
-
----
-
-### Step 5: Create the Documentation Page
-
-Create `apps/www/src/pages/components/my-widget.tsx`:
-
-```tsx
-import { myWidgetProps, myWidgetUsageCode } from '@/constants';
-// @pdfx/components is a tsconfig path alias that resolves to apps/www/src/registry/components/
-// Components live in the registry, not a separate package.
-import { MyWidget } from '@pdfx/components';
-import { Document, Page, StyleSheet } from '@react-pdf/renderer';
-import { ComponentPage } from '../../components/component-page';
-import { PDFPreview } from '../../components/pdf-preview';
-import { useDocumentTitle } from '../../hooks/use-document-title';
-
-type MyWidgetVariant = 'default' | 'primary';
-
-const styles = StyleSheet.create({
-  page: { padding: 40 },
-});
-
-const renderPreviewDocument = (variant: MyWidgetVariant) => (
-  <Document title="PDFx MyWidget Preview">
-    <Page size="A4" style={styles.page}>
-      <MyWidget label="Example Widget" variant={variant} />
-    </Page>
-  </Document>
-);
-
-const variantOptions = [
-  { value: 'default' as MyWidgetVariant, label: 'Default' },
-  { value: 'primary' as MyWidgetVariant, label: 'Primary' },
-];
-
-export default function MyWidgetComponentPage() {
-  useDocumentTitle('MyWidget Component');
-
-  return (
-    <ComponentPage
-      title="MyWidget"
-      description="Short description of what this component does and when to use it."
-      installCommand="npx @akii09/pdfx-cli add my-widget"
-      componentName="my-widget"
-      preview={
-        <PDFPreview
-          title="Preview"
-          downloadFilename="my-widget-preview.pdf"
-          variants={{
-            options: variantOptions,
-            defaultValue: 'default' as MyWidgetVariant,
-            label: 'Variant',
-          }}
-        >
-          {/* biome-ignore lint/suspicious/noExplicitAny: Generic type workaround for React JSX components */}
-          {renderPreviewDocument as any}
-        </PDFPreview>
-      }
-      usageCode={myWidgetUsageCode}
-      usageFilename="src/components/pdfx/pdfx-my-widget.tsx"
-      props={myWidgetProps}
-    />
-  );
-}
-```
-
-**Notes on `ComponentPage` props:**
-
-| Prop | Description |
-|------|-------------|
-| `title` | Component display name |
-| `description` | One-line description for the page header |
-| `installCommand` | CLI install command shown as code |
-| `componentName` | Kebab-case name, used to build registry URL |
-| `preview` | `<PDFPreview>` element (with optional `variants` for dropdown) |
-| `usageCode` | Raw usage code string from constants file |
-| `usageFilename` | Shown in the code block header |
-| `props` | Array of `{ name, type, required?, defaultValue?, description }` |
-| `additionalInfo` | Optional JSX for extra guide sections below the props table |
-
----
-
-### Step 6: Register the Route
-
-Edit `apps/www/src/app/App.tsx`:
-
-```tsx
-// 1. Add lazy import at the top with other lazy imports
-const MyWidgetPage = lazy(() => import('../pages/components/my-widget'));
-
-// 2. Add Route inside <Route path="components">
-<Route
-  path="my-widget"
-  element={
-    <Suspense fallback={<PageLoader />}>
-      <MyWidgetPage />
-    </Suspense>
-  }
-/>
-```
-
----
-
-### Step 7: Add to the Components Index
-
-Edit `apps/www/src/pages/components/index.tsx`:
-
-```tsx
-// 1. Import an icon from lucide-react
-import { Puzzle } from 'lucide-react';
-
-// 2. Add entry to the components array
-{
-  name: 'MyWidget',
-  description: 'Short description shown on the components listing card.',
-  href: '/components/my-widget',
-  icon: Puzzle,
-  install: 'npx @akii09/pdfx-cli add my-widget',
-},
-```
-
----
-
-### Step 8: Verify
+### 8. Verify
 
 ```bash
-# Run full quality suite
 pnpm lint && pnpm typecheck && pnpm test && pnpm build
-
-# Start the docs site and navigate to /components/my-widget
 pnpm dev:www
 ```
 
-Check that:
-- The component appears in the `/components` listing
-- The doc page renders with a working PDF preview and variant dropdown
-- The props table is complete and accurate
-- All tests pass
+Check localhost:3000/components/my-widget - preview renders, `pdfx add my-widget` installs cleanly.
 
 ---
 
-## Adding a New Theme Preset
+## Adding a Theme Preset
 
-1. Create the theme in `packages/shared/src/themes/` (e.g. `academic.ts`)
-   - Copy an existing preset (e.g. `professional.ts`) as a starting point
-   - Adjust `colors`, `typography`, `spacing`, and `primitives` as needed
-2. Export from `packages/shared/src/themes/index.ts`
-3. Add to `ThemePresetName` union type and `themePresets` map in `packages/shared/src/index.ts`
-4. Update `apps/www/src/pages/components/getting-started/theming.tsx` to document the new preset
+1. Create the theme file in `packages/shared/src/themes/` (e.g. `academic.ts`) implementing `PdfxTheme`
+2. Export it from `packages/shared/src/themes/index.ts`
+3. Add it to `themePresets` and `ThemePresetName` in `packages/shared/src/themes/index.ts`
+4. Document it in `apps/www/src/pages/components/getting-started/theming.tsx`
 
 ---
 
-## Project Conventions
+## Component Rules
 
-### Code Style
-
-- **Linting & Formatting**: Biome (`pnpm lint`, `pnpm format`)
-- **TypeScript**: Strict mode — avoid `any` casts (use `as const satisfies` where appropriate)
-- **Imports**: No default exports from component/library files; default exports only for page-level components (Next.js/React Router convention)
-
-### Component Patterns
-
-- All styles derived from theme tokens — **no hardcoded pixel values**
-- `resolveColor(value, theme.colors)` for all color props — supports both token names and raw CSS
-- Style arrays composed as `[base, variant, dynamic, override]`
-- `usePdfxTheme()` + `useSafeMemo(() => createXStyles(theme), [theme])` inside the component — memoized per theme instance, safe for unit tests
+- All styles come from the theme - no hardcoded colors or pixel values
+- Use `resolveColor(value, theme.colors)` for any color prop
+- Memoize the StyleSheet: `useSafeMemo(() => createXStyles(theme), [theme])`
+- Compose style arrays as `[base, variant, dynamic, override]`
 - Extend `PDFComponentProps` from `@pdfx/shared`
-
-### Naming
-
-- Component files: `kebab-case.tsx` (e.g. `page-header.tsx`)
-- Exported symbols: `PascalCase` (e.g. `PageHeader`, `PageHeaderProps`, `PageHeaderVariant`)
-- Constants files: `kebab-case.constant.ts`
-
-### Commits
-
-Use [Conventional Commits](https://www.conventionalcommits.org/):
-- `feat: add MyWidget component`
-- `fix: correct border radius in Card bordered variant`
-- `docs: add KeyValue component page`
-- `refactor: extract shared style caching utility`
-- `test: add logo-right variant tests for PageHeader`
+- Every component needs smoke tests
 
 ---
 
-## Release Process
+## Pull Requests
 
-PDFX uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
+Branch off `main` in your fork:
 
-1. After merging your PR, add a changeset if your change affects a published package:
-   ```bash
-   pnpm changeset
-   ```
-2. Follow the prompts to select the affected packages and bump type (`patch`, `minor`, `major`).
-3. Commit the generated changeset file with your PR.
-4. When changes are merged to `main`, the **Release** workflow will open a "Version Packages" PR automatically.
-5. Merging that PR triggers a publish to npm.
+```bash
+git checkout -b feat/my-widget
+```
 
-> **Note**: Only maintainers can merge the version PR and trigger a publish.
+Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `refactor:`, `test:`.
 
-## Git Workflows
+Keep PRs focused - one component, one fix, one thing. Large mixed PRs are hard to review and slow to merge.
 
-For common git operations like **cherry-picking commits**, rebasing, and resolving conflicts, see the **[Git Workflows Guide](./.github/GIT_WORKFLOWS.md)**.
+Open as a **Draft PR** if you want early feedback before it's ready.
 
-## Questions?
+Run the full check before marking it ready:
 
-Open a [Discussion](https://github.com/akii09/pdfx/discussions) or comment on an existing issue.
+```bash
+pnpm lint && pnpm typecheck && pnpm test && pnpm build
+```
+
+Then open the PR against `akii09/pdfx:main` from your fork branch.
+
+---
+
+## Bugs and Ideas
+
+Open an [issue](https://github.com/akii09/pdfx/issues) or start a [discussion](https://github.com/akii09/pdfx/discussions). For bugs, include a minimal reproduction.
