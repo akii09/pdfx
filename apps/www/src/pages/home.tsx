@@ -68,9 +68,10 @@ function VideoModal() {
             onKeyDown={(e) => e.stopPropagation()}
           >
             <iframe
-              src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+              src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`}
               title="PDFx demo video"
-              allow="autoplay; fullscreen"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
               className="w-full h-full border-0"
             />
           </div>
