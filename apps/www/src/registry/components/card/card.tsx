@@ -6,16 +6,26 @@ import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type CardVariant = 'default' | 'bordered' | 'muted';
 
+/**
+ * Bordered content card with optional title and padding presets.
+ * Props - `title` | `children` | `variant` | `padding` | `wrap` | `style`
+ * @see {@link PdfCardProps}
+ */
 export interface PdfCardProps extends Omit<PDFComponentProps, 'children'> {
-  /** Optional card heading rendered above the content. */
   title?: string;
-  /** Card body content. */
   children?: ReactNode;
-  /** Visual style variant. @default 'default' */
+  /**
+   * @default 'default'
+   */
   variant?: CardVariant;
-  /** Internal padding preset. @default 'md' */
+  /**
+   * @default 'md'
+   */
   padding?: 'sm' | 'md' | 'lg';
-  /** Allow the card to split across PDF pages. @default true */
+  /**
+   * When false, the card will not split across PDF pages.
+   * @default false
+   */
   wrap?: boolean;
 }
 

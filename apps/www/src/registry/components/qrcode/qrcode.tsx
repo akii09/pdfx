@@ -7,6 +7,11 @@ import { resolveColor } from '../../lib/resolve-color.js';
 
 export type QRCodeErrorLevel = 'L' | 'M' | 'Q' | 'H';
 
+/**
+ * QR code rendered as an SVG grid for use in PDF documents.
+ * Props - `value` | `size` | `color` | `backgroundColor` | `errorLevel` | `margin` | `caption` | `style`
+ * @see {@link PdfQRCodeProps}
+ */
 export interface PdfQRCodeProps extends Omit<PDFComponentProps, 'children'> {
   value: string;
   size?: number;

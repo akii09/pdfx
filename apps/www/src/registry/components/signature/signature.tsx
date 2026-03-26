@@ -5,38 +5,34 @@ import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
 export type SignatureVariant = 'single' | 'double' | 'inline';
 
-/** A single signer definition used in the `double` and `inline` variants. */
+/**
+ * Signature signer properties.
+ * Props - `label` | `name` | `title` | `date`
+ * @see {@link SignatureSigner}
+ */
 export interface SignatureSigner {
-  /** Label above the signature line (e.g. "Authorized By"). */
   label?: string;
-  /** Pre-filled name below the signature line. */
   name?: string;
-  /** Job title or role displayed below the name. */
   title?: string;
-  /** Date string displayed below the title. */
   date?: string;
 }
 
+/**
+ * Signature block properties.
+ * Props - `variant` | `label` | `name` | `title` | `date` | `signers` | `style`
+ * @see {@link PdfSignatureBlockProps}
+ */
 export interface PdfSignatureBlockProps {
   /**
-   * Layout variant.
-   * - `single` — one signature block (uses top-level label/name/title/date)
-   * - `double` — two blocks side by side (uses the `signers` tuple)
-   * - `inline` — two blocks in a compact horizontal row (uses the `signers` tuple)
+   * Layout variant: [single, double, inline]
    * @default 'single'
    */
   variant?: SignatureVariant;
-  /** Label above the signature line. Used by the `single` variant. */
   label?: string;
-  /** Pre-filled name below the signature line. Used by the `single` variant. */
   name?: string;
-  /** Job title or role. Used by the `single` variant. */
   title?: string;
-  /** Date string. Used by the `single` variant. */
   date?: string;
-  /** Two signer definitions for the `double` and `inline` variants. */
   signers?: [SignatureSigner, SignatureSigner];
-  /** Custom @react-pdf/renderer styles applied to the outer container. */
   style?: Style;
 }
 

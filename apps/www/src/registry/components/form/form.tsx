@@ -5,8 +5,6 @@ import { createFormStyles } from './form.styles';
 import type { FormLayout, PdfFormField, PdfFormGroup, PdfFormProps } from './form.types';
 
 // ─── Helpers (plain functions, not React components) ──────────────────────────
-// Using plain functions ensures the rendered tree is fully resolved when
-// components are called directly in unit tests (findText traversal works).
 
 function renderFieldAbove(
   field: PdfFormField,
@@ -67,7 +65,6 @@ function renderGroup(
     );
   }
 
-  // Split fields evenly across columns
   const chunkSize = Math.ceil(group.fields.length / cols);
   const chunks: PdfFormField[][] = [];
   for (let i = 0; i < group.fields.length; i += chunkSize) {

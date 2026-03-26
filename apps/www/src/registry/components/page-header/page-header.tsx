@@ -14,43 +14,32 @@ export type PageHeaderVariant =
   | 'logo-right'
   | 'two-column';
 
+/**
+ * Header row with layout variants, logo support, and optional fixed positioning.
+ * Props - `title` | `subtitle` | `rightText` | `rightSubText` | `variant` | `background` | `titleColor` | `marginBottom` | `address` | `phone` | `email` | `logo` | `fixed` | `noWrap` | `style`
+ * @see {@link PageHeaderProps}
+ */
 export interface PageHeaderProps extends Omit<PDFComponentProps, 'children'> {
-  /** Main heading text displayed prominently in the header. */
   title: string;
-  /** Secondary line rendered below the title. */
   subtitle?: string;
-  /** Right-aligned primary text (e.g., date, document number). */
   rightText?: string;
-  /** Right-aligned secondary text rendered below `rightText` (e.g., "Confidential"). */
   rightSubText?: string;
-  /** Visual layout variant. @default 'simple' */
-  variant?: PageHeaderVariant;
-  /** Background color override — accepts a theme token key or a hex string. */
-  background?: string;
-  /** Title text color override — accepts a theme token key or a hex string. */
-  titleColor?: string;
-  /** Bottom margin in PDF points. Defaults to `theme.spacing.sectionGap`. */
-  marginBottom?: number;
-  /** Street / mailing address line — used by `two-column` variant. */
-  address?: string;
-  /** Phone number — used by `two-column` variant. */
-  phone?: string;
-  /** Email address — used by `two-column` variant. */
-  email?: string;
   /**
-   * Logo element rendered alongside text in `logo-left` and `logo-right` variants.
-   * @example <Image src="/logo.png" style={{ width: 48, height: 48 }} />
+   * @default 'simple'
    */
+  variant?: PageHeaderVariant;
+  background?: string;
+  titleColor?: string;
+  marginBottom?: number;
+  address?: string;
+  phone?: string;
+  email?: string;
   logo?: ReactNode;
-
   /**
-   * Fix this header to the top of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.
    * @default false
    */
   fixed?: boolean;
-
   /**
-   * Prevent the header from being split across PDF pages when placed inline. A partially-rendered header is always visually broken, so this defaults to true. Set to false only for decorative banners that can tolerate splitting.
    * @default true
    */
   noWrap?: boolean;

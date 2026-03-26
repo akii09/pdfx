@@ -7,44 +7,54 @@ import { resolveColor } from '../../lib/resolve-color.js';
 export type KeyValueDirection = 'horizontal' | 'vertical';
 export type KeyValueSize = 'sm' | 'md' | 'lg';
 
-/** A single key-value pair to display in the list. */
+/**
+ * A single key-value row with optional per-item color and style overrides.
+ * Props - `key` | `value` | `valueColor` | `valueStyle` | `keyStyle`
+ * @see {@link KeyValueEntry}
+ */
 export interface KeyValueEntry {
-  /** The label (key) text. */
   key: string;
-  /** The value text. */
   value: string;
-  /** Override color for this item's value — accepts a theme token or hex/rgb value. */
   valueColor?: string;
-  /** Inline style override for the value text element. */
   valueStyle?: Style;
-  /** Inline style override for the key text element. */
   keyStyle?: Style;
 }
 
+/**
+ * List of key-value pairs with layout and style options.
+ * Props - `items` | `direction` | `divided` | `size` | `labelFlex` | `labelColor` | `valueColor` | `boldValue` | `noWrap` | `dividerColor` | `dividerThickness` | `dividerMargin` | `style`
+ * @see {@link KeyValueProps}
+ */
 export interface KeyValueProps extends Omit<PDFComponentProps, 'children'> {
-  /** Array of key-value pairs to display. */
   items: KeyValueEntry[];
-  /** Layout direction — horizontal puts key and value on the same row. @default 'horizontal' */
+  /**
+   * @default 'horizontal'
+   */
   direction?: KeyValueDirection;
-  /** Show a divider line between each row. @default false */
+  /**
+   * @default false
+   */
   divided?: boolean;
-  /** Font size preset for both keys and values. @default 'md' */
+  /**
+   * @default 'md'
+   */
   size?: KeyValueSize;
-  /** Flex weight of the key column (controls width relative to the value column). @default 1 */
+  /**
+   * @default 1
+   */
   labelFlex?: number;
-  /** Global key color override — accepts a theme token or hex/rgb value. */
   labelColor?: string;
-  /** Global value color override — accepts a theme token or hex/rgb value. */
   valueColor?: string;
-  /** Render all values in bold weight. @default false */
+  /**
+   * @default false
+   */
   boldValue?: boolean;
-  /** Prevent the list from splitting across PDF pages. @default false */
+  /**
+   * @default false
+   */
   noWrap?: boolean;
-  /** Custom divider line color — accepts a theme token or hex/rgb value. */
   dividerColor?: string;
-  /** Custom divider line thickness in points. */
   dividerThickness?: number;
-  /** Custom bottom margin below each divider in points. */
   dividerMargin?: number;
 }
 

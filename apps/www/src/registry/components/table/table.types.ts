@@ -10,43 +10,50 @@ export type TableVariant =
   | 'bordered'
   | 'primary-header';
 
+/**
+ * Table container with visual style variants and optional zebra striping.
+ * Props - `variant` | `zebraStripe` | `noWrap` | `children` | `style`
+ * @see {@link TableProps}
+ */
 export interface TableProps extends PDFComponentProps {
-  /** Visual style variant that controls borders, backgrounds, and spacing. @default 'line' */
+  /**
+   * @default 'line'
+   */
   variant?: TableVariant;
-  /** Apply alternating row background colors to body rows. Automatically enabled for the `striped` variant. @default false */
+  /**
+   * @default false
+   */
   zebraStripe?: boolean;
-  /** Prevent the entire table from splitting across PDF pages. Use for short tables that fit on one page. @default false */
+  /**
+   * @default false
+   */
   noWrap?: boolean;
 }
 
 export type TableSectionProps = PDFComponentProps;
 
+/**
+ * Table row with optional header, footer, and stripe states.
+ * Props - `header` | `footer` | `stripe` | `variant` | `children` | `style`
+ * @see {@link TableRowProps}
+ */
 export interface TableRowProps extends PDFComponentProps {
-  /** Render this row as a header row — applies bold text and variant header background. */
   header?: boolean;
-  /** Render this row as a footer row — applies bold text and a top border. */
   footer?: boolean;
-  /** Apply the zebra stripe background to this row. Set automatically by `Table` when `zebraStripe` is enabled. */
   stripe?: boolean;
-  /** Visual variant inherited from the parent `Table`. Set automatically — do not pass manually. */
   variant?: TableVariant;
 }
 
+/**
+ * Table cell with alignment, fixed width, and header or footer text styling.
+ * Props - `header` | `footer` | `align` | `width` | `variant` | `_last` | `children` | `style`
+ * @see {@link TableCellProps}
+ */
 export interface TableCellProps extends PDFComponentProps {
-  /** Render this cell in header text style — bold, variant accent color. */
   header?: boolean;
-  /** Render this cell in footer text style. */
   footer?: boolean;
-  /** Horizontal text alignment within the cell. */
   align?: 'left' | 'center' | 'right';
-  /** Fixed column width in PDF points or CSS-like string. When omitted the cell flex-grows. */
   width?: string | number;
-  /** Visual variant inherited from the parent `TableRow`. Set automatically — do not pass manually. */
   variant?: TableVariant;
-  /**
-   * True when this is the last cell in its row.
-   * Used internally to omit the right border on the last cell in `grid` / `bordered` variants.
-   * @internal Set automatically by `TableRow` via `cloneElement` — do not pass manually.
-   */
   _last?: boolean;
 }

@@ -1,8 +1,4 @@
 /* eslint-disable react-refresh/only-export-components */
-// graph.tsx intentionally exports utility functions (getGraphWidth, GRAPH_SAFE_WIDTHS)
-// alongside the PdfGraph component. These helpers are part of the component's public API
-// and are needed by consumers in the same import. Splitting them into a separate file
-// would break the copy-paste workflow this library is designed around.
 
 import type { PdfxTheme } from '@pdfx/shared';
 import { Circle, G, Line, Path, Rect, Svg, Text as SvgText } from '@react-pdf/renderer';
@@ -10,21 +6,16 @@ import { Text as PDFText, StyleSheet, View } from '@react-pdf/renderer';
 import type { Style } from '@react-pdf/types';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 
-/**
- * A4 page width in points (595pt).
- * Used for calculating safe graph widths.
- */
 export const A4_WIDTH = 595;
 
 /**
- * Options for calculating graph width.
+ * Options for calculating graph width based on theme page margins and container context.
+ * Props - `containerPadding` | `wrapperPadding` | `pageWidth`
+ * @see {@link GraphWidthOptions}
  */
 export interface GraphWidthOptions {
-  /** Additional container padding (e.g., Section padding). Default: 0 */
   containerPadding?: number;
-  /** Additional wrapper padding (e.g., graphShell). Default: 0 */
   wrapperPadding?: number;
-  /** Page size width override. Default: 595 (A4) */
   pageWidth?: number;
 }
 
@@ -66,7 +57,6 @@ export const GRAPH_SAFE_WIDTHS = {
   inSectionWithWrapper: 380,
 } as const;
 
-/** Internal layout constants for chart margins. */
 const CHART_MARGINS = {
   axisLeft: 40,
   pieLeft: 10,
@@ -80,89 +70,87 @@ export type GraphVariant = 'bar' | 'horizontal-bar' | 'line' | 'area' | 'pie' | 
 
 export type GraphLegendPosition = 'bottom' | 'right' | 'none';
 
+/**
+ * A single data point with a label, numeric value, and optional color override.
+ * Props - `label` | `value` | `color`
+ * @see {@link GraphDataPoint}
+ */
 export interface GraphDataPoint {
-  /** Label displayed on axis or legend. */
   label: string;
-  /** Numeric value. */
   value: number;
-  /** Optional per-data-point color override (hex). */
   color?: string;
 }
 
+/**
+ * A named data series containing multiple data points, used for multi-series charts.
+ * Props - `name` | `data` | `color`
+ * @see {@link GraphSeries}
+ */
 export interface GraphSeries {
-  /** Series name shown in the legend. */
   name: string;
-  /** Data points for this series. */
   data: GraphDataPoint[];
-  /** Optional series-level color override (hex). */
   color?: string;
 }
 
+/**
+ * Multi-variant PDF chart (bar, line, area, pie, donut) rendered with SVG primitives.
+ * Props - `variant` | `data` | `title` | `subtitle` | `xLabel` | `yLabel` | `width` | `height` | `fullWidth` | `containerPadding` | `wrapperPadding` | `colors` | `showValues` | `showGrid` | `legend` | `centerLabel` | `showDots` | `smooth` | `yTicks` | `noWrap` | `style`
+ * @see {@link GraphProps}
+ */
 export interface GraphProps {
-  /** Chart type. @default 'bar' */
-  variant?: GraphVariant;
   /**
-   * Single-series data or multi-series data.
-   * - GraphDataPoint[]: single series, used as-is.
-   * - GraphSeries[]: multi-series (bar, line, area only).
+   * @default 'bar'
    */
+  variant?: GraphVariant;
   data: GraphDataPoint[] | GraphSeries[];
-  /** Chart title rendered above the chart area. */
   title?: string;
-  /** Optional subtitle / description below title. */
   subtitle?: string;
-  /** X-axis label. */
   xLabel?: string;
-  /** Y-axis label. */
   yLabel?: string;
   /**
-   * Total SVG width in PDF points.
-   * Ignored when `fullWidth` is true.
    * @default 420
    */
   width?: number;
-  /** Total SVG height in PDF points. @default 260 */
+  /**
+   * @default 260
+   */
   height?: number;
   /**
-   * When true, automatically calculates width based on theme page margins.
-   * Accounts for page margins and optional container/wrapper padding.
    * @default false
    */
   fullWidth?: boolean;
-  /**
-   * Container padding to account for when using fullWidth.
-   * Use this when graph is inside a Section or Card with padding.
-   * @default 0
-   */
   containerPadding?: number;
-  /**
-   * Wrapper padding to account for when using fullWidth.
-   * Use this when graph is wrapped in a bordered View (like graphShell).
-   * @default 0
-   */
   wrapperPadding?: number;
-  /** Override the color palette (hex values). */
   colors?: string[];
-  /** Show numeric value labels on bars or data points. @default false */
+  /**
+   * @default false
+   */
   showValues?: boolean;
-  /** Show horizontal grid lines. @default true */
+  /**
+   * @default true
+   */
   showGrid?: boolean;
-  /** Legend position. @default 'bottom' */
+  /**
+   * @default 'bottom'
+   */
   legend?: GraphLegendPosition;
-  /** For donut variant: text displayed in the center hole. */
   centerLabel?: string;
-  /** For line/area: show dots at each data point. @default true */
+  /**
+   * @default true
+   */
   showDots?: boolean;
-  /** For line/area: render smooth bezier curves (false = straight segments). @default false */
+  /**
+   * @default false
+   */
   smooth?: boolean;
-  /** Number of Y-axis ticks. @default 5 */
+  /**
+   * @default 5
+   */
   yTicks?: number;
   /**
-   * Prevent the chart from splitting across page boundaries.
    * @default true
    */
   noWrap?: boolean;
-  /** Custom style override applied to the outer container View. */
   style?: Style;
 }
 
@@ -505,7 +493,7 @@ function renderHorizontalBarChart(
   const barH = rowH * 0.5;
   const textColor = theme.colors.mutedForeground;
   const axisColor = theme.colors.foreground;
-  const labelW = 60; // reserved for labels on left
+  const labelW = 60;
 
   return (
     <>
@@ -682,7 +670,6 @@ function renderPieDonutChart(
         const path = arcPath(cx, cy, r, currentAngle, currentAngle + sweep, innerR);
         currentAngle += sweep;
 
-        // Label position — slightly outside the arc
         const labelR = r * 1.18;
         const lp = polarToCartesian(cx, cy, labelR, midAngle);
         const anchor = lp.x > cx ? 'start' : 'end';

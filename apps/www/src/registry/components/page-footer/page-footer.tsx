@@ -12,49 +12,39 @@ export type PageFooterVariant =
   | 'three-column'
   | 'detailed';
 
+/**
+ * Footer row with layout variants, optional sticky or fixed positioning, and contact info support.
+ * Props - `leftText` | `rightText` | `centerText` | `variant` | `background` | `textColor` | `marginTop` | `address` | `phone` | `email` | `website` | `fixed` | `sticky` | `pagePadding` | `noWrap` | `style`
+ * @see {@link PageFooterProps}
+ */
 export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
-  /** Left-aligned footer text (e.g., company name, copyright notice). */
   leftText?: string;
-  /** Right-aligned footer text (e.g., page number, document version). */
   rightText?: string;
-  /** Center-aligned footer text — used by `simple` and `centered` variants. */
   centerText?: string;
-  /** Visual layout variant. @default 'simple' */
+  /**
+   * @default 'simple'
+   */
   variant?: PageFooterVariant;
-  /** Background color override — accepts a theme token key or a hex string. */
   background?: string;
-  /** Text color override applied to all footer text — accepts a theme token key or a hex string. */
   textColor?: string;
-  /** Top margin in PDF points. Defaults to `theme.spacing.sectionGap`. */
   marginTop?: number;
-  /** Street / mailing address — used by `three-column` and `detailed` variants. */
   address?: string;
-  /** Phone number — used by `three-column` and `detailed` variants. */
   phone?: string;
-  /** Email address — used by `three-column` and `detailed` variants. */
   email?: string;
-  /** Website URL — used by `three-column` and `detailed` variants. */
   website?: string;
   /**
-   *  Fix this footer to the bottom of the page, so it will always be visible regardless of content length. This is achieved using `position: 'fixed'` in the PDF layout.
    * @default false
    */
   fixed?: boolean;
-
   /**
-   * Render this footer at the bottom of the page, but allow it to scroll with the content if the page is long enough. This is achieved using absolute positioning with `position: 'absolute'` and `bottom: 0`.
    * @default false
    */
   sticky?: boolean;
-
   /**
-   * When using `sticky`, this value sets the `left` and `right` offsets to match the page's horizontal padding, ensuring the footer content is aligned with the rest of the page content.
    * @default 0
    */
   pagePadding?: number;
-
   /**
-   * Prevent the footer from being split across PDF pages when placed inline.
    * @default true
    */
   noWrap?: boolean;
@@ -183,7 +173,6 @@ function createPageFooterStyles(t: PdfxTheme) {
     contactInfoCenter: {
       ...textBase,
       textAlign: 'center',
-      // Slightly smaller than xs to keep multi-line contact info compact in the center column.
       fontSize: t.primitives.typography.xs - 1,
       marginTop: spacing[0.5],
     },
