@@ -153,3 +153,13 @@ code {
     box-shadow: 0 0 0 8px rgba(88, 101, 242, 0.25);
   }
 }
+
+/* Video modal fade-in */
+@keyframes pdfx-fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
