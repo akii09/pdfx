@@ -21,7 +21,9 @@
       "type": "registry:file"
     }
   ],
-  "dependencies": ["@react-pdf/renderer"],
+  "dependencies": [
+    "@react-pdf/renderer"
+  ],
   "peerComponents": [
     "badge",
     "data-table",

@@ -14,7 +14,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "badge",
@@ -27,7 +29,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "card",
@@ -40,7 +44,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "data-table",
@@ -61,8 +67,12 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
-      "registryDependencies": ["table"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "table"
+      ]
     },
     {
       "name": "divider",
@@ -75,7 +85,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "form",
@@ -96,7 +108,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "graph",
@@ -109,7 +123,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "heading",
@@ -122,7 +138,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "keep-together",
@@ -135,7 +153,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "key-value",
@@ -148,7 +168,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "link",
@@ -161,7 +183,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "list",
@@ -182,7 +206,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "page-break",
@@ -195,7 +221,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "page-footer",
@@ -208,7 +236,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "page-header",
@@ -221,7 +251,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "page-number",
@@ -234,7 +266,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "pdf-image",
@@ -247,7 +281,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "qrcode",
@@ -260,8 +296,13 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer", "qrcode"],
-      "devDependencies": ["@types/qrcode"]
+      "dependencies": [
+        "@react-pdf/renderer",
+        "qrcode"
+      ],
+      "devDependencies": [
+        "@types/qrcode"
+      ]
     },
     {
       "name": "section",
@@ -274,7 +315,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "signature",
@@ -287,7 +330,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "stack",
@@ -300,7 +345,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "table",
@@ -321,7 +368,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "text",
@@ -334,7 +383,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "watermark",
@@ -347,7 +398,9 @@
           "type": "registry:component"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
     },
     {
       "name": "invoice-classic",
@@ -364,7 +417,9 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
       "peerComponents": [
         "page-header",
         "page-footer",
@@ -390,7 +445,9 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
       "peerComponents": [
         "page-header",
         "page-footer",
@@ -416,8 +473,17 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
-      "peerComponents": ["page-header", "page-footer", "table", "key-value", "text", "signature"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "text",
+        "signature"
+      ]
     },
     {
       "name": "invoice-creative",
@@ -434,7 +500,9 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
       "peerComponents": [
         "page-header",
         "page-footer",
@@ -460,8 +528,17 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
-      "peerComponents": ["page-header", "page-footer", "table", "key-value", "section", "text"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text"
+      ]
     },
     {
       "name": "invoice-modern",
@@ -478,8 +555,17 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
-      "peerComponents": ["page-header", "page-footer", "table", "key-value", "section", "text"]
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "page-header",
+        "page-footer",
+        "table",
+        "key-value",
+        "section",
+        "text"
+      ]
     },
     {
       "name": "report-financial",
@@ -500,7 +586,9 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
       "peerComponents": [
         "badge",
         "data-table",
@@ -534,7 +622,9 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
       "peerComponents": [
         "badge",
         "data-table",
@@ -568,7 +658,9 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
       "peerComponents": [
         "badge",
         "data-table",
@@ -602,7 +694,9 @@
           "type": "registry:file"
         }
       ],
-      "dependencies": ["@react-pdf/renderer"],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
       "peerComponents": [
         "badge",
         "data-table",
