@@ -56,7 +56,8 @@ function VideoModal() {
 
       {open && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+          style={{ animation: 'pdfx-fadein 0.15s ease' }}
           onClick={() => setOpen(false)}
           onKeyDown={(e) => {
             if (e.key === 'Escape') setOpen(false);
@@ -68,7 +69,7 @@ function VideoModal() {
             onKeyDown={(e) => e.stopPropagation()}
           >
             <iframe
-              src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`}
+              src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0`}
               title="PDFx demo video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
