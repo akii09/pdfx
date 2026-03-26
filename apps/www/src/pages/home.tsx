@@ -808,7 +808,7 @@ export default function HomePage() {
                 transition={{ duration: 0.5, delay: 0.12 }}
                 className="text-base xl:text-lg text-muted-foreground mb-8 leading-relaxed"
               >
-                Copy, paste, customize. Professional PDFs with a component library you fully own —
+                Copy, paste, customize. Professional PDFs with a component library you fully own
                 built on @react-pdf/renderer.
               </motion.p>
 
@@ -997,7 +997,7 @@ export default function HomePage() {
           >
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">See it in action</h2>
             <p className="text-muted-foreground">
-              Watch how to go from zero to a PDF invoice in under 5 minutes.
+              Watch how to create a PDF invoice from scratch in just a few steps.
             </p>
           </motion.div>
           <motion.div
