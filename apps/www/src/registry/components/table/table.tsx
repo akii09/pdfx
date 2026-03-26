@@ -53,8 +53,6 @@ function processTableChildren(
 }
 
 export function TableHeader({ children, style }: TableSectionProps) {
-  // minPresenceAhead: if < 60pt remain on the page, move the header to the next page
-  // so the header is never stranded alone at the bottom without any body rows.
   return (
     <View minPresenceAhead={60} style={style}>
       {children}
@@ -162,7 +160,6 @@ export function TableRow({
     return child;
   });
 
-  // wrap={false}: each row is atomic — never split mid-row across pages.
   return (
     <View wrap={false} style={styleArray}>
       {processedChildren}
@@ -182,14 +179,9 @@ export function TableCell({
 }: TableCellProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createTableStyles(theme), [theme]);
-  const cellStyles: Style[] = [styles.cell];
+  const cellStyles: Style[] =
+    width !== undefined ? [styles.cellFixed, { width } as Style] : [styles.cell];
 
-  if (width !== undefined) {
-    cellStyles.push(styles.cellFixed);
-    cellStyles.push({ width } as Style);
-  }
-
-  // Only certain variants carry a cell-level style override; grid/line use the base cell style.
   const cellVariantStyle = (
     {
       minimal: styles.cellMinimal,
@@ -232,13 +224,7 @@ export function TableCell({
 
   const content =
     typeof children === 'string' ? (
-      <PDFText
-        style={[
-          textStyle,
-          align ? { textAlign: align } : {},
-          { margin: 0, padding: 0 }, // ← hard reset — always last so it wins
-        ]}
-      >
+      <PDFText style={[textStyle, align ? { textAlign: align } : {}, { margin: 0, padding: 0 }]}>
         {children}
       </PDFText>
     ) : (

@@ -3,8 +3,6 @@ import { StyleSheet } from '@react-pdf/renderer';
 
 /**
  * Creates all list styles derived from the active theme.
- * Returns a StyleSheet covering container, item row, gap variations, markers,
- * checklist/icon boxes, text styles, and nested children layout.
  * @param t - The resolved PdfxTheme instance.
  */
 export function createListStyles(t: PdfxTheme) {
@@ -19,16 +17,15 @@ export function createListStyles(t: PdfxTheme) {
     },
     itemRow: {
       flexDirection: 'row',
-      alignItems: 'flex-start',
+      alignItems: 'center',
     },
     itemRowGapXs: { marginBottom: spacing[1] },
     itemRowGapSm: { marginBottom: spacing[2] },
     itemRowGapMd: { marginBottom: spacing[3] },
-    // ── Bullet markers ────────────────────────────────────────────────
     markerBulletWrap: {
       width: spacing[4],
-      paddingTop: spacing[1],
       alignItems: 'center',
+      justifyContent: 'center',
     },
     markerBulletDot: {
       width: 5,
@@ -38,8 +35,8 @@ export function createListStyles(t: PdfxTheme) {
     },
     markerBulletSubWrap: {
       width: spacing[4],
-      paddingTop: 5,
       alignItems: 'center',
+      justifyContent: 'center',
     },
     markerBulletSubDot: {
       width: 4,
@@ -50,7 +47,6 @@ export function createListStyles(t: PdfxTheme) {
       borderColor: t.colors.mutedForeground,
       backgroundColor: 'transparent',
     },
-    // ── Numbered marker ───────────────────────────────────────────────
     markerNumberBadge: {
       width: spacing[5],
       height: spacing[5],
@@ -58,7 +54,6 @@ export function createListStyles(t: PdfxTheme) {
       backgroundColor: t.colors.primary,
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: 1,
       marginRight: spacing[2],
     },
     markerNumberText: {
@@ -67,7 +62,6 @@ export function createListStyles(t: PdfxTheme) {
       color: t.colors.primaryForeground,
       fontWeight: fontWeights.bold,
     },
-    // ── Checklist ─────────────────────────────────────────────────────
     checkBox: {
       width: spacing[4],
       height: spacing[4],
@@ -75,7 +69,6 @@ export function createListStyles(t: PdfxTheme) {
       borderColor: t.colors.border,
       borderStyle: 'solid',
       borderRadius: 3,
-      marginTop: 1,
       marginRight: spacing[2],
       alignItems: 'center',
       justifyContent: 'center',
@@ -91,7 +84,6 @@ export function createListStyles(t: PdfxTheme) {
       color: t.colors.background,
       fontWeight: fontWeights.bold,
     },
-    // ── Icon box ──────────────────────────────────────────────────────
     iconBox: {
       width: spacing[5],
       height: spacing[5],
@@ -99,7 +91,6 @@ export function createListStyles(t: PdfxTheme) {
       backgroundColor: t.colors.primary,
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: 1,
       marginRight: spacing[2],
     },
     iconMark: {
@@ -108,7 +99,6 @@ export function createListStyles(t: PdfxTheme) {
       color: t.colors.primaryForeground,
       fontWeight: fontWeights.bold,
     },
-    // ── Text styles ───────────────────────────────────────────────────
     itemText: {
       flex: 1,
       fontFamily: t.typography.body.fontFamily,
