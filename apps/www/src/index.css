@@ -7,7 +7,7 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285);
   --muted: oklch(0.968 0.003 285);
-  --muted-foreground: oklch(0.552 0.016 285);
+  --muted-foreground: oklch(0.45 0.015 285);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285);
   --card: oklch(1 0 0);
@@ -22,7 +22,7 @@
   --accent-foreground: oklch(0.141 0.005 285);
   --destructive: oklch(0.577 0.245 27);
   --destructive-foreground: oklch(0.985 0 0);
-  --ring: oklch(0.552 0.016 285);
+  --ring: oklch(0.45 0.015 285);
   --radius: 0.5rem;
 }
 

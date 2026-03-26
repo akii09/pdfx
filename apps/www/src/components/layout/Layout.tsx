@@ -3,6 +3,7 @@ import { CommandPalette } from '../command-palette';
 // import { DiscordFloatButton } from '../discord-float-button';
 import { GitHubStarBanner } from '../github-star-banner';
 import { PageTransition } from '../page-transition';
+import { ReadingProgress } from '../reading-progress';
 import { Footer } from './footer';
 import { Header } from './header';
 import { Sidebar } from './sidebar';
@@ -10,6 +11,7 @@ import { Sidebar } from './sidebar';
 export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <ReadingProgress />
       {/* Skip-to-content link for keyboard/screen reader users (M9) */}
       <a
         href="#main-content"

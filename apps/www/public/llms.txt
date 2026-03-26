@@ -4,9 +4,9 @@
 
 PDFx is an open-source React PDF component library that follows the shadcn/ui model: run the CLI to add a component, the source lands in your project and you own it fully. No runtime package dependency, no version lock-in, MIT licensed.
 
-Website: https://pdfx.akashpise.dev  
-GitHub: https://github.com/akii09/pdfx  
-npm (CLI): https://www.npmjs.com/package/@akii09/pdfx-cli  
+Website: https://pdfx.akashpise.dev
+GitHub: https://github.com/akii09/pdfx
+npm (CLI): https://www.npmjs.com/package/@akii09/pdfx-cli
 License: MIT
 
 ## Quick Start
@@ -37,7 +37,7 @@ Key traits:
 - **No runtime dependency** — after `pdfx add`, you own the file
 - **Full TypeScript** — every component is typed with PDFComponentProps
 - **Theme system** — Professional, Modern, and Minimal presets; or define your own
-- **CLI-driven** — `pdfx add`, `pdfx list`, `pdfx diff`, `pdfx theme` commands
+- **CLI-driven** — `pdfx add`, `pdfx list`, `pdfx diff`, `pdfx theme`, `pdfx block` commands
 - **MIT licensed** — free forever, no cost
 
 ## Theme System
@@ -53,12 +53,12 @@ Themes: `professional` (default), `modern`, `minimal`
 Each theme exports a token object used inside components:
 ```ts
 const theme = usePdfxTheme();
-// theme.colors.primary, theme.spacing.md, theme.font.sizes.base, ...
+// theme.colors.primary, theme.spacing.md, theme.typography.body.fontSize, ...
 ```
 
 ## Component Reference
 
-All 24 components, their paths, and descriptions:
+All 24 components by category:
 
 ### Typography
 - **Heading** (`/components/heading`) — H1–H6 hierarchy with theme-aware sizing
@@ -68,31 +68,29 @@ All 24 components, their paths, and descriptions:
 ### Layout
 - **Stack** (`/components/stack`) — Flexbox container (row or column)
 - **Section** (`/components/section`) — Top-level document section with optional title
-- **Divider** (`/components/divider`) — Horizontal rule with configurable weight and color
-- **Page Break** (`/components/page-break`) — Force content onto a new PDF page
-- **Keep Together** (`/components/keep-together`) — Prevent a group from splitting across pages
 - **Card** (`/components/card`) — Bordered content card with header and body
-
-### Page Chrome
-- **Page Header** (`/components/page-header`) — Fixed header on every page with logo, title, subtitle
-- **Page Footer** (`/components/page-footer`) — Fixed footer with contact info or legal copy
-- **Page Number** (`/components/page-number`) — Dynamic page X of Y counter
+- **Divider** (`/components/divider`) — Horizontal rule with configurable weight and color
+- **PageBreak** (`/components/page-break`) — Force content onto a new PDF page
+- **KeepTogether** (`/components/keep-together`) — Prevent a group from splitting across pages
+- **PageHeader** (`/components/page-header`) — Fixed header on every page with logo, title, subtitle
+- **PageFooter** (`/components/page-footer`) — Fixed footer with contact info or legal copy
+- **PageNumber** (`/components/page-number`) — Dynamic page X of Y counter
 - **Watermark** (`/components/watermark`) — Diagonal or centered text watermark on every page
 
-### Data Display
-- **Table** (`/components/table`) — HTML-like table with headers, rows, and alternating stripes
-- **Data Table** (`/components/data-table`) — Data-driven table from an object array; columns auto-inferred
+### Data
+- **Table** (`/components/table`) — Composable table with rows and cells
+- **DataTable** (`/components/data-table`) — Data-driven table from an object array; columns auto-inferred
 - **List** (`/components/list`) — Ordered and unordered lists with custom bullet styles
 - **Badge** (`/components/badge`) — Small inline label for statuses, tags, or categories
-- **Key Value** (`/components/key-value`) — Two-column label/value pairs (perfect for invoice metadata)
+- **KeyValue** (`/components/key-value`) — Two-column label/value pairs (perfect for invoice metadata)
 - **Alert** (`/components/alert`) — Info, warning, error, and success callout boxes
 
-### Media & Visuals
-- **PDF Image** (`/components/pdf-image`) — Embed raster images with sizing and aspect-ratio control
-- **Graph** (`/components/graph`) — SVG bar, line, and pie charts rendered as native PDF vectors
-- **QR Code** (`/components/qrcode`) — Scannable QR codes as native PDF vector graphics
+### Visual
+- **Image** (`/components/pdf-image`) — Embed raster images with sizing and aspect-ratio control
+- **Graph** (`/components/graph`) — SVG bar, line, area, pie, donut, and horizontal-bar charts
+- **QRCode** (`/components/qrcode`) — Scannable QR codes as native PDF vector graphics
 
-### Forms & Documents
+### Forms
 - **Form** (`/components/form`) — Labeled field groups for invoices, contracts, and agreements
 - **Signature** (`/components/signature`) — Signature block with name, role, date, and underline
 
@@ -112,8 +110,10 @@ npx @akii09/pdfx-cli block add invoice-consultant
 
 ### Report Blocks
 ```bash
-npx @akii09/pdfx-cli block add report-analytics
 npx @akii09/pdfx-cli block add report-financial
+npx @akii09/pdfx-cli block add report-marketing
+npx @akii09/pdfx-cli block add report-operations
+npx @akii09/pdfx-cli block add report-security
 ```
 
 ## CLI Command Reference
@@ -123,7 +123,7 @@ npx @akii09/pdfx-cli block add report-financial
 | `pdfx init` | Scaffold config + theme in your project |
 | `pdfx add <component>` | Copy component source into your project |
 | `pdfx add --all` | Copy all components at once |
-| `pdfx list` | List all available components |
+| `pdfx list` | List all available components with install status |
 | `pdfx diff <component>` | Show diff between your local copy and latest upstream |
 | `pdfx theme init` | Create a custom theme file |
 | `pdfx theme switch <name>` | Switch to professional / modern / minimal |
@@ -138,25 +138,40 @@ npx @akii09/pdfx-cli block add report-financial
 - **Package manager**: pnpm v10 (workspace monorepo)
 - **Build**: Vite + Turborepo
 - **Linter**: Biome
-- **Node.js**: ≥ 24.0.0
+- **Node.js**: 24+ (dev), 20+ (consumers)
 
 ## Repository Structure
 
 ```
 pdfx/
-├── apps/
-│   ├── playground/   # Dev sandbox for testing components
-│   └── www/          # Docs site (Vite React SPA)
-├── packages/
-│   ├── ui/           # The 24 PDF components (source of truth)
-│   ├── cli/          # @akii09/pdfx-cli — the add/init/theme commands
-│   └── shared/       # Shared types, errors, schema validation
-└── docs/             # Architecture and decision docs
+  apps/
+    www/                     # Docs site + registry server (Vite React SPA)
+      src/registry/
+        components/          # 24 component source files (source of truth)
+        blocks/              # 10 block template source files
+        index.json           # Registry manifest
+      src/lib/
+        build-registry.ts    # Transforms source → public/r/*.json
+      public/r/              # HTTP-served JSON consumed by the CLI
+  packages/
+    shared/                  # Types, theme presets, Zod schemas, errors
+    cli/                     # @akii09/pdfx-cli — all CLI commands
+  docs/                      # Architecture and decision docs
 ```
 
-## Optional: Full documentation pages
+## How the Registry Works
+
+The website and the registry are the same thing — same model as shadcn/ui.
+
+1. Component source lives in `apps/www/src/registry/components/<name>/`
+2. `pnpm build:registry` runs `build-registry.ts` which transforms source into `public/r/<name>.json`
+3. `pdfx add <name>` fetches that JSON over HTTPS and writes the files into the user's project
+4. No PDFx package is installed — the user owns the code from that point
+
+## Documentation
 
 - Docs: https://pdfx.akashpise.dev/docs
 - Installation: https://pdfx.akashpise.dev/installation
 - Components: https://pdfx.akashpise.dev/components
 - Blocks: https://pdfx.akashpise.dev/blocks
+- Contributing: https://github.com/akii09/pdfx/blob/main/CONTRIBUTING.md
