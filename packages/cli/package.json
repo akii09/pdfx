@@ -1,6 +1,6 @@
 {
   "name": "@akii09/pdfx-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI for PDFx components",
   "type": "module",
   "bin": {
@@ -14,7 +14,10 @@
       "import": "./dist/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",

@@ -1,5 +1,11 @@
 # @akii09/pdfx-cli
 
+## 0.2.1
+
+### Patch Changes
+
+- [#80](https://github.com/akii09/pdfx/pull/80) [`13e89dd`](https://github.com/akii09/pdfx/commit/13e89dd8ea9bb17c5628d847b106d72a91d63c3b) Thanks [@akii09](https://github.com/akii09)! - fix: - list and qr-code component style issues fixed
+
 ## 0.2.0
 
 ### Minor Changes
