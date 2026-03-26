@@ -13,8 +13,6 @@ export function generateThemeFile(preset: PdfxTheme): string {
 // This module is the single source of truth for PDFX styling tokens.
 // Update the exported \`theme\` object to customize component styles.
 
-// Theme type
-
 interface PdfxTheme {
   name: string;
   primitives: {
@@ -59,8 +57,6 @@ interface PdfxTheme {
     orientation: 'portrait' | 'landscape';
   };
 }
-
-// Theme values
 
 export const theme: PdfxTheme = ${serializeTheme(preset)};
 `;

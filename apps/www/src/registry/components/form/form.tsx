@@ -4,8 +4,6 @@ import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { createFormStyles } from './form.styles';
 import type { FormLayout, PdfFormField, PdfFormGroup, PdfFormProps } from './form.types';
 
-// ─── Helpers (plain functions, not React components) ──────────────────────────
-
 function renderFieldAbove(
   field: PdfFormField,
   idx: number,
@@ -87,8 +85,6 @@ function renderGroup(
     </View>
   );
 }
-
-// ─── PdfForm ──────────────────────────────────────────────────────────────────
 
 export function PdfForm({
   title,

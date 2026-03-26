@@ -2,25 +2,13 @@ import type { PdfxTheme } from '@pdfx/shared';
 import { StyleSheet } from '@react-pdf/renderer';
 import type { PdfFormVariant } from './form.types';
 
-/**
- * Creates all fillable-form styles derived from the active theme.
- *
- * Design principles:
- *   - Labels: xs uppercase tracked — professional, scannable
- *   - Field areas: clearly defined blank zones (by variant)
- *   - Spacing: tight but breathable — 12pt between fields, 20pt between groups
- *   - Group titles: small-caps divider line style (like Notion forms)
- *
- * @param t       - The resolved PdfxTheme instance.
- * @param variant - Visual style variant for the field areas.
- */
+/** Style factory for fillable form layouts, derived from the active theme. */
 export function createFormStyles(t: PdfxTheme, variant: PdfFormVariant = 'underline') {
   const { spacing, borderRadius, fontWeights, typography } = t.primitives;
   const borderColor = t.colors.border;
   const hairline = 0.75; // lighter than spacing[0.5]=2pt — more refined
   const rule = 1; // group title rule
 
-  // ─── Field area visual per variant ──────────────────────────────────────────
   const fieldAreaByVariant: Record<PdfFormVariant, object> = {
     underline: {
       borderBottomWidth: 1,
@@ -48,13 +36,11 @@ export function createFormStyles(t: PdfxTheme, variant: PdfFormVariant = 'underl
   const hasPadding = variant === 'box' || variant === 'outlined' || variant === 'ghost';
 
   return StyleSheet.create({
-    // ─── Form root ───────────────────────────────────────────────────────────
     root: {
       width: '100%',
       marginBottom: t.spacing.componentGap,
     },
 
-    // ─── Form-level title block ───────────────────────────────────────────────
     formTitle: {
       fontFamily: t.typography.heading.fontFamily,
       fontSize: typography.xl,
@@ -77,11 +63,9 @@ export function createFormStyles(t: PdfxTheme, variant: PdfFormVariant = 'underl
       marginBottom: spacing[4],
     },
 
-    // ─── Field group ─────────────────────────────────────────────────────────
     group: {
       marginBottom: spacing[5],
     },
-    // Group title: small caps style with a faint rule underneath
     groupTitle: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
@@ -93,7 +77,6 @@ export function createFormStyles(t: PdfxTheme, variant: PdfFormVariant = 'underl
       marginBottom: spacing[3],
     },
 
-    // ─── Multi-column layout ──────────────────────────────────────────────────
     columnsRow: {
       flexDirection: 'row',
       gap: spacing[4],
@@ -102,8 +85,6 @@ export function createFormStyles(t: PdfxTheme, variant: PdfFormVariant = 'underl
       flex: 1,
     },
 
-    // ─── Field: label ABOVE ───────────────────────────────────────────────────
-    // Compact vertical rhythm — 12pt between fields
     fieldAbove: {
       marginBottom: spacing[3],
       width: '100%',
@@ -119,7 +100,6 @@ export function createFormStyles(t: PdfxTheme, variant: PdfFormVariant = 'underl
       marginBottom: spacing[1],
     },
 
-    // ─── Field: label LEFT ────────────────────────────────────────────────────
     fieldLeft: {
       flexDirection: 'row',
       alignItems: 'flex-end',
@@ -139,13 +119,11 @@ export function createFormStyles(t: PdfxTheme, variant: PdfFormVariant = 'underl
       flex: 1,
     },
 
-    // ─── Blank field area ─────────────────────────────────────────────────────
     fieldArea: {
       width: '100%' as const,
       ...fieldAreaByVariant[variant],
     },
 
-    // Hint text inside the field area (format guide)
     hint: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,

@@ -51,7 +51,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
   const { heading, body } = t.typography;
 
   return StyleSheet.create({
-    // ── Simple variant ──────────────────────────────────────────────────
     simpleContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -73,7 +72,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       alignItems: 'flex-end',
     },
 
-    // ── Centered variant ────────────────────────────────────────────────
     centeredContainer: {
       display: 'flex',
       flexDirection: 'column',
@@ -84,7 +82,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       borderBottomStyle: 'solid',
     },
 
-    // ── Minimal variant ─────────────────────────────────────────────────
     minimalContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -102,7 +99,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       alignItems: 'flex-end',
     },
 
-    // ── Branded variant ─────────────────────────────────────────────────
     brandedContainer: {
       display: 'flex',
       flexDirection: 'column',
@@ -112,7 +108,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       borderRadius: borderRadius.sm,
     },
 
-    // ── Typography ──────────────────────────────────────────────────────
     title: {
       fontFamily: heading.fontFamily,
       fontSize: heading.fontSize.h3,
@@ -162,7 +157,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       marginTop: spacing[1],
     },
 
-    // ── Logo-left variant ───────────────────────────────────────────────
     logoLeftContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -183,7 +177,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       flexDirection: 'column',
     },
 
-    // ── Logo-right variant ──────────────────────────────────────────────
     logoRightContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -205,7 +198,6 @@ function createPageHeaderStyles(t: PdfxTheme) {
       height: 48,
     },
 
-    // ── Two-column variant ──────────────────────────────────────────────
     twoColumnContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -257,7 +249,6 @@ export function PageHeader({
   const styles = useSafeMemo(() => createPageHeaderStyles(theme), [theme]);
   const mb = marginBottom ?? theme.spacing.sectionGap;
 
-  // ── Branded ─────────────────────────────────────────────────────────
   if (variant === 'branded') {
     const containerStyles: Style[] = [styles.brandedContainer, { marginBottom: mb }];
     if (background) {
@@ -278,7 +269,6 @@ export function PageHeader({
     );
   }
 
-  // ── Centered ────────────────────────────────────────────────────────
   if (variant === 'centered') {
     const containerStyles: Style[] = [styles.centeredContainer, { marginBottom: mb }];
     if (background) {
@@ -299,7 +289,6 @@ export function PageHeader({
     );
   }
 
-  // ── Logo-right ──────────────────────────────────────────────────────
   if (variant === 'logo-right') {
     const containerStyles: Style[] = [styles.logoRightContainer, { marginBottom: mb }];
     if (background) {
@@ -321,7 +310,6 @@ export function PageHeader({
     );
   }
 
-  // ── Logo-left ───────────────────────────────────────────────────────
   if (variant === 'logo-left') {
     const containerStyles: Style[] = [styles.logoLeftContainer, { marginBottom: mb }];
     if (background) {
@@ -349,7 +337,6 @@ export function PageHeader({
     );
   }
 
-  // ── Two-column ──────────────────────────────────────────────────────
   if (variant === 'two-column') {
     const containerStyles: Style[] = [styles.twoColumnContainer, { marginBottom: mb }];
     if (background) {
@@ -377,7 +364,6 @@ export function PageHeader({
     );
   }
 
-  // ── Minimal ─────────────────────────────────────────────────────────
   if (variant === 'minimal') {
     const containerStyles: Style[] = [styles.minimalContainer, { marginBottom: mb }];
     if (background) {
@@ -404,7 +390,6 @@ export function PageHeader({
     );
   }
 
-  // ── Simple (default) ────────────────────────────────────────────────
   const containerStyles: Style[] = [styles.simpleContainer, { marginBottom: mb }];
   if (background) {
     containerStyles.push({ backgroundColor: resolveColor(background, theme.colors) });

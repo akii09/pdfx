@@ -17,6 +17,10 @@ export function createListStyles(t: PdfxTheme) {
     },
     itemRow: {
       flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
+    itemRowCenter: {
+      flexDirection: 'row',
       alignItems: 'center',
     },
     itemRowGapXs: { marginBottom: spacing[1] },
@@ -25,7 +29,8 @@ export function createListStyles(t: PdfxTheme) {
     markerBulletWrap: {
       width: spacing[4],
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
+      marginTop: spacing[1],
     },
     markerBulletDot: {
       width: 5,
@@ -36,7 +41,8 @@ export function createListStyles(t: PdfxTheme) {
     markerBulletSubWrap: {
       width: spacing[4],
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
+      marginTop: spacing[1],
     },
     markerBulletSubDot: {
       width: 4,
@@ -143,6 +149,8 @@ export function createListStyles(t: PdfxTheme) {
     childrenContainer: {
       marginLeft: spacing[5],
       marginTop: spacing[1],
+      display: 'flex',
+      flexDirection: 'column',
     },
   });
 }

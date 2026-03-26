@@ -63,7 +63,6 @@ function createPageFooterStyles(t: PdfxTheme) {
   };
 
   return StyleSheet.create({
-    // ── Simple variant ──────────────────────────────────────────────────
     simpleContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -75,7 +74,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       borderTopStyle: 'solid',
     },
 
-    // ── Centered variant ────────────────────────────────────────────────
     centeredContainer: {
       display: 'flex',
       flexDirection: 'column',
@@ -86,7 +84,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       borderTopStyle: 'solid',
     },
 
-    // ── Minimal variant ─────────────────────────────────────────────────
     minimalContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -96,7 +93,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       paddingBottom: spacing[1],
     },
 
-    // ── Branded variant ─────────────────────────────────────────────────
     brandedContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -107,7 +103,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       paddingVertical: spacing[3],
     },
 
-    // ── Text styles ─────────────────────────────────────────────────────
     textLeft: {
       ...textBase,
       flex: 1,
@@ -137,7 +132,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       textAlign: 'right',
     },
 
-    // ── Three-column variant ──────────────────────────────────────────
     threeColumnContainer: {
       display: 'flex',
       flexDirection: 'row',
@@ -177,7 +171,6 @@ function createPageFooterStyles(t: PdfxTheme) {
       marginTop: spacing[0.5],
     },
 
-    // ── Detailed variant ──────────────────────────────────────────────
     detailedContainer: {
       display: 'flex',
       flexDirection: 'column',
@@ -243,18 +236,10 @@ export function PageFooter({
   const isFixed = fixed || sticky;
   const mt = sticky ? 0 : (marginTop ?? theme.spacing.sectionGap);
   const resolvedTextColor = textColor ? resolveColor(textColor, theme.colors) : undefined;
-  /**
-   * The sticky style is built dynamically so `pagePadding` is reflected in
-   * `left`/`right`, matching the page's horizontal padding exactly.
-   */
   const stickyStyle: Style = sticky
     ? { position: 'absolute', bottom: pagePadding, left: pagePadding, right: pagePadding }
     : {};
 
-  /**
-   * Appends background + custom style + sticky overrides to a container style array.
-   * sticky style is always last so it wins over all other overrides.
-   */
   function applyOverrides(base: Style[]): Style[] {
     if (background) base.push({ backgroundColor: resolveColor(background, theme.colors) });
     if (style) base.push(style);
@@ -262,7 +247,6 @@ export function PageFooter({
     return base;
   }
 
-  // ── Branded ──────────────────────────────────────────────────────────
   if (variant === 'branded') {
     const containerStyles = applyOverrides([styles.brandedContainer, { marginTop: mt }]);
 
@@ -281,7 +265,6 @@ export function PageFooter({
     );
   }
 
-  // ── Centered ─────────────────────────────────────────────────────────
   if (variant === 'centered') {
     const containerStyles = applyOverrides([styles.centeredContainer, { marginTop: mt }]);
 
@@ -296,7 +279,6 @@ export function PageFooter({
     );
   }
 
-  // ── Three-column ────────────────────────────────────────────────────
   if (variant === 'three-column') {
     const containerStyles = applyOverrides([styles.threeColumnContainer, { marginTop: mt }]);
 
@@ -327,7 +309,6 @@ export function PageFooter({
     );
   }
 
-  // ── Detailed ─────────────────────────────────────────────────────────
   if (variant === 'detailed') {
     const containerStyles = applyOverrides([styles.detailedContainer, { marginTop: mt }]);
 
@@ -360,7 +341,6 @@ export function PageFooter({
     );
   }
 
-  // ── Minimal ──────────────────────────────────────────────────────────
   if (variant === 'minimal') {
     const containerStyles = applyOverrides([styles.minimalContainer, { marginTop: mt }]);
 
@@ -379,7 +359,6 @@ export function PageFooter({
     );
   }
 
-  // ── Simple (default) ─────────────────────────────────────────────────
   const containerStyles = applyOverrides([styles.simpleContainer, { marginTop: mt }]);
 
   const lStyle: Style[] = [styles.textLeft];

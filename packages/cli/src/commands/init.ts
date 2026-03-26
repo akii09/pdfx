@@ -151,7 +151,6 @@ export async function init() {
     blockDir: answers.blockDir || DEFAULTS.BLOCK_DIR,
   };
 
-  // Validate the config we're about to write
   const validation = configSchema.safeParse(config);
   if (!validation.success) {
     const issues = validation.error.issues.map((i) => i.message).join(', ');

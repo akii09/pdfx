@@ -113,17 +113,14 @@ export function resolveThemeImport(
   const absComponentDir = path.resolve(process.cwd(), componentDir);
   const absThemePath = path.resolve(process.cwd(), themePath);
 
-  // Strip .ts/.tsx extension for the import specifier
   const themeImportTarget = absThemePath.replace(/\.tsx?$/, '');
 
   let relativePath = path.relative(absComponentDir, themeImportTarget);
 
-  // Ensure the path starts with ./ or ../
   if (!relativePath.startsWith('.')) {
     relativePath = `./${relativePath}`;
   }
 
-  // Compute the context file path — pdfx-theme-context sits next to pdfx-theme
   const absContextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context');
   let relativeContextPath = path.relative(absComponentDir, absContextPath);
 
@@ -344,10 +341,8 @@ async function installComponent(
   const componentDir = path.join(targetDir, component.name);
   ensureDir(componentDir);
 
-  // Relative form of componentDir for resolveThemeImport (which resolves from cwd internally)
   const componentRelDir = path.join(config.componentDir, component.name);
 
-  // Collect and validate file paths, rewriting theme imports if needed
   const filesToWrite: Array<{ filePath: string; content: string }> = [];
   for (const file of component.files) {
     const fileName = path.basename(file.path);
@@ -364,7 +359,6 @@ async function installComponent(
     filesToWrite.push({ filePath, content });
   }
 
-  // Check for existing files (overwrite protection)
   if (!force) {
     const existing = filesToWrite.filter((f) => checkFileExists(f.filePath));
     if (existing.length > 0) {
@@ -375,13 +369,10 @@ async function installComponent(
     }
   }
 
-  // Write all files
   for (const file of filesToWrite) {
     writeFile(file.filePath, file.content);
   }
 
-  // Ensure pdfx-theme-context.tsx exists alongside the theme file.
-  // Components import it for usePdfxTheme / useSafeMemo / PdfxThemeProvider.
   if (config.theme) {
     const absThemePath = path.resolve(process.cwd(), config.theme);
     const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
@@ -393,7 +384,6 @@ async function installComponent(
 }
 
 export async function add(components: string[], options: AddOptions = {}) {
-  // Validate arguments
   if (!components || components.length === 0) {
     console.error(chalk.red('Error: Component name required'));
     console.log(chalk.dim('Usage: pdfx add <component...>'));
@@ -401,7 +391,6 @@ export async function add(components: string[], options: AddOptions = {}) {
     process.exit(1);
   }
 
-  // Lightweight dependency check - just verify @react-pdf/renderer exists
   const reactPdfCheck = validateReactPdfRenderer();
   if (!reactPdfCheck.installed) {
     console.error(chalk.red('\nError: @react-pdf/renderer is not installed\n'));
@@ -431,7 +420,6 @@ export async function add(components: string[], options: AddOptions = {}) {
   try {
     config = readConfig(configPath);
 
-    // Override registry if provided via CLI option
     if (options.registry) {
       config = { ...config, registry: options.registry };
     }
