@@ -6,7 +6,7 @@
 
 **Beautiful PDF components for React. Copy-paste. No lock-in.**
 
-Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by [shadcn/components](https://components.shadcn.com/) — PDFx gives you pre-built, themeable document components and a CLI to add them directly into your codebase.
+Built on [@react-pdf/renderer](https://react-pdf.org/) and inspired by shadcn/ui — PDFx gives you pre-built, themeable document components and a CLI to add them directly into your codebase.
 
 ---
 
