@@ -1,86 +1,112 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { Command, Terminal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export function MCPBadge() {
-  const [phase, setPhase] = useState<'vibe' | 'strike' | 'smart'>('vibe');
+  const [phase, setPhase] = useState<'booting' | 'ready'>('booting');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase('strike'), 2200);
-    const t2 = setTimeout(() => setPhase('smart'), 2900);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    // Show boot sequence for 4.5 seconds to capture attention
+    const t = setTimeout(() => setPhase('ready'), 4500);
+    return () => clearTimeout(t);
   }, []);
 
   return (
-    <div className="fixed bottom-6 right-5 z-50">
+    <div className="fixed bottom-6 right-6 z-50">
       <motion.button
         type="button"
         onClick={() => navigate('/mcp')}
-        initial={{ opacity: 0, y: 20, scale: 0.9 }}
+        initial={{ opacity: 0, y: 30, scale: 0.9 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.55, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        whileHover={{ scale: 1.06, y: -2 }}
-        whileTap={{ scale: 0.96 }}
-        className="relative flex flex-col items-center cursor-pointer select-none focus:outline-none"
+        transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.5 }}
+        whileHover={{ scale: 1.05, y: -4 }}
+        whileTap={{ scale: 0.95 }}
+        className="group relative flex items-center gap-3 cursor-pointer select-none focus:outline-none"
         aria-label="Open MCP & Skills docs"
       >
-        {/* Ambient glow */}
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-500/30 via-fuchsia-500/20 to-pink-500/20 blur-xl opacity-70 pointer-events-none" />
+        {/* Soft shadow instead of colored glow */}
+        <div className="absolute -inset-2 rounded-full bg-foreground/5 blur-xl pointer-events-none transition-opacity group-hover:opacity-100 opacity-50" />
 
-        {/* Card */}
-        <div className="relative z-10 rounded-2xl border border-white/20 bg-zinc-950/90 backdrop-blur-md px-4 pt-2.5 pb-3 shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.08)] min-w-[136px] flex flex-col items-center gap-1">
-          {/* FOR label */}
-          {/* <span className="text-[9px] font-semibold uppercase tracking-[0.18em] text-zinc-500 leading-none">
-            For
-          </span> */}
+        {/* Main Card */}
+        <div className="relative z-10 flex items-center gap-3 rounded-full border border-border/50 bg-background/80 shadow-xl backdrop-blur-xl px-4 py-2.5 transition-colors hover:bg-muted/50 group-hover:border-border/80">
+          {/* Icon Indicator */}
+          <div className="relative flex items-center justify-center p-1.5 rounded-full bg-muted">
+            {phase === 'booting' ? (
+              <Terminal className="w-4 h-4 text-muted-foreground" />
+            ) : (
+              <Command className="w-4 h-4 text-foreground" />
+            )}
+            <span
+              className={`absolute -right-0.5 -top-0.5 w-2 h-2 rounded-full border border-background transition-colors duration-500 ${phase === 'ready' ? 'bg-foreground animate-pulse' : 'bg-muted-foreground'}`}
+            />
+          </div>
 
-          {/* Animated text block */}
-          <div className="flex flex-col items-center gap-0.5">
-            {/* Vibe Coders + strikethrough */}
-            <div className="relative">
-              <span className="text-[13px] font-bold tracking-tight text-zinc-300 leading-none">
-                Vibe Coders
-              </span>
-              <AnimatePresence>
-                {(phase === 'strike' || phase === 'smart') && (
+          <div className="flex flex-col items-start min-w-[125px]">
+            {/* Title / Animation text */}
+            <div className="relative h-[20px] flex items-center overflow-hidden w-full">
+              <AnimatePresence mode="popLayout">
+                {phase === 'booting' ? (
                   <motion.div
-                    className="absolute inset-y-0 my-auto left-0 h-[1.5px] bg-gradient-to-r from-violet-400 to-pink-400 rounded-full"
-                    initial={{ width: '0%' }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: 0.35, ease: 'easeOut' }}
-                  />
+                    key="booting"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="flex items-center gap-1.5 text-[13px] font-mono tracking-tight text-muted-foreground"
+                  >
+                    <span className="opacity-70">$</span>
+                    <span className="relative flex items-center">
+                      <motion.span
+                        animate={{ backgroundPosition: ['200% 0', '-200% 0'] }}
+                        transition={{
+                          duration: 2.5,
+                          repeat: Number.POSITIVE_INFINITY,
+                          ease: 'linear',
+                        }}
+                        className="bg-gradient-to-r from-muted-foreground/50 via-foreground to-muted-foreground/50 bg-[length:200%_auto] bg-clip-text text-transparent"
+                      >
+                        mcp connect
+                      </motion.span>
+                    </span>
+                    <motion.span
+                      animate={{ opacity: [1, 0, 1] }}
+                      transition={{
+                        duration: 0.8,
+                        repeat: Number.POSITIVE_INFINITY,
+                        ease: 'linear',
+                      }}
+                      className="w-1.5 h-3.5 bg-foreground/80 -ml-0.5"
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="ready"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, type: 'spring' }}
+                    className="flex items-center gap-1.5"
+                  >
+                    <span className="text-[14px] font-bold tracking-tight text-foreground drop-shadow-sm">
+                      Agent Ready
+                    </span>
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
 
-            {/* Smart Coders */}
-            <AnimatePresence>
-              {phase === 'smart' && (
+            {/* Subtext */}
+            <AnimatePresence mode="wait">
+              {phase === 'ready' && (
                 <motion.span
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
-                  className="text-[13px] font-bold tracking-tight leading-none bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-[10px] font-medium text-muted-foreground tracking-wider uppercase mt-[-2px]"
                 >
-                  Smart Coders ✦
+                  MCP Server Active
                 </motion.span>
               )}
             </AnimatePresence>
-          </div>
-
-          {/* Shimmer rule */}
-          <div className="mt-0.5 h-[1px] w-full bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
-
-          {/* MCP chip */}
-          <div className="flex items-center gap-1 mt-0.5">
-            <span className="h-1 w-1 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[9px] font-mono font-medium text-zinc-500 tracking-widest uppercase">
-              MCP + Skills
-            </span>
           </div>
         </div>
       </motion.button>
