@@ -1,6 +1,6 @@
 {
   "name": "@akii09/pdfx-cli",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "CLI for PDFx components",
   "type": "module",
   "bin": {
@@ -12,19 +12,21 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./mcp": {
+      "types": "./dist/mcp/index.d.ts",
+      "import": "./dist/mcp/index.js"
     }
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rimraf dist",
     "test": "vitest run --passWithNoTests",
     "lint": "biome check src/",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "mcp:inspect": "pnpm dlx @modelcontextprotocol/inspector node dist/index.js mcp"
   },
   "dependencies": {
     "commander": "^12.1.0",
@@ -33,7 +35,11 @@
     "prompts": "^2.4.2",
     "semver": "^7.6.3",
     "execa": "^9.5.2",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "dedent": "^1.6.0",
+    "zod": "^3.24.0",
+    "zod-to-json-schema": "^3.24.6"
   },
   "devDependencies": {
     "@pdfx/shared": "workspace:*",

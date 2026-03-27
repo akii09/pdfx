@@ -11,10 +11,6 @@
       "type": "registry:component"
     }
   ],
-  "dependencies": [
-    "@react-pdf/renderer"
-  ],
-  "registryDependencies": [
-    "theme"
-  ]
+  "dependencies": ["@react-pdf/renderer"],
+  "registryDependencies": ["theme"]
 }

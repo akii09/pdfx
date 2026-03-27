@@ -16,11 +16,21 @@ export type BadgeSize = 'sm' | 'md' | 'lg';
 
 /**
  * Inline label for status, tags, or categories.
- * Props - `label` | `variant` | `size` | `background` | `color` | `style`
+ *
+ * Accepts text via either `label` prop or `children` (string). `label` takes
+ * precedence when both are provided. The children pattern (`<Badge>text</Badge>`)
+ * is supported for compatibility with common React idioms, but note that
+ * `@react-pdf/renderer` doesn't support JSX children the way HTML does — only
+ * string children are accepted.
+ *
+ * Props - `label` | `children` | `variant` | `size` | `background` | `color` | `style`
  * @see {@link BadgeProps}
  */
 export interface BadgeProps extends Omit<PDFComponentProps, 'children'> {
-  label: string;
+  /** Text to display. Takes precedence over children when both are provided. */
+  label?: string;
+  /** String children as an alternative to the label prop. */
+  children?: string;
   /**
    * @default 'default'
    */
@@ -108,6 +118,7 @@ function createBadgeStyles(t: PdfxTheme) {
 
 export function Badge({
   label,
+  children,
   variant = 'default',
   size = 'md',
   background,
@@ -116,6 +127,8 @@ export function Badge({
 }: BadgeProps) {
   const theme = usePdfxTheme();
   const styles = useSafeMemo(() => createBadgeStyles(theme), [theme]);
+  // `label` takes precedence; fall back to string children for React idiom compatibility
+  const text = label ?? children ?? '';
   const containerStyles: Style[] = [
     styles.containerBase,
     styles.containerVariantMap[variant],
@@ -130,7 +143,7 @@ export function Badge({
   ];
   return (
     <View style={containerStyles}>
-      <PDFText style={textStyles}>{label}</PDFText>
+      <PDFText style={textStyles}>{text}</PDFText>
     </View>
   );
 }

@@ -8,6 +8,8 @@ import { blockAdd, blockList } from './commands/block.js';
 import { diff } from './commands/diff.js';
 import { init } from './commands/init.js';
 import { list } from './commands/list.js';
+import { mcpCommand } from './commands/mcp.js';
+import { skillsCommand } from './commands/skills.js';
 import { themeInit, themeSwitch, themeValidate } from './commands/theme.js';
 
 function getVersion(): string {
@@ -31,7 +33,11 @@ program.configureOutput({
   },
 });
 
-program.command('init').description('Initialize pdfx in your project').action(init);
+program
+  .command('init')
+  .description('Initialize pdfx in your project')
+  .option('-y, --yes', 'Accept all defaults without prompting (non-interactive / CI mode)')
+  .action((options: { yes?: boolean }) => init(options));
 
 program
   .command('add <components...>')
@@ -69,6 +75,9 @@ themeCmd
   .action(themeSwitch);
 
 themeCmd.command('validate').description('Validate your theme file').action(themeValidate);
+
+program.addCommand(mcpCommand);
+program.addCommand(skillsCommand);
 
 const blockCmd = program.command('block').description('Manage PDF blocks (copy-paste designs)');
 

@@ -38,7 +38,9 @@ async function fetchBlock(name: string, registryUrl: string): Promise<RegistryIt
       response.status === 404
         ? `Block "${name}" not found in registry`
         : `Registry returned HTTP ${response.status}`,
-      response.status === 404 ? 'Run "pdfx block list" to see all available blocks' : undefined
+      response.status === 404
+        ? 'Run "npx @akii09/pdfx-cli@latest block list" to see all available blocks'
+        : undefined
     );
   }
 
@@ -166,7 +168,7 @@ async function ensurePeerComponents(
 
       if (!force) {
         peerWarnings.push(
-          `${componentName}: already exists, skipped install (use "pdfx diff ${componentName}" to verify freshness)`
+          `${componentName}: already exists, skipped install (use "npx @akii09/pdfx-cli@latest diff ${componentName}" to verify freshness)`
         );
         continue;
       }
@@ -276,7 +278,7 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
 
   if (!checkFileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
-    console.log(chalk.yellow('Run: pdfx init'));
+    console.log(chalk.yellow('Run: npx @akii09/pdfx-cli@latest init'));
     process.exit(1);
   }
 
@@ -369,7 +371,7 @@ export async function blockList() {
 
   if (!checkFileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
-    console.log(chalk.yellow('Run: pdfx init'));
+    console.log(chalk.yellow('Run: npx @akii09/pdfx-cli@latest init'));
     process.exit(1);
   }
 
@@ -444,7 +446,11 @@ export async function blockList() {
       console.log();
     }
 
-    console.log(chalk.dim(`  Install with: ${chalk.cyan('pdfx block add <block-name>')}\n`));
+    console.log(
+      chalk.dim(
+        `  Install with: ${chalk.cyan('npx @akii09/pdfx-cli@latest block add <block-name>')}\n`
+      )
+    );
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     spinner.fail(message);

@@ -2,6 +2,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, Copy, Github, PlayCircle, Server, Zap } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { MCPBadge } from '../components/mcp-badge';
 import { SocialProofStats } from '../components/social-proof-stats';
 
 function VideoModal() {
@@ -1273,6 +1274,7 @@ export default function HomePage() {
           </div>
         </motion.div>
       </section>
+      <MCPBadge />
     </div>
   );
 }

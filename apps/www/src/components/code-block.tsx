@@ -9,6 +9,8 @@ interface CodeBlockProps {
   /** If provided, the copy button copies this value instead of the displayed code */
   copyValue?: string;
   language?: string;
+  /** Backward-compatible alias for language */
+  lang?: string;
   filename?: string;
   className?: string;
 }
@@ -18,15 +20,19 @@ const theme = themes.oneDark;
 export function CodeBlock({
   code,
   copyValue,
-  language = 'tsx',
+  language,
+  lang,
   filename,
   className,
 }: CodeBlockProps) {
-  const lang = useMemo(() => {
-    if (language === 'bash' || language === 'sh' || language === 'shell') return 'bash';
-    if (language === 'ts' || language === 'typescript') return 'typescript';
-    return language;
-  }, [language]);
+  const resolvedLanguage = language ?? lang ?? 'tsx';
+
+  const languageForHighlight = useMemo(() => {
+    if (resolvedLanguage === 'bash' || resolvedLanguage === 'sh' || resolvedLanguage === 'shell')
+      return 'bash';
+    if (resolvedLanguage === 'ts' || resolvedLanguage === 'typescript') return 'typescript';
+    return resolvedLanguage;
+  }, [resolvedLanguage]);
 
   return (
     <div
@@ -52,7 +58,7 @@ export function CodeBlock({
             className="absolute right-3 top-3 z-10 text-zinc-400 hover:text-zinc-100 hover:bg-white/10 rounded-md p-1.5 transition-colors"
           />
         )}
-        <Highlight theme={theme} code={code.trim()} language={lang}>
+        <Highlight theme={theme} code={code.trim()} language={languageForHighlight}>
           {({ className: preClassName, style, tokens, getLineProps, getTokenProps }) => (
             <pre
               className={cn(

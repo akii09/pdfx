@@ -24,6 +24,13 @@ const sections: SidebarSection[] = [
     links: [{ title: 'Setup Guide', href: '/installation' }],
   },
   {
+    title: 'AI Tools',
+    links: [
+      { title: 'MCP Server', href: '/mcp?tab=mcp' },
+      { title: 'Skills File', href: '/mcp?tab=skills' },
+    ],
+  },
+  {
     title: 'Components',
     links: [
       { title: 'Alert', href: '/components/alert' },
@@ -64,15 +71,20 @@ const sections: SidebarSection[] = [
 
 export function Sidebar() {
   const location = useLocation();
+  const isMCPPage = location.pathname.startsWith('/mcp');
   const showSidebar =
     location.pathname.startsWith('/docs') ||
     location.pathname.startsWith('/components') ||
     location.pathname.startsWith('/installation') ||
     location.pathname.startsWith('/templates') ||
-    location.pathname.startsWith('/blocks');
+    location.pathname.startsWith('/blocks') ||
+    isMCPPage;
   const isComponentsIndex = location.pathname === '/components';
 
   if (!showSidebar) return null;
+
+  // Determine active AI Tools link by checking search params
+  const activeHref = location.pathname + location.search;
 
   return (
     <aside className="hidden lg:block w-52 shrink-0 border-r">
@@ -109,23 +121,45 @@ export function Sidebar() {
                 </h4>
               </div>
               <ul className="space-y-0.5">
-                {section.links.map((link) => (
-                  <li key={link.href}>
-                    <NavLink
-                      to={link.href}
-                      className={({ isActive }) =>
-                        cn(
-                          'block rounded-md px-3 py-1.5 text-sm transition-colors',
-                          isActive
-                            ? 'bg-accent text-accent-foreground font-medium'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
-                        )
-                      }
-                    >
-                      {link.title}
-                    </NavLink>
-                  </li>
-                ))}
+                {section.links.map((link) => {
+                  // For AI Tools links, check if current tab matches
+                  const isAIToolsLink = section.title === 'AI Tools';
+                  const isActive = isAIToolsLink
+                    ? activeHref.includes(link.href.split('?')[1] ?? '') && isMCPPage
+                    : undefined;
+
+                  return (
+                    <li key={link.href}>
+                      {isAIToolsLink ? (
+                        <NavLink
+                          to={link.href}
+                          className={cn(
+                            'block rounded-md px-3 py-1.5 text-sm transition-colors',
+                            isActive
+                              ? 'bg-accent text-accent-foreground font-medium'
+                              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                          )}
+                        >
+                          {link.title}
+                        </NavLink>
+                      ) : (
+                        <NavLink
+                          to={link.href}
+                          className={({ isActive: navActive }) =>
+                            cn(
+                              'block rounded-md px-3 py-1.5 text-sm transition-colors',
+                              navActive
+                                ? 'bg-accent text-accent-foreground font-medium'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+                            )
+                          }
+                        >
+                          {link.title}
+                        </NavLink>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           );

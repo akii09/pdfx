@@ -6,9 +6,10 @@ interface CopyButtonProps {
   value: string;
   className?: string;
   onCopy?: (value: string) => void;
+  text?: string;
 }
 
-export function CopyButton({ value, className, onCopy }: CopyButtonProps) {
+export function CopyButton({ value, className, onCopy, text }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
@@ -34,7 +35,7 @@ export function CopyButton({ value, className, onCopy }: CopyButtonProps) {
       </button>
       {copied && (
         <output className="sr-only" aria-live="polite">
-          Copied to clipboard
+          {text ?? 'Copied to clipboard'}
         </output>
       )}
     </>

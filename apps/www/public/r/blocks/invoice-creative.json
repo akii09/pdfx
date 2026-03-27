@@ -16,16 +16,6 @@
       "type": "registry:file"
     }
   ],
-  "dependencies": [
-    "@react-pdf/renderer"
-  ],
-  "peerComponents": [
-    "page-header",
-    "page-footer",
-    "table",
-    "key-value",
-    "section",
-    "text",
-    "badge"
-  ]
+  "dependencies": ["@react-pdf/renderer"],
+  "peerComponents": ["page-header", "page-footer", "table", "key-value", "section", "text", "badge"]
 }

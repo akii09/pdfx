@@ -1,4 +1,4 @@
-import { FileText, Heading, Home, Search } from 'lucide-react';
+import { FileText, Heading, Home, PlugZap, Search, Sparkles } from 'lucide-react';
 
 interface CommandItem {
   label: string;
@@ -32,6 +32,46 @@ export const commandItems: CommandItem[] = [
     keywords: ['ui', 'library'],
   },
   { label: 'Blocks', href: '/blocks', icon: FileText, group: 'Pages', keywords: ['templates'] },
+  {
+    label: 'MCP Server',
+    href: '/mcp?tab=mcp',
+    icon: PlugZap,
+    group: 'Pages',
+    keywords: [
+      'mcp',
+      'ai',
+      'claude',
+      'cursor',
+      'vscode',
+      'windsurf',
+      'qoder',
+      'opencode',
+      'antigravity',
+      'model context protocol',
+      'tools',
+      'editor',
+    ],
+  },
+  {
+    label: 'Skills File',
+    href: '/mcp?tab=skills',
+    icon: Sparkles,
+    group: 'Pages',
+    keywords: [
+      'skills',
+      'ai',
+      'context',
+      'cursorrules',
+      'claude md',
+      'llms',
+      'copilot instructions',
+      'windsurfrules',
+      'agents md',
+      'opencode',
+      'antigravity',
+      'qoder rules',
+    ],
+  },
 
   { label: 'Heading', href: '/components/heading', icon: Heading, group: 'Components' },
   { label: 'Text', href: '/components/text', icon: FileText, group: 'Components' },

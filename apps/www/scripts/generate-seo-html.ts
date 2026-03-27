@@ -45,6 +45,11 @@ const routes: Record<string, RouteMeta> = {
     description:
       'Install PDFx in seconds. Run `npx @akii09/pdfx-cli init` to scaffold your PDF component library and pick your first theme.',
   },
+  '/mcp': {
+    title: 'MCP Server & Skills File — PDFx',
+    description:
+      'Make your AI editor fluent in PDFx. Set up the MCP server in Claude Code, Cursor, VS Code, Antigravity, or Windsurf in one command. Download the AI context skills file for any editor.',
+  },
 
   // ── Components hub ───────────────────────────────────────────────────────
   '/components': {

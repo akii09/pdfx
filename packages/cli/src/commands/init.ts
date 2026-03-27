@@ -11,7 +11,12 @@ import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
 import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
 import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
 
-export async function init() {
+interface InitOptions {
+  /** Skip all prompts and accept defaults. Suitable for CI / non-interactive environments. */
+  yes?: boolean;
+}
+
+export async function init(options: InitOptions = {}) {
   console.log(chalk.bold.cyan('\n  Welcome to the pdfx cli\n'));
 
   const preFlightResult = runPreFlightChecks();
@@ -34,112 +39,127 @@ export async function init() {
 
   const existingConfig = path.join(process.cwd(), 'pdfx.json');
   if (fs.existsSync(existingConfig)) {
-    const { overwrite } = await prompts({
-      type: 'confirm',
-      name: 'overwrite',
-      message: 'pdfx.json already exists. Overwrite?',
-      initial: false,
-    });
-    if (!overwrite) {
-      console.log(chalk.yellow('Init cancelled — existing config preserved.'));
-      return;
+    if (options.yes) {
+      console.log(chalk.dim('  pdfx.json already exists — overwriting (--yes).'));
+    } else {
+      const { overwrite } = await prompts({
+        type: 'confirm',
+        name: 'overwrite',
+        message: 'pdfx.json already exists. Overwrite?',
+        initial: false,
+      });
+      if (!overwrite) {
+        console.log(chalk.yellow('Init cancelled — existing config preserved.'));
+        return;
+      }
     }
   }
 
-  const answers = await prompts(
-    [
-      {
-        type: 'text',
-        name: 'componentDir',
-        message: 'Where should we install components?',
-        initial: DEFAULTS.COMPONENT_DIR,
-        validate: (value: string) => {
-          if (!value || value.trim().length === 0) {
-            return 'Component directory is required';
-          }
-
-          if (path.isAbsolute(value)) {
-            return 'Please use a relative path (e.g., ./src/components/pdfx)';
-          }
-
-          if (!value.startsWith('.')) {
-            return 'Path should start with ./ or ../ (e.g., ./src/components/pdfx)';
-          }
-          return true;
-        },
-      },
-      {
-        type: 'text',
-        name: 'blockDir',
-        message: 'Where should we install blocks?',
-        initial: DEFAULTS.BLOCK_DIR,
-        validate: (value: string) => {
-          if (!value || value.trim().length === 0) {
-            return 'Block directory is required';
-          }
-          if (path.isAbsolute(value)) {
-            return 'Please use a relative path (e.g., ./src/blocks/pdfx)';
-          }
-          if (!value.startsWith('.')) {
-            return 'Path should start with ./ or ../ (e.g., ./src/blocks/pdfx)';
-          }
-          return true;
-        },
-      },
-      {
-        type: 'text',
-        name: 'registry',
-        message: 'Registry URL:',
-        initial: DEFAULTS.REGISTRY_URL,
-        validate: (value: string) => {
-          if (!value || !value.startsWith('http')) {
-            return 'Please enter a valid HTTP(S) URL';
-          }
-          return true;
-        },
-      },
-      {
-        type: 'select',
-        name: 'themePreset',
-        message: 'Choose a theme:',
-        choices: [
+  // In --yes mode, skip all prompts and use sensible defaults.
+  const answers = options.yes
+    ? {
+        componentDir: DEFAULTS.COMPONENT_DIR,
+        blockDir: DEFAULTS.BLOCK_DIR,
+        registry: DEFAULTS.REGISTRY_URL,
+        themePreset: 'professional' as const,
+        themePath: normalizeThemePath(DEFAULTS.THEME_FILE),
+      }
+    : await prompts(
+        [
           {
-            title: 'Professional',
-            description: 'Serif headings, navy colors, generous margins',
-            value: 'professional',
+            type: 'text',
+            name: 'componentDir',
+            message: 'Where should we install components?',
+            initial: DEFAULTS.COMPONENT_DIR,
+            validate: (value: string) => {
+              if (!value || value.trim().length === 0) {
+                return 'Component directory is required';
+              }
+
+              if (path.isAbsolute(value)) {
+                return 'Please use a relative path (e.g., ./src/components/pdfx)';
+              }
+
+              if (!value.startsWith('.')) {
+                return 'Path should start with ./ or ../ (e.g., ./src/components/pdfx)';
+              }
+              return true;
+            },
           },
           {
-            title: 'Modern',
-            description: 'Sans-serif, vibrant purple, tight spacing',
-            value: 'modern',
+            type: 'text',
+            name: 'blockDir',
+            message: 'Where should we install blocks?',
+            initial: DEFAULTS.BLOCK_DIR,
+            validate: (value: string) => {
+              if (!value || value.trim().length === 0) {
+                return 'Block directory is required';
+              }
+              if (path.isAbsolute(value)) {
+                return 'Please use a relative path (e.g., ./src/blocks/pdfx)';
+              }
+              if (!value.startsWith('.')) {
+                return 'Path should start with ./ or ../ (e.g., ./src/blocks/pdfx)';
+              }
+              return true;
+            },
           },
           {
-            title: 'Minimal',
-            description: 'Monospace headings, stark black, maximum whitespace',
-            value: 'minimal',
+            type: 'text',
+            name: 'registry',
+            message: 'Registry URL:',
+            initial: DEFAULTS.REGISTRY_URL,
+            validate: (value: string) => {
+              if (!value || !value.startsWith('http')) {
+                return 'Please enter a valid HTTP(S) URL';
+              }
+              return true;
+            },
+          },
+          {
+            type: 'select',
+            name: 'themePreset',
+            message: 'Choose a theme:',
+            choices: [
+              {
+                title: 'Professional',
+                description: 'Serif headings, navy colors, generous margins',
+                value: 'professional',
+              },
+              {
+                title: 'Modern',
+                description: 'Sans-serif, vibrant purple, tight spacing',
+                value: 'modern',
+              },
+              {
+                title: 'Minimal',
+                description: 'Monospace headings, stark black, maximum whitespace',
+                value: 'minimal',
+              },
+            ],
+            initial: 0,
+          },
+          {
+            type: 'text',
+            name: 'themePath',
+            message: 'Where should we create the theme file?',
+            initial: DEFAULTS.THEME_FILE,
+            format: normalizeThemePath,
+            validate: validateThemePath,
           },
         ],
-        initial: 0,
-      },
-      {
-        type: 'text',
-        name: 'themePath',
-        message: 'Where should we create the theme file?',
-        initial: DEFAULTS.THEME_FILE,
-        format: normalizeThemePath,
-        validate: validateThemePath,
-      },
-    ],
-    {
-      onCancel: () => {
-        console.log(chalk.yellow('\nSetup cancelled.'));
-        process.exit(0);
-      },
-    }
-  );
+        {
+          onCancel: () => {
+            console.log(chalk.yellow('\nSetup cancelled.'));
+            process.exit(0);
+          },
+        }
+      );
 
   if (!answers.componentDir || !answers.registry) {
-    console.error(chalk.red('Missing required fields. Run pdfx init again.'));
+    console.error(
+      chalk.red('Missing required fields. Run npx @akii09/pdfx-cli@latest init again.')
+    );
     process.exit(1);
   }
 
@@ -153,7 +173,12 @@ export async function init() {
 
   const validation = configSchema.safeParse(config);
   if (!validation.success) {
-    const issues = validation.error.issues.map((i) => i.message).join(', ');
+    const issues = validation.error.issues
+      .map((i) => {
+        const fieldPath = i.path.length > 0 ? i.path.join('.') : 'root';
+        return `"${fieldPath}": ${i.message}`;
+      })
+      .join('; ');
     console.error(chalk.red(`Invalid configuration: ${issues}`));
     process.exit(1);
   }
@@ -176,8 +201,8 @@ export async function init() {
 
     spinner.succeed(`Created pdfx.json + ${config.theme} (${presetName} theme)`);
     console.log(chalk.green('\nSuccess! You can now run:'));
-    console.log(chalk.cyan('  pdfx add heading'));
-    console.log(chalk.cyan('  pdfx block add invoice-classic'));
+    console.log(chalk.cyan('  npx @akii09/pdfx-cli@latest add heading'));
+    console.log(chalk.cyan('  npx @akii09/pdfx-cli@latest block add invoice-classic'));
     console.log(chalk.dim(`\n  Components: ${path.resolve(process.cwd(), answers.componentDir)}`));
     console.log(chalk.dim(`  Blocks: ${path.resolve(process.cwd(), config.blockDir)}`));
     console.log(chalk.dim(`  Theme: ${path.resolve(process.cwd(), config.theme)}\n`));

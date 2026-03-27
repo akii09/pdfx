@@ -6,7 +6,6 @@ import { type Registry, registryItemSchema, registrySchema } from '@pdfx/shared'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Input types: what we read from registry/index.json (no content yet)
 interface SourceRegistryFile {
   path: string;
   type: string;
@@ -252,11 +251,15 @@ async function processItem(
 }
 
 /**
- * Maps @pdfx/components exported names to their consumer component file paths.
- * Key: export name, Value: component folder name (used to build the pdfx- prefixed path).
+ * Maps @pdfx/components exported names (or friendly aliases) to their consumer
+ * component folder names (used to build the pdfx-<folder> install path).
+ *
+ * Both canonical names AND common aliases are listed so that block source files
+ * work regardless of which name they import. Aliases are remapped to canonical
+ * export names at emit time via CANONICAL_EXPORT_BY_FOLDER below.
  */
 const PDFX_UI_COMPONENT_MAP: Record<string, string> = {
-  // Components
+  // Canonical component names (match actual export names in installed files)
   Badge: 'badge',
   Card: 'card',
   DataTable: 'data-table',
@@ -271,24 +274,55 @@ const PDFX_UI_COMPONENT_MAP: Record<string, string> = {
   PdfList: 'list',
   PdfPageNumber: 'page-number',
   PdfQRCode: 'qrcode',
+  PdfSignatureBlock: 'signature',
   PdfWatermark: 'watermark',
   PageBreak: 'page-break',
   PageFooter: 'page-footer',
   PageHeader: 'page-header',
   Section: 'section',
-  Signature: 'signature',
   Stack: 'stack',
   Table: 'table',
   TableBody: 'table',
   TableCell: 'table',
+  TableFooter: 'table',
   TableHeader: 'table',
   TableRow: 'table',
   Text: 'text',
+  // Friendly aliases — block sources or AI-generated code may use these shorter names.
+  // They resolve to the same folder and are remapped to canonical names at emit time.
+  Alert: 'alert',
+  Graph: 'graph',
+  List: 'list',
+  PageNumber: 'page-number',
+  QRCode: 'qrcode',
+  QrCode: 'qrcode',
+  Signature: 'signature',
+  Watermark: 'watermark',
   // Theme context
   PdfxThemeContext: 'theme-context',
   PdfxThemeProvider: 'theme-context',
   usePdfxTheme: 'theme-context',
   useSafeMemo: 'theme-context',
+};
+
+/**
+ * Canonical export name for each component folder.
+ *
+ * Only needed for folders where the real export name doesn't match the alias
+ * that might appear in block source files (e.g. a block might import `Signature`
+ * but the installed file exports `PdfSignatureBlock`).
+ *
+ * Key: folder name (value in PDFX_UI_COMPONENT_MAP)
+ * Value: the exact name exported by that component's file
+ */
+const CANONICAL_EXPORT_BY_FOLDER: Record<string, string> = {
+  alert: 'PdfAlert',
+  graph: 'PdfGraph',
+  list: 'PdfList',
+  'page-number': 'PdfPageNumber',
+  qrcode: 'PdfQRCode',
+  signature: 'PdfSignatureBlock',
+  watermark: 'PdfWatermark',
 };
 
 /**
@@ -354,9 +388,14 @@ export function transformBlockForRegistry(content: string): string {
     }
 
     for (const [folder, names] of Object.entries(componentGroups).sort()) {
-      const importNames = names.join(', ');
+      // Remap any alias names to their canonical export name, then deduplicate.
+      // Example: both 'Signature' and 'PdfSignatureBlock' in the same import get
+      // collapsed into a single 'PdfSignatureBlock' import.
+      const canonicalNames = [
+        ...new Set(names.map((n) => CANONICAL_EXPORT_BY_FOLDER[folder] ?? n)),
+      ];
       newImports.push(
-        `import { ${importNames} } from '../../components/pdfx/${folder}/pdfx-${folder}';`
+        `import { ${canonicalNames.join(', ')} } from '../../components/pdfx/${folder}/pdfx-${folder}';`
       );
     }
 
