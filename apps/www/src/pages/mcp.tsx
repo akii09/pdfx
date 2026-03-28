@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { PlugZap, Sparkles, Terminal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -159,14 +159,19 @@ export default function MCPPage() {
         </motion.div>
 
         {/* Tab content */}
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-        >
-          {activeTab === 'mcp' ? <MCPContent /> : <SkillsContent />}
-        </motion.div>
+        <div className="relative">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+            >
+              {activeTab === 'mcp' ? <MCPContent /> : <SkillsContent />}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Right ToC */}
