@@ -1,5 +1,12 @@
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight, Copy, Github, PlayCircle, Server, Zap } from 'lucide-react';
+import {
+  AnimatePresence,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
+import { ArrowRight, Check, Copy, Github, PlayCircle, Server, Zap } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MCPBadge } from '../components/mcp-badge';
@@ -343,11 +350,16 @@ function FloatingCard({
         top,
         width,
         height,
-        rotate: `${rotate}deg`,
+        rotateZ: rotate,
+        transformPerspective: 1200,
+        transformStyle: 'preserve-3d',
         zIndex,
       }}
-      className="rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15),0_4px_16px_rgba(0,0,0,0.08)] border border-black/[0.06] bg-white"
+      className="rounded-2xl overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.18)] dark:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] border border-foreground/[0.08] bg-background/80 backdrop-blur-2xl"
     >
+      {/* Inner glossy reflection */}
+      <div className="absolute inset-0 rounded-2xl border border-white/20 dark:border-white/5 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-foreground/[0.03] to-transparent pointer-events-none" />
       {children}
     </motion.div>
   );
@@ -368,6 +380,10 @@ function HeroCardsDesktop() {
   const y2 = useTransform(smoothY, [-1, 1], [6, -6]);
   const x3 = useTransform(smoothX, [-1, 1], [-5, 12]);
   const y3 = useTransform(smoothY, [-1, 1], [10, -10]);
+
+  // Global 3D Tilt mapping from pointer
+  const rotateX = useTransform(smoothY, [-1, 1], [10, -10]);
+  const rotateY = useTransform(smoothX, [-1, 1], [-10, 10]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -390,10 +406,29 @@ function HeroCardsDesktop() {
   }, [mouseX, mouseY]);
 
   return (
-    <div ref={containerRef} className="relative w-full h-[500px]" aria-hidden="true">
+    <div
+      ref={containerRef}
+      className="relative w-full h-[500px] perspective-1000"
+      aria-hidden="true"
+    >
+      {/* Ambient Mouse Glow Orb (Monochrome Spotlight using fluid templates to fix clipping bugs) */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none dark:hidden"
+        style={{
+          background: useMotionTemplate`radial-gradient(450px circle at ${useTransform(smoothX, [-1, 1], [0, 100])}% ${useTransform(smoothY, [-1, 1], [0, 100])}%, rgba(0,0,0,0.06), transparent 80%)`,
+          zIndex: 0,
+        }}
+      />
+      <motion.div
+        className="absolute inset-0 pointer-events-none hidden dark:block"
+        style={{
+          background: useMotionTemplate`radial-gradient(450px circle at ${useTransform(smoothX, [-1, 1], [0, 100])}% ${useTransform(smoothY, [-1, 1], [0, 100])}%, rgba(255,255,255,0.08), transparent 80%)`,
+          zIndex: 0,
+        }}
+      />
       {/* Contract — back left */}
       <FloatingCard
-        motionStyle={{ x: x3, y: y3 }}
+        motionStyle={{ x: x3, y: y3, rotateX, rotateY }}
         left="0%"
         top="16%"
         width="44%"
@@ -407,7 +442,7 @@ function HeroCardsDesktop() {
       </FloatingCard>
       {/* Report — back right */}
       <FloatingCard
-        motionStyle={{ x: x2, y: y2 }}
+        motionStyle={{ x: x2, y: y2, rotateX, rotateY }}
         left="56%"
         top="6%"
         width="44%"
@@ -421,7 +456,7 @@ function HeroCardsDesktop() {
       </FloatingCard>
       {/* Invoice — front center */}
       <FloatingCard
-        motionStyle={{ x: x1, y: y1 }}
+        motionStyle={{ x: x1, y: y1, rotateX, rotateY }}
         left="20%"
         top="2%"
         width="60%"
@@ -432,14 +467,6 @@ function HeroCardsDesktop() {
       >
         <InvoiceCard />
       </FloatingCard>
-      {/* Ambient glow */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 65% 45% at 50% 65%, rgba(255,255,255,0.07) 0%, transparent 70%)',
-        }}
-      />
     </div>
   );
 }
@@ -454,29 +481,51 @@ function HeroCardsMobile() {
       {/* Contract — back */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 0.7, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute rounded-xl overflow-hidden border border-black/[0.06] bg-white shadow-lg"
+        animate={{ opacity: 0.7, y: [-4, 4] }}
+        transition={{ duration: 0.7, delay: 0.3, ease: 'easeOut' }}
+        className="absolute rounded-xl overflow-hidden border border-foreground/5 bg-background shadow-lg"
         style={{ left: '2%', top: '18%', width: '48%', height: '68%', rotate: '-5deg', zIndex: 10 }}
       >
-        <ContractCard />
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{
+            duration: 6,
+            ease: 'easeInOut',
+            repeat: Number.POSITIVE_INFINITY,
+            delay: 0,
+          }}
+          className="w-full h-full"
+        >
+          <ContractCard />
+        </motion.div>
       </motion.div>
       {/* Report — back right */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 0.8, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute rounded-xl overflow-hidden border border-black/[0.06] bg-white shadow-lg"
+        animate={{ opacity: 0.8, y: [-6, 6] }}
+        transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
+        className="absolute rounded-xl overflow-hidden border border-foreground/5 bg-background shadow-lg"
         style={{ right: '2%', top: '10%', width: '48%', height: '66%', rotate: '4deg', zIndex: 20 }}
       >
-        <ReportCard />
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{
+            duration: 5,
+            ease: 'easeInOut',
+            repeat: Number.POSITIVE_INFINITY,
+            delay: 1,
+          }}
+          className="w-full h-full"
+        >
+          <ReportCard />
+        </motion.div>
       </motion.div>
       {/* Invoice — front */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute rounded-xl overflow-hidden border border-black/[0.06] bg-white shadow-xl"
+        animate={{ opacity: 1, y: [-8, 8] }}
+        transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
+        className="absolute rounded-xl overflow-hidden border border-foreground/5 bg-background shadow-2xl backdrop-blur-md"
         style={{
           left: '50%',
           transform: 'translateX(-50%)',
@@ -486,7 +535,18 @@ function HeroCardsMobile() {
           zIndex: 30,
         }}
       >
-        <InvoiceCard />
+        <motion.div
+          animate={{ y: [0, -10, 0] }}
+          transition={{
+            duration: 7,
+            ease: 'easeInOut',
+            repeat: Number.POSITIVE_INFINITY,
+            delay: 2,
+          }}
+          className="w-full h-full"
+        >
+          <InvoiceCard />
+        </motion.div>
       </motion.div>
     </div>
   );
@@ -498,23 +558,51 @@ function QuickInstall() {
   const copy = () => {
     navigator.clipboard.writeText(cmd).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      setTimeout(() => setCopied(false), 2000);
     });
   };
   return (
-    <button
+    <motion.button
       type="button"
       onClick={copy}
-      className="inline-flex items-center gap-2 sm:gap-2.5 rounded-lg border border-border bg-muted/40 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-mono text-muted-foreground hover:bg-muted hover:text-foreground transition-all duration-150 group max-w-full overflow-hidden"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className={`relative inline-flex items-center gap-2 sm:gap-2.5 rounded-lg border px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-mono transition-all duration-300 group max-w-full overflow-hidden ${
+        copied
+          ? 'bg-foreground/5 border-foreground/30 text-foreground'
+          : 'border-border bg-muted/40 text-muted-foreground hover:bg-muted hover:text-foreground hover:border-border/80'
+      }`}
     >
       <span className="text-muted-foreground/40 group-hover:text-muted-foreground/60 transition-colors shrink-0">
         $
       </span>
       <span className="truncate">{cmd}</span>
-      <Copy
-        className={`h-3.5 w-3.5 shrink-0 transition-all ${copied ? 'text-foreground scale-110' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`}
-      />
-    </button>
+      <div className="relative h-4 w-4 shrink-0 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          {copied ? (
+            <motion.div
+              key="check"
+              initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Check className="h-3.5 w-3.5 text-foreground" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="copy"
+              initial={{ opacity: 0, scale: 0.5, rotate: 45 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0, scale: 0.5, rotate: -45 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Copy className="h-3.5 w-3.5 text-muted-foreground/60 group-hover:text-foreground" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.button>
   );
 }
 
@@ -802,14 +890,16 @@ export default function HomePage() {
               >
                 PDF components
                 <br />
-                <span className="text-muted-foreground/50">for React.</span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/50">
+                  for React.
+                </span>
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.12 }}
-                className="text-base xl:text-lg text-muted-foreground mb-8 leading-relaxed"
+                className="text-base xl:text-lg text-muted-foreground mb-8 leading-relaxed max-w-lg"
               >
                 Copy, paste, customize. Professional PDFs with a component library you fully own
                 built on @react-pdf/renderer.
@@ -823,13 +913,15 @@ export default function HomePage() {
               >
                 <Link
                   to="/docs"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-foreground text-background font-medium text-sm hover:opacity-90 active:scale-[0.98] transition-all"
+                  className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-foreground text-background font-medium text-sm hover:opacity-90 active:scale-[0.98] transition-all overflow-hidden"
                 >
-                  Get started <ArrowRight className="h-4 w-4" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative">Get started</span>
+                  <ArrowRight className="h-4 w-4 relative group-hover:translate-x-0.5 transition-transform" />
                 </Link>
                 <Link
                   to="/components"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border text-foreground font-medium text-sm hover:bg-muted active:scale-[0.98] transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-border bg-card text-foreground font-medium text-sm hover:bg-muted hover:border-border/80 active:scale-[0.98] transition-all shadow-sm"
                 >
                   Browse components
                 </Link>
@@ -905,14 +997,16 @@ export default function HomePage() {
               >
                 PDF components
                 <br />
-                <span className="text-muted-foreground/50">for React.</span>
+                <span className="bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/50">
+                  for React.
+                </span>
               </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.12 }}
-                className="text-sm sm:text-base text-muted-foreground mb-5 sm:mb-7 leading-relaxed"
+                className="text-sm sm:text-base text-muted-foreground mb-5 sm:mb-7 leading-relaxed max-w-sm mx-auto"
               >
                 Copy, paste, customize. Professional PDFs with a component library you fully own.
               </motion.p>
@@ -925,13 +1019,15 @@ export default function HomePage() {
               >
                 <Link
                   to="/docs"
-                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-lg bg-foreground text-background font-medium text-sm hover:opacity-90 active:scale-[0.98] transition-all"
+                  className="group relative w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-lg bg-foreground text-background font-medium text-sm hover:opacity-90 active:scale-[0.98] transition-all overflow-hidden"
                 >
-                  Get started <ArrowRight className="h-4 w-4" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="relative">Get started</span>
+                  <ArrowRight className="h-4 w-4 relative group-hover:translate-x-0.5 transition-transform" />
                 </Link>
                 <Link
                   to="/components"
-                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-lg border border-border text-foreground font-medium text-sm hover:bg-muted active:scale-[0.98] transition-all"
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 sm:py-3 rounded-lg border border-border bg-card shadow-sm text-foreground font-medium text-sm hover:bg-muted active:scale-[0.98] transition-all"
                 >
                   Browse components
                 </Link>
@@ -1030,7 +1126,7 @@ export default function HomePage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
                 </div>
                 <div className="mt-4 text-[13px] leading-relaxed">
-                  <span className="text-purple-400">npx</span> pdfx-cli init
+                  <span className="text-zinc-400">npx</span> pdfx-cli init
                 </div>
               </div>
             </motion.div>
@@ -1059,9 +1155,9 @@ export default function HomePage() {
                   <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
                 </div>
                 <div className="mt-4 text-[13px] leading-relaxed">
-                  <span className="text-purple-400">npx</span> pdfx-cli add table form
+                  <span className="text-zinc-400">npx</span> pdfx-cli add table form
                 </div>
-                <div className="mt-2 text-green-400 text-xs opacity-80">
+                <div className="mt-2 text-zinc-500 text-xs opacity-80">
                   ✓ 2 components installed
                 </div>
               </div>
@@ -1090,23 +1186,23 @@ export default function HomePage() {
                 </div>
                 <div className="mt-3 text-[12px] leading-[1.6]">
                   <div>
-                    <span className="text-blue-400">import</span> {'{'}{' '}
-                    <span className="text-cyan-300">Form</span>,{' '}
-                    <span className="text-cyan-300">Table</span> {'}'}
+                    <span className="text-zinc-500">import</span> {'{'}{' '}
+                    <span className="text-zinc-200">Form</span>,{' '}
+                    <span className="text-zinc-200">Table</span> {'}'}
                   </div>
                   <div>
-                    <span className="text-blue-400">from</span>{' '}
-                    <span className="text-green-400">"@/components/pdfx"</span>
+                    <span className="text-zinc-500">from</span>{' '}
+                    <span className="text-zinc-400">"@/components/pdfx"</span>
                   </div>
                   <div className="mt-1">
-                    {'<'} <span className="text-cyan-300">Page</span> {'>'}
+                    {'<'} <span className="text-zinc-200">Page</span> {'>'}
                   </div>
-                  <div className="ml-4 text-zinc-400">...</div>
+                  <div className="ml-4 text-zinc-600">...</div>
                   <div className="ml-4">
-                    {'<'} <span className="text-cyan-300">Table</span> data={'{'}items{'}'} {'>'}
+                    {'<'} <span className="text-zinc-200">Table</span> data={'{'}items{'}'} {'>'}
                   </div>
                   <div>
-                    {'</'} <span className="text-cyan-300">Page</span> {'>'}
+                    {'</'} <span className="text-zinc-200">Page</span> {'>'}
                   </div>
                 </div>
               </div>
@@ -1309,33 +1405,27 @@ export default function HomePage() {
                   Next.js App Router
                 </div>
                 <div>
-                  <span className="text-blue-500 dark:text-blue-400">import</span>
+                  <span className="text-zinc-500">import</span>
                   {' { renderToBuffer } '}
-                  <span className="text-blue-500 dark:text-blue-400">from</span>{' '}
-                  <span className="text-green-600 dark:text-green-400">
-                    &apos;@react-pdf/renderer&apos;
-                  </span>
-                  ;
+                  <span className="text-zinc-500">from</span>{' '}
+                  <span className="text-zinc-400">&apos;@react-pdf/renderer&apos;</span>
+                  {';'}
                 </div>
                 <div className="mt-1">
-                  <span className="text-blue-500 dark:text-blue-400">export async function</span>{' '}
-                  <span className="text-yellow-600 dark:text-yellow-400">GET</span>() {'{'}
+                  <span className="text-zinc-500">export async function</span>{' '}
+                  <span className="text-zinc-300">GET</span>() {'{'}
                 </div>
                 <div className="ml-4">
-                  <span className="text-blue-500 dark:text-blue-400">const</span> buf ={' '}
-                  <span className="text-blue-500 dark:text-blue-400">await</span>{' '}
-                  <span className="text-yellow-600 dark:text-yellow-400">renderToBuffer</span>
+                  <span className="text-zinc-500">const</span> buf ={' '}
+                  <span className="text-zinc-500">await</span>{' '}
+                  <span className="text-zinc-300">renderToBuffer</span>
                   {'(<MyDoc />)'}
                 </div>
                 <div className="ml-4">
-                  <span className="text-blue-500 dark:text-blue-400">return new</span>{' '}
-                  <span className="text-yellow-600 dark:text-yellow-400">Response</span>(buf, {'{'}{' '}
-                  headers: {'{ '}
-                  <span className="text-green-600 dark:text-green-400">
-                    &apos;Content-Type&apos;
-                  </span>
-                  : <span className="text-green-600 dark:text-green-400">&apos;…pdf&apos;</span>{' '}
-                  {'}'} {'}'})
+                  <span className="text-zinc-500">return new</span>{' '}
+                  <span className="text-zinc-300">Response</span>(buf, {'{'} headers: {'{ '}
+                  <span className="text-zinc-400">&apos;Content-Type&apos;</span>:{' '}
+                  <span className="text-zinc-400">&apos;…pdf&apos;</span> {'}'} {'}'})
                 </div>
                 <div>{'}'}</div>
               </div>
