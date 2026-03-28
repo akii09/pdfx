@@ -1,6 +1,6 @@
 {
   "name": "pdfx-cli",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "CLI for PDFx components",
   "type": "module",
   "bin": {
@@ -19,7 +19,10 @@
       "import": "./dist/mcp/index.js"
     }
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
