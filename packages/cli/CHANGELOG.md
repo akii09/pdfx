@@ -1,4 +1,4 @@
-# @akii09/pdfx-cli
+# pdfx-cli
 
 ## 0.2.1
 
@@ -64,4 +64,4 @@
 
 ### Patch Changes
 
-- Initial lpha release of @akii09/pdfx-cli
+- Initial lpha release of pdfx-cli

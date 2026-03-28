@@ -43,7 +43,7 @@ const routes: Record<string, RouteMeta> = {
   '/installation': {
     title: 'Installation — PDFx',
     description:
-      'Install PDFx in seconds. Run `npx @akii09/pdfx-cli init` to scaffold your PDF component library and pick your first theme.',
+      'Install PDFx in seconds. Run `npx pdfx-cli init` to scaffold your PDF component library and pick your first theme.',
   },
   '/mcp': {
     title: 'MCP Server & Skills File — PDFx',

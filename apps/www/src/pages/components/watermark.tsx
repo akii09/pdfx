@@ -30,7 +30,7 @@ export default function WatermarkComponentPage() {
     <ComponentPage
       title="PdfWatermark"
       description="Displays a diagonal or positioned text overlay on PDF pages. Common uses include 'DRAFT', 'CONFIDENTIAL', 'PAID', 'VOID'. The watermark appears behind content and can repeat on every page using the fixed prop."
-      installCommand="npx @akii09/pdfx-cli add watermark"
+      installCommand="npx pdfx-cli add watermark"
       componentName="watermark"
       preview={
         <PDFPreview title="Preview" downloadFilename="watermark-preview.pdf">

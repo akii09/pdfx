@@ -17,8 +17,8 @@ export async function getAddCommand(
 ): Promise<ReturnType<typeof textResponse>> {
   const isBlock = args.type === 'block';
   const cmd = isBlock
-    ? `npx @akii09/pdfx-cli block add ${args.items.join(' ')}`
-    : `npx @akii09/pdfx-cli add ${args.items.join(' ')}`;
+    ? `npx pdfx-cli block add ${args.items.join(' ')}`
+    : `npx pdfx-cli add ${args.items.join(' ')}`;
 
   const installDir = isBlock ? 'src/blocks/pdfx/' : 'src/components/pdfx/';
   const inspectTool = isBlock ? 'get_block' : 'get_component';
@@ -39,7 +39,7 @@ export async function getAddCommand(
     - You own the code — no runtime package is added
     ${isBlock ? '- The block includes a complete document layout ready to customize' : '- Each component gets its own subdirectory inside componentDir'}
 
-    **Before running:** make sure \`pdfx.json\` exists. Run \`npx @akii09/pdfx-cli init\` if not.
+    **Before running:** make sure \`pdfx.json\` exists. Run \`npx pdfx-cli init\` if not.
 
     **See source first:** call \`${inspectTool}\` with the item name to review the code before adding.
 

@@ -34,7 +34,7 @@ We will keep you informed throughout the process and credit you in the release n
 
 This policy covers the following:
 
-- `@akii09/pdfx-cli` — the PDFX command-line interface
+- `pdfx-cli` — the PDFX command-line interface
 - `@pdfx/shared` — shared types, schemas, and theme system
 - The PDFX documentation site (`apps/www`)
 

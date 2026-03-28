@@ -494,7 +494,7 @@ function HeroCardsMobile() {
 
 function QuickInstall() {
   const [copied, setCopied] = useState(false);
-  const cmd = 'npx @akii09/pdfx-cli init';
+  const cmd = 'npx pdfx-cli init';
   const copy = () => {
     navigator.clipboard.writeText(cmd).then(() => {
       setCopied(true);

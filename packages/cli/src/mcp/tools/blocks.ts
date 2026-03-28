@@ -40,7 +40,7 @@ export async function listBlocks(): Promise<ReturnType<typeof textResponse>> {
     ${sections.join('\n\n')}
 
     ---
-    Add a block: \`npx @akii09/pdfx-cli block add <name>\`
+    Add a block: \`npx pdfx-cli block add <name>\`
     See full source: call \`get_block\` with the block name
   `);
 }
@@ -81,7 +81,7 @@ export async function getBlock(
 
     ## Add Command
     \`\`\`bash
-    npx @akii09/pdfx-cli block add ${args.block}
+    npx pdfx-cli block add ${args.block}
     \`\`\`
 
     ## Source Code

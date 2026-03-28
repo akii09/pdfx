@@ -248,6 +248,6 @@ skillsCommand
     }
     process.stdout.write('\n');
     process.stdout.write(
-      chalk.dim('  Usage: npx @akii09/pdfx-cli@latest skills init --platform <name>\n\n')
+      chalk.dim('  Usage: npx pdfx-cli@latest skills init --platform <name>\n\n')
     );
   });

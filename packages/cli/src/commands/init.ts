@@ -157,9 +157,7 @@ export async function init(options: InitOptions = {}) {
       );
 
   if (!answers.componentDir || !answers.registry) {
-    console.error(
-      chalk.red('Missing required fields. Run npx @akii09/pdfx-cli@latest init again.')
-    );
+    console.error(chalk.red('Missing required fields. Run npx pdfx-cli@latest init again.'));
     process.exit(1);
   }
 
@@ -201,8 +199,8 @@ export async function init(options: InitOptions = {}) {
 
     spinner.succeed(`Created pdfx.json + ${config.theme} (${presetName} theme)`);
     console.log(chalk.green('\nSuccess! You can now run:'));
-    console.log(chalk.cyan('  npx @akii09/pdfx-cli@latest add heading'));
-    console.log(chalk.cyan('  npx @akii09/pdfx-cli@latest block add invoice-classic'));
+    console.log(chalk.cyan('  npx pdfx-cli@latest add heading'));
+    console.log(chalk.cyan('  npx pdfx-cli@latest block add invoice-classic'));
     console.log(chalk.dim(`\n  Components: ${path.resolve(process.cwd(), answers.componentDir)}`));
     console.log(chalk.dim(`  Blocks: ${path.resolve(process.cwd(), config.blockDir)}`));
     console.log(chalk.dim(`  Theme: ${path.resolve(process.cwd(), config.theme)}\n`));

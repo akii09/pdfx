@@ -58,7 +58,7 @@ export function readConfig(configPath: string): Config {
       .join('; ');
     throw new ConfigError(
       `Invalid pdfx.json: ${issues}`,
-      `Fix the config or re-run ${chalk.cyan('npx @akii09/pdfx-cli@latest init')}`
+      `Fix the config or re-run ${chalk.cyan('npx pdfx-cli@latest init')}`
     );
   }
 
@@ -391,8 +391,8 @@ async function installComponent(
 export async function add(components: string[], options: AddOptions = {}) {
   if (!components || components.length === 0) {
     console.error(chalk.red('Error: Component name required'));
-    console.log(chalk.dim('Usage: npx @akii09/pdfx-cli@latest add <component...>'));
-    console.log(chalk.dim('Example: npx @akii09/pdfx-cli@latest add heading text table\n'));
+    console.log(chalk.dim('Usage: npx pdfx-cli@latest add <component...>'));
+    console.log(chalk.dim('Example: npx pdfx-cli@latest add heading text table\n'));
     process.exit(1);
   }
 
@@ -400,7 +400,7 @@ export async function add(components: string[], options: AddOptions = {}) {
   if (!reactPdfCheck.installed) {
     console.error(chalk.red('\nError: @react-pdf/renderer is not installed\n'));
     console.log(chalk.yellow('  PDFx components require @react-pdf/renderer to work.\n'));
-    console.log(chalk.cyan('  Run: npx @akii09/pdfx-cli@latest init'));
+    console.log(chalk.cyan('  Run: npx pdfx-cli@latest init'));
     console.log(chalk.dim('  or install manually: npm install @react-pdf/renderer\n'));
     process.exit(1);
   }
@@ -417,7 +417,7 @@ export async function add(components: string[], options: AddOptions = {}) {
 
   if (!checkFileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
-    console.log(chalk.yellow('Run: npx @akii09/pdfx-cli@latest init'));
+    console.log(chalk.yellow('Run: npx pdfx-cli@latest init'));
     process.exit(1);
   }
 

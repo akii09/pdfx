@@ -12,7 +12,7 @@ export async function diff(components: string[]) {
 
   if (!checkFileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
-    console.log(chalk.yellow('Run: npx @akii09/pdfx-cli@latest init'));
+    console.log(chalk.yellow('Run: npx pdfx-cli@latest init'));
     process.exit(1);
   }
 

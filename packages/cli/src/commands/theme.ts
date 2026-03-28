@@ -131,7 +131,7 @@ export async function themeSwitch(presetName: string) {
 
   const configPath = path.join(process.cwd(), 'pdfx.json');
   if (!checkFileExists(configPath)) {
-    console.error(chalk.red('No pdfx.json found. Run "npx @akii09/pdfx-cli@latest init" first.'));
+    console.error(chalk.red('No pdfx.json found. Run "npx pdfx-cli@latest init" first.'));
     process.exit(1);
   }
 
@@ -146,7 +146,7 @@ export async function themeSwitch(presetName: string) {
   if (!config.theme) {
     console.error(
       chalk.red(
-        'No theme path in pdfx.json. Run "npx @akii09/pdfx-cli@latest theme init" to set up theming.'
+        'No theme path in pdfx.json. Run "npx pdfx-cli@latest theme init" to set up theming.'
       )
     );
     process.exit(1);
@@ -277,7 +277,7 @@ function parseThemeObject(themePath: string): unknown {
 export async function themeValidate() {
   const configPath = path.join(process.cwd(), 'pdfx.json');
   if (!checkFileExists(configPath)) {
-    console.error(chalk.red('No pdfx.json found. Run "npx @akii09/pdfx-cli@latest init" first.'));
+    console.error(chalk.red('No pdfx.json found. Run "npx pdfx-cli@latest init" first.'));
     process.exit(1);
   }
 
@@ -291,7 +291,7 @@ export async function themeValidate() {
   if (!configResult.data.theme) {
     console.error(
       chalk.red(
-        'No theme path in pdfx.json. Run "npx @akii09/pdfx-cli@latest theme init" to set up theming.'
+        'No theme path in pdfx.json. Run "npx pdfx-cli@latest theme init" to set up theming.'
       )
     );
     process.exit(1);

@@ -62,7 +62,7 @@ export async function getTheme(
 
     ## Apply This Theme
     \`\`\`bash
-    npx @akii09/pdfx-cli theme switch ${args.theme}
+    npx pdfx-cli theme switch ${args.theme}
     \`\`\`
 
     ## Usage in Components

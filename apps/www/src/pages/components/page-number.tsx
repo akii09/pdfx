@@ -33,7 +33,7 @@ export default function PageNumberComponentPage() {
     <ComponentPage
       title="PdfPageNumber"
       description="Displays page numbers with customizable format like 'Page X of Y'. Uses react-pdf's render prop internally to access dynamic page information. Supports the fixed prop for repeating on every page."
-      installCommand="npx @akii09/pdfx-cli add page-number"
+      installCommand="npx pdfx-cli add page-number"
       componentName="page-number"
       preview={
         <PDFPreview title="Preview" downloadFilename="page-number-preview.pdf">

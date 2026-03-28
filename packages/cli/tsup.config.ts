@@ -14,7 +14,7 @@ export default defineConfig([
       js: '#!/usr/bin/env node',
     },
   },
-  // MCP server module — exported as `@akii09/pdfx-cli/mcp` for programmatic use
+  // MCP server module — exported as `pdfx-cli/mcp` for programmatic use
   {
     entry: { 'mcp/index': 'src/mcp/index.ts' },
     format: ['esm'],

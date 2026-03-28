@@ -137,7 +137,7 @@ export async function getInstallation(
     ## Step 2 — Initialize PDFx in your project
 
     \`\`\`bash
-    npx @akii09/pdfx-cli init
+    npx pdfx-cli init
     \`\`\`
 
     This creates \`pdfx.json\` in your project root and generates a theme file at \`src/lib/pdfx-theme.ts\`.
@@ -145,7 +145,7 @@ export async function getInstallation(
     ## Step 3 — Add your first component
 
     \`\`\`bash
-    npx @akii09/pdfx-cli add heading text table
+    npx pdfx-cli add heading text table
     \`\`\`
 
     Components are copied into \`src/components/pdfx/\`. You own the source — there is no runtime package dependency.
@@ -153,7 +153,7 @@ export async function getInstallation(
     ## Step 4 — Or start with a complete document block
 
     \`\`\`bash
-    npx @akii09/pdfx-cli block add invoice-modern
+    npx pdfx-cli block add invoice-modern
     \`\`\`
 
     ${FRAMEWORK_NOTES[fw]}
@@ -183,7 +183,7 @@ export async function getInstallation(
 
     > **Non-interactive init (CI / AI agents):** pass \`--yes\` to accept all defaults:
     > \`\`\`bash
-    > npx @akii09/pdfx-cli init --yes
+    > npx pdfx-cli init --yes
     > \`\`\`
 
     ## Troubleshooting
@@ -191,7 +191,7 @@ export async function getInstallation(
     | Problem | Fix |
     |---------|-----|
     | TypeScript errors on \`@react-pdf/renderer\` | \`${installCmd(pm, '@react-pdf/types', true)}\` |
-    | "Cannot find module @/components/pdfx/..." | Run \`npx @akii09/pdfx-cli@latest add <component>\` to install it |
+    | "Cannot find module @/components/pdfx/..." | Run \`npx pdfx-cli@latest add <component>\` to install it |
     | PDF renders blank | Ensure root returns \`<Document><Page>...</Page></Document>\` |
     | "Invalid hook call" | PDFx components cannot use React hooks — pass data as props |
 

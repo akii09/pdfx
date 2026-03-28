@@ -6,7 +6,7 @@ const GENERIC_MCP_CONFIG = `{
   "mcpServers": {
     "pdfx": {
       "command": "npx",
-      "args": ["-y", "@akii09/pdfx-cli@latest", "mcp"]
+      "args": ["-y", "pdfx-cli@latest", "mcp"]
     }
   }
 }`;
@@ -47,7 +47,7 @@ export function MCPContent() {
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               1 — Run the setup command
             </p>
-            <CodeBlock code="npx @akii09/pdfx-cli@latest mcp init" lang="bash" />
+            <CodeBlock code="npx pdfx-cli@latest mcp init" lang="bash" />
           </div>
 
           <div>

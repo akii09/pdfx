@@ -39,7 +39,7 @@ export async function getAuditChecklist(): Promise<ReturnType<typeof textRespons
     ### "Cannot find module @/components/pdfx/..."
     The component hasn't been added yet. Run:
     \`\`\`bash
-    npx @akii09/pdfx-cli add <component-name>
+    npx pdfx-cli add <component-name>
     \`\`\`
 
     ### "Invalid hook call"

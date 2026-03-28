@@ -43,7 +43,7 @@ export default function AlertComponentPage() {
     <ComponentPage
       title="PdfAlert"
       description="Displays info, success, warning, or error callout boxes. Use for important notices, confirmations, cautions, or critical alerts in reports, contracts, and documents. Each variant has a distinct color scheme and icon."
-      installCommand="npx @akii09/pdfx-cli add alert"
+      installCommand="npx pdfx-cli add alert"
       componentName="alert"
       preview={
         <PDFPreview title="Preview" downloadFilename="alert-preview.pdf">

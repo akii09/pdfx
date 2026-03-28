@@ -13,32 +13,32 @@ export const EDITORS = [
     id: 'claude' as EditorId,
     label: 'Claude Code',
     dot: 'bg-orange-400',
-    initCmd: 'npx @akii09/pdfx-cli@latest mcp init --client claude',
+    initCmd: 'npx pdfx-cli@latest mcp init --client claude',
     configFile: '.mcp.json',
     configFileNote: 'project root — commit this so your whole team gets the server automatically.',
     configJson: `{
   "mcpServers": {
     "pdfx": {
       "command": "npx",
-      "args": ["-y", "@akii09/pdfx-cli@latest", "mcp"]
+      "args": ["-y", "pdfx-cli@latest", "mcp"]
     }
   }
 }`,
-    cliAlt: 'claude mcp add pdfx -- npx -y @akii09/pdfx-cli@latest mcp',
+    cliAlt: 'claude mcp add pdfx -- npx -y pdfx-cli@latest mcp',
     verifyStep: 'Run: claude mcp list — pdfx should appear.',
   },
   {
     id: 'cursor' as EditorId,
     label: 'Cursor',
     dot: 'bg-blue-400',
-    initCmd: 'npx @akii09/pdfx-cli@latest mcp init --client cursor',
+    initCmd: 'npx pdfx-cli@latest mcp init --client cursor',
     configFile: '.cursor/mcp.json',
     configFileNote: 'project root.',
     configJson: `{
   "mcpServers": {
     "pdfx": {
       "command": "npx",
-      "args": ["-y", "@akii09/pdfx-cli@latest", "mcp"]
+      "args": ["-y", "pdfx-cli@latest", "mcp"]
     }
   }
 }`,
@@ -48,7 +48,7 @@ export const EDITORS = [
     id: 'vscode' as EditorId,
     label: 'VS Code',
     dot: 'bg-sky-400',
-    initCmd: 'npx @akii09/pdfx-cli@latest mcp init --client vscode',
+    initCmd: 'npx pdfx-cli@latest mcp init --client vscode',
     configFile: '.vscode/mcp.json',
     configFileNote: 'project root. Note: VS Code uses "servers" not "mcpServers".',
     configJson: `{
@@ -56,7 +56,7 @@ export const EDITORS = [
     "pdfx": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@akii09/pdfx-cli@latest", "mcp"]
+      "args": ["-y", "pdfx-cli@latest", "mcp"]
     }
   }
 }`,
@@ -66,14 +66,14 @@ export const EDITORS = [
     id: 'windsurf' as EditorId,
     label: 'Windsurf',
     dot: 'bg-teal-400',
-    initCmd: 'npx @akii09/pdfx-cli@latest mcp init --client windsurf',
+    initCmd: 'npx pdfx-cli@latest mcp init --client windsurf',
     configFile: 'mcp_config.json',
     configFileNote: 'project root, or globally at ~/.codeium/windsurf/mcp_config.json.',
     configJson: `{
   "mcpServers": {
     "pdfx": {
       "command": "npx",
-      "args": ["-y", "@akii09/pdfx-cli@latest", "mcp"]
+      "args": ["-y", "pdfx-cli@latest", "mcp"]
     }
   }
 }`,
@@ -83,14 +83,14 @@ export const EDITORS = [
     id: 'qoder' as EditorId,
     label: 'Qoder',
     dot: 'bg-violet-400',
-    initCmd: 'npx @akii09/pdfx-cli@latest mcp init --client qoder',
+    initCmd: 'npx pdfx-cli@latest mcp init --client qoder',
     configFile: '.qoder/mcp.json',
     configFileNote: 'project root.',
     configJson: `{
   "mcpServers": {
     "pdfx": {
       "command": "npx",
-      "args": ["-y", "@akii09/pdfx-cli@latest", "mcp"]
+      "args": ["-y", "pdfx-cli@latest", "mcp"]
     }
   }
 }`,
@@ -104,7 +104,7 @@ export const EDITORS = [
     id: 'opencode' as EditorId,
     label: 'opencode',
     dot: 'bg-emerald-400',
-    initCmd: 'npx @akii09/pdfx-cli@latest mcp init --client opencode',
+    initCmd: 'npx pdfx-cli@latest mcp init --client opencode',
     configFile: 'opencode.json',
     configFileNote:
       'Project root (or git root). For global access copy to ~/.config/opencode/opencode.json.',
@@ -113,7 +113,7 @@ export const EDITORS = [
   "mcp": {
     "pdfx": {
       "type": "local",
-      "command": ["npx", "-y", "@akii09/pdfx-cli@latest", "mcp"]
+      "command": ["npx", "-y", "pdfx-cli@latest", "mcp"]
     }
   }
 }`,
@@ -125,14 +125,14 @@ export const EDITORS = [
     id: 'antigravity' as EditorId,
     label: 'Antigravity',
     dot: 'bg-rose-400',
-    initCmd: 'npx @akii09/pdfx-cli@latest mcp init --client antigravity',
+    initCmd: 'npx pdfx-cli@latest mcp init --client antigravity',
     configFile: '.antigravity/mcp.json',
     configFileNote: 'Project root. Verify the exact path against your Antigravity version.',
     configJson: `{
   "mcpServers": {
     "pdfx": {
       "command": "npx",
-      "args": ["-y", "@akii09/pdfx-cli@latest", "mcp"]
+      "args": ["-y", "pdfx-cli@latest", "mcp"]
     }
   }
 }`,
@@ -142,14 +142,14 @@ export const EDITORS = [
     id: 'other' as EditorId,
     label: 'Any MCP client',
     dot: 'bg-zinc-500',
-    initCmd: 'npx @akii09/pdfx-cli@latest mcp init --client other',
+    initCmd: 'npx pdfx-cli@latest mcp init --client other',
     configFile: 'pdfx-mcp.json',
     configFileNote: "Project root. Copy the pdfx entry into your editor's native MCP config file.",
     configJson: `{
   "mcpServers": {
     "pdfx": {
       "command": "npx",
-      "args": ["-y", "@akii09/pdfx-cli@latest", "mcp"]
+      "args": ["-y", "pdfx-cli@latest", "mcp"]
     }
   }
 }`,
@@ -276,7 +276,7 @@ export const SKILL_TARGETS = [
 
 export const PDFX_SKILLS_CONTENT = `# PDFx — AI Context Guide
 # Version: 1.0 | Updated: 2026 | License: MIT
-# Or run: npx @akii09/pdfx-cli@latest skills init  (handles editor-specific paths & frontmatter)
+# Or run: npx pdfx-cli@latest skills init  (handles editor-specific paths & frontmatter)
 
 ## What is PDFx?
 
@@ -286,7 +286,7 @@ PDFx is an open-source, shadcn/ui-style PDF component library for React. It is b
 that expose a public API).
 
 Key facts:
-- Package: @akii09/pdfx-cli (the CLI that installs components)
+- Package: pdfx-cli (the CLI that installs components)
 - Registry: https://pdfx.akashpise.dev/r/
 - Runtime: Works in browser AND Node.js (Next.js App Router, Express, etc.)
 - React version: 16.8+ (hooks required)
@@ -298,13 +298,13 @@ Key facts:
 
 \`\`\`bash
 # 1. Initialize PDFx — creates src/lib/pdfx-theme.ts and installs @pdfx/shared
-npx @akii09/pdfx-cli@latest init
+npx pdfx-cli@latest init
 
 # 2. Add components you need
-npx @akii09/pdfx-cli@latest add heading text table
+npx pdfx-cli@latest add heading text table
 
 # 3. Add a pre-built block
-npx @akii09/pdfx-cli@latest add invoice-modern --type block
+npx pdfx-cli@latest add invoice-modern --type block
 \`\`\`
 
 The init command adds a theme file at src/lib/pdfx-theme.ts. All components read from this file.
@@ -675,7 +675,7 @@ import { Alert } from '@/components/pdfx/alert';
 
 Blocks are complete document templates. Add them with:
 \`\`\`bash
-npx @akii09/pdfx-cli@latest add <block-name> --type block
+npx pdfx-cli@latest add <block-name> --type block
 \`\`\`
 
 ### Invoice Blocks
@@ -702,7 +702,7 @@ Blocks are added as full React components in your project. Customize all content
 
 ### The theme file
 
-After \`npx @akii09/pdfx-cli@latest init\`, a file is created at src/lib/pdfx-theme.ts.
+After \`npx pdfx-cli@latest init\`, a file is created at src/lib/pdfx-theme.ts.
 Every PDFx component reads from this file — change a token once, all components update.
 
 \`\`\`typescript
@@ -733,9 +733,9 @@ export const theme: PdfxTheme = {
 
 ### Theme presets
 \`\`\`bash
-npx @akii09/pdfx-cli@latest theme init              # scaffold blank theme
-npx @akii09/pdfx-cli@latest theme switch modern     # switch preset: professional | modern | minimal
-npx @akii09/pdfx-cli@latest theme validate          # validate your theme file
+npx pdfx-cli@latest theme init              # scaffold blank theme
+npx pdfx-cli@latest theme switch modern     # switch preset: professional | modern | minimal
+npx pdfx-cli@latest theme validate          # validate your theme file
 \`\`\`
 
 ### Runtime theme switching
@@ -754,34 +754,34 @@ import { darkTheme } from '@/lib/pdfx-theme';
 
 \`\`\`bash
 # Setup
-npx @akii09/pdfx-cli@latest init                          # Initialize PDFx in project
-npx @akii09/pdfx-cli@latest add <component>               # Add a component
-npx @akii09/pdfx-cli@latest add <comp1> <comp2>           # Add multiple
-npx @akii09/pdfx-cli@latest add <block> --type block      # Add a block
+npx pdfx-cli@latest init                          # Initialize PDFx in project
+npx pdfx-cli@latest add <component>               # Add a component
+npx pdfx-cli@latest add <comp1> <comp2>           # Add multiple
+npx pdfx-cli@latest add <block> --type block      # Add a block
 
 # Theme
-npx @akii09/pdfx-cli@latest theme init                    # Create theme file
-npx @akii09/pdfx-cli@latest theme switch professional     # Switch preset
-npx @akii09/pdfx-cli@latest theme validate                # Validate theme
+npx pdfx-cli@latest theme init                    # Create theme file
+npx pdfx-cli@latest theme switch professional     # Switch preset
+npx pdfx-cli@latest theme validate                # Validate theme
 
 # MCP
-npx @akii09/pdfx-cli@latest mcp                           # Start MCP server
-npx @akii09/pdfx-cli@latest mcp init                      # Configure editor MCP (interactive)
-npx @akii09/pdfx-cli@latest mcp init --client claude      # Claude Code (.mcp.json)
-npx @akii09/pdfx-cli@latest mcp init --client cursor      # Cursor (.cursor/mcp.json)
-npx @akii09/pdfx-cli@latest mcp init --client vscode      # VS Code (.vscode/mcp.json)
-npx @akii09/pdfx-cli@latest mcp init --client windsurf    # Windsurf (mcp_config.json)
-npx @akii09/pdfx-cli@latest mcp init --client opencode    # opencode (opencode.json)
-npx @akii09/pdfx-cli@latest mcp init --client antigravity # Antigravity (.antigravity/mcp.json)
+npx pdfx-cli@latest mcp                           # Start MCP server
+npx pdfx-cli@latest mcp init                      # Configure editor MCP (interactive)
+npx pdfx-cli@latest mcp init --client claude      # Claude Code (.mcp.json)
+npx pdfx-cli@latest mcp init --client cursor      # Cursor (.cursor/mcp.json)
+npx pdfx-cli@latest mcp init --client vscode      # VS Code (.vscode/mcp.json)
+npx pdfx-cli@latest mcp init --client windsurf    # Windsurf (mcp_config.json)
+npx pdfx-cli@latest mcp init --client opencode    # opencode (opencode.json)
+npx pdfx-cli@latest mcp init --client antigravity # Antigravity (.antigravity/mcp.json)
 
 # Skills file (AI context document)
-npx @akii09/pdfx-cli@latest skills init                      # Write skills file (interactive)
-npx @akii09/pdfx-cli@latest skills init --platform claude    # CLAUDE.md
-npx @akii09/pdfx-cli@latest skills init --platform cursor    # .cursor/rules/pdfx.mdc
-npx @akii09/pdfx-cli@latest skills init --platform vscode    # .github/copilot-instructions.md
-npx @akii09/pdfx-cli@latest skills init --platform windsurf  # .windsurf/rules/pdfx.md
-npx @akii09/pdfx-cli@latest skills init --platform opencode  # AGENTS.md
-npx @akii09/pdfx-cli@latest skills init --platform antigravity # .antigravity/context.md
+npx pdfx-cli@latest skills init                      # Write skills file (interactive)
+npx pdfx-cli@latest skills init --platform claude    # CLAUDE.md
+npx pdfx-cli@latest skills init --platform cursor    # .cursor/rules/pdfx.mdc
+npx pdfx-cli@latest skills init --platform vscode    # .github/copilot-instructions.md
+npx pdfx-cli@latest skills init --platform windsurf  # .windsurf/rules/pdfx.md
+npx pdfx-cli@latest skills init --platform opencode  # AGENTS.md
+npx pdfx-cli@latest skills init --platform antigravity # .antigravity/context.md
 \`\`\`
 
 ---
@@ -859,7 +859,7 @@ export async function GET(req: Request) {
 - DO NOT import from @react-pdf/renderer inside PDFx component files — they already wrap it
 - DO NOT use CSS classes or Tailwind inside PDF components — use style props or theme tokens
 - DO NOT use window, document, or browser APIs in server-rendered PDF routes
-- DO NOT install components with npm — always use the CLI: npx @akii09/pdfx-cli add <name>
+- DO NOT install components with npm — always use the CLI: npx pdfx-cli add <name>
 
 ---
 
@@ -867,7 +867,7 @@ export async function GET(req: Request) {
 
 The PDFx MCP server gives AI editors live access to the registry:
 \`\`\`bash
-npx @akii09/pdfx-cli@latest mcp init   # interactive setup for your editor
+npx pdfx-cli@latest mcp init   # interactive setup for your editor
 \`\`\`
 Tools exposed: list_components, get_component, list_blocks, get_block, search_registry,
 get_theme, get_installation, get_add_command, get_audit_checklist

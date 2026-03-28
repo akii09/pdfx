@@ -1,8 +1,8 @@
 # PDFx
 
 ![Beta](https://img.shields.io/badge/status-beta-blue?style=flat-square)
-![npm](https://img.shields.io/npm/v/@akii09/pdfx-cli?style=flat-square&label=cli)
-![Downloads](https://img.shields.io/npm/dm/@akii09/pdfx-cli?style=flat-square)
+![npm](https://img.shields.io/npm/v/pdfx-cli?style=flat-square&label=cli)
+![Downloads](https://img.shields.io/npm/dm/pdfx-cli?style=flat-square)
 
 Pre-built PDF components for React. Copy them into your project, own them completely. Built on [@react-pdf/renderer](https://react-pdf.org/). No runtime dependency on PDFx.
 
@@ -11,8 +11,8 @@ Pre-built PDF components for React. Copy them into your project, own them comple
 ## Get started
 
 ```bash
-npx @akii09/pdfx-cli init
-npx @akii09/pdfx-cli add heading text badge
+npx pdfx-cli init
+npx pdfx-cli add heading text badge
 ```
 
 ```tsx

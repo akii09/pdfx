@@ -18,7 +18,7 @@ export async function listComponents(): Promise<ReturnType<typeof textResponse>>
     ${rows}
 
     ---
-    Add a component: \`npx @akii09/pdfx-cli add <name>\`
+    Add a component: \`npx pdfx-cli add <name>\`
     See full source, props, and exact export name: call \`get_component\` with the component name
   `);
 }
@@ -40,7 +40,7 @@ export async function getComponent(
     : 'none';
 
   // Extract all named exports from the primary file so the AI knows exactly
-  // what to import after running `npx @akii09/pdfx-cli@latest add`.
+  // what to import after running `npx pdfx-cli@latest add`.
   const primaryContent = item.files[0]?.content ?? '';
   const primaryPath = item.files[0]?.path ?? '';
   const exportNames = extractAllExportNames(primaryContent);
@@ -55,7 +55,7 @@ export async function getComponent(
           All named exports from \`${primaryPath}\`:
           ${exportNames.map((n) => `- \`${n}\``).join('\n')}
 
-          **Import after \`npx @akii09/pdfx-cli@latest add ${args.component}\`:**
+          **Import after \`npx pdfx-cli@latest add ${args.component}\`:**
           \`\`\`tsx
           import { ${mainExport ?? exportNames[0]} } from './components/pdfx/${args.component}/pdfx-${args.component}';
           \`\`\`
@@ -90,7 +90,7 @@ export async function getComponent(
 
     ## Add Command
     \`\`\`bash
-    npx @akii09/pdfx-cli add ${args.component}
+    npx pdfx-cli add ${args.component}
     \`\`\`
 
     ## Source Code

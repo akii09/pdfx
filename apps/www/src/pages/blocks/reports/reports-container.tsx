@@ -291,7 +291,7 @@ export default function ReportsContainerPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('preview');
 
   const current = TEMPLATES.find((t) => t.id === activeId) ?? TEMPLATES[0];
-  const installCmd = `npx @akii09/pdfx-cli block add ${current.id}`;
+  const installCmd = `npx pdfx-cli block add ${current.id}`;
 
   useDocumentTitle('Report Blocks');
 

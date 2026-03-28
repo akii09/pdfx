@@ -1,10 +1,11 @@
 {
-  "name": "@akii09/pdfx-cli",
+  "name": "pdfx-cli",
   "version": "0.3.0",
   "description": "CLI for PDFx components",
   "type": "module",
   "bin": {
-    "pdfx": "./dist/index.js"
+    "pdfx": "./dist/index.js",
+    "pdfx-cli": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

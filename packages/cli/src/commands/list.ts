@@ -77,7 +77,7 @@ export async function list() {
     const blockBaseDir = path.resolve(process.cwd(), config.blockDir ?? DEFAULTS.BLOCK_DIR);
 
     console.log(chalk.bold(`\n  Components (${components.length})`));
-    console.log(chalk.dim('  Install with: npx @akii09/pdfx-cli@latest add <component>\n'));
+    console.log(chalk.dim('  Install with: npx pdfx-cli@latest add <component>\n'));
 
     for (const item of components) {
       const componentSubDir = path.join(componentBaseDir, item.name);
@@ -94,9 +94,7 @@ export async function list() {
 
     console.log(chalk.bold(`  Blocks (${blocks.length})`));
     console.log(
-      chalk.dim(
-        '  Copy-paste designs. Install with: npx @akii09/pdfx-cli@latest block add <block>\n'
-      )
+      chalk.dim('  Copy-paste designs. Install with: npx pdfx-cli@latest block add <block>\n')
     );
 
     for (const item of blocks) {
@@ -117,13 +115,11 @@ export async function list() {
     console.log(chalk.dim('  Quick Start:'));
     console.log(
       chalk.dim(
-        `    npx @akii09/pdfx-cli@latest add heading table          ${chalk.dim('# Add components')}`
+        `    npx pdfx-cli@latest add heading table          ${chalk.dim('# Add components')}`
       )
     );
     console.log(
-      chalk.dim(
-        `    npx @akii09/pdfx-cli@latest block add invoice-classic ${chalk.dim('# Add a block')}`
-      )
+      chalk.dim(`    npx pdfx-cli@latest block add invoice-classic ${chalk.dim('# Add a block')}`)
     );
     console.log();
   } catch (error: unknown) {

@@ -39,7 +39,7 @@ const components = [
     description: 'Info, success, warning, and error callout boxes with icons.',
     href: '/components/alert',
     icon: AlertTriangle,
-    install: 'npx @akii09/pdfx-cli add alert',
+    install: 'npx pdfx-cli add alert',
     category: 'Data' as Category,
   },
   {
@@ -47,7 +47,7 @@ const components = [
     description: 'Compact status label with semantic color variants for PDF documents.',
     href: '/components/badge',
     icon: Tag,
-    install: 'npx @akii09/pdfx-cli add badge',
+    install: 'npx pdfx-cli add badge',
     category: 'Data' as Category,
   },
   {
@@ -55,7 +55,7 @@ const components = [
     description: 'Content container with default, bordered, and muted variants.',
     href: '/components/card',
     icon: Square,
-    install: 'npx @akii09/pdfx-cli add card',
+    install: 'npx pdfx-cli add card',
     category: 'Layout' as Category,
   },
   {
@@ -63,7 +63,7 @@ const components = [
     description: 'Data-driven table from columns and data.',
     href: '/components/data-table',
     icon: Table,
-    install: 'npx @akii09/pdfx-cli add data-table',
+    install: 'npx pdfx-cli add data-table',
     category: 'Data' as Category,
   },
   {
@@ -71,7 +71,7 @@ const components = [
     description: 'Horizontal rule with theme-based spacing.',
     href: '/components/divider',
     icon: Minus,
-    install: 'npx @akii09/pdfx-cli add divider',
+    install: 'npx pdfx-cli add divider',
     category: 'Layout' as Category,
   },
   {
@@ -79,7 +79,7 @@ const components = [
     description: 'Label-value form section with single, two-column, and three-column layouts.',
     href: '/components/form',
     icon: LayoutList,
-    install: 'npx @akii09/pdfx-cli add form',
+    install: 'npx pdfx-cli add form',
     category: 'Forms' as Category,
   },
   {
@@ -87,7 +87,7 @@ const components = [
     description: 'Native SVG charts: bar, line, area, pie, donut, horizontal-bar.',
     href: '/components/graph',
     icon: BarChart2,
-    install: 'npx @akii09/pdfx-cli add graph',
+    install: 'npx pdfx-cli add graph',
     category: 'Visual' as Category,
   },
   {
@@ -95,7 +95,7 @@ const components = [
     description: 'Heading levels h1-h6 with theme-based sizing.',
     href: '/components/heading',
     icon: HeadingIcon,
-    install: 'npx @akii09/pdfx-cli add heading',
+    install: 'npx pdfx-cli add heading',
     category: 'Typography' as Category,
   },
   {
@@ -103,7 +103,7 @@ const components = [
     description: 'Validated image component with 7 variants and format detection.',
     href: '/components/pdf-image',
     icon: ImageIcon,
-    install: 'npx @akii09/pdfx-cli add pdf-image',
+    install: 'npx pdfx-cli add pdf-image',
     category: 'Visual' as Category,
   },
   {
@@ -111,7 +111,7 @@ const components = [
     description: 'Prevent content from splitting across page boundaries.',
     href: '/components/keep-together',
     icon: Rows3,
-    install: 'npx @akii09/pdfx-cli add keep-together',
+    install: 'npx pdfx-cli add keep-together',
     category: 'Layout' as Category,
   },
   {
@@ -119,7 +119,7 @@ const components = [
     description: 'Labeled key-value pairs with horizontal and vertical layouts.',
     href: '/components/key-value',
     icon: List,
-    install: 'npx @akii09/pdfx-cli add key-value',
+    install: 'npx pdfx-cli add key-value',
     category: 'Data' as Category,
   },
   {
@@ -127,7 +127,7 @@ const components = [
     description: 'Clickable hyperlinks in PDF viewers.',
     href: '/components/link',
     icon: LinkIcon,
-    install: 'npx @akii09/pdfx-cli add link',
+    install: 'npx pdfx-cli add link',
     category: 'Typography' as Category,
   },
   {
@@ -135,7 +135,7 @@ const components = [
     description: 'Bullet, numbered, checklist, icon, multi-level, and descriptive variants.',
     href: '/components/list',
     icon: ClipboardList,
-    install: 'npx @akii09/pdfx-cli add list',
+    install: 'npx pdfx-cli add list',
     category: 'Data' as Category,
   },
   {
@@ -143,7 +143,7 @@ const components = [
     description: 'Forces content to start on a new page.',
     href: '/components/page-break',
     icon: FileStack,
-    install: 'npx @akii09/pdfx-cli add page-break',
+    install: 'npx pdfx-cli add page-break',
     category: 'Layout' as Category,
   },
   {
@@ -151,7 +151,7 @@ const components = [
     description: 'Document footer band with left, center, and right text slots.',
     href: '/components/page-footer',
     icon: PanelBottom,
-    install: 'npx @akii09/pdfx-cli add page-footer',
+    install: 'npx pdfx-cli add page-footer',
     category: 'Layout' as Category,
   },
   {
@@ -159,7 +159,7 @@ const components = [
     description: 'Document header band with title, subtitle, and optional right metadata.',
     href: '/components/page-header',
     icon: PanelTop,
-    install: 'npx @akii09/pdfx-cli add page-header',
+    install: 'npx pdfx-cli add page-header',
     category: 'Layout' as Category,
   },
   {
@@ -167,7 +167,7 @@ const components = [
     description: 'Dynamic page numbers with customizable format.',
     href: '/components/page-number',
     icon: Hash,
-    install: 'npx @akii09/pdfx-cli add page-number',
+    install: 'npx pdfx-cli add page-number',
     category: 'Layout' as Category,
   },
   {
@@ -175,7 +175,7 @@ const components = [
     description: 'Native SVG QR code for URLs, payments, and verification.',
     href: '/components/qrcode',
     icon: QrCode,
-    install: 'npx @akii09/pdfx-cli add qrcode',
+    install: 'npx pdfx-cli add qrcode',
     category: 'Visual' as Category,
   },
   {
@@ -183,7 +183,7 @@ const components = [
     description: 'Logical section with vertical spacing.',
     href: '/components/section',
     icon: PanelTop,
-    install: 'npx @akii09/pdfx-cli add section',
+    install: 'npx pdfx-cli add section',
     category: 'Layout' as Category,
   },
   {
@@ -191,7 +191,7 @@ const components = [
     description: 'Signature block with single, double, and inline variants.',
     href: '/components/signature',
     icon: PenLine,
-    install: 'npx @akii09/pdfx-cli add signature',
+    install: 'npx pdfx-cli add signature',
     category: 'Forms' as Category,
   },
   {
@@ -199,7 +199,7 @@ const components = [
     description: 'Vertical layout with theme-based gaps.',
     href: '/components/stack',
     icon: LayoutList,
-    install: 'npx @akii09/pdfx-cli add stack',
+    install: 'npx pdfx-cli add stack',
     category: 'Layout' as Category,
   },
   {
@@ -207,7 +207,7 @@ const components = [
     description: 'Composable table with rows and cells.',
     href: '/components/table',
     icon: Table,
-    install: 'npx @akii09/pdfx-cli add table',
+    install: 'npx pdfx-cli add table',
     category: 'Data' as Category,
   },
   {
@@ -215,7 +215,7 @@ const components = [
     description: 'Body text with variants and line height control.',
     href: '/components/text',
     icon: FileText,
-    install: 'npx @akii09/pdfx-cli add text',
+    install: 'npx pdfx-cli add text',
     category: 'Typography' as Category,
   },
   {
@@ -223,7 +223,7 @@ const components = [
     description: 'Diagonal or positioned text overlay for DRAFT, CONFIDENTIAL, etc.',
     href: '/components/watermark',
     icon: Stamp,
-    install: 'npx @akii09/pdfx-cli add watermark',
+    install: 'npx pdfx-cli add watermark',
     category: 'Layout' as Category,
   },
 ];

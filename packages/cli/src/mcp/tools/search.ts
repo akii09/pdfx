@@ -70,8 +70,8 @@ export async function searchRegistry(
     const typeLabel = item.type === 'registry:ui' ? 'component' : 'block';
     const addCmd =
       item.type === 'registry:ui'
-        ? `npx @akii09/pdfx-cli add ${item.name}`
-        : `npx @akii09/pdfx-cli block add ${item.name}`;
+        ? `npx pdfx-cli add ${item.name}`
+        : `npx pdfx-cli block add ${item.name}`;
     return dedent`
       - **${item.name}** _(${typeLabel})_ — ${item.description ?? 'No description'}
         \`${addCmd}\`

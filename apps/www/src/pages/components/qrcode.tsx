@@ -40,7 +40,7 @@ export default function QRCodeComponentPage() {
     <ComponentPage
       title="PdfQRCode"
       description="Renders a QR code using native SVG primitives. Perfect for invoices, tickets, verification docs, and payment links. The QR code is generated using the qrcode library and rendered as vector graphics for crisp output at any size."
-      installCommand="npx @akii09/pdfx-cli add qrcode"
+      installCommand="npx pdfx-cli add qrcode"
       componentName="qrcode"
       preview={
         <PDFPreview title="Preview" downloadFilename="qrcode-preview.pdf">

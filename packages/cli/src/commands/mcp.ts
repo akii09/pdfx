@@ -6,7 +6,7 @@ import { Command } from 'commander';
 import prompts from 'prompts';
 import { server } from '../mcp/index.js';
 
-const PDFX_CLI_PACKAGE = '@akii09/pdfx-cli';
+const PDFX_CLI_PACKAGE = 'pdfx-cli';
 const PDFX_MCP_VERSION = 'latest';
 
 interface McpClient {
@@ -231,9 +231,7 @@ async function initMcpConfig(opts: { client?: string }): Promise<void> {
   process.stdout.write(`\nRestart ${client.label} to activate the PDFx MCP server.\n`);
 
   if (client.name === 'claude') {
-    process.stdout.write(
-      '\nAlternatively, run:\n  claude mcp add pdfx -- npx -y @akii09/pdfx-cli mcp\n'
-    );
+    process.stdout.write('\nAlternatively, run:\n  claude mcp add pdfx -- npx -y pdfx-cli mcp\n');
   }
 
   if (client.name === 'opencode') {

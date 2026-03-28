@@ -55,7 +55,7 @@ export function SkillsContent() {
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               1 — Run the setup command
             </p>
-            <CodeBlock code="npx @akii09/pdfx-cli@latest skills init" lang="bash" />
+            <CodeBlock code="npx pdfx-cli@latest skills init" lang="bash" />
           </div>
 
           <div>

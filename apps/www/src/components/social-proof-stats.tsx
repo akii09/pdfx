@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const GITHUB_API = 'https://api.github.com/repos/akii09/pdfx';
-const NPM_API = 'https://api.npmjs.org/downloads/point/last-week/@akii09/pdfx-cli';
+const NPM_API = 'https://api.npmjs.org/downloads/point/last-week/pdfx-cli';
 
 interface Stats {
   stars: number | null;
