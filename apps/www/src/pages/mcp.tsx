@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { PlugZap, Sparkles, Terminal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -87,12 +87,7 @@ export default function MCPPage() {
       {/* Main content */}
       <div className="flex-1 min-w-0 py-12 max-w-3xl">
         {/* Page header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="mb-12"
-        >
+        <div className="mb-12">
           <div className="flex items-center gap-2 mb-4">
             <div className="p-2 rounded-xl bg-muted border border-border">
               <Terminal className="w-5 h-5 text-foreground" />
@@ -108,15 +103,10 @@ export default function MCPPage() {
             Supercharge your AI editor with fluent context about PDFx. Choose the dynamic power of
             our MCP Server or the simplicity of our Skills file.
           </p>
-        </motion.div>
+        </div>
 
         {/* Custom Animated Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-col sm:flex-row gap-3 mb-12"
-        >
+        <div className="flex flex-col sm:flex-row gap-3 mb-12">
           {tabs.map(({ id, label, icon: Icon, desc }) => {
             const isActive = activeTab === id;
             return (
@@ -156,21 +146,11 @@ export default function MCPPage() {
               </button>
             );
           })}
-        </motion.div>
+        </div>
 
         {/* Tab content */}
         <div className="relative">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -10, filter: 'blur(4px)' }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-            >
-              {activeTab === 'mcp' ? <MCPContent /> : <SkillsContent />}
-            </motion.div>
-          </AnimatePresence>
+          <div key={activeTab}>{activeTab === 'mcp' ? <MCPContent /> : <SkillsContent />}</div>
         </div>
       </div>
 
