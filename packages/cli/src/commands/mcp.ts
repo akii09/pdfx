@@ -2,9 +2,11 @@ import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import chalk from 'chalk';
 import { Command } from 'commander';
 import prompts from 'prompts';
 import { server } from '../mcp/index.js';
+import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
 
 const PDFX_CLI_PACKAGE = 'pdfx-cli';
 const PDFX_MCP_VERSION = 'latest';
@@ -176,6 +178,16 @@ function isPdfxAlreadyConfigured(config: Record<string, unknown>): boolean {
 }
 
 async function initMcpConfig(opts: { client?: string }): Promise<void> {
+  const preFlightResult = runPreFlightChecks();
+  displayPreFlightResults(preFlightResult);
+
+  if (!preFlightResult.canProceed) {
+    console.error(
+      chalk.red('\n  Cannot proceed due to blocking issues. Please fix them and try again.\n')
+    );
+    process.exit(1);
+  }
+
   let clientName = opts.client;
 
   if (!clientName) {

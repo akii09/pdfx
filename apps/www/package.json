@@ -37,6 +37,7 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.21",
+    "pdfx-cli": "workspace:*",
     "postcss": "^8.4.49",
     "rimraf": "^6.0.1",
     "tailwindcss": "^4.1.2",
