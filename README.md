@@ -2,7 +2,6 @@
 
 ![Beta](https://img.shields.io/badge/status-beta-blue?style=flat-square)
 ![npm](https://img.shields.io/npm/v/pdfx-cli?style=flat-square&label=cli)
-![Downloads](https://img.shields.io/npm/dm/pdfx-cli?style=flat-square)
 
 Pre-built PDF components for React. Copy them into your project, own them completely. Built on [@react-pdf/renderer](https://react-pdf.org/). No runtime dependency on PDFx.
 

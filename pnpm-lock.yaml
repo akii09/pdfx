@@ -126,6 +126,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.24(postcss@8.5.6)
+      pdfx-cli:
+        specifier: workspace:*
+        version: link:../../packages/cli
       postcss:
         specifier: ^8.4.49
         version: 8.5.6

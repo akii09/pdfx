@@ -11,7 +11,5 @@
       "type": "registry:component"
     }
   ],
-  "dependencies": [
-    "@react-pdf/renderer"
-  ]
+  "dependencies": ["@react-pdf/renderer"]
 }

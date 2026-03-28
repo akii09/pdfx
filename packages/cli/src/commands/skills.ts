@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import { Command } from 'commander';
 import prompts from 'prompts';
 import { PDFX_SKILLS_CONTENT } from '../skills-content.js';
+import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
 
 interface SkillsPlatform {
   /** Matches --platform flag and MCP client names where applicable */
@@ -109,6 +110,16 @@ async function skillsInit(opts: {
   yes?: boolean;
   append?: boolean;
 }): Promise<void> {
+  const preFlightResult = runPreFlightChecks();
+  displayPreFlightResults(preFlightResult);
+
+  if (!preFlightResult.canProceed) {
+    console.error(
+      chalk.red('\n  Cannot proceed due to blocking issues. Please fix them and try again.\n')
+    );
+    process.exit(1);
+  }
+
   let platformName = opts.platform;
 
   if (!platformName) {
