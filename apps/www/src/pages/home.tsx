@@ -985,32 +985,143 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── DEMO VIDEO ──────────────────────────────────────────────────────── */}
+      {/* ── HOW IT WORKS (Temporary Video Replacement) ────────────────────── */}
       <section
-        className="py-16 sm:py-20 px-4 sm:px-6 border-t border-border/60"
-        aria-label="See PDFx in action"
+        className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border/60"
+        aria-label="How PDFx works"
       >
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-8"
+            className="text-center mb-12"
           >
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">See it in action</h2>
-            <p className="text-muted-foreground">
-              Watch how to create a PDF invoice from scratch in just a few steps.
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">How it works</h2>
+            <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto">
+              PDFx isn't a bloated dependency. It's a collection of reusable components that you
+              install directly into your codebase.
             </p>
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.55, delay: 0.1 }}
-          >
-            <VideoModal />
-          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Step 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="rounded-xl border border-border bg-card overflow-hidden flex flex-col shadow-sm"
+            >
+              <div className="px-5 py-4 border-b border-border/50 bg-muted/30">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="flex items-center justify-center w-5 h-5 rounded-md bg-foreground text-background text-xs font-bold">
+                    1
+                  </div>
+                  <h3 className="font-semibold text-sm text-foreground">Initialize</h3>
+                </div>
+                <p className="text-xs text-muted-foreground ml-7">Setup PDFx config and theme</p>
+              </div>
+              <div className="p-5 flex-1 bg-zinc-950 font-mono text-xs sm:text-sm text-zinc-300">
+                <div className="flex items-center gap-2 mb-2 opacity-50">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+                </div>
+                <div className="mt-4 text-[13px] leading-relaxed">
+                  <span className="text-purple-400">npx</span> pdfx-cli init
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Step 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="rounded-xl border border-border bg-card overflow-hidden flex flex-col shadow-sm"
+            >
+              <div className="px-5 py-4 border-b border-border/50 bg-muted/30">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="flex items-center justify-center w-5 h-5 rounded-md bg-foreground text-background text-xs font-bold">
+                    2
+                  </div>
+                  <h3 className="font-semibold text-sm text-foreground">Add components</h3>
+                </div>
+                <p className="text-xs text-muted-foreground ml-7">Copy code to your project</p>
+              </div>
+              <div className="p-5 flex-1 bg-zinc-950 font-mono text-xs sm:text-sm text-zinc-300">
+                <div className="flex items-center gap-2 mb-2 opacity-50">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+                </div>
+                <div className="mt-4 text-[13px] leading-relaxed">
+                  <span className="text-purple-400">npx</span> pdfx-cli add table form
+                </div>
+                <div className="mt-2 text-green-400 text-xs opacity-80">
+                  ✓ 2 components installed
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Step 3 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="rounded-xl border border-border bg-card overflow-hidden flex flex-col shadow-sm"
+            >
+              <div className="px-5 py-4 border-b border-border/50 bg-muted/30">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <div className="flex items-center justify-center w-5 h-5 rounded-md bg-foreground text-background text-xs font-bold">
+                    3
+                  </div>
+                  <h3 className="font-semibold text-sm text-foreground">Build UI</h3>
+                </div>
+                <p className="text-xs text-muted-foreground ml-7">Write standard React code</p>
+              </div>
+              <div className="p-5 flex-1 bg-zinc-950 font-mono text-xs sm:text-sm text-zinc-300">
+                <div className="flex items-center gap-2 mb-2 opacity-50">
+                  <span className="text-xs text-zinc-400 font-sans italic">invoice.tsx</span>
+                </div>
+                <div className="mt-3 text-[12px] leading-[1.6]">
+                  <div>
+                    <span className="text-blue-400">import</span> {'{'}{' '}
+                    <span className="text-cyan-300">Form</span>,{' '}
+                    <span className="text-cyan-300">Table</span> {'}'}
+                  </div>
+                  <div>
+                    <span className="text-blue-400">from</span>{' '}
+                    <span className="text-green-400">"@/components/pdfx"</span>
+                  </div>
+                  <div className="mt-1">
+                    {'<'} <span className="text-cyan-300">Page</span> {'>'}
+                  </div>
+                  <div className="ml-4 text-zinc-400">...</div>
+                  <div className="ml-4">
+                    {'<'} <span className="text-cyan-300">Table</span> data={'{'}items{'}'} {'>'}
+                  </div>
+                  <div>
+                    {'</'} <span className="text-cyan-300">Page</span> {'>'}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* 
+            HIDDEN ORIGINAL VIDEO SECTION
+            Temporarily commented out until the new pdfx-cli video is recorded.
+          */}
+          {false && (
+            <motion.div className="mt-16 max-w-3xl mx-auto">
+              <VideoModal />
+            </motion.div>
+          )}
         </div>
       </section>
 
