@@ -1,5 +1,11 @@
 # pdfx-cli
 
+## 0.4.0
+
+### Minor Changes
+
+- [#83](https://github.com/akii09/pdfx/pull/83) [`7895058`](https://github.com/akii09/pdfx/commit/7895058b2592be4b5dbe2070e5c73ce163f46b18) Thanks [@akii09](https://github.com/akii09)! - Officially migrated the CLI package to pdfx-cli. Updated all registry interactions to use the new streamlined namespace. Existing commands will still function via the deprecated alias.
+
 ## 0.2.1
 
 ### Patch Changes
