@@ -11,7 +11,14 @@
       "type": "registry:component"
     }
   ],
-  "dependencies": ["@react-pdf/renderer", "qrcode"],
-  "devDependencies": ["@types/qrcode"],
-  "registryDependencies": ["theme"]
+  "dependencies": [
+    "@react-pdf/renderer",
+    "qrcode"
+  ],
+  "devDependencies": [
+    "@types/qrcode"
+  ],
+  "registryDependencies": [
+    "theme"
+  ]
 }

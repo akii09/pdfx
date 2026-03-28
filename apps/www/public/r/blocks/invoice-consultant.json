@@ -16,7 +16,9 @@
       "type": "registry:file"
     }
   ],
-  "dependencies": ["@react-pdf/renderer"],
+  "dependencies": [
+    "@react-pdf/renderer"
+  ],
   "peerComponents": [
     "page-header",
     "page-footer",
