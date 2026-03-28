@@ -1,5 +1,11 @@
 # pdfx-cli
 
+## 0.4.1
+
+### Patch Changes
+
+- [#86](https://github.com/akii09/pdfx/pull/86) [`8f53028`](https://github.com/akii09/pdfx/commit/8f530284db0bacf52aa13499124a5f667c7c7c4b) Thanks [@akii09](https://github.com/akii09)! - Add preflight validation to mcp and skills commands; add NPM README
+
 ## 0.4.0
 
 ### Minor Changes
