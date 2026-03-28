@@ -148,12 +148,7 @@ export const PDFPreview = memo(function PDFPreview<T = string>({
         <div className="border-b border-border bg-muted/50 px-4 py-2.5 flex items-center justify-between">
           <span className="text-sm text-muted-foreground font-medium">{title}</span>
         </div>
-        <div
-          className={cn(
-            'w-full flex flex-col items-center justify-center gap-4 bg-muted/10 p-8',
-            height
-          )}
-        >
+        <div className="w-full flex flex-col items-center justify-center gap-4 bg-muted/10 p-6 md:p-8">
           <p className="text-sm text-muted-foreground text-center">
             PDF preview is optimized for larger screens.
           </p>

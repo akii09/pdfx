@@ -753,7 +753,7 @@ const features = [
 export default function HomePage() {
   return (
     <div className="overflow-x-hidden">
-      {/* ── HERO ──────────────────────────────────────────────────────────── */}
+      {/* HERO */}
       <section className="relative flex flex-col justify-center overflow-hidden min-h-[auto] lg:min-h-screen">
         {/* Grid — light */}
         <div
@@ -778,8 +778,8 @@ export default function HomePage() {
           aria-hidden="true"
         />
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 xl:px-8 pt-20 sm:pt-24 pb-8 sm:pb-16">
-          {/* ── Desktop: side-by-side ── */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8 sm:pb-16">
+          {/* Desktop: side-by-side */}
           <div className="hidden lg:flex lg:items-center lg:gap-16 xl:gap-20">
             {/* Text */}
             <div className="flex-none w-[440px] xl:w-[500px]">
@@ -883,7 +883,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* ── Mobile: stacked ── */}
+          {/* Mobile: stacked */}
           <div className="lg:hidden flex flex-col items-center text-center">
             <div className="w-full max-w-sm sm:max-w-md mx-auto px-4">
               <motion.div
@@ -985,12 +985,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS (Temporary Video Replacement) ────────────────────── */}
+      {/* HOW IT WORKS (Temporary Video Replacement) */}
       <section
-        className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border/60"
+        className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-border/60"
         aria-label="How PDFx works"
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1125,12 +1125,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── COMPONENT PREVIEW ─────────────────────────────────────────────── */}
+      {/* COMPONENT PREVIEW */}
       <section
-        className="py-20 sm:py-28 px-4 sm:px-6 border-t border-border/60"
+        className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-t border-border/60"
         aria-label="Component library overview"
       >
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1143,7 +1143,7 @@ export default function HomePage() {
               Component Library
             </div>
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight max-w-md">
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight max-w-3xl">
                 Everything for professional PDFs
               </h2>
               <Link
@@ -1183,12 +1183,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FEATURES ──────────────────────────────────────────────────────── */}
+      {/* FEATURES */}
       <section
-        className="py-20 sm:py-28 px-4 sm:px-6 border-t border-border/60 bg-muted/[0.12]"
+        className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-t border-border/60 bg-muted/[0.12]"
         aria-label="Key features"
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1199,12 +1199,12 @@ export default function HomePage() {
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">
               Why PDFx
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight max-w-md">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight max-w-3xl">
               Designed to stay out of your way
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, i) => (
               <motion.div
                 key={feature.title}
@@ -1224,12 +1224,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── COMPATIBILITY & SERVER-SIDE ───────────────────────────────── */}
+      {/* COMPATIBILITY & SERVER-SIDE */}
       <section
-        className="py-20 sm:py-28 px-4 sm:px-6 border-t border-border/60"
+        className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-t border-border/60"
         aria-label="Compatibility and server-side support"
       >
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1240,7 +1240,7 @@ export default function HomePage() {
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">
               Compatibility
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight max-w-md">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight max-w-3xl">
               Works where you work
             </h2>
           </motion.div>
@@ -1350,9 +1350,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CLOSING CTA ───────────────────────────────────────────────────── */}
+      {/* CLOSING CTA */}
       <section
-        className="py-24 sm:py-32 px-4 sm:px-6 border-t border-border/60"
+        className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 border-t border-border/60"
         aria-label="Get started"
       >
         <motion.div

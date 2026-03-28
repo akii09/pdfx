@@ -21,25 +21,37 @@ export const linkProps = [
     required: true,
   },
   {
+    name: 'src',
+    type: 'string',
+    description: 'Alias for href. The destination URL this link points to.',
+  },
+  {
+    name: 'variant',
+    type: "'default' | 'primary' | 'muted'",
+    defaultValue: "'primary'",
+    description: 'Visual styling tier mapping to the active theme palette.',
+  },
+  {
+    name: 'underline',
+    type: "'hover' | 'always' | 'none'",
+    defaultValue: "'always'",
+    description:
+      'Standard link decoration protocol. Note: PDF rendering engines typically fallback to static underlines natively if hovered states are unsupported.',
+  },
+  {
     name: 'align',
     type: "'left' | 'center' | 'right'",
     description: 'Text alignment. Maps to textAlign.',
   },
   {
-    name: 'color',
-    type: 'string',
-    description:
-      "Text color. Use theme token ('primary', 'accent', etc.) or any CSS color. Defaults to primary.",
-  },
-  {
     name: 'children',
-    type: 'React.ReactNode',
-    description: 'The link text content',
+    type: 'ReactNode',
     required: true,
+    description: 'The interactive text or elements wrapping the destination.',
   },
   {
     name: 'style',
     type: 'Style',
-    description: 'Custom @react-pdf/renderer styles to merge with defaults',
+    description: 'Custom @react-pdf/renderer text styles overriding the variant colors.',
   },
 ];

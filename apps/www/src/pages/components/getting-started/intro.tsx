@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 export default function Intro() {
   return (
     <article aria-label="PDFx documentation introduction">
-      {/* ── Hero ── */}
+      {/* Hero */}
       <header className="mb-14">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">Welcome to PDFx</h1>
         <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-6">
@@ -46,7 +46,7 @@ export default function Intro() {
         </nav>
       </header>
 
-      {/* ── What makes it different ── */}
+      {/* What makes it different */}
       <section className="mb-14 p-5 rounded-xl border bg-muted/30" aria-labelledby="diff-heading">
         <h2 id="diff-heading" className="text-base font-semibold mb-2 flex items-center gap-2">
           <Zap className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -71,7 +71,7 @@ export default function Intro() {
         </p>
       </section>
 
-      {/* ── Core Philosophy ── */}
+      {/* Core Philosophy */}
       <section className="mb-14" aria-labelledby="philosophy-heading">
         <h2 id="philosophy-heading" className="text-xl font-bold tracking-tight mb-6">
           Core Philosophy
@@ -148,7 +148,7 @@ export default function Intro() {
         </div>
       </section>
 
-      {/* ── How It Works ── */}
+      {/* How It Works */}
       <section className="mb-14" aria-labelledby="how-heading">
         <h2 id="how-heading" className="text-xl font-bold tracking-tight mb-2">
           How It Works
@@ -196,7 +196,7 @@ export default function Intro() {
         </ol>
       </section>
 
-      {/* ── Perfect For ── */}
+      {/* Perfect For */}
       <section className="mb-14" aria-labelledby="usecases-heading">
         <h2 id="usecases-heading" className="text-xl font-bold tracking-tight mb-4">
           Perfect For
@@ -231,7 +231,7 @@ export default function Intro() {
         </div>
       </section>
 
-      {/* ── Why not just use react-pdf directly ── */}
+      {/* Why not just use react-pdf directly */}
       <section className="mb-14 p-5 rounded-xl border bg-muted/20" aria-labelledby="why-heading">
         <h2 id="why-heading" className="text-base font-bold tracking-tight mb-3">
           Why not just use @react-pdf/renderer directly?
@@ -250,7 +250,7 @@ export default function Intro() {
         </p>
       </section>
 
-      {/* ── Key Features ── */}
+      {/* Key Features */}
       <section className="mb-14" aria-labelledby="features-heading">
         <h2 id="features-heading" className="text-xl font-bold tracking-tight mb-4">
           Key Features
@@ -296,7 +296,7 @@ export default function Intro() {
         </ul>
       </section>
 
-      {/* ── CTA ── */}
+      {/* CTA */}
       <div className="p-6 rounded-xl border bg-muted/20">
         <h2 className="text-lg font-bold tracking-tight mb-2">Ready to build?</h2>
         <p className="text-sm text-muted-foreground leading-relaxed mb-4">

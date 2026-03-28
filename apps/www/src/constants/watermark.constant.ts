@@ -73,4 +73,10 @@ export const watermarkProps = [
     type: 'Style',
     description: 'Custom @react-pdf/renderer styles to merge with defaults.',
   },
+  {
+    name: 'children',
+    type: 'ReactNode',
+    description:
+      'Optional inner block components explicitly defining the watermark path or layer override.',
+  },
 ];

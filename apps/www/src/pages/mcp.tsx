@@ -84,7 +84,7 @@ export default function MCPPage() {
 
   return (
     <div className="flex gap-8 relative overflow-hidden">
-      {/* ── Main content ── */}
+      {/* Main content */}
       <div className="flex-1 min-w-0 py-12 max-w-3xl">
         {/* Page header */}
         <motion.div
@@ -172,7 +172,7 @@ export default function MCPPage() {
         </AnimatePresence>
       </div>
 
-      {/* ── Right ToC ── */}
+      {/* Right ToC */}
       <div className="pt-12">
         <InlineToC items={toc} />
       </div>

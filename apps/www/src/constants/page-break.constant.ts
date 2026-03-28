@@ -19,8 +19,13 @@ export function MyDocument() {
 
 export const pageBreakProps = [
   {
+    name: 'children',
+    type: 'ReactNode',
+    description: 'Optional elements to render before executing the break.',
+  },
+  {
     name: 'style',
     type: 'Style',
-    description: 'Custom @react-pdf/renderer styles to merge with defaults',
+    description: 'Additional @react-pdf/renderer styles mapped to the invisible break block.',
   },
 ];

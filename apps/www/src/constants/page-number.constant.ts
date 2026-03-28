@@ -60,4 +60,9 @@ export const pageNumberProps = [
     type: 'Style',
     description: 'Custom @react-pdf/renderer styles to merge with defaults.',
   },
+  {
+    name: 'children',
+    type: 'ReactNode',
+    description: 'Custom child elements mapping internal structure.',
+  },
 ];

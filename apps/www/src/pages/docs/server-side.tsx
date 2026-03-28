@@ -126,7 +126,7 @@ export default function ServerSidePage() {
 
   return (
     <article className="py-12 max-w-3xl" aria-label="Server-side PDF generation guide">
-      {/* ── Header ── */}
+      {/* Header */}
       <header className="mb-12">
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
           Server-side / Node.js
@@ -141,7 +141,7 @@ export default function ServerSidePage() {
         </p>
       </header>
 
-      {/* ── When to use server-side vs browser ── */}
+      {/* When to use server-side vs browser */}
       <section className="mb-12" aria-labelledby="when-to-use">
         <h2
           id="when-to-use"
@@ -188,7 +188,7 @@ export default function ServerSidePage() {
         </div>
       </section>
 
-      {/* ── renderToBuffer ── */}
+      {/* renderToBuffer */}
       <section className="mb-12" aria-labelledby="render-to-buffer">
         <h2
           id="render-to-buffer"
@@ -208,7 +208,7 @@ export default function ServerSidePage() {
         <CodeBlock code={renderToBufferExample} language="tsx" filename="generate-pdf.tsx" />
       </section>
 
-      {/* ── renderToStream (Express) ── */}
+      {/* renderToStream (Express) */}
       <section className="mb-12" aria-labelledby="render-to-stream">
         <h2
           id="render-to-stream"
@@ -224,7 +224,7 @@ export default function ServerSidePage() {
         <CodeBlock code={renderToStreamExample} language="tsx" filename="server.tsx" />
       </section>
 
-      {/* ── Next.js App Router ── */}
+      {/* Next.js App Router */}
       <section className="mb-12" aria-labelledby="nextjs-route">
         <h2
           id="nextjs-route"
@@ -247,7 +247,7 @@ export default function ServerSidePage() {
         <CodeBlock code={nextjsRouteExample} language="tsx" filename="app/api/pdf/route.ts" />
       </section>
 
-      {/* ── Standalone script ── */}
+      {/* Standalone script */}
       <section className="mb-12" aria-labelledby="standalone-script">
         <h2
           id="standalone-script"
@@ -274,7 +274,7 @@ export default function ServerSidePage() {
         />
       </section>
 
-      {/* ── Environment notes ── */}
+      {/* Environment notes */}
       <section className="mb-12" aria-labelledby="env-notes">
         <h2
           id="env-notes"

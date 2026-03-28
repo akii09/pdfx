@@ -87,4 +87,9 @@ export const qrcodeProps = [
     type: 'Style',
     description: 'Custom @react-pdf/renderer styles applied to the container.',
   },
+  {
+    name: 'children',
+    type: 'ReactNode',
+    description: 'Custom rendered children extending the QR canvas.',
+  },
 ];

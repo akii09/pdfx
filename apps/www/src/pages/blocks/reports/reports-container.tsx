@@ -4,13 +4,13 @@ import { Check, ChevronRight, Code2, Eye, FileText, Layers, Terminal } from 'luc
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// ── Template registry files ──────────────────────────────────────────────────
+// Template registry files
 import reportFinancialRegistry from '../../../../public/r/blocks/report-financial.json';
 import reportMarketingRegistry from '../../../../public/r/blocks/report-marketing.json';
 import reportOperationsRegistry from '../../../../public/r/blocks/report-operations.json';
 import reportSecurityRegistry from '../../../../public/r/blocks/report-security.json';
 
-// ── Component registry files ─────────────────────────────────────────────────
+// Component registry files
 import badgeRegistry from '../../../../public/r/badge.json';
 import dataTableRegistry from '../../../../public/r/data-table.json';
 import dividerRegistry from '../../../../public/r/divider.json';
@@ -39,7 +39,7 @@ type TemplateId = 'report-financial' | 'report-operations' | 'report-security' |
 type ThemePreset = 'professional' | 'modern' | 'minimal';
 type ViewMode = 'preview' | 'code';
 
-// ── Component file map ───────────────────────────────────────────────────────
+// Component file map
 // All report templates share report-layout.tsx which uses these components.
 const REPORT_COMPONENT_FILES: TemplateCodeFile[] = [
   badgeRegistry,
@@ -60,7 +60,7 @@ const REPORT_COMPONENT_FILES: TemplateCodeFile[] = [
   }))
 );
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// Helpers
 
 /** Template files only — used for the Files metadata panel. */
 function toCodeFiles(
@@ -81,7 +81,7 @@ function toExplorerFiles(
   return [...codeFiles, ...componentFiles];
 }
 
-// ── Types ────────────────────────────────────────────────────────────────────
+// Types
 
 interface TemplateConfig {
   id: TemplateId;
@@ -97,7 +97,7 @@ interface TemplateConfig {
   downloadFilename: string;
 }
 
-// ── Template configs ─────────────────────────────────────────────────────────
+// Template configs
 
 const TEMPLATES: TemplateConfig[] = (() => {
   const financial = toCodeFiles(reportFinancialRegistry.files, 'report-financial');
@@ -172,7 +172,7 @@ const TEMPLATES: TemplateConfig[] = (() => {
   ];
 })();
 
-// ── Theme metadata ────────────────────────────────────────────────────────────
+// Theme metadata
 
 const THEME_META: Record<
   ThemePreset,
@@ -204,7 +204,7 @@ const themeMap: Record<ThemePreset, PdfxTheme> = {
   minimal: minimalTheme,
 };
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+// Sub-components
 
 function TemplateCard({
   template,
@@ -283,7 +283,7 @@ function ThemeSwatch({
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+// Page
 
 export default function ReportsContainerPage() {
   const [activeId, setActiveId] = useState<TemplateId>('report-financial');

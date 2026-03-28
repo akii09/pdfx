@@ -57,10 +57,10 @@ export function transformForRegistry(content: string): { content: string; usesTh
   let result = content;
   const usesTheme = result.includes('pdfx-theme');
 
-  // ── 1. Remove @pdfx/shared type-only imports ──────────────────────────────
+  // 1. Remove @pdfx/shared type-only imports
   result = result.replace(/import\s+type\s+\{[^}]*\}\s+from\s+['"]@pdfx\/shared['"];?\n?/g, '');
 
-  // ── 2. Inline PDFComponentProps for .types.ts files ───────────────────────
+  // 2. Inline PDFComponentProps for .types.ts files
   if (result.includes('PDFComponentProps')) {
     // `(?:<[^{]*>)?` captures optional generic params (e.g. `<T = Record<string,unknown>>`),
     // stopping at `{` so we never accidentally consume the interface body.
@@ -101,7 +101,7 @@ export function transformForRegistry(content: string): { content: string; usesTh
     }
   }
 
-  // ── 3. PdfxTheme alias ────────────────────────────────────────────────────
+  // 3. PdfxTheme alias
   // Use a whole-word check so that 'usePdfxTheme' (which contains 'PdfxTheme'
   // as a substring) does NOT trigger injection in .tsx files.
   if (/(?<![a-zA-Z_$])PdfxTheme(?![a-zA-Z_$\d])/.test(result)) {
@@ -121,7 +121,7 @@ export function transformForRegistry(content: string): { content: string; usesTh
     }
   }
 
-  // ── 4. Normalize theme / context import paths ─────────────────────────────
+  // 4. Normalize theme / context import paths
   // ../../lib/pdfx-theme  or  ./lib/pdfx-theme  →  ../lib/pdfx-theme
   result = result.replace(
     /from\s+['"](?:\.\.\/\.\.\/|\.\/?)lib\/pdfx-theme['"]/g,
@@ -133,24 +133,24 @@ export function transformForRegistry(content: string): { content: string; usesTh
     "from '../lib/pdfx-theme-context'"
   );
 
-  // ── 5. Rewrite intra-component companion file imports ─────────────────────
+  // 5. Rewrite intra-component companion file imports
   // ./X.styles  →  ./pdfx-X.styles   (component imports its styles file)
   result = result.replace(/from\s+['"]\.\/([^'"]+)\.styles['"]/g, "from './pdfx-$1.styles'");
   // ./X.types  →  ./pdfx-X.types   (component imports its types file)
   result = result.replace(/from\s+['"]\.\/([^'"]+)\.types['"]/g, "from './pdfx-$1.types'");
 
-  // ── 6. Rewrite cross-component type imports ───────────────────────────────
+  // 6. Rewrite cross-component type imports
   // ../foo/foo.types  →  ../foo/pdfx-foo.types  (e.g. data-table.types imports TableVariant)
   result = result.replace(
     /from\s+['"]\.\.\/([^/'"]+)\/\1\.types['"]/g,
     "from '../$1/pdfx-$1.types'"
   );
 
-  // ── 7. data-table: rewrite table component import ─────────────────────────
+  // 7. data-table: rewrite table component import
   // ../table  or  ./table  →  ../table/pdfx-table
   result = result.replace(/from\s+['"](?:\.\.\/|\.\/)table['"]/g, "from '../table/pdfx-table'");
 
-  // ── 8. Inline resolveColor ────────────────────────────────────────────────
+  // 8. Inline resolveColor
   const resolveColorInline = `const THEME_COLOR_KEYS = ['foreground','muted','mutedForeground','primary','primaryForeground','accent','destructive','success','warning','info'] as const;
 function resolveColor(value: string, colors: Record<string, string>): string {
   return THEME_COLOR_KEYS.includes(value as (typeof THEME_COLOR_KEYS)[number]) ? colors[value] : value;
@@ -343,13 +343,13 @@ const CANONICAL_EXPORT_BY_FOLDER: Record<string, string> = {
 export function transformBlockForRegistry(content: string): string {
   let result = content;
 
-  // ── 1. @pdfx/shared → ../../lib/pdfx-theme ───────────────────────────────
+  // 1. @pdfx/shared → ../../lib/pdfx-theme
   result = result.replace(
     /import\s+type\s+\{([^}]+)\}\s+from\s+'@pdfx\/shared';?/g,
     "import type {$1} from '../../lib/pdfx-theme';"
   );
 
-  // ── 2. @pdfx/components → per-component consumer paths ───────────────────────────
+  // 2. @pdfx/components → per-component consumer paths
   const uiImportMatch = result.match(
     /import\s+(?:type\s+)?\{([^}]+)\}\s+from\s+'@pdfx\/components';?/
   );

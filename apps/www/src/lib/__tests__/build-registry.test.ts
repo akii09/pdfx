@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { transformBlockForRegistry, transformForRegistry } from '../build-registry.js';
 
-// ─── transformForRegistry ─────────────────────────────────────────────────────
+//  transformForRegistry ─────────────────────────────────────────────────────
 
 describe('transformForRegistry: @pdfx/shared import removal', () => {
   it('strips a type-only import from @pdfx/shared', () => {
@@ -153,7 +153,7 @@ describe('transformForRegistry: usesTheme flag', () => {
   });
 });
 
-// ─── transformBlockForRegistry ────────────────────────────────────────────────
+//  transformBlockForRegistry ────────────────────────────────────────────────
 
 describe('transformBlockForRegistry: no rewrites needed', () => {
   it('returns content unchanged when no pdfx imports exist', () => {

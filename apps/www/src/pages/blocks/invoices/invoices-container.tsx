@@ -62,7 +62,7 @@ const INVOICE_COMPONENT_FILES: TemplateCodeFile[] = [
   }))
 );
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
+// Helpers
 
 /** Template files only — used for the Files metadata panel. */
 function toCodeFiles(
@@ -83,7 +83,7 @@ function toExplorerFiles(
   return [...codeFiles, ...componentFiles];
 }
 
-// ── Types ────────────────────────────────────────────────────────────────────
+// Types
 
 interface TemplateConfig {
   id: TemplateId;
@@ -99,7 +99,7 @@ interface TemplateConfig {
   downloadFilename: string;
 }
 
-// ── Template configs ─────────────────────────────────────────────────────────
+// Template configs
 
 const TEMPLATES: TemplateConfig[] = (() => {
   const classic = toCodeFiles(invoice01Registry.files, 'invoice-classic');
@@ -192,7 +192,7 @@ const TEMPLATES: TemplateConfig[] = (() => {
   ];
 })();
 
-// ── Theme metadata ────────────────────────────────────────────────────────────
+// Theme metadata
 
 const THEME_META: Record<
   ThemePreset,
@@ -224,7 +224,7 @@ const themeMap: Record<ThemePreset, PdfxTheme> = {
   minimal: minimalTheme,
 };
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+// Sub-components
 
 function TemplateCard({
   template,
@@ -303,7 +303,7 @@ function ThemeSwatch({
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+// Page
 
 export default function InvoicesContainerPage() {
   const [activeId, setActiveId] = useState<TemplateId>('invoice-classic');

@@ -28,7 +28,7 @@ function parsePath(filePath: string): { folder: string; filename: string } {
   return { folder: filePath.slice(0, idx), filename: filePath.slice(idx + 1) };
 }
 
-// ── Tree Node Structure ─────────────────────────────────────────────────────
+// Tree Node Structure
 
 interface TreeNode {
   name: string;
@@ -83,7 +83,7 @@ function sortTreeNodes(nodes: TreeNode[]): TreeNode[] {
   });
 }
 
-// ── Tree Renderer Component ────────────────────────────────────────────────
+// Tree Renderer Component
 
 function TreeNodeRenderer({
   node,
@@ -252,7 +252,7 @@ export function TemplateCodeExplorer({ files, className, initialPath }: Template
         className
       )}
     >
-      {/* ── File tree ──────────────────────────────────────────────── */}
+      {/* File tree */}
       <div className="border-r border-border bg-card/80 flex flex-col min-h-0">
         <div className="px-3 py-2 border-b border-border text-[11px] font-medium uppercase tracking-wider text-muted-foreground shrink-0">
           Files
@@ -269,7 +269,7 @@ export function TemplateCodeExplorer({ files, className, initialPath }: Template
         </div>
       </div>
 
-      {/* ── Code panel ─────────────────────────────────────────────── */}
+      {/* Code panel */}
       <CodeBlock
         code={activeFile.content}
         filename={activeFile.path}

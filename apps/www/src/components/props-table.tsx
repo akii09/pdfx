@@ -11,45 +11,59 @@ interface PropsTableProps {
 }
 
 export function PropsTable({ props }: PropsTableProps) {
+  if (!props || props.length === 0) return null;
+
   return (
-    <div className="overflow-x-auto rounded-lg border">
-      <table className="w-full min-w-[640px] text-sm">
-        <colgroup>
-          <col className="w-[140px]" />
-          <col className="w-auto" />
-          <col className="w-[100px]" />
-          <col className="w-[40%]" />
-        </colgroup>
+    <div className="overflow-x-auto rounded-xl border border-border/60 bg-card shadow-sm w-full">
+      <table className="w-full text-sm text-left min-w-[700px]">
         <thead>
-          <tr className="border-b bg-muted/50">
-            <th className="px-4 py-3 text-left font-medium text-muted-foreground">Prop</th>
-            <th className="px-4 py-3 text-left font-medium text-muted-foreground">Type</th>
-            <th className="px-4 py-3 text-left font-medium text-muted-foreground">Default</th>
-            <th className="px-4 py-3 text-left font-medium text-muted-foreground">Description</th>
+          <tr className="border-b border-border/40 bg-zinc-50/50 dark:bg-zinc-900/20">
+            <th className="px-5 py-3.5 font-medium text-foreground whitespace-nowrap w-[20%]">
+              Prop
+            </th>
+            <th className="px-5 py-3.5 font-medium text-foreground whitespace-nowrap w-[25%]">
+              Type
+            </th>
+            <th className="px-5 py-3.5 font-medium text-foreground whitespace-nowrap w-[15%]">
+              Default
+            </th>
+            <th className="px-5 py-3.5 font-medium text-foreground w-[40%]">Description</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="divide-y divide-border/40">
           {props.map((prop) => (
-            <tr key={prop.name} className="border-b last:border-b-0">
-              <td className="px-4 py-3 align-top">
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
-                  {prop.name}
-                  {prop.required && <span className="text-destructive ml-0.5">*</span>}
-                </code>
+            <tr key={prop.name} className="transition-colors hover:bg-muted/30">
+              <td className="px-5 py-4 align-top">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span className="font-mono text-[13px] font-semibold text-foreground">
+                    {prop.name}
+                  </span>
+                  {prop.required && (
+                    <span className="inline-flex items-center rounded-full bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium text-destructive ring-1 ring-inset ring-destructive/20">
+                      Required
+                    </span>
+                  )}
+                </div>
               </td>
-              <td className="px-4 py-3 align-top">
-                <code className="text-xs font-mono text-muted-foreground break-words">
-                  {prop.type}
-                </code>
+              <td className="px-5 py-4 align-top">
+                <div className="inline-flex rounded-md bg-blue-500/10 dark:bg-blue-500/15 px-2 py-1 max-w-full">
+                  <span className="font-mono text-[12px] text-blue-700 dark:text-blue-300 break-words leading-relaxed">
+                    {prop.type}
+                  </span>
+                </div>
               </td>
-              <td className="px-4 py-3 align-top text-muted-foreground">
-                {prop.defaultValue ? (
-                  <code className="text-xs font-mono">{prop.defaultValue}</code>
+              <td className="px-5 py-4 align-top">
+                {prop.defaultValue && prop.defaultValue !== "''" && prop.defaultValue !== '...' ? (
+                  <span className="inline-flex rounded-md bg-muted px-2 py-1 font-mono text-[12px] text-muted-foreground whitespace-nowrap">
+                    {prop.defaultValue}
+                  </span>
                 ) : (
-                  <span className="text-xs">-</span>
+                  <span className="text-muted-foreground/40 font-medium">—</span>
                 )}
               </td>
-              <td className="px-4 py-3 align-top text-muted-foreground">{prop.description}</td>
+              <td className="px-5 py-4 align-top text-muted-foreground leading-relaxed text-[13.5px]">
+                {prop.description}
+              </td>
             </tr>
           ))}
         </tbody>
