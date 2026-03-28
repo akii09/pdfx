@@ -6,27 +6,27 @@ PDFx is an open-source React PDF component library that follows the shadcn/ui mo
 
 Website: https://pdfx.akashpise.dev
 GitHub: https://github.com/akii09/pdfx
-npm (CLI): https://www.npmjs.com/package/@akii09/pdfx-cli
+npm (CLI): https://www.npmjs.com/package/pdfx-cli
 License: MIT
 
 ## Quick Start
 
 ```bash
 # Initialise your project (creates pdfx.config.json + theme)
-npx @akii09/pdfx-cli init
+npx pdfx-cli init
 
 # Add a component — source is copied into YOUR codebase
-npx @akii09/pdfx-cli add table
+npx pdfx-cli add table
 
 # Add all components at once
-npx @akii09/pdfx-cli add --all
+npx pdfx-cli add --all
 
 # List available components
-npx @akii09/pdfx-cli list
+npx pdfx-cli list
 
 # Add a full pre-built block (invoice, report)
-npx @akii09/pdfx-cli block add invoice-modern
-npx @akii09/pdfx-cli block list
+npx pdfx-cli block add invoice-modern
+npx pdfx-cli block list
 ```
 
 ## What is PDFx?
@@ -45,7 +45,7 @@ Key traits:
 PDFx ships three built-in themes. Switch with:
 
 ```bash
-npx @akii09/pdfx-cli theme switch modern
+npx pdfx-cli theme switch modern
 ```
 
 Themes: `professional` (default), `modern`, `minimal`
@@ -100,20 +100,20 @@ Blocks are complete multi-component PDF documents you can add with a single comm
 
 ### Invoice Blocks
 ```bash
-npx @akii09/pdfx-cli block add invoice-classic
-npx @akii09/pdfx-cli block add invoice-modern
-npx @akii09/pdfx-cli block add invoice-minimal
-npx @akii09/pdfx-cli block add invoice-corporate
-npx @akii09/pdfx-cli block add invoice-creative
-npx @akii09/pdfx-cli block add invoice-consultant
+npx pdfx-cli block add invoice-classic
+npx pdfx-cli block add invoice-modern
+npx pdfx-cli block add invoice-minimal
+npx pdfx-cli block add invoice-corporate
+npx pdfx-cli block add invoice-creative
+npx pdfx-cli block add invoice-consultant
 ```
 
 ### Report Blocks
 ```bash
-npx @akii09/pdfx-cli block add report-financial
-npx @akii09/pdfx-cli block add report-marketing
-npx @akii09/pdfx-cli block add report-operations
-npx @akii09/pdfx-cli block add report-security
+npx pdfx-cli block add report-financial
+npx pdfx-cli block add report-marketing
+npx pdfx-cli block add report-operations
+npx pdfx-cli block add report-security
 ```
 
 ## CLI Command Reference
@@ -155,7 +155,7 @@ pdfx/
       public/r/              # HTTP-served JSON consumed by the CLI
   packages/
     shared/                  # Types, theme presets, Zod schemas, errors
-    cli/                     # @akii09/pdfx-cli — all CLI commands
+    cli/                     # pdfx-cli — all CLI commands
   docs/                      # Architecture and decision docs
 ```
 
