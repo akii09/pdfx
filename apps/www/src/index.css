@@ -163,3 +163,17 @@ code {
     opacity: 1;
   }
 }
+
+/* Page transition fade-in (CSS-only, replaces Framer Motion AnimatePresence) */
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-transition-fade-in {
+  animation: page-fade-in 0.15s ease-out both;
+}
