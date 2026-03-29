@@ -69,7 +69,7 @@ export function createTableStyles(t: PdfxTheme) {
     },
 
     tableBordered: {
-      borderWidth: spacing[1],
+      borderWidth: rule,
       borderColor: borderColor,
       borderStyle: 'solid',
       borderTopLeftRadius: borderRadius.sm,
@@ -194,7 +194,7 @@ export function createTableStyles(t: PdfxTheme) {
       borderRightStyle: 'solid',
     },
     cellBorderedBorder: {
-      borderRightWidth: spacing[1],
+      borderRightWidth: hairline,
       borderRightColor: borderColor,
       borderRightStyle: 'solid',
     },
@@ -202,42 +202,42 @@ export function createTableStyles(t: PdfxTheme) {
     cellText: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.foreground,
     },
 
     cellTextHeaderGrid: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
     cellTextHeaderLine: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
     cellTextHeaderMinimal: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.mutedForeground,
       fontWeight: fontWeights.medium,
     },
     cellTextHeaderStriped: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
     cellTextHeaderCompact: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
       textTransform: 'uppercase',
@@ -246,14 +246,14 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextHeaderBordered: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.foreground,
       fontWeight: fontWeights.bold,
     },
     cellTextHeaderPrimaryHeader: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.primaryForeground,
       fontWeight: fontWeights.semibold,
       textTransform: 'uppercase',
@@ -263,7 +263,7 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextFooter: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.foreground,
       fontWeight: fontWeights.semibold,
     },
@@ -271,7 +271,7 @@ export function createTableStyles(t: PdfxTheme) {
     cellTextCompact: {
       fontFamily: t.typography.body.fontFamily,
       fontSize: typography.xs,
-      lineHeight: 1,
+      lineHeight: 1.2,
       color: t.colors.foreground,
     },
   });

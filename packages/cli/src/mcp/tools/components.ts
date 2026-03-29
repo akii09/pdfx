@@ -44,7 +44,7 @@ export async function getComponent(
   const primaryContent = item.files[0]?.content ?? '';
   const primaryPath = item.files[0]?.path ?? '';
   const exportNames = extractAllExportNames(primaryContent);
-  const mainExport = extractExportName(primaryContent);
+  const mainExport = extractExportName(primaryContent, args.component);
 
   const exportSection =
     exportNames.length > 0
@@ -101,18 +101,41 @@ export async function getComponent(
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
- * Extracts the primary exported component function/const name from source.
- * Returns the first PascalCase `export function` or `export const` declaration.
+ * Extracts the primary exported component function name from source.
+ *
+ * Strategy (in priority order):
+ *  1. Exact match: an `export function` whose name lowercased equals the
+ *     component name with hyphens removed  (e.g. "table" → "Table").
+ *  2. Suffix match: an `export function` whose name ends with the normalised
+ *     component name  (e.g. "graph" → "PdfGraph").
+ *  3. First PascalCase `export function` — `export const` is intentionally
+ *     excluded because non-component consts (e.g. `A4_WIDTH`, `GRAPH_SAFE_WIDTHS`)
+ *     appear before the actual component function in several files and would
+ *     otherwise be returned as the "main export".
  */
-function extractExportName(source?: string): string | null {
+function extractExportName(source?: string, componentName?: string): string | null {
   if (!source) return null;
 
-  // Match: export function FooBar(  OR  export const FooBar =
-  const matches = [...source.matchAll(/export\s+(?:function|const)\s+([A-Z][A-Za-z0-9]*)/g)];
-  if (matches.length === 0) return null;
+  // Only match `export function`, not `export const` — constants are not components.
+  const matches = [...source.matchAll(/export\s+function\s+([A-Z][A-Za-z0-9]*)/g)];
+  const names = matches.map((m) => m[1]).filter(Boolean) as string[];
 
-  // Return the first PascalCase export — that's the component
-  return matches[0][1] ?? null;
+  if (names.length === 0) return null;
+  if (!componentName) return names[0];
+
+  // Normalise: strip hyphens, lowercase  (e.g. "data-table" → "datatable")
+  const norm = componentName.replace(/-/g, '').toLowerCase();
+
+  // 1. Exact match  (e.g. "table" → "Table")
+  const exact = names.find((n) => n.toLowerCase() === norm);
+  if (exact) return exact;
+
+  // 2. Suffix match  (e.g. "graph" → "PdfGraph", "alert" → "PdfAlert")
+  const suffix = names.find((n) => n.toLowerCase().endsWith(norm));
+  if (suffix) return suffix;
+
+  // 3. First export function — best available fallback
+  return names[0];
 }
 
 /**

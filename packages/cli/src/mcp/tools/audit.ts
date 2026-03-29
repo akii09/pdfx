@@ -43,8 +43,21 @@ export async function getAuditChecklist(): Promise<ReturnType<typeof textRespons
     \`\`\`
 
     ### "Invalid hook call"
-    PDFx components render to PDF, not to the DOM — React hooks are not supported inside them.
-    Move hook calls to the parent component and pass data down as props.
+    \`@react-pdf/renderer\` renders synchronously. Hooks that depend on browser APIs or
+    async side effects do not work in the PDF render path.
+
+    **Do NOT use inside a PDFx component:**
+    - \`useEffect\` / \`useLayoutEffect\` — no browser lifecycle in PDF rendering
+    - \`useRef\` for DOM nodes — no DOM exists in the PDF render tree
+    - Any hook that calls browser globals (\`window\`, \`document\`, \`navigator\`)
+
+    **These ARE valid inside PDFx components:**
+    - PDFx framework hooks: \`usePdfxTheme()\`, \`useSafeMemo()\`
+    - Custom hooks that are pure functions with no browser-API dependencies
+    - Data passed down as props from a parent client component
+
+    If you see this error in a wrapper component you wrote, move the browser hook
+    to the nearest client component and pass the result down as a prop.
 
     ### "Text strings must be rendered inside \`<Text>\` component"
     Wrap all string literals in \`<Text>\` from \`@react-pdf/renderer\`:
