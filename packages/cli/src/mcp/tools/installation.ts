@@ -193,7 +193,7 @@ export async function getInstallation(
     | TypeScript errors on \`@react-pdf/renderer\` | \`${installCmd(pm, '@react-pdf/types', true)}\` |
     | "Cannot find module @/components/pdfx/..." | Run \`npx pdfx-cli@latest add <component>\` to install it |
     | PDF renders blank | Ensure root returns \`<Document><Page>...</Page></Document>\` |
-    | "Invalid hook call" | PDFx components cannot use React hooks — pass data as props |
+    | "Invalid hook call" | Browser-only hooks (\`useEffect\`, \`useRef\` for DOM) don't work in the PDF render path — move them to a parent client component and pass the result as a prop. PDFx framework hooks (\`usePdfxTheme\`, \`useSafeMemo\`) are valid inside PDF components. |
 
     ---
     Next: call \`get_audit_checklist\` to verify your setup is correct.

@@ -89,15 +89,32 @@ export function transformForRegistry(content: string): { content: string; usesTh
       'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Content to render */\n  children: React.ReactNode;'
     );
 
+    // Handle `export type Foo = PDFComponentProps;` (bare type alias).
+    // Converts to an equivalent interface so PDFComponentProps doesn't remain as an
+    // undefined reference after the @pdfx/shared import is stripped above.
+    result = result.replace(
+      /export\s+type\s+(\w+(?:<[^{]*>)?)\s*=\s*PDFComponentProps\s*;/g,
+      'export interface $1 {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  /** Content to render */\n  children: React.ReactNode;\n}'
+    );
+
     // Inject Style import AFTER all replacements — only when Style is actually
     // used in the file body (avoids orphan imports when the interface name has
     // generics that previously defeated the regex).
     const bodyForStyleCheck = result.replace(/^import[^\n]*\n/gm, '');
     if (/\bStyle\b/.test(bodyForStyleCheck) && !result.includes("from '@react-pdf/types'")) {
-      result = result.replace(
+      // Primary: anchor after the last import line in the file.
+      const injected = result.replace(
         /(import\s+.*from\s+['"][^'"]+['"];?\n)(?!import)/,
         "$1import type { Style } from '@react-pdf/types';\n"
       );
+      if (injected !== result) {
+        // Anchor matched — use the injected version.
+        result = injected;
+      } else {
+        // Fallback: no import lines remain (e.g. table.types.ts after stripping @pdfx/shared).
+        // Prepend the Style import at the top of the file.
+        result = `import type { Style } from '@react-pdf/types';\n${result}`;
+      }
     }
   }
 

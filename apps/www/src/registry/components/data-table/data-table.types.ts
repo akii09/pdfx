@@ -29,7 +29,7 @@ export interface DataTableProps<T = Record<string, unknown>>
   columns: DataTableColumn<T>[];
   data: T[];
   /**
-   * @default 'line'
+   * @default 'grid'
    */
   variant?: TableVariant;
   footer?: Partial<Record<keyof T & string, string | number>>;
