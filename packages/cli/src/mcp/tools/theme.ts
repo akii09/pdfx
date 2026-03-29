@@ -67,14 +67,13 @@ export async function getTheme(
 
     ## Usage in Components
     \`\`\`tsx
-    // Access theme values in a PDFx component
-    import type { PdfxTheme } from '@pdfx/shared';
+    // Access theme values in a PDFx component via the usePdfxTheme hook.
+    // @pdfx/shared is workspace-only — do NOT import from it in your components.
+    import { View, Text } from '@react-pdf/renderer';
+    import { usePdfxTheme } from '../lib/pdfx-theme-context';
 
-    interface Props {
-      theme: PdfxTheme;
-    }
-
-    export function MyComponent({ theme }: Props) {
+    export function MyComponent() {
+      const theme = usePdfxTheme();
       return (
         <View style={{ backgroundColor: theme.colors.background }}>
           <Text style={{ color: theme.colors.foreground, fontSize: theme.typography.body.fontSize }}>
