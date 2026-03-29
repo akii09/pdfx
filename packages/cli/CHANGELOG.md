@@ -1,5 +1,13 @@
 # pdfx-cli
 
+## 0.4.3
+
+### Patch Changes
+
+- [#91](https://github.com/akii09/pdfx/pull/91) [`2f0c547`](https://github.com/akii09/pdfx/commit/2f0c5478974085534e43b1e8d538aeb6af8e58c5) Thanks [@akii09](https://github.com/akii09)! - fix: MCP config fails to work with opencode (#88)
+
+- [#91](https://github.com/akii09/pdfx/pull/91) [`2f0c547`](https://github.com/akii09/pdfx/commit/2f0c5478974085534e43b1e8d538aeb6af8e58c5) Thanks [@akii09](https://github.com/akii09)! - fix: improve MCP and skills integration; refactor graph component into a segregated structure.
+
 ## 0.4.2
 
 ### Patch Changes
