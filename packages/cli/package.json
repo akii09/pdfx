@@ -1,6 +1,6 @@
 {
   "name": "pdfx-cli",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "CLI for PDFx components",
   "type": "module",
   "bin": {

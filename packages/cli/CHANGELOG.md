@@ -1,5 +1,13 @@
 # pdfx-cli
 
+## 0.4.2
+
+### Patch Changes
+
+- [#89](https://github.com/akii09/pdfx/pull/89) [`77c1ce1`](https://github.com/akii09/pdfx/commit/77c1ce1916a4c553f2a44fb7808bee8c7f93326f) Thanks [@akii09](https://github.com/akii09)! - fix: Theme spacing issue
+
+- [#89](https://github.com/akii09/pdfx/pull/89) [`77c1ce1`](https://github.com/akii09/pdfx/commit/77c1ce1916a4c553f2a44fb7808bee8c7f93326f) Thanks [@akii09](https://github.com/akii09)! - fix: table components styling issue fixed
+
 ## 0.4.1
 
 ### Patch Changes
