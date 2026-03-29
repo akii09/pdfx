@@ -59,6 +59,40 @@ describe('transformForRegistry: PDFComponentProps inlining', () => {
   });
 });
 
+describe('transformForRegistry: React import injection', () => {
+  it('injects React import when React.ReactNode is inlined via PDFComponentProps', () => {
+    const input = [
+      `import type { PDFComponentProps } from '@pdfx/shared';`,
+      'export interface HeadingProps extends PDFComponentProps {}',
+    ].join('\n');
+    const { content } = transformForRegistry(input);
+    expect(content).toContain('children: React.ReactNode');
+    expect(content).toContain("import type React from 'react'"); // ← was missing
+  });
+
+  it('injects React import when source uses React.* directly (non-PDFComponentProps path)', () => {
+    const input = [
+      `import { View } from '@react-pdf/renderer';`,
+      'let chartContent: React.ReactNode = null;',
+      'export function MyComp() { return chartContent; }',
+    ].join('\n');
+    const { content } = transformForRegistry(input);
+    expect(content).toContain("import type React from 'react'");
+  });
+
+  it('does not duplicate React import when source already has it', () => {
+    const input = [
+      `import type React from 'react';`,
+      `import { View } from '@react-pdf/renderer';`,
+      'let x: React.ReactNode = null;',
+      'export function Comp() { return null; }',
+    ].join('\n');
+    const { content } = transformForRegistry(input);
+    const count = (content.match(/import type React from 'react'/g) ?? []).length;
+    expect(count).toBe(1);
+  });
+});
+
 describe('transformForRegistry: PdfxTheme alias injection', () => {
   it('injects ReturnType alias after usePdfxTheme import in .tsx files', () => {
     const input = [

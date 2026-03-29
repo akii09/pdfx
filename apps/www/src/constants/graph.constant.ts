@@ -79,16 +79,43 @@ export const graphProps = [
     description: 'Optional subtitle or description below the title.',
   },
   {
+    name: 'xLabel',
+    type: 'string',
+    description: 'Label for the X axis.',
+  },
+  {
+    name: 'yLabel',
+    type: 'string',
+    description: 'Label for the Y axis.',
+  },
+  {
     name: 'width',
     type: 'number',
-    defaultValue: '500',
-    description: 'Total chart width in PDF points.',
+    defaultValue: '420',
+    description: 'Total chart width in PDF points. Ignored when fullWidth is true.',
   },
   {
     name: 'height',
     type: 'number',
     defaultValue: '260',
     description: 'Total chart height in PDF points.',
+  },
+  {
+    name: 'fullWidth',
+    type: 'boolean',
+    defaultValue: 'false',
+    description:
+      'Automatically calculate width from A4 page width minus theme margins. Uses containerPadding and wrapperPadding for offset.',
+  },
+  {
+    name: 'containerPadding',
+    type: 'number',
+    description: 'Outer container padding subtracted from calculated width when fullWidth is true.',
+  },
+  {
+    name: 'wrapperPadding',
+    type: 'number',
+    description: 'Inner wrapper padding subtracted from calculated width when fullWidth is true.',
   },
   {
     name: 'colors',

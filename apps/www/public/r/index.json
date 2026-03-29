@@ -121,6 +121,18 @@
         {
           "path": "components/graph/graph.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "components/graph/graph.types.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/graph/graph.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/graph/graph.utils.ts",
+          "type": "registry:component"
         }
       ],
       "dependencies": [
