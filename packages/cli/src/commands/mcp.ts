@@ -237,7 +237,37 @@ async function initMcpConfig(opts: { client?: string }): Promise<void> {
   }
 
   const merged = mergeDeep(existing, client.config);
-  await writeFile(configPath, `${JSON.stringify(merged, null, 2)}\n`, 'utf-8');
+  const configJson = `${JSON.stringify(merged, null, 2)}\n`;
+
+  // Validate the merged config before writing
+  try {
+    const parsed = JSON.parse(configJson) as Record<string, unknown>;
+    if (!isPdfxAlreadyConfigured(parsed)) {
+      console.error(
+        chalk.red(
+          '\n  Config merge failed — pdfx entry not found in merged output. Please report this bug.\n'
+        )
+      );
+      process.exit(1);
+    }
+  } catch {
+    console.error(chalk.red('\n  Config merge produced invalid JSON. Please report this bug.\n'));
+    process.exit(1);
+  }
+
+  await writeFile(configPath, configJson, 'utf-8');
+
+  // Post-write verification: read back and confirm validity
+  try {
+    const written = await readFile(configPath, 'utf-8');
+    JSON.parse(written);
+  } catch {
+    console.error(
+      chalk.red(
+        `\n  Warning: ${client.configPath} was written but could not be read back as valid JSON.\n`
+      )
+    );
+  }
 
   process.stdout.write(`\n✓ Wrote MCP configuration to ${client.configPath}\n`);
   process.stdout.write(`\nRestart ${client.label} to activate the PDFx MCP server.\n`);

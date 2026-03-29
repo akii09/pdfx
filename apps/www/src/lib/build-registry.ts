@@ -193,6 +193,29 @@ function resolveColor(value: string, colors: Record<string, string>): string {
     }
   }
 
+  // 9. Inject React type import when React.* (e.g. React.ReactNode) is used in the
+  // file body but no React import is present. This covers two cases:
+  //   a. PDFComponentProps was inlined above → 'children: React.ReactNode' injected
+  //   b. Source uses React.ReactNode directly (valid in monorepo with shared tsconfig,
+  //      but the generated file must be self-contained for user projects)
+  // Must run after all other transforms so the final import list is stable.
+  const bodyForReactCheck = result.replace(/^import[^\n]*\n/gm, '');
+  if (
+    /\bReact\./.test(bodyForReactCheck) &&
+    !result.includes("import type React from 'react'") &&
+    !result.includes("import React from 'react'")
+  ) {
+    const injected = result.replace(
+      /(import\s+.*from\s+['"][^'"]+['"];?\n)(?!import)/,
+      "$1import type React from 'react';\n"
+    );
+    if (injected !== result) {
+      result = injected;
+    } else {
+      result = `import type React from 'react';\n${result}`;
+    }
+  }
+
   return { content: result, usesTheme };
 }
 

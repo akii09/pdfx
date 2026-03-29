@@ -104,6 +104,15 @@ The docs site and the registry server. Built with Vite + React. The registry bui
 
 Each component lives in its own folder under `apps/www/src/registry/components/<name>/`.
 
+### Naming Convention
+
+Use a `Pdf` prefix when the component name collides with widely-used exports from React, HTML, or @react-pdf/renderer:
+
+- **Use `Pdf` prefix**: `PdfImage` (conflicts with react-pdf `Image`), `PdfAlert` (conflicts with HTML `alert`), `PdfCard`, `PdfForm`, etc.
+- **Skip the prefix**: `Badge`, `DataTable`, `KeyValue`, `Heading` — names unique to PDFx's domain with no collision risk.
+
+> **Never rename existing components** — that would be a breaking change for installed users. Document your naming decision in the component's JSDoc.
+
 ### Files
 
 ```
