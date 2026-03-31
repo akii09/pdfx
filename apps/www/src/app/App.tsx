@@ -36,6 +36,7 @@ const ServerSidePage = lazy(() => import('../pages/docs/server-side'));
 const BlocksIndexPage = lazy(() => import('../pages/blocks/index'));
 const InvoicesIndexPage = lazy(() => import('../pages/blocks/invoices/index'));
 const ReportsIndexPage = lazy(() => import('../pages/blocks/reports/index'));
+const ThemeBuilderPage = lazy(() => import('../pages/theme-builder'));
 
 function PageLoader() {
   return (
@@ -322,6 +323,14 @@ export default function App() {
             }
           />
         </Route>
+        <Route
+          path="theme-builder"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ThemeBuilderPage />
+            </Suspense>
+          }
+        />
         <Route
           path="*"
           element={

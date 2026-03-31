@@ -16,15 +16,6 @@
       "type": "registry:file"
     }
   ],
-  "dependencies": [
-    "@react-pdf/renderer"
-  ],
-  "peerComponents": [
-    "page-header",
-    "page-footer",
-    "table",
-    "key-value",
-    "text",
-    "signature"
-  ]
+  "dependencies": ["@react-pdf/renderer"],
+  "peerComponents": ["page-header", "page-footer", "table", "key-value", "text", "signature"]
 }

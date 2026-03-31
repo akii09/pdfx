@@ -41,6 +41,12 @@ export {
   professionalTheme,
   modernTheme,
   minimalTheme,
+  executiveTheme,
+  corporateTheme,
+  elegantTheme,
+  vividTheme,
+  forestTheme,
+  blueprintTheme,
   themePresets,
   type ThemePresetName,
 } from './themes/index.js';

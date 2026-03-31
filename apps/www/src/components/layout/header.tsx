@@ -1,4 +1,14 @@
-import { ChevronDown, Copy, FileSpreadsheet, Github, Menu, Receipt, Search, X } from 'lucide-react';
+import {
+  ChevronDown,
+  Copy,
+  FileSpreadsheet,
+  Github,
+  Menu,
+  Palette,
+  Receipt,
+  Search,
+  X,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BLOCKS } from '../../constants';
@@ -163,19 +173,13 @@ export function Header() {
               Components
             </Link>
             <BlocksDropdown />
-            {/* Theme Customizer — coming soon */}
-            {/* <button
-              type="button"
-              disabled
-              className="flex items-center gap-1.5 text-sm text-muted-foreground/50 cursor-not-allowed select-none"
-              title="Theme Customizer — Coming Soon"
+            <Link
+              to="/theme-builder"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <Palette className="h-3.5 w-3.5" />
-              Theme Customizer
-              <span className="ml-0.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary/70 border border-primary/20">
-                Soon
-              </span>
-            </button> */}
+              Theme Builder
+            </Link>
           </nav>
         </div>
 
@@ -265,13 +269,14 @@ export function Header() {
               </Link>
             </div>
           </div>
-          {/* <span className="text-sm text-muted-foreground/60 py-2 flex items-center gap-1.5">
+          <Link
+            to="/theme-builder"
+            onClick={() => setMobileOpen(false)}
+            className="text-sm text-muted-foreground hover:text-foreground py-2 flex items-center gap-2"
+          >
             <Palette className="h-3.5 w-3.5" />
-            Theme Customizer
-            <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary/70 border border-primary/20">
-              Soon
-            </span>
-          </span> */}
+            Theme Builder
+          </Link>
           <div className="h-px bg-border my-2" />
           <a
             href="https://github.com/akii09/pdfx"

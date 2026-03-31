@@ -19,7 +19,8 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "pnpm build && changeset publish --tag beta",
-    "sync:project": "node scripts/sync-to-project.mjs"
+    "sync:project": "node scripts/sync-to-project.mjs",
+    "check": "turbo lint && turbo typecheck && turbo build && turbo test"
   },
   "packageManager": "pnpm@10.29.3",
   "engines": {
