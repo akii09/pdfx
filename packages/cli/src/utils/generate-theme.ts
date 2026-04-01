@@ -62,10 +62,15 @@ export const theme: PdfxTheme = ${serializeTheme(preset)};
 `;
 }
 
+/** Safely quotes a string value for TypeScript source output */
+function q(value: string): string {
+  return JSON.stringify(value);
+}
+
 /** Serializes a PdfxTheme to formatted TypeScript source code */
 function serializeTheme(t: PdfxTheme): string {
   return `{
-  name: '${t.name}',
+  name: ${q(t.name)},
 
   // Primitive scales.
   primitives: {
@@ -120,29 +125,29 @@ function serializeTheme(t: PdfxTheme): string {
 
   // Semantic colors. Values must be valid for react-pdf.
   colors: {
-    foreground: '${t.colors.foreground}',
-    background: '${t.colors.background}',
-    muted: '${t.colors.muted}',
-    mutedForeground: '${t.colors.mutedForeground}',
-    primary: '${t.colors.primary}',
-    primaryForeground: '${t.colors.primaryForeground}',
-    border: '${t.colors.border}',
-    accent: '${t.colors.accent}',
-    destructive: '${t.colors.destructive}',
-    success: '${t.colors.success}',
-    warning: '${t.colors.warning}',
-    info: '${t.colors.info}',
+    foreground: ${q(t.colors.foreground)},
+    background: ${q(t.colors.background)},
+    muted: ${q(t.colors.muted)},
+    mutedForeground: ${q(t.colors.mutedForeground)},
+    primary: ${q(t.colors.primary)},
+    primaryForeground: ${q(t.colors.primaryForeground)},
+    border: ${q(t.colors.border)},
+    accent: ${q(t.colors.accent)},
+    destructive: ${q(t.colors.destructive)},
+    success: ${q(t.colors.success)},
+    warning: ${q(t.colors.warning)},
+    info: ${q(t.colors.info)},
   },
 
   // Typography defaults.
   typography: {
     body: {
-      fontFamily: '${t.typography.body.fontFamily}',
+      fontFamily: ${q(t.typography.body.fontFamily)},
       fontSize: ${t.typography.body.fontSize},
       lineHeight: ${t.typography.body.lineHeight},
     },
     heading: {
-      fontFamily: '${t.typography.heading.fontFamily}',
+      fontFamily: ${q(t.typography.heading.fontFamily)},
       fontWeight: ${t.typography.heading.fontWeight},
       lineHeight: ${t.typography.heading.lineHeight},
       fontSize: {
@@ -171,8 +176,8 @@ function serializeTheme(t: PdfxTheme): string {
 
   // Page defaults.
   page: {
-    size: '${t.page.size}',
-    orientation: '${t.page.orientation}',
+    size: ${q(t.page.size)},
+    orientation: ${q(t.page.orientation)},
   },
 }`;
 }

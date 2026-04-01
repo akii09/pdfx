@@ -1,8 +1,8 @@
 # PDFx
 
-> Copy-paste React PDF components like shadcn/ui. Build professional PDFs with @react-pdf/renderer — you own the code.
+> Build PDFs with React. No magic. Just components.
 
-PDFx is an open-source React PDF component library that follows the shadcn/ui model: run the CLI to add a component, the source lands in your project and you own it fully. No runtime package dependency, no version lock-in, MIT licensed.
+PDFx is an open-source React PDF component library that follows the shadcn/ui model: run the CLI to add a component, the source lands in your project, and you own it fully. No runtime PDFx package dependency, no version lock-in, MIT licensed.
 
 Website: https://pdfx.akashpise.dev
 GitHub: https://github.com/akii09/pdfx
@@ -12,7 +12,7 @@ License: MIT
 ## Quick Start
 
 ```bash
-# Initialise your project (creates pdfx.config.json + theme)
+# Initialize your project (creates pdfx.json + theme)
 npx pdfx-cli init
 
 # Add a component — source is copied into YOUR codebase
@@ -36,19 +36,24 @@ PDFx provides 24 production-ready PDF components built on top of `@react-pdf/ren
 Key traits:
 - **No runtime dependency** — after `pdfx add`, you own the file
 - **Full TypeScript** — every component is typed with PDFComponentProps
-- **Theme system** — Professional, Modern, and Minimal presets; or define your own
+- **Theme system** — nine built-in presets, visual Theme Builder, or define your own
 - **CLI-driven** — `pdfx add`, `pdfx list`, `pdfx diff`, `pdfx theme`, `pdfx block` commands
+- **AI-ready docs** — MCP Server and Skills File docs for LLM-assisted workflows
 - **MIT licensed** — free forever, no cost
 
 ## Theme System
 
-PDFx ships three built-in themes. Switch with:
+PDFx ships nine built-in themes. Switch with:
 
 ```bash
 npx pdfx-cli theme switch modern
 ```
 
-Themes: `professional` (default), `modern`, `minimal`
+Themes: `professional` (default), `modern`, `minimal`, `executive`, `corporate`, `elegant`, `vivid`, `forest`, `blueprint`
+
+Visual theming is also available at:
+
+- Theme Builder: https://pdfx.akashpise.dev/theme-builder
 
 Each theme exports a token object used inside components:
 ```ts
@@ -126,7 +131,7 @@ npx pdfx-cli block add report-security
 | `pdfx list` | List all available components with install status |
 | `pdfx diff <component>` | Show diff between your local copy and latest upstream |
 | `pdfx theme init` | Create a custom theme file |
-| `pdfx theme switch <name>` | Switch to professional / modern / minimal |
+| `pdfx theme switch <name>` | Switch to any built-in preset theme |
 | `pdfx theme validate` | Validate your theme token file |
 | `pdfx block add <id>` | Copy a pre-built block into your project |
 | `pdfx block list` | List all available blocks |
@@ -138,7 +143,7 @@ npx pdfx-cli block add report-security
 - **Package manager**: pnpm v10 (workspace monorepo)
 - **Build**: Vite + Turborepo
 - **Linter**: Biome
-- **Node.js**: 24+ (dev), 20+ (consumers)
+- **Node.js**: 20+
 
 ## Repository Structure
 
@@ -174,4 +179,8 @@ The website and the registry are the same thing — same model as shadcn/ui.
 - Installation: https://pdfx.akashpise.dev/installation
 - Components: https://pdfx.akashpise.dev/components
 - Blocks: https://pdfx.akashpise.dev/blocks
+- MCP & Skills: https://pdfx.akashpise.dev/mcp
+- Theme Builder: https://pdfx.akashpise.dev/theme-builder
+- Releases: https://pdfx.akashpise.dev/releases
 - Contributing: https://github.com/akii09/pdfx/blob/main/CONTRIBUTING.md
+- CLI Changelog: https://github.com/akii09/pdfx/blob/main/packages/cli/CHANGELOG.md

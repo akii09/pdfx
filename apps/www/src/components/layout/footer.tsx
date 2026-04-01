@@ -29,6 +29,12 @@ export function Footer() {
           >
             Components
           </Link>
+          <Link
+            to="/releases"
+            className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
+          >
+            Releases
+          </Link>
         </nav>
       </div>
     </footer>

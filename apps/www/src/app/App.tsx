@@ -36,6 +36,8 @@ const ServerSidePage = lazy(() => import('../pages/docs/server-side'));
 const BlocksIndexPage = lazy(() => import('../pages/blocks/index'));
 const InvoicesIndexPage = lazy(() => import('../pages/blocks/invoices/index'));
 const ReportsIndexPage = lazy(() => import('../pages/blocks/reports/index'));
+const ThemeBuilderPage = lazy(() => import('../pages/theme-builder'));
+const ReleasesPage = lazy(() => import('../pages/releases'));
 
 function PageLoader() {
   return (
@@ -88,6 +90,14 @@ export default function App() {
           element={
             <Suspense fallback={<PageLoader />}>
               <MCPPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="releases"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ReleasesPage />
             </Suspense>
           }
         />
@@ -322,6 +332,14 @@ export default function App() {
             }
           />
         </Route>
+        <Route
+          path="theme-builder"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <ThemeBuilderPage />
+            </Suspense>
+          }
+        />
         <Route
           path="*"
           element={

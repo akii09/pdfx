@@ -9,7 +9,7 @@ describe('generateThemeFile', () => {
     (name) => {
       const content = generateThemeFile(themePresets[name]);
       expect(content).toContain('export const theme: PdfxTheme');
-      expect(content).toContain(`name: '${name}'`);
+      expect(content).toContain(`name: "${name}"`);
     }
   );
 
@@ -56,9 +56,9 @@ describe('generateThemeFile', () => {
     const minimal = generateThemeFile(minimalTheme);
 
     // They should have different font families
-    expect(professional).toContain("fontFamily: 'Times-Roman'");
-    expect(modern).toContain("fontFamily: 'Helvetica'");
-    expect(minimal).toContain("fontFamily: 'Courier'");
+    expect(professional).toContain('fontFamily: "Times-Roman"');
+    expect(modern).toContain('fontFamily: "Helvetica"');
+    expect(minimal).toContain('fontFamily: "Courier"');
 
     // And theme-specific colors (shadcn-inspired palettes)
     expect(professional).toContain('#18181b');

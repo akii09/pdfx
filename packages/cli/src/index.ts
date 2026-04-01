@@ -71,7 +71,7 @@ themeCmd.command('init').description('Initialize or replace the theme file').act
 
 themeCmd
   .command('switch <preset>')
-  .description('Switch to a preset theme (professional, modern, minimal)')
+  .description('Switch to a built-in preset theme')
   .action(themeSwitch);
 
 themeCmd.command('validate').description('Validate your theme file').action(themeValidate);
