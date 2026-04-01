@@ -33,6 +33,12 @@ export default () => (
 
 Visit [pdfx.akashpise.dev](https://pdfx.akashpise.dev/docs) for the full docs, component previews, and block templates.
 
+## Releases
+
+- User-facing release notes: [pdfx.akashpise.dev/releases](https://pdfx.akashpise.dev/releases)
+- CLI changelog: [packages/cli/CHANGELOG.md](./packages/cli/CHANGELOG.md)
+- GitHub Releases: [github.com/akii09/pdfx/releases](https://github.com/akii09/pdfx/releases)
+
 ## Contributing
 
 Please read the [contributing guide](./CONTRIBUTING.md) before opening a PR.

@@ -55,6 +55,11 @@ const routes: Record<string, RouteMeta> = {
     description:
       'Design your PDF theme visually. Customize colors, typography, spacing and page layout with live preview, then export the theme code for your project.',
   },
+  '/releases': {
+    title: 'Releases — PDFx',
+    description:
+      'Track PDFx release notes, CLI changelog history, and GitHub release announcements in one place.',
+  },
 
   // ── Components hub ───────────────────────────────────────────────────────
   '/components': {

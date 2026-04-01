@@ -17,6 +17,7 @@ const sections: SidebarSection[] = [
     links: [
       { title: 'Introduction', href: '/docs' },
       { title: 'Server-side / Node.js', href: '/docs/server-side' },
+      { title: 'Releases', href: '/releases' },
     ],
   },
   {
@@ -74,6 +75,7 @@ export function Sidebar() {
   const isMCPPage = location.pathname.startsWith('/mcp');
   const showSidebar =
     location.pathname.startsWith('/docs') ||
+    location.pathname.startsWith('/releases') ||
     location.pathname.startsWith('/components') ||
     location.pathname.startsWith('/installation') ||
     location.pathname.startsWith('/templates') ||
