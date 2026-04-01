@@ -1,6 +1,7 @@
 import type { PdfxTheme } from '@pdfx/shared';
 import { Check, Code2, Copy, Download, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { getRegisteredGoogleFonts } from '../../lib/pdf-fonts';
 import type { PresetName } from '../../lib/theme-code-generator';
 import { generateDeltaCode, generateThemeCode } from '../../lib/theme-code-generator';
 import { cn } from '../../lib/utils';
@@ -20,6 +21,10 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
   const [copied, setCopied] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const code = tab === 'full' ? generateThemeCode(theme) : generateDeltaCode(theme, basePreset);
+  const remoteFonts = getRegisteredGoogleFonts([
+    theme.typography.body.fontFamily,
+    theme.typography.heading.fontFamily,
+  ]);
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
@@ -161,6 +166,16 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
           </div>
         </div>
         <div className="flex-1 overflow-auto min-h-0">
+          {tab === 'full' && remoteFonts.length > 0 ? (
+            <div className="border-b border-amber-500/20 bg-amber-500/10 px-5 py-3">
+              <p className="text-[11px] text-amber-900 dark:text-amber-200">
+                <strong className="font-semibold">Production note:</strong> this export registers{' '}
+                {remoteFonts.map((font) => `'${font}'`).join(' and ')} from jsDelivr at runtime. For
+                offline or restricted deployments, self-host those font files or switch to built-in
+                fonts before release.
+              </p>
+            </div>
+          ) : null}
           <CodeBlock
             code={code}
             language="typescript"

@@ -197,8 +197,12 @@ export const GOOGLE_FONT_DEFINITIONS: Record<string, GoogleFontDefinition> = {
   },
 };
 
+export function getRegisteredGoogleFonts(fontFamilies: string[]): string[] {
+  return [...new Set(fontFamilies)].filter((name) => GOOGLE_FONT_DEFINITIONS[name]);
+}
+
 export function generateGoogleFontRegistrationSnippet(fontFamilies: string[]): string {
-  const uniqueFamilies = [...new Set(fontFamilies)].filter((name) => GOOGLE_FONT_DEFINITIONS[name]);
+  const uniqueFamilies = getRegisteredGoogleFonts(fontFamilies);
   if (uniqueFamilies.length === 0) return '';
 
   const registrations = uniqueFamilies

@@ -40,9 +40,12 @@ export function generateThemeCode(theme: PdfxTheme): string {
     t.typography.body.fontFamily,
     t.typography.heading.fontFamily,
   ]);
+  const remoteFontNotice = fontRegistrationSnippet
+    ? '// NOTE: This export registers remote font files from jsDelivr via Font.register().\n// For locked-down or offline production environments, self-host these fonts or switch to built-in fonts.\n\n'
+    : '';
 
   return `
-    ${fontRegistrationSnippet ? `${fontRegistrationSnippet}\n` : ''}
+    ${fontRegistrationSnippet ? `${remoteFontNotice}${fontRegistrationSnippet}\n` : ''}
 interface PdfxTheme {
   name: string;
   primitives: {
