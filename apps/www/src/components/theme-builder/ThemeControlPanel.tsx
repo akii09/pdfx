@@ -91,13 +91,16 @@ function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps)
     null
   );
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const isBuiltin = BUILTIN_FONTS.has(value);
 
   // Close when clicking outside (skip the trigger — it toggles itself)
   useEffect(() => {
     if (!open) return;
     function onPointerDown(e: PointerEvent) {
-      if (triggerRef.current?.contains(e.target as Node)) return;
+      const target = e.target as Node;
+      if (triggerRef.current?.contains(target)) return;
+      if (dropdownRef.current?.contains(target)) return;
       setOpen(false);
     }
     document.addEventListener('pointerdown', onPointerDown);
@@ -142,6 +145,7 @@ function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps)
         dropRect &&
         createPortal(
           <div
+            ref={dropdownRef}
             className="fixed z-[200] overflow-hidden rounded-md border border-border bg-background shadow-xl"
             style={{ top: dropRect.top, left: dropRect.left, width: dropRect.width }}
           >
