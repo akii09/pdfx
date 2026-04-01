@@ -118,11 +118,11 @@ export default function ThemeBuilderPage() {
             <span className="capitalize">{basePreset}</span>
           </span>
 
-          {loadedFromUrl && (
-            <span className="hidden md:inline-flex whitespace-nowrap rounded-full border border-accent/20 bg-accent/10 px-2 py-0.5 text-[10px] font-medium text-accent">
+          {/* {loadedFromUrl && (
+            <span className="hidden md:inline-flex whitespace-nowrap rounded-full border border-accent/20 bg-accent/10 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
               From shared link
             </span>
-          )}
+          )} */}
         </div>
 
         <div className="flex items-center gap-1">

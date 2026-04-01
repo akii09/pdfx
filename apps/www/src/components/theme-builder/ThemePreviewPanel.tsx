@@ -106,26 +106,16 @@ export function ThemePreviewPanel({
   }
 
   return (
-    <div className="flex h-full flex-col" style={{ background: '#525659' }}>
-      <div
-        className="flex shrink-0 items-center gap-2 px-5 py-2"
-        style={{ background: 'rgba(0,0,0,0.22)', borderBottom: '1px solid rgba(0,0,0,0.3)' }}
-      >
-        <FileText className="h-3.5 w-3.5 shrink-0 text-white/40" />
-        <span className="truncate text-xs font-medium text-white/55">{fileName}</span>
-      </div>
-
+    <div className="flex h-full flex-col" style={{ background: '#282828' }}>
       <div
         className="flex flex-1 justify-center overflow-auto pl-4 sm:pl-10 pr-4 sm:pr-10 py-4 sm:py-8 transition-[padding] duration-300 ease-in-out"
         style={reservedRight > 0 ? { paddingRight: `${40 + reservedRight}px` } : undefined}
       >
         {renderState.url ? (
           <div
-            className="relative w-full max-w-[780px] self-start"
+            className="relative w-full max-w-full self-start"
             style={{
-              minHeight: 'max(600px, calc(100vh - 10rem))',
-              boxShadow:
-                '0 2px 4px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.35), 0 20px 48px rgba(0,0,0,0.4)',
+              minHeight: 'max(600px, calc(100vh - 10rem))'
             }}
           >
             <iframe
