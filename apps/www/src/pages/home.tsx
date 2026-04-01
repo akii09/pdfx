@@ -903,15 +903,6 @@ export default function HomePage() {
           }}
           aria-hidden="true"
         />
-        <div
-          className="absolute inset-x-0 top-0 h-52 pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(circle at top, color-mix(in oklch, var(--foreground) 8%, transparent) 0%, transparent 72%)',
-          }}
-          aria-hidden="true"
-        />
-
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8 sm:pb-16">
           {/* Desktop: side-by-side */}
           <div className="hidden lg:flex lg:items-center lg:gap-16 xl:gap-20">
@@ -922,9 +913,13 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45 }}
               >
-                <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur-sm px-3.5 py-1 text-xs text-muted-foreground mb-8">
-                  <span className="h-1.5 w-1.5 rounded-full bg-foreground/50 animate-pulse" />
-                  Open source · MIT · 24 components
+                <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/75 px-3 py-1 text-[11px] font-medium text-muted-foreground shadow-sm mb-7">
+                  <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-border/60 bg-muted/50">
+                    <Sparkles className="h-3 w-3" />
+                  </span>
+                  <span>React PDF toolkit</span>
+                  <span className="text-muted-foreground/50">·</span>
+                  <span className="text-muted-foreground/80">Open source</span>
                 </div>
               </motion.div>
 
@@ -932,13 +927,11 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.06 }}
-                className="text-[3.25rem] xl:text-[3.75rem] font-bold tracking-[-0.025em] text-foreground leading-[1.04] mb-6"
+                className="text-[2.95rem] xl:text-[3.35rem] font-semibold tracking-[-0.04em] text-foreground leading-[0.98] mb-6"
               >
-                Build polished PDFs
+                Build PDFs with React.
                 <br />
-                <span className="bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/50">
-                  with React components.
-                </span>
+                <span className="text-foreground/72">No magic. Just components.</span>
               </motion.h1>
 
               <motion.p
@@ -1057,9 +1050,11 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45 }}
               >
-                <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-border/70 bg-background/70 backdrop-blur-sm px-2.5 sm:px-3 py-1 text-[10px] sm:text-xs text-muted-foreground mb-4 sm:mb-6">
-                  <span className="h-1.5 w-1.5 rounded-full bg-foreground/50 animate-pulse" />
-                  Open source · MIT · 24 components
+                <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-border/60 bg-background/75 px-2.5 sm:px-3 py-1 text-[10px] sm:text-[11px] font-medium text-muted-foreground shadow-sm mb-4 sm:mb-6">
+                  <span className="inline-flex h-4.5 w-4.5 sm:h-5 sm:w-5 items-center justify-center rounded-full border border-border/60 bg-muted/50">
+                    <Sparkles className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                  </span>
+                  <span>React PDF toolkit</span>
                 </div>
               </motion.div>
 
@@ -1067,13 +1062,11 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.06 }}
-                className="text-[1.75rem] sm:text-[2.5rem] font-bold tracking-[-0.025em] text-foreground leading-[1.1] mb-3 sm:mb-5"
+                className="text-[1.7rem] sm:text-[2.2rem] font-semibold tracking-[-0.04em] text-foreground leading-[1.02] mb-3 sm:mb-5"
               >
-                Build polished PDFs
+                Build PDFs with React.
                 <br />
-                <span className="bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/50">
-                  with React components.
-                </span>
+                <span className="text-foreground/72">No magic. Just components.</span>
               </motion.h1>
 
               <motion.p
@@ -1234,7 +1227,8 @@ export default function HomePage() {
                     {description}
                   </p>
                   <div className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
-                    Explore <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                    Explore{' '}
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                   </div>
                 </Link>
               </motion.div>
