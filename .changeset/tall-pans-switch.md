@@ -1,4 +1,6 @@
+---
 "pdfx-cli": minor
+---
 
 Improve the theming workflow in `pdfx-cli`.
 
