@@ -1,5 +1,17 @@
 # pdfx-cli
 
+## 0.5.0
+
+### Minor Changes
+
+- [#96](https://github.com/akii09/pdfx/pull/96) [`f3db877`](https://github.com/akii09/pdfx/commit/f3db877775e5758afad63600632548a83e899724) Thanks [@akii09](https://github.com/akii09)! - feat: harden theme builder and expand theme preset support
+
+- [#96](https://github.com/akii09/pdfx/pull/96) [`f3db877`](https://github.com/akii09/pdfx/commit/f3db877775e5758afad63600632548a83e899724) Thanks [@akii09](https://github.com/akii09)! - Improve the theming workflow in `pdfx-cli`.
+
+  - harden generated theme files by safely escaping string values in the emitted TypeScript
+  - expose the expanded built-in preset set through shared theme preset support in `pdfx theme switch`
+  - align the CLI release with the newer Theme Builder and shared theme model
+
 ## 0.4.3
 
 ### Patch Changes
