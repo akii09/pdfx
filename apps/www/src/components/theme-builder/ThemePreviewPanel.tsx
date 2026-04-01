@@ -1,6 +1,6 @@
 import type { PdfxTheme } from '@pdfx/shared';
 import { pdf } from '@react-pdf/renderer';
-import { AlertCircle, FileText, Loader2 } from 'lucide-react';
+import { AlertCircle, Loader2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { ThemePreviewDocument } from './ThemePreviewDocument';
 
@@ -64,8 +64,6 @@ export function ThemePreviewPanel({
     };
   }, []);
 
-  const fileName = `${theme.name || 'theme'}-preview.pdf`;
-
   if (renderState.loading && !renderState.url) {
     return (
       <div className="h-full flex items-center justify-center" style={{ background: '#525659' }}>
@@ -115,7 +113,7 @@ export function ThemePreviewPanel({
           <div
             className="relative w-full max-w-full self-start"
             style={{
-              minHeight: 'max(600px, calc(100vh - 10rem))'
+              minHeight: 'max(600px, calc(100vh - 10rem))',
             }}
           >
             <iframe

@@ -39,7 +39,6 @@ export default function ThemeBuilderPage() {
     initialTheme ?? undefined
   );
 
-  const [loadedFromUrl] = useState(() => initialTheme !== null);
   const [shareToast, setShareToast] = useState(false);
   const [codeModalOpen, setCodeModalOpen] = useState(false);
 
