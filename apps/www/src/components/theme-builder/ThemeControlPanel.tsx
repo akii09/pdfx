@@ -57,8 +57,6 @@ function Section({ title, icon, defaultOpen = true, children }: SectionProps) {
 
 // ─── Font family picker ───────────────────────────────────────────────────────
 
-const BUILTIN_FONTS = new Set(['Helvetica', 'Times-Roman', 'Courier']);
-
 const groupedFonts = FONT_OPTIONS.reduce<Record<string, FontOption[]>>((acc, font) => {
   const label = FONT_CATEGORY_LABELS[font.category];
   if (!acc[label]) acc[label] = [];
@@ -67,9 +65,6 @@ const groupedFonts = FONT_OPTIONS.reduce<Record<string, FontOption[]>>((acc, fon
 }, {});
 
 const FONT_GROUP_ORDER = [
-  FONT_CATEGORY_LABELS['builtin-sans'],
-  FONT_CATEGORY_LABELS['builtin-serif'],
-  FONT_CATEGORY_LABELS['builtin-mono'],
   FONT_CATEGORY_LABELS.sans,
   FONT_CATEGORY_LABELS.serif,
   FONT_CATEGORY_LABELS.mono,
@@ -92,7 +87,6 @@ function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps)
   );
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const isBuiltin = BUILTIN_FONTS.has(value);
 
   // Close when clicking outside (skip the trigger — it toggles itself)
   useEffect(() => {
@@ -189,16 +183,12 @@ function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps)
 
       {/* Meta line */}
       <p className="mt-1.5 text-[10px] text-muted-foreground">
-        {isBuiltin ? (
-          'Built-in PDF font — no network request'
-        ) : (
-          <>
-            <span className="rounded border border-accent/20 bg-accent/10 px-1 py-0.5 text-[9px] font-medium text-accent">
-              OSS
-            </span>{' '}
-            Open source · loaded on first use
-          </>
-        )}
+        <>
+          <span className="rounded border border-accent/20 bg-accent/10 px-1 py-0.5 text-[9px] font-medium text-accent">
+            Google
+          </span>{' '}
+          Auto-registered in generated theme file
+        </>
       </p>
     </div>
   );

@@ -19,7 +19,7 @@ import { cn } from '../lib/utils';
 
 const SHARE_TOAST_DURATION = 2_000; // ms
 const DEBOUNCE_MS = 350;
-const PANEL_WIDTH = 360; // must match the w-[360px] on the floating panel
+const PANEL_WIDTH = 360; // must match the md:w-[360px] Tailwind class on the floating panel
 
 function useDocumentTitle(title: string) {
   useEffect(() => {
@@ -42,7 +42,21 @@ export default function ThemeBuilderPage() {
   const [loadedFromUrl] = useState(() => initialTheme !== null);
   const [shareToast, setShareToast] = useState(false);
   const [codeModalOpen, setCodeModalOpen] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(true);
+
+  // Default panel open only on ≥ md screens; closed by default on mobile.
+  const [panelOpen, setPanelOpen] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
+  );
+  // Track breakpoint so reservedRight is 0 on mobile (panel overlays full-width).
+  const [isMdBreakpoint, setIsMdBreakpoint] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
+  );
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 768px)');
+    const handler = (e: MediaQueryListEvent) => setIsMdBreakpoint(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
 
   // Blob URL lifted from ThemePreviewPanel → feeds Download + Open in new tab
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
@@ -64,8 +78,11 @@ export default function ThemeBuilderPage() {
   }, [theme]);
 
   // ⌘Z / ⌘⇧Z keyboard shortcuts
+  // Guard: skip when focus is inside an input/textarea so native text-undo is preserved.
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
       const meta = e.metaKey || e.ctrlKey;
       if (meta && e.key === 'z' && !e.shiftKey) {
         e.preventDefault();
@@ -230,21 +247,23 @@ export default function ThemeBuilderPage() {
          */}
         <ThemePreviewPanel
           theme={previewTheme}
-          reservedRight={panelOpen ? PANEL_WIDTH : 0}
+          reservedRight={panelOpen && isMdBreakpoint ? PANEL_WIDTH : 0}
           onUrlChange={handleUrlChange}
         />
 
-        {/* Floating customizer panel (slides in from the right) */}
+        {/* Floating customizer panel (slides in from the right).
+             On mobile: w-full so it takes the full viewport.
+             On md+: w-[360px] fixed sidebar.
+             translateX(100%) always works for both widths. */}
         <div
           className={cn(
             'absolute inset-y-0 right-0 z-20',
-            'flex flex-col',
+            'flex flex-col w-full md:w-[360px]',
             'border-l border-border bg-background/[0.98] shadow-2xl backdrop-blur-md',
             'transition-transform duration-300 ease-in-out will-change-transform'
           )}
           style={{
-            width: PANEL_WIDTH,
-            transform: panelOpen ? 'translateX(0)' : `translateX(${PANEL_WIDTH}px)`,
+            transform: panelOpen ? 'translateX(0)' : 'translateX(100%)',
           }}
           aria-label="Theme customizer"
         >

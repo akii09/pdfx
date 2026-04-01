@@ -57,8 +57,11 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
     const a = document.createElement('a');
     a.href = url;
     a.download = 'pdfx-theme.ts';
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    // Delay revoke so the browser has time to start the download stream.
+    setTimeout(() => URL.revokeObjectURL(url), 100);
   }
 
   if (!open) return null;

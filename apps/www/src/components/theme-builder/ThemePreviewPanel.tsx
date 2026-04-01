@@ -146,8 +146,8 @@ export function ThemePreviewPanel({
 
       {/* ── PDF canvas ────────────────────────────────────────────────────── */}
       <div
-        className="flex flex-1 justify-center overflow-auto pl-10 py-8 transition-[padding] duration-300 ease-in-out"
-        style={{ paddingRight: `${40 + reservedRight}px` }}
+        className="flex flex-1 justify-center overflow-auto pl-4 sm:pl-10 pr-4 sm:pr-10 py-4 sm:py-8 transition-[padding] duration-300 ease-in-out"
+        style={reservedRight > 0 ? { paddingRight: `${40 + reservedRight}px` } : undefined}
       >
         {renderState.url ? (
           <div
@@ -165,7 +165,7 @@ export function ThemePreviewPanel({
              */}
             <iframe
               key={renderState.url}
-              src={`${renderState.url}#toolbar=0`}
+              src={`${renderState.url}#toolbar=0&zoom=page-width`}
               title="Theme Preview — PDF"
               className="block h-full w-full border-0"
               style={{ background: 'white', minHeight: 'max(600px, calc(100vh - 10rem))' }}

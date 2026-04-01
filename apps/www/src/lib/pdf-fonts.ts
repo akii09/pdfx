@@ -133,21 +133,103 @@ Font.register({
   ],
 });
 
+interface GoogleFontFace {
+  weight: number;
+  style?: 'normal' | 'italic';
+}
+
+interface GoogleFontDefinition {
+  packageName: string;
+  fileFamily: string;
+  faces: GoogleFontFace[];
+}
+
+export const GOOGLE_FONT_DEFINITIONS: Record<string, GoogleFontDefinition> = {
+  Inter: {
+    packageName: 'inter',
+    fileFamily: 'inter',
+    faces: [{ weight: 400 }, { weight: 500 }, { weight: 600 }, { weight: 700 }],
+  },
+  Roboto: {
+    packageName: 'roboto',
+    fileFamily: 'roboto',
+    faces: [{ weight: 400 }, { weight: 400, style: 'italic' }, { weight: 500 }, { weight: 700 }],
+  },
+  'Open Sans': {
+    packageName: 'open-sans',
+    fileFamily: 'open-sans',
+    faces: [{ weight: 400 }, { weight: 400, style: 'italic' }, { weight: 600 }, { weight: 700 }],
+  },
+  Lato: {
+    packageName: 'lato',
+    fileFamily: 'lato',
+    faces: [{ weight: 400 }, { weight: 400, style: 'italic' }, { weight: 700 }],
+  },
+  Nunito: {
+    packageName: 'nunito',
+    fileFamily: 'nunito',
+    faces: [{ weight: 400 }, { weight: 600 }, { weight: 700 }],
+  },
+  Merriweather: {
+    packageName: 'merriweather',
+    fileFamily: 'merriweather',
+    faces: [{ weight: 400 }, { weight: 400, style: 'italic' }, { weight: 700 }],
+  },
+  'Playfair Display': {
+    packageName: 'playfair-display',
+    fileFamily: 'playfair-display',
+    faces: [{ weight: 400 }, { weight: 700 }],
+  },
+  Lora: {
+    packageName: 'lora',
+    fileFamily: 'lora',
+    faces: [{ weight: 400 }, { weight: 400, style: 'italic' }, { weight: 700 }],
+  },
+  'Source Code Pro': {
+    packageName: 'source-code-pro',
+    fileFamily: 'source-code-pro',
+    faces: [{ weight: 400 }, { weight: 700 }],
+  },
+  'JetBrains Mono': {
+    packageName: 'jetbrains-mono',
+    fileFamily: 'jetbrains-mono',
+    faces: [{ weight: 400 }, { weight: 700 }],
+  },
+};
+
+export function generateGoogleFontRegistrationSnippet(fontFamilies: string[]): string {
+  const uniqueFamilies = [...new Set(fontFamilies)].filter((name) => GOOGLE_FONT_DEFINITIONS[name]);
+  if (uniqueFamilies.length === 0) return '';
+
+  const registrations = uniqueFamilies
+    .map((name) => {
+      const def = GOOGLE_FONT_DEFINITIONS[name];
+      const fonts = def.faces
+        .map((face) => {
+          const style = face.style ?? 'normal';
+          const styleProp = face.style ? `, fontStyle: '${face.style}'` : '';
+          return `      { src: fontSrc('${def.packageName}', '${def.fileFamily}', ${face.weight}, '${style}'), fontWeight: ${face.weight}${styleProp} }`;
+        })
+        .join(',\n');
+
+      return `Font.register({\n  family: '${name}',\n  fonts: [\n${fonts}\n  ],\n});`;
+    })
+    .join('\n\n');
+
+  return `import { Font } from '@react-pdf/renderer';\n\nconst FONT_CDN = 'https://cdn.jsdelivr.net/npm/@fontsource';\n\nfunction fontSrc(\n  pkg: string,\n  family: string,\n  weight: number,\n  style: 'normal' | 'italic' = 'normal'\n): string {\n  return \`${'${'}FONT_CDN}/${'${'}pkg}@4/files/${'${'}family}-latin-${'${'}weight}-${'${'}style}.woff\`;\n}\n\n${registrations}`;
+}
+
 // ── Font catalogue ────────────────────────────────────────────────────────────
 
 export interface FontOption {
   value: string;
   label: string;
-  category: 'builtin-sans' | 'builtin-serif' | 'builtin-mono' | 'sans' | 'serif' | 'mono';
+  category: 'sans' | 'serif' | 'mono';
 }
 
 /** All available font families, grouped by category for the UI. */
 export const FONT_OPTIONS: FontOption[] = [
-  // Built-in PDF fonts — no network required
-  { value: 'Helvetica', label: 'Helvetica', category: 'builtin-sans' },
-  { value: 'Times-Roman', label: 'Times Roman', category: 'builtin-serif' },
-  { value: 'Courier', label: 'Courier', category: 'builtin-mono' },
-  // OSS sans-serif
+  // Google fonts (via @fontsource on jsDelivr)
   { value: 'Inter', label: 'Inter', category: 'sans' },
   { value: 'Roboto', label: 'Roboto', category: 'sans' },
   { value: 'Open Sans', label: 'Open Sans', category: 'sans' },
@@ -163,10 +245,7 @@ export const FONT_OPTIONS: FontOption[] = [
 ];
 
 export const FONT_CATEGORY_LABELS: Record<FontOption['category'], string> = {
-  'builtin-sans': 'Built-in — Sans-serif',
-  'builtin-serif': 'Built-in — Serif',
-  'builtin-mono': 'Built-in — Monospace',
-  sans: 'Sans-serif',
-  serif: 'Serif',
-  mono: 'Monospace',
+  sans: 'Google Sans-serif',
+  serif: 'Google Serif',
+  mono: 'Google Monospace',
 };

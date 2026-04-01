@@ -11,6 +11,7 @@ import {
   vividTheme,
 } from '@pdfx/shared';
 import { useMemo, useReducer } from 'react';
+import { FONT_OPTIONS } from '../../lib/pdf-fonts';
 import type { PresetName } from '../../lib/theme-code-generator';
 
 // ─── Preset map ───────────────────────────────────────────────────────────────
@@ -26,6 +27,36 @@ const PRESETS: Record<PresetName, PdfxTheme> = {
   forest: forestTheme,
   blueprint: blueprintTheme,
 };
+
+const GOOGLE_FONT_SET = new Set(FONT_OPTIONS.map((f) => f.value));
+
+const LEGACY_FONT_FALLBACK: Record<string, string> = {
+  Helvetica: 'Inter',
+  'Times-Roman': 'Merriweather',
+  Courier: 'Source Code Pro',
+};
+
+function normalizeFontFamily(family: string): string {
+  if (GOOGLE_FONT_SET.has(family)) return family;
+  return LEGACY_FONT_FALLBACK[family] ?? 'Inter';
+}
+
+function normalizeThemeFonts(theme: PdfxTheme): PdfxTheme {
+  return {
+    ...theme,
+    typography: {
+      ...theme.typography,
+      body: {
+        ...theme.typography.body,
+        fontFamily: normalizeFontFamily(theme.typography.body.fontFamily),
+      },
+      heading: {
+        ...theme.typography.heading,
+        fontFamily: normalizeFontFamily(theme.typography.heading.fontFamily),
+      },
+    },
+  };
+}
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
@@ -186,7 +217,7 @@ function reducer(state: ThemeBuilderState, action: Action): ThemeBuilderState {
 
     case 'LOAD_PRESET':
       return {
-        theme: { ...PRESETS[action.preset], name: state.theme.name },
+        theme: normalizeThemeFonts({ ...PRESETS[action.preset], name: state.theme.name }),
         basePreset: action.preset,
         past: pushPast(state.past, state.theme),
         future: [],
@@ -194,7 +225,7 @@ function reducer(state: ThemeBuilderState, action: Action): ThemeBuilderState {
 
     case 'LOAD_THEME':
       return {
-        theme: action.theme,
+        theme: normalizeThemeFonts(action.theme),
         basePreset: state.basePreset,
         past: pushPast(state.past, state.theme),
         future: [],
@@ -262,7 +293,7 @@ export interface UseThemeBuilderReturn {
 
 export function useThemeBuilder(initialTheme?: PdfxTheme): UseThemeBuilderReturn {
   const [state, dispatch] = useReducer(reducer, {
-    theme: initialTheme ?? professionalTheme,
+    theme: normalizeThemeFonts(initialTheme ?? professionalTheme),
     basePreset: 'professional',
     past: [],
     future: [],
