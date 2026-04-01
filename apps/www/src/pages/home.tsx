@@ -940,8 +940,8 @@ export default function HomePage() {
                 transition={{ duration: 0.5, delay: 0.12 }}
                 className="text-base xl:text-lg text-muted-foreground mb-8 leading-relaxed max-w-lg"
               >
-                Copy, paste, customize, and ship. PDFx gives you production-ready PDF components,
-                theme tooling, and AI-ready docs without locking your code into a black box.
+                Copy, paste, customize, and ship. PDFx gives you composable PDF components, theme
+                tooling, and AI-ready docs without locking your code into a black box.
               </motion.p>
 
               <motion.div
