@@ -17,7 +17,7 @@ const sections: SidebarSection[] = [
     links: [
       { title: 'Introduction', href: '/docs' },
       { title: 'Server-side / Node.js', href: '/docs/server-side' },
-      { title: 'Releases', href: '/releases' },
+      // { title: 'Releases', href: '/releases' },
     ],
   },
   {
