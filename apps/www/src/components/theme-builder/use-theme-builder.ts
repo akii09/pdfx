@@ -277,10 +277,13 @@ export interface UseThemeBuilderReturn {
   actions: ThemeBuilderActions;
 }
 
-export function useThemeBuilder(initialTheme?: PdfxTheme): UseThemeBuilderReturn {
+export function useThemeBuilder(
+  initialTheme?: PdfxTheme,
+  initialBasePreset?: PresetName
+): UseThemeBuilderReturn {
   const [state, dispatch] = useReducer(reducer, {
     theme: normalizeThemeFonts(initialTheme ?? professionalTheme),
-    basePreset: 'professional',
+    basePreset: initialBasePreset ?? 'professional',
     past: [],
     future: [],
   });

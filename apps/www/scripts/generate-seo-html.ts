@@ -50,6 +50,11 @@ const routes: Record<string, RouteMeta> = {
     description:
       'Make your AI editor fluent in PDFx. Set up the MCP server in Claude Code, Cursor, VS Code, Antigravity, or Windsurf in one command. Download the AI context skills file for any editor.',
   },
+  '/theme-builder': {
+    title: 'Theme Builder — PDFx',
+    description:
+      'Design your PDF theme visually. Customize colors, typography, spacing and page layout with live preview, then export the theme code for your project.',
+  },
 
   // ── Components hub ───────────────────────────────────────────────────────
   '/components': {

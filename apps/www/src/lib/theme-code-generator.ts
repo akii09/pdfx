@@ -1,5 +1,6 @@
 import type { PdfxTheme } from '@pdfx/shared';
 import {
+  type ThemePresetName,
   blueprintTheme,
   corporateTheme,
   elegantTheme,
@@ -12,16 +13,7 @@ import {
 } from '@pdfx/shared';
 import { generateGoogleFontRegistrationSnippet } from './pdf-fonts';
 
-export type PresetName =
-  | 'professional'
-  | 'modern'
-  | 'minimal'
-  | 'executive'
-  | 'corporate'
-  | 'elegant'
-  | 'vivid'
-  | 'forest'
-  | 'blueprint';
+export type PresetName = ThemePresetName;
 
 export const PRESET_MAP: Record<PresetName, PdfxTheme> = {
   professional: professionalTheme,

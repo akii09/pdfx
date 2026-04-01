@@ -34,9 +34,10 @@ function useDocumentTitle(title: string) {
 export default function ThemeBuilderPage() {
   useDocumentTitle('Theme Builder — PDFx');
 
-  const initialTheme = readThemeFromHash();
+  const initialData = readThemeFromHash();
   const { theme, basePreset, canUndo, canRedo, actions } = useThemeBuilder(
-    initialTheme ?? undefined
+    initialData?.theme ?? undefined,
+    initialData?.basePreset ?? undefined
   );
 
   const [shareToast, setShareToast] = useState(false);
@@ -65,12 +66,12 @@ export default function ThemeBuilderPage() {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setPreviewTheme(theme);
-      writeThemeToHash(theme);
+      writeThemeToHash(theme, basePreset);
     }, DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [theme]);
+  }, [theme, basePreset]);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -92,14 +93,14 @@ export default function ThemeBuilderPage() {
   }, [actions]);
 
   const handleShare = useCallback(() => {
-    writeThemeToHash(theme);
+    writeThemeToHash(theme, basePreset);
     const showCopied = () => {
       setShareToast(true);
       setTimeout(() => setShareToast(false), SHARE_TOAST_DURATION);
     };
 
     navigator.clipboard.writeText(window.location.href).then(showCopied).catch(showCopied);
-  }, [theme]);
+  }, [theme, basePreset]);
 
   const fileName = `${theme.name || 'theme'}-preview.pdf`;
 
