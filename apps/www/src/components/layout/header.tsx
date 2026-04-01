@@ -1,4 +1,5 @@
 import {
+  Bot,
   ChevronDown,
   Copy,
   FileSpreadsheet,
@@ -198,6 +199,14 @@ export function Header() {
               ⌘K
             </kbd>
           </button>
+          <Link
+            to="/mcp"
+            className="inline-flex items-center justify-center rounded-md border bg-muted/50 p-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            aria-label="Open MCP and Skills docs"
+            title="MCP & Skills"
+          >
+            <Bot className="h-4 w-4" />
+          </Link>
           <a
             href="https://github.com/akii09/pdfx"
             target="_blank"
@@ -276,6 +285,14 @@ export function Header() {
           >
             <Palette className="h-3.5 w-3.5" />
             Theme Builder
+          </Link>
+          <Link
+            to="/mcp"
+            onClick={() => setMobileOpen(false)}
+            className="text-sm text-muted-foreground hover:text-foreground py-2 flex items-center gap-2"
+          >
+            <Bot className="h-3.5 w-3.5" />
+            MCP & Skills
           </Link>
           <div className="h-px bg-border my-2" />
           <a

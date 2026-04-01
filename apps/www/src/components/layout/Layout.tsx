@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { CommandPalette } from '../command-palette';
@@ -10,7 +11,11 @@ import { Header } from './header';
 import { Sidebar } from './sidebar';
 
 export default function Layout() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname, search]);
 
   // Theme Builder is a full-viewport tool — no sidebar, no footer, no
   // reading-progress bar, and no container constraints.

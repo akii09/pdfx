@@ -1,4 +1,4 @@
-import { Award, FileSpreadsheet, Receipt, User } from 'lucide-react';
+import { FileSpreadsheet, Receipt } from 'lucide-react';
 
 export const BLOCKS = [
   {
@@ -20,25 +20,5 @@ export const BLOCKS = [
     isDisabled: false,
     path: '/blocks/reports',
     count: 4,
-  },
-  {
-    icon: User,
-    name: 'Resumes',
-    description: 'Professional resume layouts with multiple styles.',
-    color: 'text-pink-500',
-    bg: 'bg-pink-50 dark:bg-pink-950/40',
-    isDisabled: true,
-    path: '/blocks/resumes',
-    count: 0,
-  },
-  {
-    icon: Award,
-    name: 'Certificates',
-    description: 'Award and achievement certificate designs.',
-    color: 'text-yellow-500',
-    bg: 'bg-yellow-50 dark:bg-yellow-950/40',
-    isDisabled: true,
-    path: '/blocks/certificates',
-    count: 0,
   },
 ];

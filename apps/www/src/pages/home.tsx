@@ -6,10 +6,21 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion';
-import { ArrowRight, Check, Copy, Github, PlayCircle, Server, Zap } from 'lucide-react';
+import {
+  ArrowRight,
+  Bot,
+  Check,
+  Copy,
+  FileCode2,
+  Github,
+  Palette,
+  PlayCircle,
+  Server,
+  Sparkles,
+  Zap,
+} from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MCPBadge } from '../components/mcp-badge';
 import { SocialProofStats } from '../components/social-proof-stats';
 
 function VideoModal() {
@@ -838,6 +849,33 @@ const features = [
   },
 ];
 
+const workflowTools = [
+  {
+    title: 'MCP Server',
+    description:
+      'Give MCP-capable editors live access to PDFx components, blocks, and theme patterns while you build.',
+    href: '/mcp?tab=mcp',
+    icon: Bot,
+    eyebrow: 'AI tooling',
+  },
+  {
+    title: 'Skills File',
+    description:
+      'Drop in a lightweight context file so any AI editor understands the PDFx mental model before it writes code.',
+    href: '/mcp?tab=skills',
+    icon: FileCode2,
+    eyebrow: 'Editor context',
+  },
+  {
+    title: 'Theme Builder',
+    description:
+      'Design a PDF theme visually, preview it live, then export code that fits directly into your project.',
+    href: '/theme-builder',
+    icon: Palette,
+    eyebrow: 'Visual theming',
+  },
+];
+
 export default function HomePage() {
   return (
     <div className="overflow-x-hidden">
@@ -865,6 +903,14 @@ export default function HomePage() {
           }}
           aria-hidden="true"
         />
+        <div
+          className="absolute inset-x-0 top-0 h-52 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle at top, color-mix(in oklch, var(--foreground) 8%, transparent) 0%, transparent 72%)',
+          }}
+          aria-hidden="true"
+        />
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-8 sm:pb-16">
           {/* Desktop: side-by-side */}
@@ -888,10 +934,10 @@ export default function HomePage() {
                 transition={{ duration: 0.55, delay: 0.06 }}
                 className="text-[3.25rem] xl:text-[3.75rem] font-bold tracking-[-0.025em] text-foreground leading-[1.04] mb-6"
               >
-                PDF components
+                Build polished PDFs
                 <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/50">
-                  for React.
+                  with React components.
                 </span>
               </motion.h1>
 
@@ -901,8 +947,8 @@ export default function HomePage() {
                 transition={{ duration: 0.5, delay: 0.12 }}
                 className="text-base xl:text-lg text-muted-foreground mb-8 leading-relaxed max-w-lg"
               >
-                Copy, paste, customize. Professional PDFs with a component library you fully own
-                built on @react-pdf/renderer.
+                Copy, paste, customize, and ship. PDFx gives you production-ready PDF components,
+                theme tooling, and AI-ready docs without locking your code into a black box.
               </motion.p>
 
               <motion.div
@@ -925,6 +971,34 @@ export default function HomePage() {
                 >
                   Browse components
                 </Link>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.22 }}
+                className="flex flex-wrap items-center gap-2 mb-5"
+              >
+                {[
+                  { icon: Palette, label: 'Theme Builder' },
+                  { icon: Bot, label: 'MCP & Skills' },
+                  { icon: Sparkles, label: 'Copy-paste blocks' },
+                ].map(({ icon: Icon, label }) => (
+                  <Link
+                    key={label}
+                    to={
+                      label === 'Theme Builder'
+                        ? '/theme-builder'
+                        : label === 'MCP & Skills'
+                          ? '/mcp'
+                          : '/blocks/invoices'
+                    }
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-background/70 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {label}
+                  </Link>
+                ))}
               </motion.div>
 
               <motion.div
@@ -995,10 +1069,10 @@ export default function HomePage() {
                 transition={{ duration: 0.55, delay: 0.06 }}
                 className="text-[1.75rem] sm:text-[2.5rem] font-bold tracking-[-0.025em] text-foreground leading-[1.1] mb-3 sm:mb-5"
               >
-                PDF components
+                Build polished PDFs
                 <br />
                 <span className="bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/50">
-                  for React.
+                  with React components.
                 </span>
               </motion.h1>
 
@@ -1008,7 +1082,8 @@ export default function HomePage() {
                 transition={{ duration: 0.5, delay: 0.12 }}
                 className="text-sm sm:text-base text-muted-foreground mb-5 sm:mb-7 leading-relaxed max-w-sm mx-auto"
               >
-                Copy, paste, customize. Professional PDFs with a component library you fully own.
+                Copy, paste, customize, and ship. PDFx gives you production-ready PDF components,
+                theme tooling, and AI-ready docs.
               </motion.p>
 
               <motion.div
@@ -1031,6 +1106,28 @@ export default function HomePage() {
                 >
                   Browse components
                 </Link>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.22 }}
+                className="flex flex-wrap justify-center gap-2 mb-4"
+              >
+                {[
+                  { icon: Palette, label: 'Theme Builder', href: '/theme-builder' },
+                  { icon: Bot, label: 'MCP & Skills', href: '/mcp' },
+                  { icon: Sparkles, label: 'Blocks', href: '/blocks/invoices' },
+                ].map(({ icon: Icon, label, href }) => (
+                  <Link
+                    key={label}
+                    to={href}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-background/70 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {label}
+                  </Link>
+                ))}
               </motion.div>
 
               <motion.div
@@ -1077,6 +1174,71 @@ export default function HomePage() {
             >
               <HeroCardsMobile />
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* AI TOOLS + THEMING */}
+      <section
+        className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-t border-border/60 bg-muted/[0.12]"
+        aria-label="AI workflow and theme tooling"
+      >
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5 }}
+            className="mb-12 sm:mb-16"
+          >
+            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">
+              Workflow
+            </div>
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-3xl">
+                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                  Faster setup, smarter editing, cleaner theming
+                </h2>
+                <p className="mt-3 text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  PDFx is not only a component library. It also gives you a visual theme tool and
+                  AI-friendly integration paths so setup, customization, and generation stay in one
+                  system.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {workflowTools.map(({ title, description, href, icon: Icon, eyebrow }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.38, delay: i * 0.06 }}
+              >
+                <Link
+                  to={href}
+                  className="group flex h-full flex-col rounded-xl border border-border/60 bg-card p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-sm"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="rounded-lg border border-border/60 bg-muted/50 p-2.5">
+                      <Icon className="h-4 w-4 text-foreground" />
+                    </div>
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                      {eyebrow}
+                    </span>
+                  </div>
+                  <h3 className="mt-5 text-base font-semibold text-foreground">{title}</h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
+                    {description}
+                  </p>
+                  <div className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-foreground">
+                    Explore <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
@@ -1475,7 +1637,6 @@ export default function HomePage() {
           </div>
         </motion.div>
       </section>
-      <MCPBadge />
     </div>
   );
 }
