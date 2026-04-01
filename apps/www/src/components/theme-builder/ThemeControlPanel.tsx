@@ -9,6 +9,7 @@ import {
   Unlink,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { FONT_CATEGORY_LABELS, FONT_OPTIONS, type FontOption } from '../../lib/pdf-fonts';
 import type { PresetName } from '../../lib/theme-code-generator';
 import { THEME_PRESETS } from '../../lib/theme-presets';
@@ -54,7 +55,9 @@ function Section({ title, icon, defaultOpen = true, children }: SectionProps) {
   );
 }
 
-// ─── Font family select ───────────────────────────────────────────────────────
+// ─── Font family picker ───────────────────────────────────────────────────────
+
+const BUILTIN_FONTS = new Set(['Helvetica', 'Times-Roman', 'Courier']);
 
 const groupedFonts = FONT_OPTIONS.reduce<Record<string, FontOption[]>>((acc, font) => {
   const label = FONT_CATEGORY_LABELS[font.category];
@@ -72,45 +75,125 @@ const FONT_GROUP_ORDER = [
   FONT_CATEGORY_LABELS.mono,
 ];
 
-interface FontSelectProps {
+interface FontPickerDropdownProps {
   label: string;
   value: string;
   onChange: (value: string) => void;
 }
 
-function FontSelect({ label, value, onChange }: FontSelectProps) {
-  const isBuiltin = ['Helvetica', 'Times-Roman', 'Courier'].includes(value);
+/**
+ * Custom font picker that renders its dropdown as `position: fixed` so it
+ * escapes the panel's `overflow-y: auto` scroll container and is never clipped.
+ */
+function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps) {
+  const [open, setOpen] = useState(false);
+  const [dropRect, setDropRect] = useState<{ top: number; left: number; width: number } | null>(
+    null
+  );
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const isBuiltin = BUILTIN_FONTS.has(value);
+
+  // Close when clicking outside (skip the trigger — it toggles itself)
+  useEffect(() => {
+    if (!open) return;
+    function onPointerDown(e: PointerEvent) {
+      if (triggerRef.current?.contains(e.target as Node)) return;
+      setOpen(false);
+    }
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [open]);
+
+  function handleToggle() {
+    if (!open && triggerRef.current) {
+      const r = triggerRef.current.getBoundingClientRect();
+      setDropRect({ top: r.bottom + 4, left: r.left, width: r.width });
+    }
+    setOpen((o) => !o);
+  }
+
   return (
     <div className="py-1.5">
       <p className="mb-2 text-sm font-medium leading-none text-foreground">{label}</p>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+
+      {/* Trigger */}
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={handleToggle}
         className={cn(
-          'w-full cursor-pointer rounded-md border border-border bg-muted/50 px-3 py-1.5 text-sm text-foreground',
-          'transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+          'flex w-full items-center justify-between gap-2 rounded-md border border-border bg-muted/50 px-3 py-1.5',
+          'text-left text-sm transition-colors hover:bg-muted focus:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+          open && 'ring-1 ring-ring'
         )}
       >
-        {FONT_GROUP_ORDER.map((groupLabel) => {
-          const fonts = groupedFonts[groupLabel];
-          if (!fonts?.length) return null;
-          return (
-            <optgroup key={groupLabel} label={groupLabel}>
-              {fonts.map((f) => (
-                <option key={f.value} value={f.value}>
-                  {f.label}
-                </option>
-              ))}
-            </optgroup>
-          );
-        })}
-      </select>
+        <span className="truncate font-medium text-foreground">{value}</span>
+        <ChevronDown
+          className={cn(
+            'h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform duration-200',
+            open && 'rotate-180'
+          )}
+        />
+      </button>
+
+      {/* Dropdown — portalled to <body> so it escapes backdrop-filter/overflow
+          containing blocks on the panel wrapper. */}
+      {open &&
+        dropRect &&
+        createPortal(
+          <div
+            className="fixed z-[200] overflow-hidden rounded-md border border-border bg-background shadow-xl"
+            style={{ top: dropRect.top, left: dropRect.left, width: dropRect.width }}
+          >
+            <div className="overflow-y-auto" style={{ maxHeight: 240 }}>
+              {FONT_GROUP_ORDER.map((groupLabel) => {
+                const fonts = groupedFonts[groupLabel];
+                if (!fonts?.length) return null;
+                return (
+                  <div key={groupLabel}>
+                    <div className="bg-muted/90 px-3 py-1 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      {groupLabel}
+                    </div>
+                    {fonts.map((f) => (
+                      <button
+                        key={f.value}
+                        type="button"
+                        onClick={() => {
+                          onChange(f.value);
+                          setOpen(false);
+                        }}
+                        className={cn(
+                          'flex w-full items-center justify-between px-3 py-2 text-left text-sm transition-colors',
+                          f.value === value
+                            ? 'bg-muted/80 text-foreground'
+                            : 'text-foreground/80 hover:bg-muted/50 hover:text-foreground'
+                        )}
+                      >
+                        <span>{f.label}</span>
+                        {f.value === value && (
+                          <Check className="h-3.5 w-3.5 shrink-0 text-foreground/60" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </div>,
+          document.body
+        )}
+
+      {/* Meta line */}
       <p className="mt-1.5 text-[10px] text-muted-foreground">
-        Selected: <span className="font-medium text-foreground/80">{value}</span>
-        {!isBuiltin && (
-          <span className="ml-1 rounded border border-accent/20 bg-accent/10 px-1 py-0.5 text-[9px] font-medium text-accent">
-            OSS
-          </span>
+        {isBuiltin ? (
+          'Built-in PDF font — no network request'
+        ) : (
+          <>
+            <span className="rounded border border-accent/20 bg-accent/10 px-1 py-0.5 text-[9px] font-medium text-accent">
+              OSS
+            </span>{' '}
+            Open source · loaded on first use
+          </>
         )}
       </p>
     </div>
@@ -365,7 +448,7 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" />
               Body Text
             </p>
-            <FontSelect
+            <FontPickerDropdown
               label="Font Family"
               value={theme.typography.body.fontFamily}
               onChange={actions.setBodyFontFamily}
@@ -398,7 +481,7 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" />
               Headings
             </p>
-            <FontSelect
+            <FontPickerDropdown
               label="Font Family"
               value={theme.typography.heading.fontFamily}
               onChange={actions.setHeadingFontFamily}

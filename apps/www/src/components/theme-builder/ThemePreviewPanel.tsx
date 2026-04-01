@@ -1,7 +1,7 @@
 import type { PdfxTheme } from '@pdfx/shared';
-import { usePDF } from '@react-pdf/renderer';
+import { pdf } from '@react-pdf/renderer';
 import { AlertCircle, FileText, Loader2 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ThemePreviewDocument } from './ThemePreviewDocument';
 
 interface ThemePreviewPanelProps {
@@ -10,64 +10,89 @@ interface ThemePreviewPanelProps {
    * Width (px) of UI chrome that visually covers the right edge of this panel.
    * The PDF canvas adjusts its right-padding by this amount so the document
    * appears centred in the *visible* area, not the full container width.
-   *
-   * Matches the slide-in/out CSS transition duration (300 ms) via a CSS
-   * transition on padding, so the document re-centres smoothly.
    */
   reservedRight?: number;
   /** Called whenever the rendered PDF blob URL changes (or becomes null). */
   onUrlChange?: (url: string | null) => void;
 }
 
+interface RenderState {
+  /** Current blob URL (null on first render before PDF is ready). */
+  url: string | null;
+  /** True while a PDF render is in progress. */
+  loading: boolean;
+  /** Non-null when the last render failed. */
+  error: string | null;
+}
+
 /**
  * Full-bleed PDF preview with a professional dark-canvas aesthetic.
  *
- * Design notes:
- * - Background (#525659) matches Chrome/Acrobat's PDF viewer canvas.
- * - `#toolbar=0` on the blob URL hides the browser's native PDF chrome.
- * - `reservedRight` compensates for the floating customizer panel so the
- *   document is always centred in the user-visible area.
- * - A blur overlay appears when the theme changes mid-session (e.g. font
- *   switch) so the user gets feedback without a jarring flash.
+ * Uses the imperative `pdf().toBlob()` API (not `usePDF`) so that a fresh
+ * react-pdf renderer instance is created on every theme change. This is
+ * critical for font-family updates: react-pdf's internal reconciler does not
+ * reliably detect font changes when the document tree structure is identical,
+ * causing stale renders. A fresh instance has no such caching.
  */
 export function ThemePreviewPanel({
   theme,
   reservedRight = 0,
   onUrlChange,
 }: ThemePreviewPanelProps) {
-  const [iframeKey, setIframeKey] = useState(0);
-  const isFirstRender = useRef(true);
-  const [showOverlay, setShowOverlay] = useState(false);
+  const [renderState, setRenderState] = useState<RenderState>({
+    url: null,
+    loading: true,
+    error: null,
+  });
 
-  const documentElement = useMemo(() => <ThemePreviewDocument theme={theme} />, [theme]);
-  const [instance, updateInstance] = usePDF({ document: documentElement });
+  // Tracks the current blob URL so we can revoke it when a new one is ready.
+  const prevUrlRef = useRef<string | null>(null);
 
-  // Re-render whenever the document changes (skip initial mount — usePDF
-  // already renders it once; re-triggering causes a double flash).
+  // Re-generate the PDF every time the theme changes.
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    setShowOverlay(true);
-    updateInstance(documentElement);
-    setIframeKey((k) => k + 1);
-  }, [documentElement, updateInstance]);
+    let cancelled = false;
 
-  // Clear overlay once the new render finishes
-  useEffect(() => {
-    if (!instance.loading && showOverlay) setShowOverlay(false);
-  }, [instance.loading, showOverlay]);
+    // Keep the old URL visible (overlay) while re-rendering; clear it on first load.
+    setRenderState((s) => ({ url: s.url, loading: true, error: null }));
 
-  // Bubble URL to parent (Download / Open in new tab buttons live in the header)
+    pdf(<ThemePreviewDocument theme={theme} />)
+      .toBlob()
+      .then((blob) => {
+        if (cancelled) return;
+
+        // Revoke the previous blob URL to free memory.
+        if (prevUrlRef.current) URL.revokeObjectURL(prevUrlRef.current);
+
+        const url = URL.createObjectURL(blob);
+        prevUrlRef.current = url;
+        setRenderState({ url, loading: false, error: null });
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setRenderState((s) => ({ ...s, loading: false, error: String(err) }));
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [theme]);
+
+  // Bubble URL up to the page header (Download / Open in new tab).
   useEffect(() => {
-    onUrlChange?.(instance.url ?? null);
-  }, [instance.url, onUrlChange]);
+    onUrlChange?.(renderState.url);
+  }, [renderState.url, onUrlChange]);
+
+  // Revoke the last blob URL when the component unmounts.
+  useEffect(() => {
+    return () => {
+      if (prevUrlRef.current) URL.revokeObjectURL(prevUrlRef.current);
+    };
+  }, []);
 
   const fileName = `${theme.name || 'theme'}-preview.pdf`;
 
   // ── Initial loading skeleton ─────────────────────────────────────────────
-  if (instance.loading && !showOverlay) {
+  if (renderState.loading && !renderState.url) {
     return (
       <div className="h-full flex items-center justify-center" style={{ background: '#525659' }}>
         <div className="flex flex-col items-center gap-4">
@@ -90,7 +115,7 @@ export function ThemePreviewPanel({
   }
 
   // ── Error state ──────────────────────────────────────────────────────────
-  if (instance.error) {
+  if (renderState.error && !renderState.url) {
     return (
       <div
         className="h-full flex flex-col items-center justify-center gap-3 p-8"
@@ -101,7 +126,7 @@ export function ThemePreviewPanel({
         </div>
         <div className="text-center">
           <p className="text-sm font-medium text-red-300">Failed to render preview</p>
-          <p className="mt-1 max-w-xs text-xs text-white/50">{String(instance.error)}</p>
+          <p className="mt-1 max-w-xs text-xs text-white/50">{renderState.error}</p>
         </div>
       </div>
     );
@@ -120,16 +145,11 @@ export function ThemePreviewPanel({
       </div>
 
       {/* ── PDF canvas ────────────────────────────────────────────────────── */}
-      {/*
-       * paddingRight grows by `reservedRight` so justify-center aligns the
-       * document to the centre of the *visible* area (left of the side panel).
-       * The CSS transition matches the panel slide duration (300 ms).
-       */}
       <div
         className="flex flex-1 justify-center overflow-auto pl-10 py-8 transition-[padding] duration-300 ease-in-out"
         style={{ paddingRight: `${40 + reservedRight}px` }}
       >
-        {instance.url ? (
+        {renderState.url ? (
           <div
             className="relative w-full max-w-[780px] self-start"
             style={{
@@ -138,16 +158,21 @@ export function ThemePreviewPanel({
                 '0 2px 4px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.35), 0 20px 48px rgba(0,0,0,0.4)',
             }}
           >
+            {/*
+             * key={renderState.url} forces the iframe to fully remount when
+             * the blob URL changes, preventing the browser from showing stale
+             * cached content from the previous render.
+             */}
             <iframe
-              key={iframeKey}
-              src={`${instance.url}#toolbar=0`}
+              key={renderState.url}
+              src={`${renderState.url}#toolbar=0`}
               title="Theme Preview — PDF"
               className="block h-full w-full border-0"
               style={{ background: 'white', minHeight: 'max(600px, calc(100vh - 10rem))' }}
             />
 
-            {/* Re-render overlay — shown while re-rendering a live preview */}
-            {showOverlay && (
+            {/* Re-render overlay — shown while a new PDF is being generated */}
+            {renderState.loading && (
               <div
                 className="absolute inset-0 flex items-center justify-center"
                 style={{ background: 'rgba(82,86,89,0.75)', backdropFilter: 'blur(2px)' }}

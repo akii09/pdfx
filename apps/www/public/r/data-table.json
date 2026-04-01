@@ -21,6 +21,11 @@
       "type": "registry:component"
     }
   ],
-  "dependencies": ["@react-pdf/renderer"],
-  "registryDependencies": ["theme", "table"]
+  "dependencies": [
+    "@react-pdf/renderer"
+  ],
+  "registryDependencies": [
+    "theme",
+    "table"
+  ]
 }

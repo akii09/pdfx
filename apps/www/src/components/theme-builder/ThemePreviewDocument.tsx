@@ -118,6 +118,7 @@ function createStyles(t: PdfxTheme) {
     badgeRow: {
       flexDirection: 'row',
       flexWrap: 'wrap',
+      alignItems: 'center',
       gap: primitives.spacing[2],
       marginBottom: t.spacing.componentGap,
     },
@@ -127,12 +128,18 @@ function createStyles(t: PdfxTheme) {
       paddingVertical: primitives.spacing[1],
       borderWidth: 1,
       borderStyle: 'solid',
-      alignSelf: 'flex-start',
+      alignSelf: 'center',
     },
     badgeText: {
       fontFamily: body.fontFamily,
-      fontWeight: primitives.fontWeights.semibold,
+      // Use bold (700) — guaranteed registered for every font family.
+      // Avoid semibold (600) which isn't registered for Lato, Merriweather,
+      // Lora, Playfair Display, Source Code Pro and JetBrains Mono.
+      fontWeight: primitives.fontWeights.bold,
       fontSize: primitives.typography.xs,
+      // Explicit lineHeight prevents inheriting the page's body lineHeight
+      // (which varies 1.2–1.75 across themes and misaligns badge heights).
+      lineHeight: 1,
       letterSpacing: 0.3,
     },
     badgeDefault: { borderColor: border, backgroundColor: muted },
@@ -166,7 +173,9 @@ function createStyles(t: PdfxTheme) {
     alertTitle: {
       fontFamily: heading.fontFamily,
       fontSize: primitives.typography.sm,
-      fontWeight: primitives.fontWeights.semibold,
+      // bold (700) — semibold (600) isn't registered for Merriweather, Lora, etc.
+      fontWeight: primitives.fontWeights.bold,
+      lineHeight: 1.2,
       color: foreground,
       marginBottom: 3,
     },
@@ -196,7 +205,8 @@ function createStyles(t: PdfxTheme) {
     },
     tableHeaderCell: {
       fontFamily: heading.fontFamily,
-      fontWeight: primitives.fontWeights.semibold,
+      // bold (700) — semibold (600) not registered for all heading fonts.
+      fontWeight: primitives.fontWeights.bold,
       fontSize: primitives.typography.xs,
       color: mutedForeground,
       textTransform: 'uppercase',
@@ -255,7 +265,8 @@ function createStyles(t: PdfxTheme) {
       fontFamily: body.fontFamily,
       fontSize: body.fontSize,
       color: foreground,
-      fontWeight: primitives.fontWeights.medium,
+      // bold (700) — medium (500) isn't registered for most fonts.
+      fontWeight: primitives.fontWeights.bold,
     },
 
     // ── Section card ─────────────────────────────────────────────
@@ -277,7 +288,7 @@ function createStyles(t: PdfxTheme) {
     },
     cardTitle: {
       fontFamily: heading.fontFamily,
-      fontWeight: primitives.fontWeights.semibold,
+      fontWeight: primitives.fontWeights.bold,
       fontSize: heading.fontSize.h4,
       color: foreground,
     },
@@ -293,7 +304,7 @@ function createStyles(t: PdfxTheme) {
     },
     highlightTitle: {
       fontFamily: heading.fontFamily,
-      fontWeight: primitives.fontWeights.semibold,
+      fontWeight: primitives.fontWeights.bold,
       fontSize: heading.fontSize.h4,
       color: foreground,
       marginBottom: 4,
@@ -480,9 +491,9 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
         <Text style={s.h4}>Sub-section Heading (H4)</Text>
         <Text style={s.bodyText}>
           Body text rendered in{' '}
-          <Text style={{ fontWeight: 600 }}>{t.typography.body.fontFamily}</Text> at{' '}
+          <Text style={{ fontWeight: 700 }}>{t.typography.body.fontFamily}</Text> at{' '}
           {t.typography.body.fontSize}pt with a {t.typography.body.lineHeight} line-height ratio.
-          Headings use <Text style={{ fontWeight: 600 }}>{t.typography.heading.fontFamily}</Text>.
+          Headings use <Text style={{ fontWeight: 700 }}>{t.typography.heading.fontFamily}</Text>.
         </Text>
 
         {/* Highlight box */}
