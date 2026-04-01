@@ -12,9 +12,6 @@ interface SegmentedControlProps<T extends string> {
   onChange: (value: T) => void;
 }
 
-/**
- * Horizontal pill-style segmented control for selecting one option from a small set.
- */
 export function SegmentedControl<T extends string>({
   label,
   options,

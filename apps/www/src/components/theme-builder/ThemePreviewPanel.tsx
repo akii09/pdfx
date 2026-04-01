@@ -6,34 +6,15 @@ import { ThemePreviewDocument } from './ThemePreviewDocument';
 
 interface ThemePreviewPanelProps {
   theme: PdfxTheme;
-  /**
-   * Width (px) of UI chrome that visually covers the right edge of this panel.
-   * The PDF canvas adjusts its right-padding by this amount so the document
-   * appears centred in the *visible* area, not the full container width.
-   */
   reservedRight?: number;
-  /** Called whenever the rendered PDF blob URL changes (or becomes null). */
   onUrlChange?: (url: string | null) => void;
 }
 
 interface RenderState {
-  /** Current blob URL (null on first render before PDF is ready). */
   url: string | null;
-  /** True while a PDF render is in progress. */
   loading: boolean;
-  /** Non-null when the last render failed. */
   error: string | null;
 }
-
-/**
- * Full-bleed PDF preview with a professional dark-canvas aesthetic.
- *
- * Uses the imperative `pdf().toBlob()` API (not `usePDF`) so that a fresh
- * react-pdf renderer instance is created on every theme change. This is
- * critical for font-family updates: react-pdf's internal reconciler does not
- * reliably detect font changes when the document tree structure is identical,
- * causing stale renders. A fresh instance has no such caching.
- */
 export function ThemePreviewPanel({
   theme,
   reservedRight = 0,
@@ -45,14 +26,11 @@ export function ThemePreviewPanel({
     error: null,
   });
 
-  // Tracks the current blob URL so we can revoke it when a new one is ready.
   const prevUrlRef = useRef<string | null>(null);
 
-  // Re-generate the PDF every time the theme changes.
   useEffect(() => {
     let cancelled = false;
 
-    // Keep the old URL visible (overlay) while re-rendering; clear it on first load.
     setRenderState((s) => ({ url: s.url, loading: true, error: null }));
 
     pdf(<ThemePreviewDocument theme={theme} />)
@@ -60,7 +38,6 @@ export function ThemePreviewPanel({
       .then((blob) => {
         if (cancelled) return;
 
-        // Revoke the previous blob URL to free memory.
         if (prevUrlRef.current) URL.revokeObjectURL(prevUrlRef.current);
 
         const url = URL.createObjectURL(blob);
@@ -77,12 +54,10 @@ export function ThemePreviewPanel({
     };
   }, [theme]);
 
-  // Bubble URL up to the page header (Download / Open in new tab).
   useEffect(() => {
     onUrlChange?.(renderState.url);
   }, [renderState.url, onUrlChange]);
 
-  // Revoke the last blob URL when the component unmounts.
   useEffect(() => {
     return () => {
       if (prevUrlRef.current) URL.revokeObjectURL(prevUrlRef.current);
@@ -91,7 +66,6 @@ export function ThemePreviewPanel({
 
   const fileName = `${theme.name || 'theme'}-preview.pdf`;
 
-  // ── Initial loading skeleton ─────────────────────────────────────────────
   if (renderState.loading && !renderState.url) {
     return (
       <div className="h-full flex items-center justify-center" style={{ background: '#525659' }}>
@@ -114,7 +88,6 @@ export function ThemePreviewPanel({
     );
   }
 
-  // ── Error state ──────────────────────────────────────────────────────────
   if (renderState.error && !renderState.url) {
     return (
       <div
@@ -132,10 +105,8 @@ export function ThemePreviewPanel({
     );
   }
 
-  // ── Viewer ───────────────────────────────────────────────────────────────
   return (
     <div className="flex h-full flex-col" style={{ background: '#525659' }}>
-      {/* ── Slim document bar ─────────────────────────────────────────────── */}
       <div
         className="flex shrink-0 items-center gap-2 px-5 py-2"
         style={{ background: 'rgba(0,0,0,0.22)', borderBottom: '1px solid rgba(0,0,0,0.3)' }}
@@ -144,7 +115,6 @@ export function ThemePreviewPanel({
         <span className="truncate text-xs font-medium text-white/55">{fileName}</span>
       </div>
 
-      {/* ── PDF canvas ────────────────────────────────────────────────────── */}
       <div
         className="flex flex-1 justify-center overflow-auto pl-4 sm:pl-10 pr-4 sm:pr-10 py-4 sm:py-8 transition-[padding] duration-300 ease-in-out"
         style={reservedRight > 0 ? { paddingRight: `${40 + reservedRight}px` } : undefined}
@@ -158,11 +128,6 @@ export function ThemePreviewPanel({
                 '0 2px 4px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.35), 0 20px 48px rgba(0,0,0,0.4)',
             }}
           >
-            {/*
-             * key={renderState.url} forces the iframe to fully remount when
-             * the blob URL changes, preventing the browser from showing stale
-             * cached content from the previous render.
-             */}
             <iframe
               key={renderState.url}
               src={`${renderState.url}#toolbar=0&zoom=page-width`}
@@ -171,7 +136,6 @@ export function ThemePreviewPanel({
               style={{ background: 'white', minHeight: 'max(600px, calc(100vh - 10rem))' }}
             />
 
-            {/* Re-render overlay — shown while a new PDF is being generated */}
             {renderState.loading && (
               <div
                 className="absolute inset-0 flex items-center justify-center"

@@ -19,7 +19,7 @@ import { cn } from '../lib/utils';
 
 const SHARE_TOAST_DURATION = 2_000; // ms
 const DEBOUNCE_MS = 350;
-const PANEL_WIDTH = 360; // must match the md:w-[360px] Tailwind class on the floating panel
+const PANEL_WIDTH = 360;
 
 function useDocumentTitle(title: string) {
   useEffect(() => {
@@ -43,11 +43,9 @@ export default function ThemeBuilderPage() {
   const [shareToast, setShareToast] = useState(false);
   const [codeModalOpen, setCodeModalOpen] = useState(false);
 
-  // Default panel open only on ≥ md screens; closed by default on mobile.
   const [panelOpen, setPanelOpen] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
   );
-  // Track breakpoint so reservedRight is 0 on mobile (panel overlays full-width).
   const [isMdBreakpoint, setIsMdBreakpoint] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
   );
@@ -58,11 +56,9 @@ export default function ThemeBuilderPage() {
     return () => mql.removeEventListener('change', handler);
   }, []);
 
-  // Blob URL lifted from ThemePreviewPanel → feeds Download + Open in new tab
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const handleUrlChange = useCallback((url: string | null) => setPdfUrl(url), []);
 
-  // Debounced preview theme — avoids re-rendering the PDF on every keystroke
   const [previewTheme, setPreviewTheme] = useState(theme);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -77,12 +73,11 @@ export default function ThemeBuilderPage() {
     };
   }, [theme]);
 
-  // ⌘Z / ⌘⇧Z keyboard shortcuts
-  // Guard: skip when focus is inside an input/textarea so native text-undo is preserved.
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       const target = e.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+        return;
       const meta = e.metaKey || e.ctrlKey;
       if (meta && e.key === 'z' && !e.shiftKey) {
         e.preventDefault();
@@ -99,25 +94,19 @@ export default function ThemeBuilderPage() {
 
   const handleShare = useCallback(() => {
     writeThemeToHash(theme);
-    navigator.clipboard
-      .writeText(window.location.href)
-      .then(() => {
-        setShareToast(true);
-        setTimeout(() => setShareToast(false), SHARE_TOAST_DURATION);
-      })
-      .catch(() => {
-        setShareToast(true);
-        setTimeout(() => setShareToast(false), SHARE_TOAST_DURATION);
-      });
+    const showCopied = () => {
+      setShareToast(true);
+      setTimeout(() => setShareToast(false), SHARE_TOAST_DURATION);
+    };
+
+    navigator.clipboard.writeText(window.location.href).then(showCopied).catch(showCopied);
   }, [theme]);
 
   const fileName = `${theme.name || 'theme'}-preview.pdf`;
 
   return (
     <div className="flex w-full flex-col" style={{ height: 'calc(100vh - 3.5rem)' }}>
-      {/* ── Top bar ─────────────────────────────────────────────────────── */}
       <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border bg-background px-5 py-2">
-        {/* Left: title · preset badge · shared-link badge */}
         <div className="flex min-w-0 items-center gap-2">
           <h1 className="whitespace-nowrap text-sm font-semibold text-foreground">Theme Builder</h1>
 
@@ -136,9 +125,7 @@ export default function ThemeBuilderPage() {
           )}
         </div>
 
-        {/* Right: history · reset · get code · download · open · share */}
         <div className="flex items-center gap-1">
-          {/* Undo / Redo */}
           <button
             type="button"
             onClick={actions.undo}
@@ -160,7 +147,6 @@ export default function ThemeBuilderPage() {
 
           <div className="mx-1 h-4 w-px bg-border" />
 
-          {/* Reset to preset defaults */}
           <button
             type="button"
             onClick={() => actions.loadPreset(basePreset)}
@@ -173,7 +159,6 @@ export default function ThemeBuilderPage() {
 
           <div className="mx-1 h-4 w-px bg-border" />
 
-          {/* Get code */}
           <button
             type="button"
             onClick={() => setCodeModalOpen(true)}
@@ -183,7 +168,6 @@ export default function ThemeBuilderPage() {
             <span className="hidden sm:inline">Get Code</span>
           </button>
 
-          {/* Download PDF */}
           <a
             href={pdfUrl ?? '#'}
             download={fileName}
@@ -201,7 +185,6 @@ export default function ThemeBuilderPage() {
             <span className="hidden sm:inline">Download</span>
           </a>
 
-          {/* Open in new tab */}
           <a
             href={pdfUrl ?? '#'}
             target="_blank"
@@ -221,7 +204,6 @@ export default function ThemeBuilderPage() {
 
           <div className="mx-1 h-4 w-px bg-border" />
 
-          {/* Share */}
           <button
             type="button"
             onClick={handleShare}
@@ -238,23 +220,13 @@ export default function ThemeBuilderPage() {
         </div>
       </div>
 
-      {/* ── Canvas ──────────────────────────────────────────────────────── */}
       <div className="relative min-h-0 flex-1 overflow-hidden">
-        {/*
-         * The PDF preview fills the full canvas. `reservedRight` tells it how
-         * much of its right edge is obscured by the floating panel so it can
-         * shift the centering calculation accordingly.
-         */}
         <ThemePreviewPanel
           theme={previewTheme}
           reservedRight={panelOpen && isMdBreakpoint ? PANEL_WIDTH : 0}
           onUrlChange={handleUrlChange}
         />
 
-        {/* Floating customizer panel (slides in from the right).
-             On mobile: w-full so it takes the full viewport.
-             On md+: w-[360px] fixed sidebar.
-             translateX(100%) always works for both widths. */}
         <div
           className={cn(
             'absolute inset-y-0 right-0 z-20',
@@ -275,7 +247,6 @@ export default function ThemeBuilderPage() {
           />
         </div>
 
-        {/* FAB — visible only when the panel is hidden */}
         <button
           type="button"
           onClick={() => setPanelOpen(true)}
@@ -296,7 +267,6 @@ export default function ThemeBuilderPage() {
         </button>
       </div>
 
-      {/* Code export modal */}
       <ThemeCodeModal
         theme={theme}
         basePreset={basePreset}

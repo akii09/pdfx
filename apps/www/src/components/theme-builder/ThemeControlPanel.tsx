@@ -19,8 +19,6 @@ import { SegmentedControl } from './controls/SegmentedControl';
 import { SliderInput } from './controls/SliderInput';
 import type { ThemeBuilderActions } from './use-theme-builder';
 
-// ─── Collapsible section ─────────────────────────────────────────────────────
-
 interface SectionProps {
   title: string;
   icon: string;
@@ -55,8 +53,6 @@ function Section({ title, icon, defaultOpen = true, children }: SectionProps) {
   );
 }
 
-// ─── Font family picker ───────────────────────────────────────────────────────
-
 const groupedFonts = FONT_OPTIONS.reduce<Record<string, FontOption[]>>((acc, font) => {
   const label = FONT_CATEGORY_LABELS[font.category];
   if (!acc[label]) acc[label] = [];
@@ -76,10 +72,6 @@ interface FontPickerDropdownProps {
   onChange: (value: string) => void;
 }
 
-/**
- * Custom font picker that renders its dropdown as `position: fixed` so it
- * escapes the panel's `overflow-y: auto` scroll container and is never clipped.
- */
 function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps) {
   const [open, setOpen] = useState(false);
   const [dropRect, setDropRect] = useState<{ top: number; left: number; width: number } | null>(
@@ -87,8 +79,6 @@ function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps)
   );
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // Close when clicking outside (skip the trigger — it toggles itself)
   useEffect(() => {
     if (!open) return;
     function onPointerDown(e: PointerEvent) {
@@ -112,8 +102,6 @@ function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps)
   return (
     <div className="py-1.5">
       <p className="mb-2 text-sm font-medium leading-none text-foreground">{label}</p>
-
-      {/* Trigger */}
       <button
         ref={triggerRef}
         type="button"
@@ -133,8 +121,6 @@ function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps)
         />
       </button>
 
-      {/* Dropdown — portalled to <body> so it escapes backdrop-filter/overflow
-          containing blocks on the panel wrapper. */}
       {open &&
         dropRect &&
         createPortal(
@@ -180,8 +166,6 @@ function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps)
           </div>,
           document.body
         )}
-
-      {/* Meta line */}
       <p className="mt-1.5 text-[10px] text-muted-foreground">
         <>
           <span className="rounded border border-accent/20 bg-accent/10 px-1 py-0.5 text-[9px] font-medium text-accent">
@@ -194,8 +178,6 @@ function FontPickerDropdown({ label, value, onChange }: FontPickerDropdownProps)
   );
 }
 
-// ─── Preset dropdown ──────────────────────────────────────────────────────────
-
 interface PresetDropdownProps {
   value: PresetName;
   onChange: (preset: PresetName) => void;
@@ -205,8 +187,6 @@ function PresetDropdown({ value, onChange }: PresetDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const active = THEME_PRESETS.find((p) => p.name === value) ?? THEME_PRESETS[0];
-
-  // Close when user clicks outside
   useEffect(() => {
     function onPointerDown(e: PointerEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -216,8 +196,6 @@ function PresetDropdown({ value, onChange }: PresetDropdownProps) {
     document.addEventListener('pointerdown', onPointerDown);
     return () => document.removeEventListener('pointerdown', onPointerDown);
   }, []);
-
-  // Pick a random preset that isn't the current one
   const handleShuffle = useCallback(() => {
     const others = THEME_PRESETS.filter((p) => p.name !== value);
     const next = others[Math.floor(Math.random() * others.length)];
@@ -226,7 +204,6 @@ function PresetDropdown({ value, onChange }: PresetDropdownProps) {
 
   return (
     <div className="flex items-center gap-1.5">
-      {/* Dropdown trigger */}
       <div ref={ref} className="relative flex-1">
         <button
           type="button"
@@ -236,7 +213,6 @@ function PresetDropdown({ value, onChange }: PresetDropdownProps) {
             'text-left text-sm transition-colors hover:bg-muted focus:outline-none focus-visible:ring-1 focus-visible:ring-ring'
           )}
         >
-          {/* Colour dots */}
           <SwatchDots accent={active.accent} dots={active.dots} />
           <div className="min-w-0 flex-1">
             <span className="block text-sm font-semibold leading-none text-foreground">
@@ -253,8 +229,6 @@ function PresetDropdown({ value, onChange }: PresetDropdownProps) {
             )}
           />
         </button>
-
-        {/* Dropdown list */}
         {open && (
           <div className="absolute left-0 right-0 z-50 mt-1 overflow-hidden rounded-md border border-border bg-background shadow-xl">
             <div className="max-h-[320px] overflow-y-auto py-1">
@@ -287,8 +261,6 @@ function PresetDropdown({ value, onChange }: PresetDropdownProps) {
           </div>
         )}
       </div>
-
-      {/* Shuffle button */}
       <button
         type="button"
         onClick={handleShuffle}
@@ -301,7 +273,6 @@ function PresetDropdown({ value, onChange }: PresetDropdownProps) {
   );
 }
 
-/** Reusable colour-dot trio used in both trigger and list items. */
 function SwatchDots({ accent, dots }: { accent: string; dots: [string, string] }) {
   return (
     <div className="flex shrink-0 gap-1">
@@ -315,8 +286,6 @@ function SwatchDots({ accent, dots }: { accent: string; dots: [string, string] }
     </div>
   );
 }
-
-// ─── Color tokens list ────────────────────────────────────────────────────────
 
 const COLOR_TOKENS: { key: keyof PdfxTheme['colors']; label: string; description: string }[] = [
   { key: 'foreground', label: 'Foreground', description: 'Primary text' },
@@ -332,8 +301,6 @@ const COLOR_TOKENS: { key: keyof PdfxTheme['colors']; label: string; description
   { key: 'warning', label: 'Warning', description: 'Warning states' },
   { key: 'info', label: 'Info', description: 'Info states' },
 ];
-
-// ─── Main panel ───────────────────────────────────────────────────────────────
 
 export interface ThemeControlPanelProps {
   theme: PdfxTheme;
@@ -360,7 +327,6 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      {/* ── Panel header ─────────────────────────────────────────────────── */}
       <div className="flex shrink-0 items-center justify-between border-b border-border/60 bg-muted/30 px-4 py-2.5">
         <div className="flex min-w-0 items-center gap-2">
           <SlidersHorizontal className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
@@ -386,10 +352,7 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
           </button>
         )}
       </div>
-
-      {/* ── Scrollable content ────────────────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
-        {/* Name + preset */}
         <div className="space-y-3.5 border-b border-border/60 px-4 pb-4 pt-4">
           <div>
             <label
@@ -418,8 +381,6 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
             <PresetDropdown value={basePreset} onChange={actions.loadPreset} />
           </div>
         </div>
-
-        {/* ── Colors ──────────────────────────────────────────────────────── */}
         <Section title="Colors" icon="🎨">
           <div className="divide-y divide-border/30">
             {COLOR_TOKENS.map(({ key, label, description }) => (
@@ -433,10 +394,7 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
             ))}
           </div>
         </Section>
-
-        {/* ── Typography ──────────────────────────────────────────────────── */}
         <Section title="Typography" icon="Aa">
-          {/* Body text */}
           <div className="mb-4">
             <p className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" />
@@ -468,8 +426,6 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
           </div>
 
           <div className="mb-4 h-px bg-border/50" />
-
-          {/* Headings */}
           <div className="mb-4">
             <p className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" />
@@ -503,8 +459,6 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
           </div>
 
           <div className="mb-4 h-px bg-border/50" />
-
-          {/* Heading size scale */}
           <div>
             <p className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" />
@@ -533,8 +487,6 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
             ))}
           </div>
         </Section>
-
-        {/* ── Page ────────────────────────────────────────────────────────── */}
         <Section title="Page" icon="📄">
           <SegmentedControl
             label="Size"
@@ -556,10 +508,7 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
             onChange={actions.setPageOrientation}
           />
         </Section>
-
-        {/* ── Spacing ─────────────────────────────────────────────────────── */}
         <Section title="Spacing" icon="↔">
-          {/* Page margins */}
           <div className="mb-4">
             <div className="mb-2 flex items-center justify-between">
               <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -603,8 +552,6 @@ export function ThemeControlPanel({ theme, basePreset, actions, onClose }: Theme
           </div>
 
           <div className="mb-4 h-px bg-border/50" />
-
-          {/* Gaps */}
           <div>
             <p className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-foreground/40" />

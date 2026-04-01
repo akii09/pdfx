@@ -10,19 +10,8 @@ import {
   Text,
   View,
 } from '@react-pdf/renderer';
-// Register OSS fonts so custom font families render correctly in the preview
+import { useMemo } from 'react';
 import '../../lib/pdf-fonts';
-
-/**
- * A self-contained PDF document that exercises every theme token.
- * Intentionally avoids registry components so it has no dependency
- * on usePdfxTheme() or React context — it receives the theme as a plain prop.
- *
- * Layout: 3 pages
- *   Page 1 — Typography & Badges
- *   Page 2 — Alerts & Color Palette
- *   Page 3 — Data Table, Card, and Spacing tokens
- */
 
 function createStyles(t: PdfxTheme) {
   const {
@@ -39,7 +28,6 @@ function createStyles(t: PdfxTheme) {
   const { primitives, spacing } = t;
 
   return StyleSheet.create({
-    // ── Page ──────────────────────────────────────────────────────
     page: {
       fontFamily: body.fontFamily,
       fontSize: body.fontSize,
@@ -52,7 +40,6 @@ function createStyles(t: PdfxTheme) {
       paddingLeft: t.spacing.page.marginLeft,
     },
 
-    // ── Headings ─────────────────────────────────────────────────
     h1: {
       fontFamily: heading.fontFamily,
       fontWeight: heading.fontWeight,
@@ -90,7 +77,6 @@ function createStyles(t: PdfxTheme) {
       marginTop: spacing.paragraphGap,
     },
 
-    // ── Body text ────────────────────────────────────────────────
     bodyText: {
       fontFamily: body.fontFamily,
       fontSize: body.fontSize,
@@ -106,7 +92,6 @@ function createStyles(t: PdfxTheme) {
       marginBottom: t.spacing.paragraphGap,
     },
 
-    // ── Divider ──────────────────────────────────────────────────
     divider: {
       borderBottomWidth: 1,
       borderBottomColor: border,
@@ -114,7 +99,6 @@ function createStyles(t: PdfxTheme) {
       marginVertical: t.spacing.componentGap,
     },
 
-    // ── Badges ───────────────────────────────────────────────────
     badgeRow: {
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -132,13 +116,8 @@ function createStyles(t: PdfxTheme) {
     },
     badgeText: {
       fontFamily: body.fontFamily,
-      // Use bold (700) — guaranteed registered for every font family.
-      // Avoid semibold (600) which isn't registered for Lato, Merriweather,
-      // Lora, Playfair Display, Source Code Pro and JetBrains Mono.
       fontWeight: primitives.fontWeights.bold,
       fontSize: primitives.typography.xs,
-      // Explicit lineHeight prevents inheriting the page's body lineHeight
-      // (which varies 1.2–1.75 across themes and misaligns badge heights).
       lineHeight: 1,
       letterSpacing: 0.3,
     },
@@ -157,7 +136,6 @@ function createStyles(t: PdfxTheme) {
     badgeAccent: { borderColor: accent, backgroundColor: accent },
     badgeAccentText: { color: background },
 
-    // ── Alert ────────────────────────────────────────────────────
     alert: {
       flexDirection: 'row',
       padding: 12,
@@ -173,7 +151,6 @@ function createStyles(t: PdfxTheme) {
     alertTitle: {
       fontFamily: heading.fontFamily,
       fontSize: primitives.typography.sm,
-      // bold (700) — semibold (600) isn't registered for Merriweather, Lora, etc.
       fontWeight: primitives.fontWeights.bold,
       lineHeight: 1.2,
       color: foreground,
@@ -192,7 +169,6 @@ function createStyles(t: PdfxTheme) {
       alignItems: 'center',
     },
 
-    // ── Table ────────────────────────────────────────────────────
     table: { marginBottom: t.spacing.componentGap },
     tableHeader: {
       flexDirection: 'row',
@@ -205,7 +181,6 @@ function createStyles(t: PdfxTheme) {
     },
     tableHeaderCell: {
       fontFamily: heading.fontFamily,
-      // bold (700) — semibold (600) not registered for all heading fonts.
       fontWeight: primitives.fontWeights.bold,
       fontSize: primitives.typography.xs,
       color: mutedForeground,
@@ -247,7 +222,6 @@ function createStyles(t: PdfxTheme) {
       flex: 1,
     },
 
-    // ── Key-value pairs ───────────────────────────────────────────
     kvRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -265,11 +239,9 @@ function createStyles(t: PdfxTheme) {
       fontFamily: body.fontFamily,
       fontSize: body.fontSize,
       color: foreground,
-      // bold (700) — medium (500) isn't registered for most fonts.
       fontWeight: primitives.fontWeights.bold,
     },
 
-    // ── Section card ─────────────────────────────────────────────
     card: {
       borderWidth: 1,
       borderColor: border,
@@ -293,7 +265,6 @@ function createStyles(t: PdfxTheme) {
       color: foreground,
     },
 
-    // ── Highlight box ─────────────────────────────────────────────
     highlightBox: {
       borderRadius: primitives.borderRadius.md,
       padding: primitives.spacing[4],
@@ -316,7 +287,6 @@ function createStyles(t: PdfxTheme) {
       color: mutedForeground,
     },
 
-    // ── Color palette swatches ────────────────────────────────────
     swatchRow: {
       flexDirection: 'row',
       gap: primitives.spacing[2],
@@ -340,7 +310,6 @@ function createStyles(t: PdfxTheme) {
     },
     swatchItem: { alignItems: 'center' },
 
-    // ── Stats row ─────────────────────────────────────────────────
     statsRow: {
       flexDirection: 'row',
       gap: primitives.spacing[3],
@@ -368,7 +337,6 @@ function createStyles(t: PdfxTheme) {
       color: mutedForeground,
     },
 
-    // ── Page header strip ─────────────────────────────────────────
     pageHeaderStrip: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -391,7 +359,6 @@ function createStyles(t: PdfxTheme) {
       color: mutedForeground,
     },
 
-    // ── Accent bar ───────────────────────────────────────────────
     accentBar: {
       height: 3,
       backgroundColor: accent,
@@ -399,7 +366,6 @@ function createStyles(t: PdfxTheme) {
       marginBottom: primitives.spacing[4],
     },
 
-    // ── Footer ────────────────────────────────────────────────────
     pageFooter: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -422,7 +388,7 @@ interface ThemePreviewDocumentProps {
 }
 
 export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
-  const s = createStyles(theme);
+  const s = useMemo(() => createStyles(theme), [theme]);
   const t = theme;
 
   const sampleRows = [
@@ -462,12 +428,9 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
 
   return (
     <Document>
-      {/* ── Page 1: Typography & Badges ─────────────────────────── */}
       <Page size={t.page.size} orientation={t.page.orientation} style={s.page}>
-        {/* Accent bar */}
         <View style={s.accentBar} />
 
-        {/* Page header */}
         <View style={s.pageHeaderStrip}>
           <Text style={s.pageHeaderTitle}>Theme Preview</Text>
           <Text style={s.pageHeaderMeta}>
@@ -475,17 +438,14 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           </Text>
         </View>
 
-        {/* H1 */}
         <Text style={s.h1}>Document Title (H1)</Text>
         <Text style={s.bodyText}>
           This preview exercises every token in your PDFx theme. Adjust colors, typography, spacing,
           and page settings in the control panel to see how your documents will look in real time.
         </Text>
 
-        {/* Divider */}
         <View style={s.divider} />
 
-        {/* H2 — Heading scale */}
         <Text style={s.h2}>Typography Scale (H2)</Text>
         <Text style={s.h3}>Section Heading (H3)</Text>
         <Text style={s.h4}>Sub-section Heading (H4)</Text>
@@ -496,7 +456,6 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           Headings use <Text style={{ fontWeight: 700 }}>{t.typography.heading.fontFamily}</Text>.
         </Text>
 
-        {/* Highlight box */}
         <View style={s.highlightBox} wrap={false}>
           <Text style={s.highlightTitle}>Key Insight</Text>
           <Text style={s.highlightBody}>
@@ -505,7 +464,6 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           </Text>
         </View>
 
-        {/* H3 + badges */}
         <Text style={s.h3}>Status Badges (H3)</Text>
         <View style={s.badgeRow} wrap={false}>
           <View style={[s.badge, s.badgeDefault]}>
@@ -531,14 +489,12 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           </View>
         </View>
 
-        {/* Footer */}
         <View style={s.pageFooter} fixed>
           <Text style={s.pageFooterText}>PDFx Theme Builder · pdfx.akashpise.dev</Text>
           <Text style={s.pageFooterText}>Page 1 of 3</Text>
         </View>
       </Page>
 
-      {/* ── Page 2: Alerts & Color Palette ────────────────────────── */}
       <Page size={t.page.size} orientation={t.page.orientation} style={s.page}>
         <View style={s.accentBar} />
 
@@ -547,7 +503,6 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           <Text style={s.pageHeaderMeta}>Page 2 of 3</Text>
         </View>
 
-        {/* Alerts — each wrapped to prevent splitting */}
         <Text style={s.h2}>Alert Components (H2)</Text>
 
         <View style={[s.alert, s.alertBorderInfo]} wrap={false}>
@@ -662,7 +617,6 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           </View>
         </View>
 
-        {/* Color palette */}
         <Text style={s.h2}>Color Palette (H2)</Text>
         <Text style={s.bodyText}>
           All twelve semantic color tokens that drive component styling across your PDF documents.
@@ -681,14 +635,12 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           {t.typography.heading.fontFamily} · Accent: {t.colors.accent}
         </Text>
 
-        {/* Footer */}
         <View style={s.pageFooter} fixed>
           <Text style={s.pageFooterText}>PDFx Theme Builder · pdfx.akashpise.dev</Text>
           <Text style={s.pageFooterText}>Page 2 of 3</Text>
         </View>
       </Page>
 
-      {/* ── Page 3: Data & Spacing ─────────────────────────────────── */}
       <Page size={t.page.size} orientation={t.page.orientation} style={s.page}>
         <View style={s.accentBar} />
 
@@ -697,7 +649,6 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           <Text style={s.pageHeaderMeta}>Page 3 of 3</Text>
         </View>
 
-        {/* Stats row */}
         <View style={s.statsRow} wrap={false}>
           {stats.map((stat) => (
             <View key={stat.label} style={s.statBox}>
@@ -707,7 +658,6 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           ))}
         </View>
 
-        {/* H2 + Table */}
         <Text style={s.h2}>Data Table (H2)</Text>
         <View style={s.table} wrap={false}>
           <View style={s.tableHeader}>
@@ -736,7 +686,6 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           ))}
         </View>
 
-        {/* H3 + Card */}
         <Text style={s.h3}>Card Component (H3)</Text>
         <View style={s.card} wrap={false}>
           <View style={s.cardHeader}>
@@ -750,10 +699,8 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           ))}
         </View>
 
-        {/* Divider */}
         <View style={s.divider} />
 
-        {/* Spacing info */}
         <Text style={s.h3}>Spacing Tokens (H3)</Text>
         <Text style={s.bodyText}>
           Page margins: {t.spacing.page.marginTop}pt top · {t.spacing.page.marginRight}pt right ·{' '}
@@ -764,7 +711,6 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
           Component gap: {t.spacing.componentGap}pt
         </Text>
 
-        {/* Footer */}
         <View style={s.pageFooter} fixed>
           <Text style={s.pageFooterText}>PDFx Theme Builder · pdfx.akashpise.dev</Text>
           <Text style={s.pageFooterText}>Page 3 of 3</Text>

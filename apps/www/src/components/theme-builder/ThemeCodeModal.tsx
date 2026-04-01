@@ -20,8 +20,6 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
   const [copied, setCopied] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const code = tab === 'full' ? generateThemeCode(theme) : generateDeltaCode(theme, basePreset);
-
-  // Close on ESC
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
@@ -30,12 +28,9 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
-
-  // Lock body scroll when open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
-      // Focus the close button for keyboard accessibility
       setTimeout(() => closeButtonRef.current?.focus(), 50);
     } else {
       document.body.style.overflow = '';
@@ -60,7 +55,6 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    // Delay revoke so the browser has time to start the download stream.
     setTimeout(() => URL.revokeObjectURL(url), 100);
   }
 
@@ -73,17 +67,13 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-transparent border-0 m-0 max-w-none w-full h-full"
       aria-label="Generated theme code"
     >
-      {/* Click-outside to close */}
       <div
         className="absolute inset-0 bg-background/80 backdrop-blur-sm"
         onClick={onClose}
         onKeyDown={(e) => e.key === 'Escape' && onClose()}
         aria-hidden="true"
       />
-
-      {/* Modal panel */}
       <div className="relative z-10 w-full max-w-3xl rounded-xl border border-border bg-background shadow-2xl flex flex-col overflow-hidden max-h-[85vh]">
-        {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20">
@@ -110,10 +100,7 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
             <X className="h-4 w-4" />
           </button>
         </div>
-
-        {/* Tab bar + actions */}
         <div className="flex items-center justify-between px-5 py-2.5 border-b border-border/60 bg-muted/30 shrink-0">
-          {/* Tabs */}
           <div className="flex rounded-lg border border-border overflow-hidden bg-background">
             <button
               type="button"
@@ -140,8 +127,6 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
               Delta from <span className="capitalize">{basePreset}</span>
             </button>
           </div>
-
-          {/* Actions */}
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -175,8 +160,6 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
             </button>
           </div>
         </div>
-
-        {/* Code block */}
         <div className="flex-1 overflow-auto min-h-0">
           <CodeBlock
             code={code}
@@ -185,8 +168,6 @@ export function ThemeCodeModal({ theme, basePreset, open, onClose }: ThemeCodeMo
             className="rounded-none border-0 h-full"
           />
         </div>
-
-        {/* Footer hint */}
         <div className="px-5 py-3 border-t border-border/60 bg-muted/20 shrink-0">
           <p className="text-[11px] text-muted-foreground">
             <strong className="text-foreground/70">Tip:</strong> Use the{' '}

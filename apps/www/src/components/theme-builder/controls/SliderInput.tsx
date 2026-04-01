@@ -9,13 +9,6 @@ interface SliderInputProps {
   description?: string;
 }
 
-/**
- * Labeled range slider with a clearly split filled/unfilled track.
- *
- * The filled portion (left of thumb) uses a solid foreground color so it's
- * instantly distinguishable from the unfilled remainder in both light and dark
- * themes — no hsl() wrapping needed, just direct CSS custom properties.
- */
 export function SliderInput({
   label,
   value,
@@ -69,7 +62,6 @@ export function SliderInput({
         style={trackStyle}
         className={[
           'w-full h-2 rounded-full appearance-none cursor-pointer',
-          // webkit thumb
           '[&::-webkit-slider-thumb]:appearance-none',
           '[&::-webkit-slider-thumb]:h-[18px]',
           '[&::-webkit-slider-thumb]:w-[18px]',
@@ -83,7 +75,6 @@ export function SliderInput({
           '[&::-webkit-slider-thumb]:hover:scale-110',
           '[&::-webkit-slider-thumb]:active:scale-95',
           '[&::-webkit-slider-thumb]:active:cursor-grabbing',
-          // firefox thumb
           '[&::-moz-range-thumb]:h-[18px]',
           '[&::-moz-range-thumb]:w-[18px]',
           '[&::-moz-range-thumb]:rounded-full',
@@ -92,7 +83,6 @@ export function SliderInput({
           '[&::-moz-range-thumb]:border-solid',
           '[&::-moz-range-thumb]:border-foreground',
           '[&::-moz-range-thumb]:cursor-grab',
-          // focus
           'focus-visible:outline-none',
           'focus-visible:[&::-webkit-slider-thumb]:ring-2',
           'focus-visible:[&::-webkit-slider-thumb]:ring-ring',

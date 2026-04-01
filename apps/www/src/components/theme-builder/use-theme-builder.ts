@@ -14,8 +14,6 @@ import { useMemo, useReducer } from 'react';
 import { FONT_OPTIONS } from '../../lib/pdf-fonts';
 import type { PresetName } from '../../lib/theme-code-generator';
 
-// ─── Preset map ───────────────────────────────────────────────────────────────
-
 const PRESETS: Record<PresetName, PdfxTheme> = {
   professional: professionalTheme,
   modern: modernTheme,
@@ -58,18 +56,12 @@ function normalizeThemeFonts(theme: PdfxTheme): PdfxTheme {
   };
 }
 
-// ─── State ────────────────────────────────────────────────────────────────────
-
 interface ThemeBuilderState {
   theme: PdfxTheme;
   basePreset: PresetName;
-  /** Past snapshots for undo (oldest → newest, max 20) */
   past: PdfxTheme[];
-  /** Future snapshots for redo (next → furthest, max 20) */
   future: PdfxTheme[];
 }
-
-// ─── Actions ──────────────────────────────────────────────────────────────────
 
 type Action =
   | { type: 'SET_NAME'; value: string }
@@ -94,8 +86,6 @@ type Action =
   | { type: 'UNDO' }
   | { type: 'REDO' };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 function pushPast(past: PdfxTheme[], snapshot: PdfxTheme): PdfxTheme[] {
   return [...past.slice(-19), snapshot];
 }
@@ -108,8 +98,6 @@ function applyChange(state: ThemeBuilderState, newTheme: PdfxTheme): ThemeBuilde
     future: [],
   };
 }
-
-// ─── Reducer ──────────────────────────────────────────────────────────────────
 
 function reducer(state: ThemeBuilderState, action: Action): ThemeBuilderState {
   switch (action.type) {
@@ -258,8 +246,6 @@ function reducer(state: ThemeBuilderState, action: Action): ThemeBuilderState {
   }
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
-
 export interface ThemeBuilderActions {
   setName: (value: string) => void;
   setColor: (key: keyof PdfxTheme['colors'], value: string) => void;
@@ -299,12 +285,6 @@ export function useThemeBuilder(initialTheme?: PdfxTheme): UseThemeBuilderReturn
     future: [],
   });
 
-  /**
-   * All action creators are memoised against `dispatch`.
-   * `dispatch` is guaranteed stable by React's useReducer contract, so this
-   * memo never re-creates — `actions` is the same object reference for the
-   * entire component lifetime.
-   */
   const actions = useMemo<ThemeBuilderActions>(
     () => ({
       setName: (value) => dispatch({ type: 'SET_NAME', value }),
@@ -326,7 +306,6 @@ export function useThemeBuilder(initialTheme?: PdfxTheme): UseThemeBuilderReturn
       undo: () => dispatch({ type: 'UNDO' }),
       redo: () => dispatch({ type: 'REDO' }),
     }),
-    // dispatch is stable for the component's lifetime — use empty deps to satisfy lint.
     []
   );
 

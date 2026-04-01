@@ -12,22 +12,14 @@ function isValidHex(value: string): boolean {
   return /^#[0-9a-fA-F]{6}$/.test(value);
 }
 
-/**
- * Color picker with a clickable swatch and a synced hex text input.
- * The native color picker opens when the swatch is clicked.
- */
 export function ColorInput({ label, value, onChange, description }: ColorInputProps) {
   const [text, setText] = useState(value);
   const [open, setOpen] = useState(false);
   const pickerRef = useRef<HTMLInputElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
-
-  // Keep local text in sync when value changes externally
   useEffect(() => {
     setText(value);
   }, [value]);
-
-  // Close popover on outside click
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
@@ -49,7 +41,6 @@ export function ColorInput({ label, value, onChange, description }: ColorInputPr
   }
 
   function handleTextBlur() {
-    // Restore to last valid value if input is incomplete
     if (!isValidHex(text)) {
       setText(value);
     }
@@ -70,7 +61,6 @@ export function ColorInput({ label, value, onChange, description }: ColorInputPr
       </div>
 
       <div className="flex items-center gap-2 shrink-0" ref={popoverRef}>
-        {/* Swatch button */}
         <button
           type="button"
           onClick={() => {
@@ -82,8 +72,6 @@ export function ColorInput({ label, value, onChange, description }: ColorInputPr
           aria-label={`Pick color for ${label}`}
           title={value}
         />
-
-        {/* Hidden native color picker */}
         <input
           ref={pickerRef}
           type="color"
@@ -93,8 +81,6 @@ export function ColorInput({ label, value, onChange, description }: ColorInputPr
           tabIndex={-1}
           aria-hidden="true"
         />
-
-        {/* Hex text input */}
         <input
           type="text"
           value={text}

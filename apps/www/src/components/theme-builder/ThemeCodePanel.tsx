@@ -35,16 +35,13 @@ export function ThemeCodePanel({ theme, basePreset }: ThemeCodePanelProps) {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    // Delay revoke so the browser has time to start the download stream.
     setTimeout(() => URL.revokeObjectURL(url), 100);
   }
 
   return (
     <div className="border-t border-border bg-background shrink-0">
-      {/* Panel header */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/60">
         <div className="flex items-center gap-3">
-          {/* Collapse toggle */}
           <button
             type="button"
             onClick={() => setCollapsed(!collapsed)}
@@ -57,8 +54,6 @@ export function ThemeCodePanel({ theme, basePreset }: ThemeCodePanelProps) {
             )}
             Generated Code
           </button>
-
-          {/* Tab switcher */}
           {!collapsed && (
             <div className="flex rounded-md border border-border overflow-hidden bg-muted/50 ml-2">
               <button
@@ -88,8 +83,6 @@ export function ThemeCodePanel({ theme, basePreset }: ThemeCodePanelProps) {
             </div>
           )}
         </div>
-
-        {/* Actions */}
         {!collapsed && (
           <div className="flex items-center gap-2">
             <button
@@ -128,8 +121,6 @@ export function ThemeCodePanel({ theme, basePreset }: ThemeCodePanelProps) {
           </div>
         )}
       </div>
-
-      {/* Code area */}
       {!collapsed && (
         <div className="h-52 overflow-auto">
           <CodeBlock
