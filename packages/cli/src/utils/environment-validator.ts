@@ -63,6 +63,26 @@ export function validateReactProject(cwd: string = process.cwd()): EnvironmentVa
   }
 }
 
+/**
+ * Check if this is a Next.js project (has next in dependencies).
+ */
+export function detectNextJs(cwd: string = process.cwd()): boolean {
+  const pkgPath = path.join(cwd, 'package.json');
+
+  if (!checkFileExists(pkgPath)) return false;
+
+  try {
+    const pkg = readJsonFile(pkgPath) as Record<string, unknown>;
+    const deps = {
+      ...(pkg.dependencies as Record<string, string> | undefined),
+      ...(pkg.devDependencies as Record<string, string> | undefined),
+    };
+    return 'next' in deps;
+  } catch {
+    return false;
+  }
+}
+
 export function validateEnvironment(cwd: string = process.cwd()): EnvironmentCheckResult {
   return {
     hasPackageJson: validatePackageJson(cwd),
