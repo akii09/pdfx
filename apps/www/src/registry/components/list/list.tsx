@@ -51,9 +51,7 @@ function renderBulletItem(
     <View key={index}>
       <View style={buildRowStyles(index, total, gap, styles)}>
         {dotMarker(level, styles)}
-        <View style={{ flex: 1 }}>
-          <PDFText style={styles.itemText}>{item.text}</PDFText>
-        </View>
+        <PDFText style={styles.itemText}>{item.text}</PDFText>
       </View>
       {item.children && item.children.length > 0
         ? renderItemList(item.children, 'bullet', gap, styles, level + 1)
