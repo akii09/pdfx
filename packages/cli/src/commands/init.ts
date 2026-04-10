@@ -8,7 +8,7 @@ import { DEFAULTS } from '../constants.js';
 import { ensureDir } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
-import { distinctId, posthog } from '../utils/posthog.js';
+import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
 import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
 
@@ -209,7 +209,7 @@ export async function init(options: InitOptions = {}) {
         non_interactive: options.yes ?? false,
       },
     });
-    await posthog.shutdown();
+    await shutdownPosthog();
     console.log(chalk.green('\nSuccess! You can now run:'));
     console.log(chalk.cyan('  npx pdfx-cli@latest add heading'));
     console.log(chalk.cyan('  npx pdfx-cli@latest block add invoice-classic'));
@@ -218,7 +218,7 @@ export async function init(options: InitOptions = {}) {
     console.log(chalk.dim(`  Theme: ${path.resolve(process.cwd(), config.theme)}\n`));
   } catch (error: unknown) {
     posthog.captureException(error, distinctId);
-    await posthog.shutdown();
+    await shutdownPosthog();
     spinner.fail('Failed to create config');
     const message = error instanceof Error ? error.message : String(error);
     console.error(chalk.dim(`  ${message}`));

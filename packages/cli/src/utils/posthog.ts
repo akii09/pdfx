@@ -13,3 +13,8 @@ export const posthog = new PostHog('phc_zMnenjjttpwQD7tKQKzgpiSvwpv3KcLG96kR2tYv
 });
 
 export const distinctId = getDistinctId();
+
+/** Shutdown with a 3-second cap so the CLI never hangs on network issues. */
+export async function shutdownPosthog(): Promise<void> {
+  await posthog.shutdown(3000);
+}

@@ -24,7 +24,7 @@ import {
   findPackageRoot,
   getInstallCommand,
 } from '../utils/package-manager.js';
-import { distinctId, posthog } from '../utils/posthog.js';
+import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { readJsonFile } from '../utils/read-json.js';
 
 type DependencyInstallMode = 'prompt' | 'always' | 'never';
@@ -539,7 +539,7 @@ export async function add(components: string[], options: AddOptions = {}) {
     }
   }
 
-  await posthog.shutdown();
+  await shutdownPosthog();
 
   console.log();
   if (failed.length > 0) {

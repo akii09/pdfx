@@ -4,7 +4,7 @@ import { type Config, componentNameSchema } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import { checkFileExists, safePath } from '../utils/file-system.js';
-import { distinctId, posthog } from '../utils/posthog.js';
+import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
 
 export async function diff(components: string[]) {
@@ -106,7 +106,7 @@ export async function diff(components: string[]) {
       has_failures: hasFailures,
     },
   });
-  await posthog.shutdown();
+  await shutdownPosthog();
 
   if (hasFailures) {
     process.exit(1);

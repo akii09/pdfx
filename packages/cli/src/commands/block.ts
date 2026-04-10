@@ -16,7 +16,7 @@ import prompts from 'prompts';
 import { DEFAULTS, FETCH_TIMEOUT_MS, REGISTRY_SUBPATHS } from '../constants.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
-import { distinctId, posthog } from '../utils/posthog.js';
+import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
 
 type OverwriteDecision = 'skip' | 'overwrite' | 'overwrite-all';
@@ -339,7 +339,7 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
       }
     } catch (error: unknown) {
       if (error instanceof ValidationError && error.message.includes('Cancelled')) {
-        await posthog.shutdown();
+        await shutdownPosthog();
         spinner.info('Cancelled');
         process.exit(0);
       } else if (
@@ -369,7 +369,7 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
     }
   }
 
-  await posthog.shutdown();
+  await shutdownPosthog();
 
   console.log();
 
@@ -476,7 +476,7 @@ export async function blockList() {
       event: 'block_list_viewed',
       properties: { block_count: blocks.length },
     });
-    await posthog.shutdown();
+    await shutdownPosthog();
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     spinner.fail(message);
