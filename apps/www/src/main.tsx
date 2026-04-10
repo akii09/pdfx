@@ -9,8 +9,7 @@ import { ThemeProvider } from './components/theme-provider';
 import './index.css';
 
 posthog.init('phc_zMnenjjttpwQD7tKQKzgpiSvwpv3KcLG96kR2tYvG6JZ', {
-  api_host: '/ingest',
-  ui_host: 'https://us.posthog.com',
+  api_host: 'https://us.i.posthog.com',
   capture_pageview: 'history_change',
   capture_pageleave: true,
 });

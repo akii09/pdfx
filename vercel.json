@@ -24,7 +24,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://vercel.live https://us-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net data:; img-src 'self' data: blob:; connect-src 'self' data: blob: https://api.github.com https://api.npmjs.org https://cdn.jsdelivr.net; frame-src 'self' blob: https://www.youtube-nocookie.com https://vercel.live; worker-src 'self' blob:"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://vercel.live https://us-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net data:; img-src 'self' data: blob:; connect-src 'self' data: blob: https://api.github.com https://api.npmjs.org https://cdn.jsdelivr.net https://us.i.posthog.com https://us-assets.i.posthog.com; frame-src 'self' blob: https://www.youtube-nocookie.com https://vercel.live; worker-src 'self' blob:"
         }
       ]
     }
@@ -33,14 +33,6 @@
     {
       "source": "/r/:path*",
       "destination": "/r/:path*"
-    },
-    {
-      "source": "/ingest/static/:path*",
-      "destination": "https://us-assets.i.posthog.com/static/:path*"
-    },
-    {
-      "source": "/ingest/:path*",
-      "destination": "https://us.i.posthog.com/:path*"
     },
     {
       "source": "/((?!r/).*)",
