@@ -16,6 +16,7 @@ import prompts from 'prompts';
 import { DEFAULTS, FETCH_TIMEOUT_MS, REGISTRY_SUBPATHS } from '../constants.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
+import { distinctId, posthog } from '../utils/posthog.js';
 import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
 
 type OverwriteDecision = 'skip' | 'overwrite' | 'overwrite-all';
@@ -318,6 +319,15 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
       } else {
         installedCount++;
         spinner.succeed(`Added block ${chalk.cyan(blockName)}`);
+        posthog.capture({
+          distinctId,
+          event: 'block_added',
+          properties: {
+            block_name: blockName,
+            forced: force,
+            peer_components_installed: result.installedPeers,
+          },
+        });
         if (result.installedPeers.length > 0) {
           console.log(
             chalk.green(`  Installed required components: ${result.installedPeers.join(', ')}`)
@@ -329,6 +339,7 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
       }
     } catch (error: unknown) {
       if (error instanceof ValidationError && error.message.includes('Cancelled')) {
+        await posthog.shutdown();
         spinner.info('Cancelled');
         process.exit(0);
       } else if (
@@ -345,9 +356,20 @@ export async function blockAdd(names: string[], options: { force?: boolean } = {
         const message = error instanceof Error ? error.message : String(error);
         console.error(chalk.dim(`  ${message}`));
       }
+      posthog.capture({
+        distinctId,
+        event: 'block_add_failed',
+        properties: {
+          block_name: blockName,
+          error_message: error instanceof Error ? error.message : String(error),
+        },
+      });
+      posthog.captureException(error, distinctId);
       failed.push(blockName);
     }
   }
+
+  await posthog.shutdown();
 
   console.log();
 
@@ -449,6 +471,12 @@ export async function blockList() {
     console.log(
       chalk.dim(`  Install with: ${chalk.cyan('npx pdfx-cli@latest block add <block-name>')}\n`)
     );
+    posthog.capture({
+      distinctId,
+      event: 'block_list_viewed',
+      properties: { block_count: blocks.length },
+    });
+    await posthog.shutdown();
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     spinner.fail(message);

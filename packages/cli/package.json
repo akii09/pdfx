@@ -33,15 +33,16 @@
     "mcp:inspect": "pnpm dlx @modelcontextprotocol/inspector node dist/index.js mcp"
   },
   "dependencies": {
-    "commander": "^12.1.0",
+    "@modelcontextprotocol/sdk": "^1.12.0",
     "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "dedent": "^1.6.0",
+    "execa": "^9.5.2",
     "ora": "^8.1.1",
+    "posthog-node": "^5.29.2",
     "prompts": "^2.4.2",
     "semver": "^7.6.3",
-    "execa": "^9.5.2",
     "typescript": "catalog:",
-    "@modelcontextprotocol/sdk": "^1.12.0",
-    "dedent": "^1.6.0",
     "zod": "^3.24.0",
     "zod-to-json-schema": "^3.24.6"
   },
@@ -50,9 +51,9 @@
     "@types/node": "catalog:",
     "@types/prompts": "^2.4.9",
     "@types/semver": "^7.5.8",
+    "rimraf": "^6.0.1",
     "tsup": "^8.5.1",
-    "vitest": "catalog:",
-    "rimraf": "^6.0.1"
+    "vitest": "catalog:"
   },
   "engines": {
     "node": ">=20.0.0"

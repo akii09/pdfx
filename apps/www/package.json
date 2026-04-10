@@ -16,7 +16,6 @@
   "dependencies": {
     "@pdfx/shared": "workspace:*",
     "@react-pdf/renderer": "catalog:",
-    "@vercel/analytics": "^1.6.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "framer-motion": "^12.34.0",

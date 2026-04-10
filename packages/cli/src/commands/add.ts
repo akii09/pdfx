@@ -24,6 +24,7 @@ import {
   findPackageRoot,
   getInstallCommand,
 } from '../utils/package-manager.js';
+import { distinctId, posthog } from '../utils/posthog.js';
 import { readJsonFile } from '../utils/read-json.js';
 
 type DependencyInstallMode = 'prompt' | 'always' | 'never';
@@ -494,6 +495,14 @@ export async function add(components: string[], options: AddOptions = {}) {
       await installComponent(component, config, force);
       installedCount++;
       spinner.succeed(`Added ${component.name}`);
+      posthog.capture({
+        distinctId,
+        event: 'component_added',
+        properties: {
+          component_name: component.name,
+          forced: force,
+        },
+      });
     } catch (error: unknown) {
       let shouldMarkAsFailed = true;
 
@@ -516,10 +525,21 @@ export async function add(components: string[], options: AddOptions = {}) {
       }
 
       if (shouldMarkAsFailed) {
+        posthog.capture({
+          distinctId,
+          event: 'component_add_failed',
+          properties: {
+            component_name: component.name,
+            error_message: error instanceof Error ? error.message : String(error),
+          },
+        });
+        posthog.captureException(error, distinctId);
         failed.push(component.name);
       }
     }
   }
+
+  await posthog.shutdown();
 
   console.log();
   if (failed.length > 0) {

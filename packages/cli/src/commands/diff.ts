@@ -4,11 +4,13 @@ import { type Config, componentNameSchema } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import { checkFileExists, safePath } from '../utils/file-system.js';
+import { distinctId, posthog } from '../utils/posthog.js';
 import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
 
 export async function diff(components: string[]) {
   const configPath = path.join(process.cwd(), 'pdfx.json');
   let hasFailures = false;
+  const outdatedComponents: string[] = [];
 
   if (!checkFileExists(configPath)) {
     console.error(chalk.red('Error: pdfx.json not found'));
@@ -67,6 +69,7 @@ export async function diff(components: string[]) {
         if (localContent === registryContent) {
           console.log(chalk.green(`  ${fileName}: up to date`));
         } else {
+          outdatedComponents.push(componentName);
           console.log(chalk.yellow(`  ${fileName}: differs from registry`));
 
           const localLines = localContent.split('\n');
@@ -92,6 +95,18 @@ export async function diff(components: string[]) {
       hasFailures = true;
     }
   }
+
+  posthog.capture({
+    distinctId,
+    event: 'component_diff_run',
+    properties: {
+      component_count: components.length,
+      outdated_count: outdatedComponents.length,
+      outdated_components: outdatedComponents,
+      has_failures: hasFailures,
+    },
+  });
+  await posthog.shutdown();
 
   if (hasFailures) {
     process.exit(1);

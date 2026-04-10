@@ -8,6 +8,7 @@ import ts from 'typescript';
 import { DEFAULTS } from '../constants.js';
 import { checkFileExists, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
+import { distinctId, posthog } from '../utils/posthog.js';
 import { readJsonFile } from '../utils/read-json.js';
 import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
 
@@ -88,6 +89,12 @@ export async function themeInit() {
     writeFile(contextPath, generateThemeContextFile());
 
     spinner.succeed(`Created ${themePath} with ${presetName} theme`);
+    posthog.capture({
+      distinctId,
+      event: 'theme_initialized',
+      properties: { theme_preset: presetName, theme_path: themePath },
+    });
+    await posthog.shutdown();
 
     if (checkFileExists(configPath)) {
       try {
@@ -105,6 +112,8 @@ export async function themeInit() {
 
     console.log(chalk.dim(`\n  Edit ${themePath} to customize your theme.\n`));
   } catch (error: unknown) {
+    posthog.captureException(error, distinctId);
+    await posthog.shutdown();
     spinner.fail('Failed to create theme file');
     const message = error instanceof Error ? error.message : String(error);
     console.error(chalk.dim(`  ${message}`));
@@ -177,7 +186,15 @@ export async function themeSwitch(presetName: string) {
     }
 
     spinner.succeed(`Switched to ${validatedPreset} theme`);
+    posthog.capture({
+      distinctId,
+      event: 'theme_switched',
+      properties: { theme_preset: validatedPreset },
+    });
+    await posthog.shutdown();
   } catch (error: unknown) {
+    posthog.captureException(error, distinctId);
+    await posthog.shutdown();
     spinner.fail('Failed to switch theme');
     const message = error instanceof Error ? error.message : String(error);
     console.error(chalk.dim(`  ${message}`));
@@ -321,9 +338,17 @@ export async function themeValidate() {
     }
 
     spinner.succeed('Theme file is valid');
+    posthog.capture({
+      distinctId,
+      event: 'theme_validated',
+      properties: { theme_path: configResult.data.theme, valid: true },
+    });
+    await posthog.shutdown();
 
     console.log(chalk.dim(`\n  Validated: ${configResult.data.theme}\n`));
   } catch (error: unknown) {
+    posthog.captureException(error, distinctId);
+    await posthog.shutdown();
     spinner.fail('Failed to validate theme');
     const message = error instanceof Error ? error.message : String(error);
     console.error(chalk.dim(`  ${message}`));
