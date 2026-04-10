@@ -159,7 +159,6 @@ export function createTableStyles(t: PdfxTheme) {
       justifyContent: 'center',
     },
     cellFixed: {
-      flex: 0,
       flexGrow: 0,
       flexShrink: 0,
       paddingVertical: cellPadV,

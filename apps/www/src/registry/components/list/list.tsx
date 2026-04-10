@@ -51,7 +51,9 @@ function renderBulletItem(
     <View key={index}>
       <View style={buildRowStyles(index, total, gap, styles)}>
         {dotMarker(level, styles)}
-        <View style={{ flex: 1 }}>
+        {/* flex:1 on the View, NOT on the Text — avoids Yoga height underestimation
+            for multi-line Text nodes that would cause overlapping rows. */}
+        <View style={styles.itemTextWrap}>
           <PDFText style={styles.itemText}>{item.text}</PDFText>
         </View>
       </View>
@@ -74,7 +76,9 @@ function renderNumberedItem(
       <View style={styles.markerNumberBadge}>
         <PDFText style={styles.markerNumberText}>{`${index + 1}`}</PDFText>
       </View>
-      <PDFText style={styles.itemText}>{item.text}</PDFText>
+      <View style={styles.itemTextWrap}>
+        <PDFText style={styles.itemText}>{item.text}</PDFText>
+      </View>
     </View>
   );
 }
@@ -92,7 +96,9 @@ function renderChecklistItem(
       <View style={[styles.checkBox, isChecked ? styles.checkBoxChecked : {}]}>
         {isChecked ? <PDFText style={styles.checkMark}>✓</PDFText> : null}
       </View>
-      <PDFText style={styles.itemText}>{item.text}</PDFText>
+      <View style={styles.itemTextWrap}>
+        <PDFText style={styles.itemText}>{item.text}</PDFText>
+      </View>
     </View>
   );
 }
@@ -109,7 +115,9 @@ function renderIconItem(
       <View style={styles.iconBox}>
         <PDFText style={styles.iconMark}>★</PDFText>
       </View>
-      <PDFText style={styles.itemText}>{item.text}</PDFText>
+      <View style={styles.itemTextWrap}>
+        <PDFText style={styles.itemText}>{item.text}</PDFText>
+      </View>
     </View>
   );
 }
@@ -126,14 +134,16 @@ function renderMultiLevelItem(
     <View key={index}>
       <View style={buildRowStyles(index, total, gap, styles)}>
         {dotMarker(level, styles)}
-        <PDFText
-          style={[
-            level === 0 ? styles.itemText : styles.itemTextSub,
-            level === 0 ? styles.itemTextBold : {},
-          ]}
-        >
-          {item.text}
-        </PDFText>
+        <View style={styles.itemTextWrap}>
+          <PDFText
+            style={[
+              level === 0 ? styles.itemText : styles.itemTextSub,
+              level === 0 ? styles.itemTextBold : {},
+            ]}
+          >
+            {item.text}
+          </PDFText>
+        </View>
       </View>
       {item.children && item.children.length > 0
         ? renderItemList(item.children, 'multi-level', gap, styles, level + 1)

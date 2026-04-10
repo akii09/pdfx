@@ -94,7 +94,8 @@ export const tableProps = [
     name: 'TableCell.width',
     type: 'string | number',
     defaultValue: '-',
-    description: "Column width ('50%' or 200). Omit for equal flex.",
+    description:
+      "Fixed column width — number (pt) or string ('50px', '25%'). Fixed-width cells do not grow or shrink; omit to distribute space equally with flex.",
   },
   // DataTable props
   {

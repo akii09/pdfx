@@ -106,18 +106,25 @@ export function createListStyles(t: PdfxTheme) {
       fontWeight: fontWeights.bold,
     },
     itemText: {
-      flex: 1,
+      // No flex here — Text nodes with flex shorthand get flexBasis:0, which causes
+      // Yoga to under-measure multi-line text height → overlapping rows.
+      // flex:1 must live on the wrapping View, not on the Text itself.
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize,
       lineHeight: t.typography.body.lineHeight,
       color: t.colors.foreground,
     },
     itemTextSub: {
-      flex: 1,
+      // Same: no flex — see itemText comment.
       fontFamily: t.typography.body.fontFamily,
       fontSize: t.typography.body.fontSize - 0.5,
       lineHeight: t.typography.body.lineHeight,
       color: t.colors.mutedForeground,
+    },
+    itemTextWrap: {
+      // Companion to itemText / itemTextSub. Apply this to the View that wraps
+      // the Text so flex expansion happens at the View level, not the Text level.
+      flex: 1,
     },
     itemTextBold: {
       fontWeight: fontWeights.semibold,

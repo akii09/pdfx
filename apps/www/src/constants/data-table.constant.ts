@@ -98,7 +98,8 @@ export const dataTableProps = [
     name: 'Column.width',
     type: 'string | number',
     defaultValue: '-',
-    description: 'Column width. Use % for proportional (e.g. "25%") or number for fixed pts.',
+    description:
+      'Fixed column width. Accepts a number (pt) or any CSS-like string ("50px", "20%"). Fixed-width columns do not grow; remaining space is distributed among flex columns.',
   },
   {
     name: 'Column.render',
