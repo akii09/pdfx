@@ -1,5 +1,11 @@
 # pdfx-cli
 
+## 0.6.1
+
+### Patch Changes
+
+- [#114](https://github.com/akii09/pdfx/pull/114) [`4df9181`](https://github.com/akii09/pdfx/commit/4df9181a58ca3f8a9bbdc4a3ba442eae222badba) Thanks [@akii09](https://github.com/akii09)! - Add PostHog analytics to track CLI command usage and errors
+
 ## 0.6.0
 
 ### Minor Changes
