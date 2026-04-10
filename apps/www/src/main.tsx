@@ -10,7 +10,7 @@ import './index.css';
 
 posthog.init('phc_zMnenjjttpwQD7tKQKzgpiSvwpv3KcLG96kR2tYvG6JZ', {
   api_host: 'https://us.i.posthog.com',
-  capture_pageview: true,
+  capture_pageview: 'history_change',
   capture_pageleave: true,
 });
 
