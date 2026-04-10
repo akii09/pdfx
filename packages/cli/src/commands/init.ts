@@ -10,6 +10,31 @@ import { generateThemeContextFile, generateThemeFile } from '../utils/generate-t
 import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
 import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
 import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
+import { detectNextJs } from '../utils/environment-validator.js';
+
+/**
+ * Return context-aware default paths.
+ * For Next.js projects without a `src/` directory, drop the `src/` prefix so
+ * the suggested paths match the project's actual layout.
+ */
+function getSmartDefaults(cwd: string = process.cwd()) {
+  const isNextJs = detectNextJs(cwd);
+  const hasSrcDir = fs.existsSync(path.join(cwd, 'src'));
+
+  if (isNextJs && !hasSrcDir) {
+    return {
+      componentDir: './components/pdfx',
+      blockDir: './blocks/pdfx',
+      themeFile: './lib/pdfx-theme.ts',
+    };
+  }
+
+  return {
+    componentDir: DEFAULTS.COMPONENT_DIR,
+    blockDir: DEFAULTS.BLOCK_DIR,
+    themeFile: DEFAULTS.THEME_FILE,
+  };
+}
 
 interface InitOptions {
   /** Skip all prompts and accept defaults. Suitable for CI / non-interactive environments. */
@@ -56,13 +81,14 @@ export async function init(options: InitOptions = {}) {
   }
 
   // In --yes mode, skip all prompts and use sensible defaults.
+  const defaults = getSmartDefaults();
   const answers = options.yes
     ? {
-        componentDir: DEFAULTS.COMPONENT_DIR,
-        blockDir: DEFAULTS.BLOCK_DIR,
+        componentDir: defaults.componentDir,
+        blockDir: defaults.blockDir,
         registry: DEFAULTS.REGISTRY_URL,
         themePreset: 'professional' as const,
-        themePath: normalizeThemePath(DEFAULTS.THEME_FILE),
+        themePath: normalizeThemePath(defaults.themeFile),
       }
     : await prompts(
         [
@@ -70,7 +96,7 @@ export async function init(options: InitOptions = {}) {
             type: 'text',
             name: 'componentDir',
             message: 'Where should we install components?',
-            initial: DEFAULTS.COMPONENT_DIR,
+            initial: defaults.componentDir,
             validate: (value: string) => {
               if (!value || value.trim().length === 0) {
                 return 'Component directory is required';
@@ -90,7 +116,7 @@ export async function init(options: InitOptions = {}) {
             type: 'text',
             name: 'blockDir',
             message: 'Where should we install blocks?',
-            initial: DEFAULTS.BLOCK_DIR,
+            initial: defaults.blockDir,
             validate: (value: string) => {
               if (!value || value.trim().length === 0) {
                 return 'Block directory is required';
@@ -143,7 +169,7 @@ export async function init(options: InitOptions = {}) {
             type: 'text',
             name: 'themePath',
             message: 'Where should we create the theme file?',
-            initial: DEFAULTS.THEME_FILE,
+            initial: defaults.themeFile,
             format: normalizeThemePath,
             validate: validateThemePath,
           },
