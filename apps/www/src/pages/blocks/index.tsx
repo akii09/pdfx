@@ -27,6 +27,14 @@ const CATEGORIES: BlockCategoryCard[] = [
     count: 4,
     tags: ['Executive', 'Graph', 'DataTable', 'Best Practices'],
   },
+  {
+    href: '/blocks/receipts',
+    title: 'Receipts',
+    description:
+      'Compact purchase receipt layouts for checkout and retail flows, designed to showcase status and totals clearly.',
+    count: 1,
+    tags: ['Compact', 'Badge', 'Table', 'KeyValue'],
+  },
 ];
 
 export default function BlocksIndex() {

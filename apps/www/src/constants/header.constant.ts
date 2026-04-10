@@ -12,6 +12,16 @@ export const BLOCKS = [
     count: 6,
   },
   {
+    icon: Receipt,
+    name: 'Receipts',
+    description: '1 compact receipt layout for checkout, payment status, and totals.',
+    color: 'text-amber-500',
+    bg: 'bg-amber-50 dark:bg-amber-950/40',
+    isDisabled: false,
+    path: '/blocks/receipts',
+    count: 1,
+  },
+  {
     icon: FileSpreadsheet,
     name: 'Reports',
     description: '4 production-ready report designs for various business needs.',

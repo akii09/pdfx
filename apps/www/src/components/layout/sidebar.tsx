@@ -65,6 +65,7 @@ const sections: SidebarSection[] = [
     links: [
       // { title: 'Overview', href: '/blocks' },
       { title: 'Invoices', href: '/blocks/invoices' },
+      { title: 'Receipts', href: '/blocks/receipts' },
       { title: 'Reports', href: '/blocks/reports' },
     ],
   },
