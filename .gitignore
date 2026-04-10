@@ -21,6 +21,10 @@ public/r/
 *.swo
 .qoder
 
+# Claude Code local config (skills, settings are developer-local)
+.claude/skills/
+.claude/settings.local.json
+
 # OS
 .DS_Store
 Thumbs.db
