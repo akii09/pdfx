@@ -20,7 +20,7 @@
     "cmdk": "^1.1.1",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.564.0",
-    "posthog-js": "^1.367.0",
+    "posthog-js": "^1.372.1",
     "prism-react-renderer": "^2.4.1",
     "prismjs": "^1.30.0",
     "qrcode": "^1.5.4",
