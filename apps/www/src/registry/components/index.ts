@@ -136,4 +136,5 @@ export {
   type GraphLegendPosition,
   type GraphWidthOptions,
 } from './graph';
+export { BubbleSheet, type BubbleSheetProps, type BubbleSize } from './bubble-sheet';
 export { PdfxThemeProvider, usePdfxTheme, PdfxThemeContext } from '../lib/pdfx-theme-context';

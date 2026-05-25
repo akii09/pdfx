@@ -19,6 +19,29 @@
       ]
     },
     {
+      "name": "bubble-sheet",
+      "type": "registry:ui",
+      "title": "BubbleSheet",
+      "description": "OMR-style answer sheet with bubble grid, choice headers, and optional student info section",
+      "files": [
+        {
+          "path": "components/bubble-sheet/bubble-sheet.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/bubble-sheet/bubble-sheet.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/bubble-sheet/bubble-sheet.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ]
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
