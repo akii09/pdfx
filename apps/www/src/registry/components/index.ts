@@ -136,4 +136,15 @@ export {
   type GraphLegendPosition,
   type GraphWidthOptions,
 } from './graph';
+export {
+  PdfSvg,
+  PdfSvgCircle,
+  PdfSvgRect,
+  PdfSvgLine,
+  type PdfSvgProps,
+  type PdfSvgCircleProps,
+  type PdfSvgRectProps,
+  type PdfSvgLineProps,
+  type PdfSvgAlign,
+} from './svg';
 export { PdfxThemeProvider, usePdfxTheme, PdfxThemeContext } from '../lib/pdfx-theme-context';

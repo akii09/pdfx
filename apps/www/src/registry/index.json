@@ -124,6 +124,27 @@
       "dependencies": ["@react-pdf/renderer"]
     },
     {
+      "name": "svg",
+      "type": "registry:ui",
+      "title": "PdfSvg",
+      "description": "Themed SVG container with preset shapes (circle, rectangle, line) for custom illustrations",
+      "files": [
+        {
+          "path": "components/svg/svg.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/svg/svg.styles.ts",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/svg/svg.types.ts",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": ["@react-pdf/renderer"]
+    },
+    {
       "name": "heading",
       "type": "registry:ui",
       "title": "Heading",
