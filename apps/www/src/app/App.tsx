@@ -30,6 +30,7 @@ const PageNumberPage = lazy(() => import('../pages/components/page-number'));
 const WatermarkPage = lazy(() => import('../pages/components/watermark'));
 const QRCodePage = lazy(() => import('../pages/components/qrcode'));
 const AlertPage = lazy(() => import('../pages/components/alert'));
+const BubbleSheetPage = lazy(() => import('../pages/components/bubble-sheet'));
 const MCPPage = lazy(() => import('../pages/mcp'));
 const InstallationPage = lazy(() => import('../pages/installation'));
 const ServerSidePage = lazy(() => import('../pages/docs/server-side'));
@@ -299,6 +300,14 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader />}>
                 <AlertPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="bubble-sheet"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <BubbleSheetPage />
               </Suspense>
             }
           />

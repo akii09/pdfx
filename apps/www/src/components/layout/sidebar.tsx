@@ -36,6 +36,7 @@ const sections: SidebarSection[] = [
     links: [
       { title: 'Alert', href: '/components/alert' },
       { title: 'Badge', href: '/components/badge' },
+      { title: 'BubbleSheet', href: '/components/bubble-sheet' },
       { title: 'Card', href: '/components/card' },
       { title: 'DataTable', href: '/components/data-table' },
       { title: 'Divider', href: '/components/divider' },
