@@ -127,11 +127,16 @@ function createAlertStyles(theme: PdfxTheme) {
     error: colors.destructive ?? '#EF4444',
   } satisfies Record<AlertVariant, string>;
 
-  const bl = (color: string) => ({ borderLeftColor: color, borderLeftWidth: 4 });
+  const isRtl = theme.page.direction === 'rtl';
+  /** In RTL mode, the accent border appears on the right side. */
+  const bl = (color: string) =>
+    isRtl
+      ? ({ borderRightColor: color, borderRightWidth: 4 } as const)
+      : ({ borderLeftColor: color, borderLeftWidth: 4 } as const);
 
   const sheet = StyleSheet.create({
     container: {
-      flexDirection: 'row',
+      flexDirection: isRtl ? 'row-reverse' : 'row',
       padding: 12,
       borderRadius: 4,
       marginBottom: theme.spacing.componentGap,
@@ -145,7 +150,7 @@ function createAlertStyles(theme: PdfxTheme) {
     borderError: bl(variantColors.error),
     iconContainer: {
       width: 20,
-      marginRight: 10,
+      ...(isRtl ? { marginLeft: 10 } : { marginRight: 10 }),
       alignItems: 'center',
       justifyContent: 'flex-start',
       paddingTop: 2,

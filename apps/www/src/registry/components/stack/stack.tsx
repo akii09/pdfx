@@ -95,10 +95,14 @@ export function Stack({
     between: styles.justifyBetween,
     around: styles.justifyAround,
   };
-  const styleArray: Style[] = [
-    direction === 'horizontal' ? styles.horizontal : styles.vertical,
-    gapMap[gap],
-  ];
+  const isRtl = theme.page.direction === 'rtl';
+  const horizontalStyle =
+    direction === 'horizontal'
+      ? isRtl
+        ? { flexDirection: 'row-reverse' as const }
+        : styles.horizontal
+      : styles.vertical;
+  const styleArray: Style[] = [horizontalStyle, gapMap[gap]];
   if (align && align in alignMap) styleArray.push(alignMap[align]);
   if (justify && justify in justifyMap) styleArray.push(justifyMap[justify]);
   if (wrap) styleArray.push(styles.wrap);

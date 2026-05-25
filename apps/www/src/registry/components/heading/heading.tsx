@@ -140,8 +140,14 @@ export function Heading({
   if (transform && transform in transformMap)
     styleArray.push(transformMap[transform as keyof typeof transformMap]);
   if (noMargin) styleArray.push(styles.noMargin);
+  const isRtl = theme.page.direction === 'rtl';
   const semantic = {} as Style;
-  if (align) semantic.textAlign = align;
+  /** Apply explicit align or default to 'right' for RTL direction. */
+  if (align) {
+    semantic.textAlign = align;
+  } else if (isRtl) {
+    semantic.textAlign = 'right';
+  }
   if (color) semantic.color = resolveColor(color, theme.colors);
   if (Object.keys(semantic).length > 0) styleArray.push(semantic);
   if (style) styleArray.push(...[style].flat());

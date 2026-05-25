@@ -59,5 +59,6 @@ export const elegantTheme: PdfxTheme = {
   page: {
     size: 'A4',
     orientation: 'portrait',
+    direction: 'ltr',
   },
 };

@@ -59,5 +59,6 @@ export const vividTheme: PdfxTheme = {
   page: {
     size: 'A4',
     orientation: 'portrait',
+    direction: 'ltr',
   },
 };

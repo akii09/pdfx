@@ -58,6 +58,7 @@ export const spacingTokensSchema = z.object({
 export const pageTokensSchema = z.object({
   size: z.enum(['A4', 'LETTER', 'LEGAL']),
   orientation: z.enum(['portrait', 'landscape']),
+  direction: z.enum(['ltr', 'rtl']).default('ltr'),
 });
 
 /** Schema for primitive tokens */

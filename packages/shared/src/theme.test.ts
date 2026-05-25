@@ -42,7 +42,7 @@ describe('themeSchema', () => {
   it('should reject theme with invalid page size', () => {
     const result = themeSchema.safeParse({
       ...professionalTheme,
-      page: { size: 'B5', orientation: 'portrait' },
+      page: { size: 'B5', orientation: 'portrait', direction: 'ltr' },
     });
     expect(result.success).toBe(false);
   });
@@ -50,9 +50,44 @@ describe('themeSchema', () => {
   it('should reject theme with invalid orientation', () => {
     const result = themeSchema.safeParse({
       ...professionalTheme,
-      page: { size: 'A4', orientation: 'diagonal' },
+      page: { size: 'A4', orientation: 'diagonal', direction: 'ltr' },
     });
     expect(result.success).toBe(false);
+  });
+
+  it('should accept theme with rtl direction', () => {
+    const result = themeSchema.safeParse({
+      ...professionalTheme,
+      page: { ...professionalTheme.page, direction: 'rtl' },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('should accept theme with ltr direction', () => {
+    const result = themeSchema.safeParse({
+      ...professionalTheme,
+      page: { ...professionalTheme.page, direction: 'ltr' },
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('should reject theme with invalid direction', () => {
+    const result = themeSchema.safeParse({
+      ...professionalTheme,
+      page: { size: 'A4', orientation: 'portrait', direction: 'bidi' },
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('should default direction to ltr when omitted', () => {
+    const result = themeSchema.safeParse({
+      ...professionalTheme,
+      page: { size: 'A4', orientation: 'portrait' },
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.page.direction).toBe('ltr');
+    }
   });
 
   it('should reject theme with font weight outside 100-900', () => {
@@ -129,6 +164,13 @@ describe('theme presets', () => {
     const names = Object.values(themePresets).map((t) => t.name);
     expect(new Set(names).size).toBe(names.length);
   });
+
+  it.each(Object.keys(themePresets) as (keyof typeof themePresets)[])(
+    '%s preset should default to ltr direction',
+    (name) => {
+      expect(themePresets[name].page.direction).toBe('ltr');
+    }
+  );
 
   it('minimal theme should have wider margins than professional', () => {
     expect(minimalTheme.spacing.page.marginTop).toBeGreaterThan(

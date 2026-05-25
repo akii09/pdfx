@@ -10,4 +10,15 @@ describe('KeyValue', () => {
       KeyValue({ items: [{ key: 'Name', value: 'Alice' }], direction: 'vertical' })
     ).not.toThrow();
   });
+  it('renders horizontal items without throwing', () => {
+    expect(() =>
+      KeyValue({
+        items: [
+          { key: 'שם', value: 'אליס' },
+          { key: 'גיל', value: '30' },
+        ],
+        direction: 'horizontal',
+      })
+    ).not.toThrow();
+  });
 });

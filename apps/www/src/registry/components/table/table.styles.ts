@@ -86,7 +86,7 @@ export function createTableStyles(t: PdfxTheme) {
     },
 
     row: {
-      flexDirection: 'row',
+      flexDirection: t.page.direction === 'rtl' ? 'row-reverse' : 'row',
       display: 'flex',
     },
 

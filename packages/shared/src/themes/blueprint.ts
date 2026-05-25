@@ -59,5 +59,6 @@ export const blueprintTheme: PdfxTheme = {
   page: {
     size: 'A4',
     orientation: 'portrait',
+    direction: 'ltr',
   },
 };

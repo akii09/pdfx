@@ -214,12 +214,26 @@ export interface SpacingTokens {
   componentGap: number;
 }
 
+/**
+ * Text direction for the document.
+ * Use 'rtl' for right-to-left languages such as Hebrew and Arabic.
+ * @default 'ltr'
+ */
+export type Direction = 'ltr' | 'rtl';
+
 /** Page layout defaults */
 export interface PageTokens {
   /** Default page size */
   size: 'A4' | 'LETTER' | 'LEGAL';
   /** Default page orientation */
   orientation: 'portrait' | 'landscape';
+  /**
+   * Text and layout direction.
+   * Set to 'rtl' for right-to-left languages (Hebrew, Arabic, etc.).
+   * Components will automatically mirror text alignment and horizontal layouts.
+   * @default 'ltr'
+   */
+  direction: Direction;
 }
 
 // ─── Full Theme ─────────────────────────────────────────────────────────────

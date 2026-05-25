@@ -8,4 +8,9 @@ describe('PdfAlert', () => {
   it('accepts variant prop', () => {
     expect(() => PdfAlert({ title: 'Test', variant: 'success' })).not.toThrow();
   });
+  it('renders all variants without throwing', () => {
+    for (const variant of ['info', 'success', 'warning', 'error'] as const) {
+      expect(() => PdfAlert({ title: 'RTL Alert', variant })).not.toThrow();
+    }
+  });
 });

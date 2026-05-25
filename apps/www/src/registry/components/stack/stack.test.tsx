@@ -8,4 +8,7 @@ describe('Stack', () => {
   it('accepts direction prop', () => {
     expect(() => Stack({ children: 'Content', direction: 'horizontal' })).not.toThrow();
   });
+  it('renders horizontal stack without throwing (RTL direction supported)', () => {
+    expect(() => Stack({ children: 'Content', direction: 'horizontal', gap: 'md' })).not.toThrow();
+  });
 });

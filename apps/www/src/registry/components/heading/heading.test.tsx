@@ -8,4 +8,7 @@ describe('Heading', () => {
   it('accepts level prop', () => {
     expect(() => Heading({ level: 3, children: 'Subtitle' })).not.toThrow();
   });
+  it('renders with explicit align in RTL without throwing', () => {
+    expect(() => Heading({ level: 1, children: 'כותרת', align: 'right' })).not.toThrow();
+  });
 });

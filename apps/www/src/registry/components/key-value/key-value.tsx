@@ -74,7 +74,11 @@ function createKeyValueStyles(t: PdfxTheme) {
   };
   return StyleSheet.create({
     container: { flexDirection: 'column' },
-    rowHorizontal: { flexDirection: 'row', alignItems: 'flex-start', paddingVertical: spacing[1] },
+    rowHorizontal: {
+      flexDirection: t.page.direction === 'rtl' ? 'row-reverse' : 'row',
+      alignItems: 'flex-start',
+      paddingVertical: spacing[1],
+    },
     rowVertical: { flexDirection: 'column', marginBottom: t.spacing.paragraphGap },
     divider: {
       borderBottomWidth: spacing[0.5],
@@ -146,7 +150,12 @@ export function KeyValue({
           return (
             <View key={item.key} style={rowStyles}>
               <PDFText style={[...keyStyles, { flex: labelFlex }]}>{item.key}</PDFText>
-              <PDFText style={[...valStyles, { flex: 1, textAlign: 'right' }]}>
+              <PDFText
+                style={[
+                  ...valStyles,
+                  { flex: 1, textAlign: theme.page.direction === 'rtl' ? 'left' : 'right' },
+                ]}
+              >
                 {item.value}
               </PDFText>
             </View>

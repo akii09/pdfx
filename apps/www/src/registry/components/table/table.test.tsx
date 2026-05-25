@@ -47,6 +47,7 @@ describe('TableRow / TableCell', () => {
         borderRadius: { sm: 2, md: 4 },
       },
       spacing: { componentGap: 16, paragraphGap: 8 },
+      page: { size: 'A4', orientation: 'portrait', direction: 'ltr' },
       // biome-ignore lint/suspicious/noExplicitAny: minimal mock theme for unit test
     } as any;
     const styles = createTableStyles(mockTheme);
@@ -62,5 +63,59 @@ describe('TableHeader / TableBody', () => {
   });
   it('TableBody renders without throwing', () => {
     expect(() => TableBody({ children: null })).not.toThrow();
+  });
+});
+
+describe('Table RTL support', () => {
+  it('createTableStyles produces row-reverse in RTL theme', () => {
+    const rtlTheme = {
+      colors: {
+        border: '#e2e8f0',
+        muted: '#f8fafc',
+        primary: '#3b82f6',
+        foreground: '#1a1a1a',
+        mutedForeground: '#6b7280',
+        primaryForeground: '#ffffff',
+      },
+      typography: { body: { fontFamily: 'Helvetica', fontSize: 11, lineHeight: 1.4 } },
+      primitives: {
+        spacing: { 0.5: 2, 1: 4, 2: 8, 3: 12, 4: 16 },
+        fontWeights: { regular: 400, medium: 500, semibold: 600, bold: 700 },
+        typography: { xs: 10, sm: 12 },
+        lineHeights: { normal: 1.4 },
+        borderRadius: { sm: 2, md: 4 },
+      },
+      spacing: { componentGap: 16, paragraphGap: 8 },
+      page: { size: 'A4', orientation: 'portrait', direction: 'rtl' },
+      // biome-ignore lint/suspicious/noExplicitAny: minimal mock theme for unit test
+    } as any;
+    const styles = createTableStyles(rtlTheme);
+    expect(styles.row.flexDirection).toBe('row-reverse');
+  });
+
+  it('createTableStyles produces row in LTR theme', () => {
+    const ltrTheme = {
+      colors: {
+        border: '#e2e8f0',
+        muted: '#f8fafc',
+        primary: '#3b82f6',
+        foreground: '#1a1a1a',
+        mutedForeground: '#6b7280',
+        primaryForeground: '#ffffff',
+      },
+      typography: { body: { fontFamily: 'Helvetica', fontSize: 11, lineHeight: 1.4 } },
+      primitives: {
+        spacing: { 0.5: 2, 1: 4, 2: 8, 3: 12, 4: 16 },
+        fontWeights: { regular: 400, medium: 500, semibold: 600, bold: 700 },
+        typography: { xs: 10, sm: 12 },
+        lineHeights: { normal: 1.4 },
+        borderRadius: { sm: 2, md: 4 },
+      },
+      spacing: { componentGap: 16, paragraphGap: 8 },
+      page: { size: 'A4', orientation: 'portrait', direction: 'ltr' },
+      // biome-ignore lint/suspicious/noExplicitAny: minimal mock theme for unit test
+    } as any;
+    const styles = createTableStyles(ltrTheme);
+    expect(styles.row.flexDirection).toBe('row');
   });
 });

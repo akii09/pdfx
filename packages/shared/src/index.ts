@@ -7,6 +7,7 @@ export type {
   TypographyTokens,
   SpacingTokens,
   PageTokens,
+  Direction,
   TypographyScale,
   SpacingScale,
   FontWeights,

@@ -8,10 +8,19 @@ import { theme as defaultTheme } from './pdfx-theme';
 
 export type PdfxTheme = typeof defaultTheme;
 
+/** Text direction type for RTL language support. */
+export type Direction = 'ltr' | 'rtl';
+
 export const PdfxThemeContext = createContext<PdfxTheme>(defaultTheme);
 
 export interface PdfxThemeProviderProps {
   theme?: PdfxTheme;
+  /**
+   * Override the document text direction independently of the theme.
+   * Set to 'rtl' for right-to-left languages (Hebrew, Arabic, etc.).
+   * When provided, this takes precedence over `theme.page.direction`.
+   */
+  direction?: Direction;
   children: ReactNode;
 }
 
@@ -29,8 +38,14 @@ function hasActiveDispatcher(): boolean {
   return dispatcher != null;
 }
 
-export function PdfxThemeProvider({ theme, children }: PdfxThemeProviderProps) {
-  const resolvedTheme = useMemo(() => theme ?? defaultTheme, [theme]);
+export function PdfxThemeProvider({ theme, direction, children }: PdfxThemeProviderProps) {
+  const resolvedTheme = useMemo(() => {
+    const base = theme ?? defaultTheme;
+    if (direction && direction !== base.page.direction) {
+      return { ...base, page: { ...base.page, direction } };
+    }
+    return base;
+  }, [theme, direction]);
   return <PdfxThemeContext.Provider value={resolvedTheme}>{children}</PdfxThemeContext.Provider>;
 }
 
