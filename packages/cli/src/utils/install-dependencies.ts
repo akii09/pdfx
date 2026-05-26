@@ -3,6 +3,7 @@ import { execa } from 'execa';
 import ora from 'ora';
 import prompts from 'prompts';
 import type { DependencyValidation } from './dependency-validator.js';
+import { detectKnownInstallError, preInstallAdvisory } from './install-errors.js';
 import { detectPackageManager, findPackageRoot, getInstallCommand } from './package-manager.js';
 
 export interface InstallResult {
@@ -28,7 +29,13 @@ export async function promptAndInstallReactPdf(
 
   console.log(chalk.yellow('\n  ⚠ @react-pdf/renderer is required but not installed\n'));
   console.log(chalk.dim(`    Package root: ${packageRoot}`));
-  console.log(chalk.dim(`    This command will run: ${installCmd}\n`));
+  console.log(chalk.dim(`    This command will run: ${installCmd}`));
+
+  const advisory = preInstallAdvisory(pm.name, packageName);
+  if (advisory) {
+    console.log(advisory);
+  }
+  console.log('');
 
   const { shouldInstall } = await prompts({
     type: 'confirm',
@@ -61,9 +68,11 @@ export async function promptAndInstallReactPdf(
   } catch (error: unknown) {
     spinner.fail('Failed to install @react-pdf/renderer');
     const message = error instanceof Error ? error.message : String(error);
+    const known = detectKnownInstallError(message, pm.name);
+    const trailer = known ? `\n\n${known.hint}` : `\n  Try manually: ${chalk.cyan(installCmd)}`;
     return {
       success: false,
-      message: `Installation failed: ${message}\n  Try manually: ${chalk.cyan(installCmd)}`,
+      message: `Installation failed: ${message}${trailer}`,
     };
   }
 }
