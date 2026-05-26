@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BLOCKS } from '../../constants';
 import { cn } from '../../lib/utils';
+import { HeaderPromo } from '../header-promo';
 import { ThemeToggle } from '../theme-toggle';
 
 function BlocksDropdown() {
@@ -186,6 +187,7 @@ export function Header() {
 
         {/* Right: search, github, theme toggle */}
         <div className="hidden md:flex items-center gap-3">
+          <HeaderPromo />
           <button
             type="button"
             onClick={() => {
