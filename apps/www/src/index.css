@@ -177,3 +177,30 @@ code {
 .page-transition-fade-in {
   animation: page-fade-in 0.15s ease-out both;
 }
+
+/* Header promo slot — gentle shimmer sweep (~3s) */
+@keyframes header-promo-shimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+  60%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.header-promo-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklch, var(--primary) 22%, transparent) 50%,
+    transparent 100%
+  );
+  animation: header-promo-shimmer 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-promo-shimmer {
+    animation: none;
+  }
+}
