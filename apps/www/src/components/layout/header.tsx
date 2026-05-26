@@ -269,6 +269,14 @@ export function Header() {
                 Invoices
               </Link>
               <Link
+                to="/blocks/receipts"
+                onClick={() => setMobileOpen(false)}
+                className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"
+              >
+                <Receipt className="h-3.5 w-3.5 text-amber-500" />
+                Receipts
+              </Link>
+              <Link
                 to="/blocks/reports"
                 onClick={() => setMobileOpen(false)}
                 className="text-sm text-muted-foreground hover:text-foreground py-1.5 flex items-center gap-2"

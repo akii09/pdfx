@@ -35,6 +35,7 @@ const InstallationPage = lazy(() => import('../pages/installation'));
 const ServerSidePage = lazy(() => import('../pages/docs/server-side'));
 const BlocksIndexPage = lazy(() => import('../pages/blocks/index'));
 const InvoicesIndexPage = lazy(() => import('../pages/blocks/invoices/index'));
+const ReceiptsIndexPage = lazy(() => import('../pages/blocks/receipts/index'));
 const ReportsIndexPage = lazy(() => import('../pages/blocks/reports/index'));
 const ThemeBuilderPage = lazy(() => import('../pages/theme-builder'));
 const ReleasesPage = lazy(() => import('../pages/releases'));
@@ -320,6 +321,14 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader />}>
                 <InvoicesIndexPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="receipts"
+            element={
+              <Suspense fallback={<PageLoader />}>
+                <ReceiptsIndexPage />
               </Suspense>
             }
           />

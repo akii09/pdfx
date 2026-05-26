@@ -144,6 +144,13 @@ export const commandItems: CommandItem[] = [
     keywords: ['template', 'invoice'],
   },
   {
+    label: 'Receipt Blocks',
+    href: '/blocks/receipts',
+    icon: FileText,
+    group: 'Blocks',
+    keywords: ['template', 'receipt'],
+  },
+  {
     label: 'Report Blocks',
     href: '/blocks/reports',
     icon: FileText,

@@ -580,6 +580,32 @@
       ]
     },
     {
+      "name": "receipt-standard",
+      "type": "registry:block",
+      "title": "Receipt Standard",
+      "description": "Compact purchase receipt with payment status badge, line-item table, and totals summary.",
+      "files": [
+        {
+          "path": "blocks/receipt-standard/receipt-standard.tsx",
+          "type": "registry:file"
+        },
+        {
+          "path": "blocks/receipt-standard/receipt-standard.types.ts",
+          "type": "registry:file"
+        }
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "peerComponents": [
+        "badge",
+        "table",
+        "key-value",
+        "section",
+        "text"
+      ]
+    },
+    {
       "name": "report-financial",
       "type": "registry:block",
       "title": "Financial Report",
