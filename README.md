@@ -46,3 +46,20 @@ Please read the [contributing guide](./CONTRIBUTING.md) before opening a PR.
 ## License
 
 MIT © [Akii](https://github.com/akii09)
+
+## Sponsors
+
+PDFx is proudly sponsored by:
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="http://pdfxbuilder.com/">
+        <strong>PDFx Builder</strong><br/>
+        <sub>Visual PDF builder powered by PDFx</sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
+Interested in sponsoring? [Open an issue](https://github.com/akii09/pdfx/issues) to get in touch.
