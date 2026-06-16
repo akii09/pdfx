@@ -46,3 +46,17 @@ Please read the [contributing guide](./CONTRIBUTING.md) before opening a PR.
 ## License
 
 MIT © [Akii](https://github.com/akii09)
+
+## Sponsors
+
+PDFx is proudly sponsored by:
+
+<a href="http://pdfxbuilder.com/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/pdfxbuilder-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset=".github/assets/pdfxbuilder-light.png">
+    <img src=".github/assets/pdfxbuilder-light.png" alt="PDFx Builder" height="40">
+  </picture>
+</a>
+
+Interested in sponsoring? [Open an issue](https://github.com/akii09/pdfx/issues) to get in touch.

@@ -11,6 +11,7 @@ export default defineConfig({
     __PDFX_VERSION__: JSON.stringify(cliPkg.version),
   },
   resolve: {
+    dedupe: ['react', 'react-dom'],
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@pdfx/components': path.resolve(__dirname, './src/registry/components'),
