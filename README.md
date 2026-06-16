@@ -51,15 +51,12 @@ MIT © [Akii](https://github.com/akii09)
 
 PDFx is proudly sponsored by:
 
-<table>
-  <tr>
-    <td align="center">
-      <a href="http://pdfxbuilder.com/">
-        <strong>PDFx Builder</strong><br/>
-        <sub>Visual PDF builder powered by PDFx</sub>
-      </a>
-    </td>
-  </tr>
-</table>
+<a href="http://pdfxbuilder.com/">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/pdfxbuilder-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset=".github/assets/pdfxbuilder-light.png">
+    <img src=".github/assets/pdfxbuilder-light.png" alt="PDFx Builder" height="40">
+  </picture>
+</a>
 
 Interested in sponsoring? [Open an issue](https://github.com/akii09/pdfx/issues) to get in touch.
