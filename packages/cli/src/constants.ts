@@ -10,6 +10,11 @@ export const REGISTRY_SUBPATHS = {
   BLOCKS: 'blocks',
 } as const;
 
+export const DOCS = {
+  /** Guide for generating and saving PDFs from Node.js / server-side environments. */
+  SERVER_SIDE: 'https://pdfx.akashpise.dev/docs/server-side',
+} as const;
+
 export const REQUIRED_VERSIONS = {
   '@react-pdf/renderer': '>=3.0.0',
   react: '>=16.8.0',

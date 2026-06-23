@@ -4,7 +4,7 @@ import { type ThemePresetName, configSchema, themePresets } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
-import { DEFAULTS } from '../constants.js';
+import { DEFAULTS, DOCS } from '../constants.js';
 import { ensureDir } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
@@ -215,7 +215,9 @@ export async function init(options: InitOptions = {}) {
     console.log(chalk.cyan('  npx pdfx-cli@latest block add invoice-classic'));
     console.log(chalk.dim(`\n  Components: ${path.resolve(process.cwd(), answers.componentDir)}`));
     console.log(chalk.dim(`  Blocks: ${path.resolve(process.cwd(), config.blockDir)}`));
-    console.log(chalk.dim(`  Theme: ${path.resolve(process.cwd(), config.theme)}\n`));
+    console.log(chalk.dim(`  Theme: ${path.resolve(process.cwd(), config.theme)}`));
+    console.log(chalk.dim('\n  Generate & save PDFs on the server (Node.js, API routes):'));
+    console.log(`  ${chalk.cyan(DOCS.SERVER_SIDE)}\n`);
   } catch (error: unknown) {
     posthog.captureException(error, distinctId);
     await shutdownPosthog();
