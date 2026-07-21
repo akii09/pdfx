@@ -4,6 +4,7 @@ import {
   type Config,
   ConfigError,
   NetworkError,
+  PdfxError,
   RegistryError,
   type RegistryItem,
   ValidationError,
@@ -26,6 +27,8 @@ import {
 } from '../utils/package-manager.js';
 import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { readJsonFile } from '../utils/read-json.js';
+import { fetchRegistryNames } from '../utils/registry-index.js';
+import { buildNotFoundSuggestion } from '../utils/suggest.js';
 
 type DependencyInstallMode = 'prompt' | 'always' | 'never';
 
@@ -82,11 +85,14 @@ export async function fetchComponent(name: string, registryUrl: string): Promise
   }
 
   if (!response.ok) {
-    throw new RegistryError(
-      response.status === 404
-        ? `Component "${name}" not found in registry`
-        : `Registry returned HTTP ${response.status}`
-    );
+    if (response.status === 404) {
+      const available = await fetchRegistryNames(registryUrl, 'registry:ui');
+      throw new RegistryError(
+        `Component "${name}" not found in registry`,
+        buildNotFoundSuggestion(name, available, 'npx pdfx-cli@latest list')
+      );
+    }
+    throw new RegistryError(`Registry returned HTTP ${response.status}`);
   }
 
   let data: unknown;
@@ -470,6 +476,9 @@ export async function add(components: string[], options: AddOptions = {}) {
       spinner.fail(`Failed to resolve ${componentName}`);
       const message = error instanceof Error ? error.message : String(error);
       console.error(chalk.dim(`  ${message}`));
+      if (error instanceof PdfxError && error.suggestion) {
+        console.log(chalk.dim(`  Hint: ${error.suggestion}`));
+      }
       failed.push(componentName);
     }
   }

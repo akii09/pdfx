@@ -14,7 +14,17 @@ export const posthog = new PostHog('phc_zMnenjjttpwQD7tKQKzgpiSvwpv3KcLG96kR2tYv
 
 export const distinctId = getDistinctId();
 
-/** Shutdown with a 3-second cap so the CLI never hangs on network issues. */
+/**
+ * Flushes pending events with a 3-second cap so the CLI never hangs on network issues.
+ *
+ * A failed flush is swallowed deliberately. Telemetry is best-effort: the user cannot
+ * act on it, and letting the rejection escape means exception autocapture reports our
+ * own analytics timeout as if it were a CLI failure.
+ */
 export async function shutdownPosthog(): Promise<void> {
-  await posthog.shutdown(3000);
+  try {
+    await posthog.shutdown(3000);
+  } catch {
+    // Best-effort flush — a dropped analytics batch is never worth surfacing.
+  }
 }

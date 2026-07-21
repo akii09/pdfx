@@ -17,6 +17,8 @@ import { DEFAULTS, FETCH_TIMEOUT_MS, REGISTRY_SUBPATHS } from '../constants.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
 import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
+import { fetchRegistryNames } from '../utils/registry-index.js';
+import { buildNotFoundSuggestion } from '../utils/suggest.js';
 import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
 
 type OverwriteDecision = 'skip' | 'overwrite' | 'overwrite-all';
@@ -35,14 +37,14 @@ async function fetchBlock(name: string, registryUrl: string): Promise<RegistryIt
   }
 
   if (!response.ok) {
-    throw new RegistryError(
-      response.status === 404
-        ? `Block "${name}" not found in registry`
-        : `Registry returned HTTP ${response.status}`,
-      response.status === 404
-        ? 'Run "npx pdfx-cli@latest block list" to see all available blocks'
-        : undefined
-    );
+    if (response.status === 404) {
+      const available = await fetchRegistryNames(registryUrl, 'registry:block');
+      throw new RegistryError(
+        `Block "${name}" not found in registry`,
+        buildNotFoundSuggestion(name, available, 'npx pdfx-cli@latest block list')
+      );
+    }
+    throw new RegistryError(`Registry returned HTTP ${response.status}`);
   }
 
   let data: unknown;
