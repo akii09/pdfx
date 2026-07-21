@@ -17,14 +17,20 @@ export const distinctId = getDistinctId();
 /**
  * Flushes pending events with a 3-second cap so the CLI never hangs on network issues.
  *
- * A failed flush is swallowed deliberately. Telemetry is best-effort: the user cannot
- * act on it, and letting the rejection escape means exception autocapture reports our
- * own analytics timeout as if it were a CLI failure.
+ * Returns whether the flush completed, turning a failure into a value the caller can
+ * inspect rather than an exception that escapes. The rejection must not propagate:
+ * telemetry is best-effort, the user cannot act on it, and an escaping rejection is
+ * picked up by exception autocapture — which reported our own analytics timeout as if
+ * it were a CLI failure.
+ *
+ * Commands intentionally ignore the result today; it exists so a dropped batch is an
+ * explicit outcome rather than a discarded error.
  */
-export async function shutdownPosthog(): Promise<void> {
+export async function shutdownPosthog(): Promise<boolean> {
   try {
     await posthog.shutdown(3000);
+    return true;
   } catch {
-    // Best-effort flush — a dropped analytics batch is never worth surfacing.
+    return false;
   }
 }
