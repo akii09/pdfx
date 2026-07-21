@@ -86,10 +86,17 @@ export async function fetchComponent(name: string, registryUrl: string): Promise
 
   if (!response.ok) {
     if (response.status === 404) {
-      const available = await fetchRegistryNames(registryUrl, 'registry:ui');
+      const available = await fetchRegistryNames(registryUrl);
       throw new RegistryError(
         `Component "${name}" not found in registry`,
-        buildNotFoundSuggestion(name, available, 'npx pdfx-cli@latest list')
+        buildNotFoundSuggestion(name, {
+          kind: 'component',
+          sameKind: available.components,
+          otherKind: 'block',
+          otherKindNames: available.blocks,
+          otherKindCommand: 'npx pdfx-cli@latest block add',
+          listCommand: 'npx pdfx-cli@latest list',
+        })
       );
     }
     throw new RegistryError(`Registry returned HTTP ${response.status}`);

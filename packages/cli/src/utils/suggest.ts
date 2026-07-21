@@ -73,19 +73,46 @@ export function findSimilarNames(name: string, candidates: string[]): string[] {
   return [...contains, ...near].slice(0, MAX_SUGGESTIONS);
 }
 
+export interface NotFoundContext {
+  /** What the user was installing: `component` for `add`, `block` for `block add`. */
+  kind: string;
+  /** Registry names of that kind. */
+  sameKind: string[];
+  /** The other kind's label, used when the match lives on the other command. */
+  otherKind: string;
+  /** Registry names of the other kind. */
+  otherKindNames: string[];
+  /** Command that installs from the other kind, e.g. `npx pdfx-cli@latest block add`. */
+  otherKindCommand: string;
+  /** Command that lists what the user was already looking for. */
+  listCommand: string;
+}
+
 /**
  * Builds the hint shown under a "not found" error.
  *
- * Falls back to just the list command when nothing looks similar — or when the registry
- * index could not be read, in which case `candidates` is empty.
+ * Prefers matches of the kind the user asked for. Failing that it looks across kinds:
+ * `pdfx add invoice` finds nothing under components, but six `invoice-*` blocks exist,
+ * and pointing at `block add` is more useful than a generic "run list".
+ *
+ * Falls back to the list command alone when nothing looks similar — including when the
+ * registry index could not be read, in which case both name lists are empty.
  */
-export function buildNotFoundSuggestion(
-  name: string,
-  candidates: string[],
-  listCommand: string
-): string {
-  const matches = findSimilarNames(name, candidates);
-  const listHint = `Run "${listCommand}" to see everything available`;
+export function buildNotFoundSuggestion(name: string, ctx: NotFoundContext): string {
+  const listHint = `Run "${ctx.listCommand}" to see everything available`;
 
-  return matches.length > 0 ? `Did you mean: ${matches.join(', ')}? ${listHint}` : listHint;
+  const matches = findSimilarNames(name, ctx.sameKind);
+  if (matches.length > 0) {
+    return `Did you mean: ${matches.join(', ')}? ${listHint}`;
+  }
+
+  const crossMatches = findSimilarNames(name, ctx.otherKindNames);
+  if (crossMatches.length > 0) {
+    return (
+      `No ${ctx.kind} matches "${name}", but these ${ctx.otherKind}s do: ` +
+      `${crossMatches.join(', ')}. Run "${ctx.otherKindCommand} <name>"`
+    );
+  }
+
+  return listHint;
 }

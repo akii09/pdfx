@@ -38,10 +38,17 @@ async function fetchBlock(name: string, registryUrl: string): Promise<RegistryIt
 
   if (!response.ok) {
     if (response.status === 404) {
-      const available = await fetchRegistryNames(registryUrl, 'registry:block');
+      const available = await fetchRegistryNames(registryUrl);
       throw new RegistryError(
         `Block "${name}" not found in registry`,
-        buildNotFoundSuggestion(name, available, 'npx pdfx-cli@latest block list')
+        buildNotFoundSuggestion(name, {
+          kind: 'block',
+          sameKind: available.blocks,
+          otherKind: 'component',
+          otherKindNames: available.components,
+          otherKindCommand: 'npx pdfx-cli@latest add',
+          listCommand: 'npx pdfx-cli@latest block list',
+        })
       );
     }
     throw new RegistryError(`Registry returned HTTP ${response.status}`);

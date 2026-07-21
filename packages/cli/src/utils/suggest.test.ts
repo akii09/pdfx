@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildNotFoundSuggestion, findSimilarNames } from './suggest.js';
+import { type NotFoundContext, buildNotFoundSuggestion, findSimilarNames } from './suggest.js';
 
 /**
  * Unit tests for registry name suggestions.
@@ -77,22 +77,78 @@ describe('findSimilarNames: no match', () => {
   });
 });
 
-describe('buildNotFoundSuggestion', () => {
+/** Context for a failed `pdfx block add`. */
+function blockContext(overrides: Partial<NotFoundContext> = {}): NotFoundContext {
+  return {
+    kind: 'block',
+    sameKind: BLOCKS,
+    otherKind: 'component',
+    otherKindNames: COMPONENTS,
+    otherKindCommand: 'npx pdfx-cli@latest add',
+    listCommand: 'npx pdfx-cli@latest block list',
+    ...overrides,
+  };
+}
+
+/** Context for a failed `pdfx add`. */
+function componentContext(overrides: Partial<NotFoundContext> = {}): NotFoundContext {
+  return {
+    kind: 'component',
+    sameKind: COMPONENTS,
+    otherKind: 'block',
+    otherKindNames: BLOCKS,
+    otherKindCommand: 'npx pdfx-cli@latest block add',
+    listCommand: 'npx pdfx-cli@latest list',
+    ...overrides,
+  };
+}
+
+describe('buildNotFoundSuggestion: same-kind matches', () => {
   it('includes both the suggestions and the list command when matches exist', () => {
-    const hint = buildNotFoundSuggestion('invoice', BLOCKS, 'npx pdfx-cli@latest block list');
+    const hint = buildNotFoundSuggestion('invoice', blockContext());
     expect(hint).toContain('Did you mean: invoice-classic, invoice-consultant, invoice-corporate?');
     expect(hint).toContain('npx pdfx-cli@latest block list');
   });
 
-  it('falls back to only the list command when nothing is similar', () => {
-    const hint = buildNotFoundSuggestion('spreadsheet', BLOCKS, 'npx pdfx-cli@latest block list');
+  it('prefers a same-kind match over any cross-kind match', () => {
+    // "table" is a component; nothing in BLOCKS is close to it.
+    const hint = buildNotFoundSuggestion('tabel', componentContext());
+    expect(hint).toContain('Did you mean: table?');
+    expect(hint).not.toContain('block add');
+  });
+});
+
+describe('buildNotFoundSuggestion: cross-kind matches', () => {
+  it('points at the block command when a component lookup matches blocks', () => {
+    // The reported failure: users ran `pdfx add invoice` / `block add invoice`.
+    const hint = buildNotFoundSuggestion('invoice', componentContext());
+    expect(hint).toBe(
+      'No component matches "invoice", but these blocks do: ' +
+        'invoice-classic, invoice-consultant, invoice-corporate. ' +
+        'Run "npx pdfx-cli@latest block add <name>"'
+    );
+  });
+
+  it('points at the component command when a block lookup matches components', () => {
+    const hint = buildNotFoundSuggestion('heading', blockContext());
+    expect(hint).toContain('No block matches "heading", but these components do: heading');
+    expect(hint).toContain('Run "npx pdfx-cli@latest add <name>"');
+  });
+});
+
+describe('buildNotFoundSuggestion: no matches', () => {
+  it('falls back to only the list command when nothing is similar in either kind', () => {
+    const hint = buildNotFoundSuggestion('spreadsheet', blockContext());
     expect(hint).not.toContain('Did you mean');
     expect(hint).toBe('Run "npx pdfx-cli@latest block list" to see everything available');
   });
 
   it('falls back to only the list command when the registry index was unreachable', () => {
-    // fetchRegistryNames returns [] rather than throwing when the index cannot be read.
-    const hint = buildNotFoundSuggestion('invoice', [], 'npx pdfx-cli@latest block list');
+    // fetchRegistryNames yields empty lists rather than throwing when the index fails.
+    const hint = buildNotFoundSuggestion(
+      'invoice',
+      blockContext({ sameKind: [], otherKindNames: [] })
+    );
     expect(hint).toBe('Run "npx pdfx-cli@latest block list" to see everything available');
   });
 });
