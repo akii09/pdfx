@@ -11,6 +11,10 @@ import { list } from './commands/list.js';
 import { mcpCommand } from './commands/mcp.js';
 import { skillsCommand } from './commands/skills.js';
 import { themeInit, themeSwitch, themeValidate } from './commands/theme.js';
+import { installEpipeGuards } from './utils/safe-output.js';
+
+// Must run before any command can write to stdout/stderr.
+installEpipeGuards();
 
 function getVersion(): string {
   try {
