@@ -18,7 +18,7 @@
     "@react-pdf/renderer": "catalog:",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "framer-motion": "^12.34.0",
+    "framer-motion": "^12.40.0",
     "lucide-react": "^0.564.0",
     "posthog-js": "^1.367.0",
     "prism-react-renderer": "^2.4.1",
