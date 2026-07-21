@@ -41,7 +41,7 @@
     "ora": "^8.1.1",
     "posthog-node": "^5.29.2",
     "prompts": "^2.4.2",
-    "semver": "^7.6.3",
+    "semver": "^7.8.5",
     "typescript": "catalog:",
     "zod": "^3.24.0",
     "zod-to-json-schema": "^3.24.6"
