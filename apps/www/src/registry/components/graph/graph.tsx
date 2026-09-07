@@ -5,7 +5,7 @@ import type { Style } from '@react-pdf/types';
 import type React from 'react';
 import { usePdfxTheme, useSafeMemo } from '../../lib/pdfx-theme-context';
 import { createGraphStyles } from './graph.styles';
-import type { ChartLayout, GraphProps, GraphSeries } from './graph.types';
+import type { ChartLayout, GraphLegendAlign, GraphProps, GraphSeries } from './graph.types';
 import {
   GRAPH_SAFE_WIDTHS,
   arcPath,
@@ -15,6 +15,7 @@ import {
   getGraphWidth,
   normalizeData,
   polarToCartesian,
+  resolveLegendAlign,
   smoothPath,
   truncate,
 } from './graph.utils';
@@ -382,13 +383,19 @@ function Legend({
   palette,
   styles,
   position = 'bottom',
+  align = 'left',
 }: {
   series: GraphSeries[];
   palette: string[];
   styles: ReturnType<typeof createGraphStyles>;
   position?: 'bottom' | 'right';
+  align?: GraphLegendAlign;
 }) {
-  const containerStyle = position === 'right' ? styles.legendColumn : styles.legendRow;
+  const flexAlign = resolveLegendAlign(align);
+  const containerStyle =
+    position === 'right'
+      ? [styles.legendColumn, { alignItems: flexAlign }]
+      : [styles.legendRow, { justifyContent: flexAlign }];
 
   return (
     <View style={containerStyle}>
@@ -459,6 +466,7 @@ export function PdfGraph({
   showValues = false,
   showGrid = true,
   legend = 'bottom',
+  legendAlign = 'left',
   centerLabel,
   showDots = true,
   smooth = false,
@@ -546,9 +554,13 @@ export function PdfGraph({
             </SvgText>
           )}
         </Svg>
-        {showLegend && legend === 'right' && Legend({ series, palette, styles, position: 'right' })}
+        {showLegend &&
+          legend === 'right' &&
+          Legend({ series, palette, styles, position: 'right', align: legendAlign })}
       </View>
-      {showLegend && legend === 'bottom' && Legend({ series, palette, styles, position: 'bottom' })}
+      {showLegend &&
+        legend === 'bottom' &&
+        Legend({ series, palette, styles, position: 'bottom', align: legendAlign })}
     </View>
   );
 

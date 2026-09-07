@@ -15,6 +15,9 @@ export type GraphVariant = 'bar' | 'horizontal-bar' | 'line' | 'area' | 'pie' | 
 
 export type GraphLegendPosition = 'bottom' | 'right' | 'none';
 
+/** Horizontal alignment of legend items. Pairs with `legend` position. */
+export type GraphLegendAlign = 'left' | 'center' | 'right';
+
 /**
  * A single data point with a label, numeric value, and optional color override.
  * Props - `label` | `value` | `color`
@@ -39,7 +42,7 @@ export interface GraphSeries {
 
 /**
  * Multi-variant PDF chart (bar, line, area, pie, donut) rendered with SVG primitives.
- * Props - `variant` | `data` | `title` | `subtitle` | `xLabel` | `yLabel` | `width` | `height` | `fullWidth` | `containerPadding` | `wrapperPadding` | `colors` | `showValues` | `showGrid` | `legend` | `centerLabel` | `showDots` | `smooth` | `yTicks` | `noWrap` | `style`
+ * Props - `variant` | `data` | `title` | `subtitle` | `xLabel` | `yLabel` | `width` | `height` | `fullWidth` | `containerPadding` | `wrapperPadding` | `colors` | `showValues` | `showGrid` | `legend` | `legendAlign` | `centerLabel` | `showDots` | `smooth` | `yTicks` | `noWrap` | `style`
  * @see {@link GraphProps}
  */
 export interface GraphProps {
@@ -79,6 +82,12 @@ export interface GraphProps {
    * @default 'bottom'
    */
   legend?: GraphLegendPosition;
+  /**
+   * Horizontal alignment of the legend. For `legend="bottom"` this is
+   * `justifyContent`; for `legend="right"` this is `alignItems`.
+   * @default 'left'
+   */
+  legendAlign?: GraphLegendAlign;
   centerLabel?: string;
   /**
    * @default true

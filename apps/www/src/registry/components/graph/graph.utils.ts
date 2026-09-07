@@ -1,5 +1,11 @@
 import type { PdfxTheme } from '@pdfx/shared';
-import type { ChartLayout, GraphDataPoint, GraphSeries, GraphWidthOptions } from './graph.types';
+import type {
+  ChartLayout,
+  GraphDataPoint,
+  GraphLegendAlign,
+  GraphSeries,
+  GraphWidthOptions,
+} from './graph.types';
 
 /** Standard A4 page width in PDF points. */
 export const A4_WIDTH = 595;
@@ -180,4 +186,11 @@ export function buildLayout(
     yTicks: computeYTicks(yMin, yMax, yTickCount),
     xLabels: series[0]?.data.map((d) => d.label) ?? [],
   };
+}
+
+/** Map a legend align value to the matching yoga/flex alignment. */
+export function resolveLegendAlign(align: GraphLegendAlign): 'flex-start' | 'center' | 'flex-end' {
+  if (align === 'center') return 'center';
+  if (align === 'right') return 'flex-end';
+  return 'flex-start';
 }
