@@ -141,6 +141,13 @@ export const graphProps = [
     description: "Legend position. 'none' hides the legend. Not shown for pie/donut.",
   },
   {
+    name: 'legendAlign',
+    type: "'left' | 'center' | 'right'",
+    defaultValue: "'left'",
+    description:
+      'Horizontal alignment of legend items. Applies as justifyContent when legend is bottom, and as alignItems when legend is right.',
+  },
+  {
     name: 'centerLabel',
     type: 'string',
     description: 'For donut variant: text displayed in the center hole.',

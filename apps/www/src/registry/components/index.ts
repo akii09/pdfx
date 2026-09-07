@@ -134,6 +134,7 @@ export {
   type GraphDataPoint,
   type GraphSeries,
   type GraphLegendPosition,
+  type GraphLegendAlign,
   type GraphWidthOptions,
 } from './graph';
 export { PdfxThemeProvider, usePdfxTheme, PdfxThemeContext } from '../lib/pdfx-theme-context';

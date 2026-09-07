@@ -439,6 +439,7 @@ import { PdfGraph } from '@/components/pdfx/graph/pdfx-graph';
   showValues            // boolean — show numeric labels on bars/points
   showGrid              // boolean — default: true
   legend="bottom"       // 'bottom' | 'right' | 'none' — default: 'bottom'
+  legendAlign="left"    // 'left' | 'center' | 'right' — default: 'left'
   centerLabel="$1.2M"  // string — for donut: text in center hole
   showDots              // boolean — default: true (line/area only)
   smooth                // boolean — bezier curves (line/area only)
