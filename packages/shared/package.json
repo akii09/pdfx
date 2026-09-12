@@ -1,6 +1,7 @@
 {
   "name": "@pdfx/shared",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "description": "Shared types, schemas, and utilities for PDFx",
@@ -9,7 +10,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
-  "files": ["src"],
+  "files": [
+    "src"
+  ],
   "scripts": {
     "test": "vitest run",
     "lint": "biome check src/",
