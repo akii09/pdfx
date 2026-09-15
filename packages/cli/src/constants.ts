@@ -1,6 +1,6 @@
 export const DEFAULTS = {
-  REGISTRY_URL: 'https://getpdfx.dev/r',
-  SCHEMA_URL: 'https://getpdfx.dev/schema.json',
+  REGISTRY_URL: 'https://pdfx.akashpise.dev/r',
+  SCHEMA_URL: 'https://pdfx.akashpise.dev/schema.json',
   COMPONENT_DIR: './src/components/pdfx',
   THEME_FILE: './src/lib/pdfx-theme.ts',
   BLOCK_DIR: './src/blocks/pdfx',
