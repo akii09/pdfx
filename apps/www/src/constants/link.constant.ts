@@ -5,7 +5,7 @@ export function MyDocument() {
   return (
     <Document>
       <Page size="A4" style={{ padding: 30 }}>
-        <Link href="https://pdfx.akashpise.dev">Documentation</Link>
+        <Link href="https://getpdfx.dev">Documentation</Link>
         <Link href="#section-1" color="primary">Internal link</Link>
       </Page>
     </Document>

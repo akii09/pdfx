@@ -6,7 +6,7 @@ This repository uses [Changesets](https://github.com/changesets/changesets) for 
 
 - CLI package history: [packages/cli/CHANGELOG.md](./packages/cli/CHANGELOG.md)
 - GitHub Releases: [github.com/akii09/pdfx/releases](https://github.com/akii09/pdfx/releases)
-- User-facing release notes: [pdfx.akashpise.dev/releases](https://pdfx.akashpise.dev/releases)
+- User-facing release notes: [getpdfx.dev/releases](https://getpdfx.dev/releases)
 
 ## Release Model
 

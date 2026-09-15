@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { type Registry, registryItemSchema, registrySchema } from '@pdfx/shared';
+import { SCHEMA_REGISTRY_ITEM_URL } from '../constants/site.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -253,7 +254,7 @@ async function processItem(
   );
 
   const output: Record<string, unknown> = {
-    $schema: 'https://pdfx.akashpise.dev/schema/registry-item.json',
+    $schema: SCHEMA_REGISTRY_ITEM_URL,
     name: item.name,
     type: item.type,
     title: item.title,
@@ -487,7 +488,7 @@ async function processBlockItem(
   );
 
   const output: Record<string, unknown> = {
-    $schema: 'https://pdfx.akashpise.dev/schema/registry-item.json',
+    $schema: SCHEMA_REGISTRY_ITEM_URL,
     name: item.name,
     type: item.type,
     title: item.title,

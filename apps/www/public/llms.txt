@@ -4,7 +4,7 @@
 
 PDFx is an open-source React PDF component library that follows the shadcn/ui model: run the CLI to add a component, the source lands in your project, and you own it fully. No runtime PDFx package dependency, no version lock-in, MIT licensed.
 
-Website: https://pdfx.akashpise.dev
+Website: https://getpdfx.dev
 GitHub: https://github.com/akii09/pdfx
 npm (CLI): https://www.npmjs.com/package/pdfx-cli
 License: MIT
@@ -53,7 +53,7 @@ Themes: `professional` (default), `modern`, `minimal`, `executive`, `corporate`,
 
 Visual theming is also available at:
 
-- Theme Builder: https://pdfx.akashpise.dev/theme-builder
+- Theme Builder: https://getpdfx.dev/theme-builder
 
 Each theme exports a token object used inside components:
 ```ts
@@ -175,12 +175,12 @@ The website and the registry are the same thing — same model as shadcn/ui.
 
 ## Documentation
 
-- Docs: https://pdfx.akashpise.dev/docs
-- Installation: https://pdfx.akashpise.dev/installation
-- Components: https://pdfx.akashpise.dev/components
-- Blocks: https://pdfx.akashpise.dev/blocks
-- MCP & Skills: https://pdfx.akashpise.dev/mcp
-- Theme Builder: https://pdfx.akashpise.dev/theme-builder
-- Releases: https://pdfx.akashpise.dev/releases
+- Docs: https://getpdfx.dev/docs
+- Installation: https://getpdfx.dev/installation
+- Components: https://getpdfx.dev/components
+- Blocks: https://getpdfx.dev/blocks
+- MCP & Skills: https://getpdfx.dev/mcp
+- Theme Builder: https://getpdfx.dev/theme-builder
+- Releases: https://getpdfx.dev/releases
 - Contributing: https://github.com/akii09/pdfx/blob/main/CONTRIBUTING.md
 - CLI Changelog: https://github.com/akii09/pdfx/blob/main/packages/cli/CHANGELOG.md

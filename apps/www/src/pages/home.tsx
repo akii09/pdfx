@@ -38,9 +38,7 @@ function VideoModal() {
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
-  const thumbnailSrc = thumbnailError
-    ? 'https://pdfx.akashpise.dev/og-image.png'
-    : '/og-image-ss.png';
+  const thumbnailSrc = thumbnailError ? 'https://getpdfx.dev/og-image.png' : '/og-image-ss.png';
 
   return (
     <>

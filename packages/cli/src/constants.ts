@@ -12,7 +12,7 @@ export const REGISTRY_SUBPATHS = {
 
 export const DOCS = {
   /** Guide for generating and saving PDFs from Node.js / server-side environments. */
-  SERVER_SIDE: 'https://pdfx.akashpise.dev/docs/server-side',
+  SERVER_SIDE: 'https://getpdfx.dev/docs/server-side',
 } as const;
 
 export const REQUIRED_VERSIONS = {

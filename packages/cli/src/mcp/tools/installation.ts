@@ -162,10 +162,10 @@ export async function getInstallation(
 
     \`\`\`json
     {
-      "$schema": "https://pdfx.akashpise.dev/schema.json",
+      "$schema": "https://getpdfx.dev/schema.json",
       "componentDir": "./src/components/pdfx",
       "blockDir": "./src/blocks/pdfx",
-      "registry": "https://pdfx.akashpise.dev/r",
+      "registry": "https://getpdfx.dev/r",
       "theme": "./src/lib/pdfx-theme.ts"
     }
     \`\`\`
@@ -178,7 +178,7 @@ export async function getInstallation(
     |-------|------|-------------|---------|
     | \`componentDir\` | string | Where individual components are installed | \`./src/components/pdfx\` |
     | \`blockDir\` | string | Where full document blocks are installed | \`./src/blocks/pdfx\` |
-    | \`registry\` | string (URL) | Registry base URL (must start with http) | \`https://pdfx.akashpise.dev/r\` |
+    | \`registry\` | string (URL) | Registry base URL (must start with http) | \`https://getpdfx.dev/r\` |
     | \`theme\` | string | Path to your generated theme file | \`./src/lib/pdfx-theme.ts\` |
 
     > **Non-interactive init (CI / AI agents):** pass \`--yes\` to accept all defaults:

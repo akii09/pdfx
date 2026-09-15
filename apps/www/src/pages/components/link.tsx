@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 const previewDocument = (
   <Document title="PDFx Link Preview">
     <Page size="A4" style={styles.page}>
-      <Link href="https://pdfx.akashpise.dev">Documentation</Link>
+      <Link href="https://getpdfx.dev">Documentation</Link>
       <Link href="#section-1" color="primary">
         Internal link
       </Link>

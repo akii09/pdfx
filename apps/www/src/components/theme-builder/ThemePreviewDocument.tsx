@@ -493,7 +493,7 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
         </View>
 
         <View style={s.pageFooter} fixed>
-          <Text style={s.pageFooterText}>PDFx Theme Builder · pdfx.akashpise.dev</Text>
+          <Text style={s.pageFooterText}>PDFx Theme Builder · getpdfx.dev</Text>
           <Text style={s.pageFooterText}>Page 1 of 3</Text>
         </View>
       </Page>
@@ -639,7 +639,7 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
         </Text>
 
         <View style={s.pageFooter} fixed>
-          <Text style={s.pageFooterText}>PDFx Theme Builder · pdfx.akashpise.dev</Text>
+          <Text style={s.pageFooterText}>PDFx Theme Builder · getpdfx.dev</Text>
           <Text style={s.pageFooterText}>Page 2 of 3</Text>
         </View>
       </Page>
@@ -715,7 +715,7 @@ export function ThemePreviewDocument({ theme }: ThemePreviewDocumentProps) {
         </Text>
 
         <View style={s.pageFooter} fixed>
-          <Text style={s.pageFooterText}>PDFx Theme Builder · pdfx.akashpise.dev</Text>
+          <Text style={s.pageFooterText}>PDFx Theme Builder · getpdfx.dev</Text>
           <Text style={s.pageFooterText}>Page 3 of 3</Text>
         </View>
       </Page>
