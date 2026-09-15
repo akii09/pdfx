@@ -333,7 +333,7 @@ describe('CLI Integration: Config Validation', () => {
   it('should validate required config fields', () => {
     const validConfig = {
       componentDir: './src/components/pdfx',
-      registry: 'https://pdfx.akashpise.dev/r',
+      registry: 'https://getpdfx.dev/r',
       theme: './src/lib/pdfx-theme.ts',
     };
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { DEFAULTS } from '../constants.js';
 import { resolveBlockImports } from './block.js';
 
 /**
@@ -23,7 +24,7 @@ import { resolveBlockImports } from './block.js';
 const defaultConfig = {
   componentDir: './src/components/pdfx',
   blockDir: './src/blocks/pdfx',
-  registry: 'https://pdfx.akashpise.dev/r',
+  registry: DEFAULTS.REGISTRY_URL,
 };
 
 describe('resolveBlockImports: no rewrites needed', () => {
@@ -81,7 +82,7 @@ describe('resolveBlockImports: peer component imports', () => {
   it('uses DEFAULTS.BLOCK_DIR when config.blockDir is absent', () => {
     const configWithoutBlockDir = {
       componentDir: './src/components/pdfx',
-      registry: 'https://pdfx.akashpise.dev/r',
+      registry: DEFAULTS.REGISTRY_URL,
     };
     const content = `import { A } from '../../components/pdfx/page-header/pdfx-page-header';`;
     // Should not throw; falls back to DEFAULTS.BLOCK_DIR
