@@ -8,11 +8,17 @@ import {
   manualStep5Structure,
   manualStep6AddComponent,
 } from '@/constants/docs.constant';
+import {
+  SHADCN_ADD_EXAMPLE_COMMAND,
+  SHADCN_LIST_COMMAND,
+  SHADCN_REGISTRY_ADD_COMMAND,
+  SHADCN_REGISTRY_URL,
+} from '@/constants/site';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 
 export default function Installation() {
-  const [installTab, setInstallTab] = useState<'cli' | 'manual'>('cli');
+  const [installTab, setInstallTab] = useState<'cli' | 'shadcn' | 'manual'>('cli');
   return (
     <>
       <section id="installation" className="mb-14 scroll-mt-20">
@@ -37,7 +43,19 @@ export default function Installation() {
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
-              Using CLI
+              pdfx-cli
+            </button>
+            <button
+              type="button"
+              onClick={() => setInstallTab('shadcn')}
+              className={cn(
+                'relative px-4 py-2 text-sm font-medium rounded-t-md transition-all',
+                installTab === 'shadcn'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+            >
+              shadcn CLI
             </button>
             <button
               type="button"
@@ -78,6 +96,92 @@ export default function Installation() {
                   className="border-0 rounded-lg shadow-none"
                 />
               </div>
+            </div>
+          )}
+
+          {installTab === 'shadcn' && (
+            <div className="p-4 bg-background space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Use this path when the project already has shadcn (
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  components.json
+                </code>
+                ). If it does not, run{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  npx shadcn@latest init
+                </code>{' '}
+                first — or use the pdfx-cli tab. The namespace is always{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  @pdfx
+                </code>{' '}
+                so names never collide with shadcn/ui.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Components land in{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  src/components/pdfx/
+                </code>
+                . Blocks such as{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  @pdfx/invoice-modern
+                </code>{' '}
+                land in{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  src/blocks/pdfx/&lt;name&gt;/
+                </code>
+                .
+              </p>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">1. Register the PDFx namespace</p>
+                <p className="text-xs text-muted-foreground mb-3">
+                  Leave <code className="rounded bg-muted px-1 py-0.5 font-mono">{'{name}'}</code>{' '}
+                  as a placeholder. The CLI replaces it per item, so{' '}
+                  <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx/heading</code>{' '}
+                  fetches{' '}
+                  <code className="rounded bg-muted px-1 py-0.5 font-mono">
+                    /r/shadcn/heading.json
+                  </code>
+                  .
+                </p>
+                <PackageManagerTabs
+                  command={SHADCN_REGISTRY_ADD_COMMAND}
+                  className="border-0 rounded-lg shadow-none"
+                />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-3">2. Add components or blocks</p>
+                <PackageManagerTabs
+                  command={SHADCN_ADD_EXAMPLE_COMMAND}
+                  className="border-0 rounded-lg shadow-none"
+                />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-3">3. List everything in @pdfx</p>
+                <PackageManagerTabs
+                  command={SHADCN_LIST_COMMAND}
+                  className="border-0 rounded-lg shadow-none"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Theme files and{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">@react-pdf/renderer</code>{' '}
+                are pulled in automatically via{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx/theme</code> and each
+                item&apos;s dependencies — the{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">professional</code> preset,
+                written to fixed{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">src/</code> paths rather
+                than your{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">components.json</code>{' '}
+                aliases. pdfx-cli stays the PDF-native CLI for{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">theme switch</code>,{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">diff</code>, and MCP.{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">npx pdfx-cli init</code>{' '}
+                offers to write this{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx</code> entry when{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">components.json</code>{' '}
+                already exists — it asks first, and never edits the file unprompted.
+              </p>
             </div>
           )}
 
@@ -270,6 +374,111 @@ export default function Installation() {
               </div>
             </div>
           )}
+        </div>
+      </section>
+
+      <section id="shadcn" className="mb-14 scroll-mt-20">
+        <h2 className="text-xl font-semibold tracking-tight mb-3 flex items-center gap-2">
+          <span className="flex h-6 w-1 rounded-full bg-primary" />
+          shadcn CLI
+        </h2>
+        <p className="text-muted-foreground mb-4">
+          PDFx publishes a second, shadcn-compatible registry next to the existing pdfx-cli
+          registry. Both stay in sync from the same source. pdfx-cli URLs do not change. The
+          commands in the <strong>shadcn CLI</strong> tab above are the full install; this is the{' '}
+          <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">components.json</code>{' '}
+          contract behind them.
+        </p>
+        <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
+          <p>
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+              shadcn registry add
+            </code>{' '}
+            requires an existing{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+              components.json
+            </code>
+            . If you do not have one, run{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+              npx shadcn@latest init
+            </code>{' '}
+            first. You can register the namespace with the CLI, or add it by hand — keep{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{'{name}'}</code>{' '}
+            literal:
+          </p>
+          <CodeBlock
+            code={`{
+  "registries": {
+    "@pdfx": "${SHADCN_REGISTRY_URL}"
+  }
+}`}
+            language="json"
+            filename="components.json"
+          />
+          <p>
+            Then install with{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+              @pdfx/&lt;name&gt;
+            </code>
+            . Never use a bare name —{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">heading</code> and{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">table</code> collide
+            with shadcn/ui.
+          </p>
+          <CodeBlock
+            code={`npx shadcn@latest add @pdfx/heading @pdfx/table
+npx shadcn@latest add @pdfx/invoice-modern
+npx shadcn@latest list @pdfx`}
+            language="bash"
+            filename="terminal"
+          />
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4 space-y-3">
+            <p>
+              <strong className="text-foreground">Fixed paths, not aliases.</strong> PDFx items
+              carry explicit <code className="rounded bg-muted px-1 py-0.5 font-mono">target</code>{' '}
+              paths, so files always land under{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">src/</code> — they do not
+              follow the <code className="rounded bg-muted px-1 py-0.5 font-mono">aliases</code> in
+              your <code className="rounded bg-muted px-1 py-0.5 font-mono">components.json</code>.
+              If your project keeps source at the repo root (no{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">src/</code> directory), the
+              shadcn install creates one. Components import each other by relative path, so they
+              compile wherever they land — but move the whole{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">pdfx</code> tree together if
+              you relocate it.
+            </p>
+            <p>
+              <strong className="text-foreground">Themes.</strong>{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx/theme</code> installs
+              the <code className="rounded bg-muted px-1 py-0.5 font-mono">professional</code>{' '}
+              preset — the shadcn CLI has no preset picker. Run{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">
+                npx pdfx-cli theme switch
+              </code>{' '}
+              to change it. Once you have edited{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">src/lib/pdfx-theme.ts</code>,
+              avoid{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">shadcn add --overwrite</code>{' '}
+              — it resets the file back to the preset. Without that flag shadcn leaves your existing
+              theme alone.
+            </p>
+          </div>
+
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
+            <strong className="text-foreground">Keep both CLIs.</strong> shadcn copies components.
+            Use pdfx-cli for{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">theme switch</code>,{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">diff</code>, blocks-aware
+            prompts, and the MCP server. Running{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">npx pdfx-cli init</code> in a
+            shadcn project offers to add the{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx</code> entry to an
+            existing <code className="rounded bg-muted px-1 py-0.5 font-mono">components.json</code>{' '}
+            — it prompts before writing, and uses whichever registry URL you configured. Pass{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">--register-shadcn</code> (or
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">--no-register-shadcn</code>) to
+            skip the question in CI.
+          </div>
         </div>
       </section>
     </>

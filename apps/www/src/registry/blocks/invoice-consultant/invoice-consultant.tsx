@@ -287,7 +287,7 @@ function InvoiceConsultantContent({ data }: { data: InvoiceConsultantData }) {
         )}
         <PageFooter
           leftText="Professional services invoice – Please retain for records"
-          rightText="Page 1 of 1"
+          rightText={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
           sticky
           pagePadding={25}
         />

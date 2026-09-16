@@ -23,4 +23,14 @@ export default defineConfig([
     target: 'node20',
     noExternal: ['@pdfx/shared'],
   },
+  // Theme file generator — exported as `pdfx-cli/theme` so the docs site can
+  // emit the same theme source the CLI writes, without reaching into src/
+  {
+    entry: { 'theme/index': 'src/utils/generate-theme.ts' },
+    format: ['esm'],
+    dts: true,
+    sourcemap: false,
+    target: 'node20',
+    noExternal: ['@pdfx/shared'],
+  },
 ]);

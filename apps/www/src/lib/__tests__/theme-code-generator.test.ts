@@ -6,7 +6,7 @@ describe('theme-code-generator', () => {
   it('generates self-contained full theme code with inline type', () => {
     const code = generateThemeCode(modernTheme);
 
-    expect(code).toContain('interface PdfxTheme');
+    expect(code).toContain('export interface PdfxTheme');
     expect(code).toContain('export const theme: PdfxTheme');
     expect(code).not.toContain("from '@pdfx/shared'");
     expect(code).not.toContain('defaultPrimitives');

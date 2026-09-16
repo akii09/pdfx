@@ -1,8 +1,10 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { type Registry, registryItemSchema, registrySchema } from '@pdfx/shared';
+import { type Registry, registryItemSchema, registrySchema, themePresets } from '@pdfx/shared';
+import { generateThemeContextFile, generateThemeFile } from 'pdfx-cli/theme';
 import { SCHEMA_REGISTRY_ITEM_URL } from '../constants/site.js';
+import { type PdfxRegistryItem, buildShadcnRegistry } from './shadcn-registry.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -132,10 +134,16 @@ export function transformForRegistry(content: string): { content: string; usesTh
     } else {
       // .styles.ts files: PdfxTheme came from @pdfx/shared (now removed) and there is no
       // usePdfxTheme import yet.  Add a minimal import + alias after the StyleSheet import.
-      result = result.replace(
+      const withStylesheet = result.replace(
         /(import\s+\{[^}]*StyleSheet[^}]*\}\s+from\s+['"]@react-pdf\/renderer['"];?\n)/,
         "$1import { usePdfxTheme } from '../lib/pdfx-theme-context';\ntype PdfxTheme = ReturnType<typeof usePdfxTheme>;\n"
       );
+      if (withStylesheet !== result) {
+        result = withStylesheet;
+      } else if (!result.includes('type PdfxTheme')) {
+        // .utils.ts and similar: no StyleSheet import to anchor on.
+        result = `import { usePdfxTheme } from '../lib/pdfx-theme-context';\ntype PdfxTheme = ReturnType<typeof usePdfxTheme>;\n${result}`;
+      }
     }
   }
 
@@ -156,6 +164,8 @@ export function transformForRegistry(content: string): { content: string; usesTh
   result = result.replace(/from\s+['"]\.\/([^'"]+)\.styles['"]/g, "from './pdfx-$1.styles'");
   // ./X.types  →  ./pdfx-X.types   (component imports its types file)
   result = result.replace(/from\s+['"]\.\/([^'"]+)\.types['"]/g, "from './pdfx-$1.types'");
+  // ./X.utils  →  ./pdfx-X.utils   (graph imports its utils file)
+  result = result.replace(/from\s+['"]\.\/([^'"]+)\.utils['"]/g, "from './pdfx-$1.utils'");
 
   // 6. Rewrite cross-component type imports
   // ../foo/foo.types  →  ../foo/pdfx-foo.types  (e.g. data-table.types imports TableVariant)
@@ -224,7 +234,7 @@ async function processItem(
   item: SourceRegistryItem,
   registryBaseDir: string,
   outputDir: string
-): Promise<void> {
+): Promise<PdfxRegistryItem> {
   console.log(`Processing ${item.name}...`);
 
   let itemUsesTheme = false;
@@ -253,7 +263,7 @@ async function processItem(
     })
   );
 
-  const output: Record<string, unknown> = {
+  const output: PdfxRegistryItem = {
     $schema: SCHEMA_REGISTRY_ITEM_URL,
     name: item.name,
     type: item.type,
@@ -289,6 +299,7 @@ async function processItem(
   await fs.writeFile(outputPath, JSON.stringify(output, null, 2));
 
   console.log(`  ${item.name}.json`);
+  return output;
 }
 
 /**
@@ -460,7 +471,7 @@ async function processBlockItem(
   item: SourceRegistryItem,
   registryBaseDir: string,
   outputDir: string
-): Promise<void> {
+): Promise<PdfxRegistryItem> {
   console.log(`Processing block ${item.name}...`);
 
   const files = await Promise.all(
@@ -487,7 +498,7 @@ async function processBlockItem(
     })
   );
 
-  const output: Record<string, unknown> = {
+  const output: PdfxRegistryItem = {
     $schema: SCHEMA_REGISTRY_ITEM_URL,
     name: item.name,
     type: item.type,
@@ -512,6 +523,7 @@ async function processBlockItem(
   await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`);
 
   console.log(`  ${item.name}.json (block)`);
+  return output;
 }
 
 async function buildRegistry() {
@@ -583,7 +595,47 @@ async function buildRegistry() {
   await fs.writeFile(indexOutputPath, JSON.stringify(registry, null, 2));
   console.log('  index.json');
 
+  const pdfxComponents = componentResults
+    .filter((r): r is PromiseFulfilledResult<PdfxRegistryItem> => r.status === 'fulfilled')
+    .map((r) => r.value);
+  const pdfxBlocks = blockResults
+    .filter((r): r is PromiseFulfilledResult<PdfxRegistryItem> => r.status === 'fulfilled')
+    .map((r) => r.value);
+
+  await writeShadcnRegistry(outputDir, pdfxComponents, pdfxBlocks);
+
   console.log(`\nRegistry built successfully! Output: ${outputDir}\n`);
+}
+
+async function writeShadcnRegistry(
+  outputDir: string,
+  components: PdfxRegistryItem[],
+  blocks: PdfxRegistryItem[]
+): Promise<void> {
+  const shadcnDir = path.join(outputDir, 'shadcn');
+  await fs.rm(shadcnDir, { recursive: true, force: true });
+  await fs.mkdir(shadcnDir, { recursive: true });
+
+  const { catalog, items } = buildShadcnRegistry({
+    components,
+    blocks,
+    themeFile: generateThemeFile(themePresets.professional),
+    themeContextFile: generateThemeContextFile(),
+  });
+
+  await fs.writeFile(
+    path.join(shadcnDir, 'registry.json'),
+    `${JSON.stringify(catalog, null, 2)}\n`
+  );
+  console.log('  shadcn/registry.json');
+
+  await Promise.all(
+    items.map(async (item) => {
+      const itemPath = path.join(shadcnDir, `${item.name}.json`);
+      await fs.writeFile(itemPath, `${JSON.stringify(item, null, 2)}\n`);
+    })
+  );
+  console.log(`  shadcn/*.json (${items.length} items)`);
 }
 
 // Only run when executed directly (not when imported by tests)

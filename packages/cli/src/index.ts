@@ -41,7 +41,9 @@ program
   .command('init')
   .description('Initialize pdfx in your project')
   .option('-y, --yes', 'Accept all defaults without prompting (non-interactive / CI mode)')
-  .action((options: { yes?: boolean }) => init(options));
+  .option('--register-shadcn', 'Register the @pdfx registry in an existing components.json')
+  .option('--no-register-shadcn', 'Leave components.json untouched')
+  .action((options: { yes?: boolean; registerShadcn?: boolean }) => init(options));
 
 program
   .command('add <components...>')

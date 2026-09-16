@@ -10,6 +10,5 @@
       "@pdfx/components": ["./src/registry/components"]
     }
   },
-  "include": ["src"],
-  "exclude": ["src/lib/build-registry.ts"]
+  "include": ["src"]
 }

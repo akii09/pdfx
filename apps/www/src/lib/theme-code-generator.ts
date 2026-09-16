@@ -46,7 +46,7 @@ export function generateThemeCode(theme: PdfxTheme): string {
 
   return `
     ${fontRegistrationSnippet ? `${remoteFontNotice}${fontRegistrationSnippet}\n` : ''}
-interface PdfxTheme {
+export interface PdfxTheme {
   name: string;
   primitives: {
     typography: Record<string, number>;

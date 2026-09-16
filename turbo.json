@@ -14,7 +14,9 @@
         "src/registry/index.json",
         "src/registry/components/**",
         "src/registry/blocks/**",
-        "src/lib/build-registry.ts"
+        "src/lib/build-registry.ts",
+        "src/lib/shadcn-registry.ts",
+        "src/constants/site.ts"
       ],
       "outputs": ["public/r/**"],
       "cache": true
@@ -35,6 +37,7 @@
       "cache": true
     },
     "typecheck": {
+      "dependsOn": ["^build"],
       "cache": true,
       "outputs": []
     },

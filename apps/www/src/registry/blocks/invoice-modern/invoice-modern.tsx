@@ -202,7 +202,12 @@ function InvoiceModernContent({ data }: { data: InvoiceModernData }) {
             />
           </View>
         </Section>
-        <PageFooter leftText={data.notes} rightText="Page 1 of 1" sticky pagePadding={25} />
+        <PageFooter
+          leftText={data.notes}
+          rightText={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
+          sticky
+          pagePadding={25}
+        />
       </Page>
     </Document>
   );

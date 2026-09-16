@@ -1,3 +1,4 @@
+import { SHADCN_REGISTRY_ADD_COMMAND } from '@/constants/site';
 import { ChevronDown } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -7,7 +8,7 @@ import { PackageManagerTabs } from './package-manager-tabs';
 
 const PREVIEW_LINES = 12;
 
-type InstallMethod = 'command' | 'manual';
+type InstallMethod = 'pdfx' | 'shadcn' | 'manual';
 
 interface RegistryFile {
   path: string;
@@ -22,6 +23,8 @@ interface RegistryItem {
 
 interface InstallationTabsProps {
   installCommand: string;
+  /** `npx shadcn@latest add @pdfx/<name>`. Always namespaced. */
+  shadcnCommand: string;
   componentName: string;
   usageFilename: string;
   className?: string;
@@ -41,11 +44,12 @@ function getLanguage(filePath: string): string {
 
 export function InstallationTabs({
   installCommand,
+  shadcnCommand,
   componentName,
   usageFilename,
   className,
 }: InstallationTabsProps) {
-  const [activeTab, setActiveTab] = useState<InstallMethod>('command');
+  const [activeTab, setActiveTab] = useState<InstallMethod>('pdfx');
   const [registryFiles, setRegistryFiles] = useState<RegistryFile[] | null>(null);
   const [selectedFileIdx, setSelectedFileIdx] = useState(0);
   const [registryData, setRegistryData] = useState<RegistryItem | null>(null);
@@ -89,15 +93,27 @@ export function InstallationTabs({
       <div className="flex items-center gap-0 border-b bg-muted/40 px-1 pt-1">
         <button
           type="button"
-          onClick={() => setActiveTab('command')}
+          onClick={() => setActiveTab('pdfx')}
           className={cn(
             'relative px-4 py-2 text-sm font-medium rounded-t-md transition-all',
-            activeTab === 'command'
+            activeTab === 'pdfx'
               ? 'bg-background text-foreground shadow-sm'
               : 'text-muted-foreground hover:text-foreground'
           )}
         >
-          CLI
+          pdfx-cli
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('shadcn')}
+          className={cn(
+            'relative px-4 py-2 text-sm font-medium rounded-t-md transition-all',
+            activeTab === 'shadcn'
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          shadcn
         </button>
         <button
           type="button"
@@ -113,11 +129,49 @@ export function InstallationTabs({
         </button>
       </div>
 
-      {activeTab === 'command' ? (
+      {activeTab === 'pdfx' ? (
         <PackageManagerTabs
           command={installCommand}
           className="border-0 rounded-none shadow-none"
         />
+      ) : activeTab === 'shadcn' ? (
+        <div className="p-4 bg-background space-y-3">
+          <p className="text-sm text-muted-foreground">
+            One-time: add the{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">@pdfx</code> registry
+            to an existing shadcn project (
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+              components.json
+            </code>
+            ), then install this component. Leave{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{'{name}'}</code> as
+            a placeholder. Files land in{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+              src/components/pdfx/
+            </code>
+            .
+          </p>
+          <PackageManagerTabs
+            command={SHADCN_REGISTRY_ADD_COMMAND}
+            className="border-0 rounded-lg shadow-none"
+          />
+          <PackageManagerTabs command={shadcnCommand} className="border-0 rounded-lg shadow-none" />
+          <p className="text-xs text-muted-foreground">
+            Paths are fixed rather than alias-driven, and{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx/theme</code> installs the{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">professional</code> preset —{' '}
+            <Link to="/installation#shadcn" className="underline hover:text-foreground">
+              details
+            </Link>
+            .
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Prefer the PDF-native CLI? Use the pdfx-cli tab —{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">theme switch</code>,{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">diff</code>, and MCP stay
+            there.
+          </p>
+        </div>
       ) : (
         <div className="p-4 bg-background space-y-4">
           {registryData?.registryDependencies && registryData.registryDependencies.length > 0 && (

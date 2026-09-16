@@ -10,7 +10,7 @@ export function MyDocument() {
         <PageFooter
           leftText="© 2026 Acme Corp. All rights reserved."
           centerText="Confidential"
-          rightText="Page 1 of 1"
+          rightText={({ pageNumber, totalPages }) => \`Page \${pageNumber} of \${totalPages}\`}
         />
       </Page>
     </Document>
@@ -20,21 +20,21 @@ export function MyDocument() {
 export const pageFooterProps = [
   {
     name: 'leftText',
-    type: 'string',
+    type: 'string | ((info: { pageNumber, totalPages }) => string)',
     description:
-      'Left-aligned footer text (or center text in centered variant). Common use: company name, copyright notice. In the detailed variant, used as the company name (bold).',
+      'Left-aligned footer text (or center text in centered variant). Common use: company name, copyright notice. In the detailed variant, used as the company name (bold). Pass a function to resolve it per page.',
   },
   {
     name: 'rightText',
-    type: 'string',
+    type: 'string | ((info: { pageNumber, totalPages }) => string)',
     description:
-      'Right-aligned footer text. Common use: page numbers, document reference. Ignored in centered variant. In the detailed variant, shown centered at the bottom as the page number.',
+      'Right-aligned footer text. Common use: page numbers, document reference. Ignored in centered variant. In the detailed variant, shown centered at the bottom as the page number. Pass a function to get live page numbers — the footer must be fixed or sticky for it to update on every page.',
   },
   {
     name: 'centerText',
-    type: 'string',
+    type: 'string | ((info: { pageNumber, totalPages }) => string)',
     description:
-      'Optional center text appearing between left and right columns. Only shown in simple and minimal variants.',
+      'Optional center text appearing between left and right columns. Only shown in simple and minimal variants. Pass a function to resolve it per page.',
   },
   {
     name: 'variant',

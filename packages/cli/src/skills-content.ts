@@ -25,7 +25,7 @@ Key facts:
 ## Installation (one-time project setup)
 
 \`\`\`bash
-# 1. Initialize PDFx — creates src/lib/pdfx-theme.ts and installs @pdfx/shared
+# 1. Initialize PDFx — creates src/lib/pdfx-theme.ts
 npx pdfx-cli@latest init
 
 # 2. Add components you need
@@ -33,6 +33,10 @@ npx pdfx-cli@latest add heading text table
 
 # 3. Add a pre-built block
 npx pdfx-cli@latest block add invoice-modern
+
+# Alternative: shadcn CLI (requires components.json; keep {name} as a placeholder)
+npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
+npx shadcn@latest add @pdfx/heading @pdfx/text @pdfx/table
 \`\`\`
 
 The init command adds a theme file at src/lib/pdfx-theme.ts. All components read from this file.
@@ -342,7 +346,7 @@ import { PageFooter } from '@/components/pdfx/page-footer/pdfx-page-footer';
 <PageFooter
   leftText="© 2024 Acme Corp"   // string
   centerText="Confidential"      // string
-  rightText="Page 1 of 1"        // string
+  rightText={({ pageNumber, totalPages }) => \`Page \${pageNumber} of \${totalPages}\`}  // string | (info) => string — use the function form for live page numbers (needs fixed/sticky)
   variant="simple"               // 'simple' | 'centered' | 'branded' | 'minimal' | 'three-column' | 'detailed'
   background="#18181b"            // string
   textColor="#fff"                // string
@@ -663,7 +667,7 @@ export function InvoiceDoc() {
           </TableBody>
         </Table>
         <Badge label="PAID" variant="success" />
-        <PageFooter leftText="Acme Corp" rightText="Page 1 of 1" />
+        <PageFooter leftText="Acme Corp" rightText={({ pageNumber, totalPages }) => \`Page \${pageNumber} of \${totalPages}\`} sticky />
       </Page>
     </Document>
   );

@@ -429,7 +429,7 @@
         }
       ],
       "dependencies": ["@react-pdf/renderer"],
-      "peerComponents": ["page-header", "page-footer", "table", "key-value", "text", "signature"]
+      "peerComponents": ["page-header", "page-footer", "table", "key-value", "text", "pdf-image"]
     },
     {
       "name": "invoice-creative",

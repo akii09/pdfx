@@ -20,8 +20,10 @@ apps/www/               docs site + registry server (Vite + React)
       index.json        registry manifest (name, type, files, deps)
     lib/
       build-registry.ts transforms registry/components/ into public/r/*.json
+      shadcn-registry.ts emits the parallel shadcn catalog at public/r/shadcn/
   public/
-    r/                  HTTP-served JSON consumed by the CLI
+    r/                  HTTP-served JSON consumed by pdfx-cli
+      shadcn/           shadcn CLI catalog + items (@pdfx namespace)
 ```
 
 ## Data Flow
@@ -32,11 +34,13 @@ apps/www/src/registry/components/<name>/<name>.tsx   (source of truth)
          └── build-registry.ts  (pnpm build:registry)
                |  strips @pdfx/shared imports, inlines shared helpers
                v
-         public/r/<name>.json                (served over HTTPS)
+         public/r/<name>.json                (pdfx-cli)
+         public/r/shadcn/<name>.json         (shadcn CLI, namespaced @pdfx)
                |
-               └── pdfx add <name>           (CLI fetches JSON, writes files)
+               ├── pdfx add <name>
+               └── npx shadcn add @pdfx/<name>
                      v
-         user-project/src/components/pdfx/<name>/   (component lives here)
+         user-project/src/components/pdfx/<name>/   (same file tree from either CLI)
 ```
 
 ## Key Design Decisions
@@ -70,6 +74,7 @@ All three non-test files are listed in `index.json` and copied to the user's pro
 |-------|----------|---------|
 | Components | `apps/www/src/registry/components/**/*.test.tsx` | 2 smoke tests per component |
 | Registry transforms | `apps/www/src/lib/__tests__/build-registry.test.ts` | Pure function unit tests |
+| shadcn registry | `apps/www/src/lib/__tests__/shadcn-registry.test.ts` | Dual-registry contract tests |
 | CLI commands | `packages/cli/src/commands/*.test.ts` | Unit + integration with temp dirs |
 | CLI utilities | `packages/cli/src/utils/*.test.ts` | Unit tests |
 

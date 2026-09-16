@@ -19,6 +19,7 @@ export async function listComponents(): Promise<ReturnType<typeof textResponse>>
 
     ---
     Add a component: \`npx pdfx-cli add <name>\`
+    Or with shadcn: \`npx shadcn@latest add @pdfx/<name>\`
     See full source, props, and exact export name: call \`get_component\` with the component name
   `);
 }

@@ -94,8 +94,8 @@ packages/cli       → CLI / MCP server (pdfx-cli on npm)
 packages/shared    → Cross-package types & schemas (Zod)
 ```
 
-The registry lives at `apps/www/public/r/`. Each component is a JSON file built by
-`pnpm build:registry` from source in `apps/www/src/registry/components/`.
+The registry lives at `apps/www/public/r/` (pdfx-cli). A parallel shadcn catalog is generated at
+`apps/www/public/r/shadcn/` (namespace `@pdfx`). Never hand-edit either tree.
 
 ## Component File Structure
 

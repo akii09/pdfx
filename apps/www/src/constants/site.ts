@@ -8,3 +8,22 @@ export const REGISTRY_ORIGIN = `${SITE_URL}/r`;
 export const SCHEMA_REGISTRY_URL = `${SITE_URL}/schema/registry.json`;
 
 export const SCHEMA_REGISTRY_ITEM_URL = `${SITE_URL}/schema/registry-item.json`;
+
+/** shadcn CLI namespace. Always install as `@pdfx/<name>`, never a bare name. */
+export const SHADCN_REGISTRY_NAMESPACE = '@pdfx';
+
+/** Item URL template for `components.json` → `registries["@pdfx"]`. */
+export const SHADCN_REGISTRY_URL = `${SITE_URL}/r/shadcn/{name}.json`;
+
+/** Catalog URL for `npx shadcn@latest list` / `search`. */
+export const SHADCN_REGISTRY_CATALOG_URL = `${SITE_URL}/r/shadcn/registry.json`;
+
+export const SHADCN_REGISTRY_ADD_COMMAND = `npx shadcn@latest registry add ${SHADCN_REGISTRY_NAMESPACE}=${SHADCN_REGISTRY_URL}`;
+
+export const SHADCN_ADD_EXAMPLE_COMMAND = `npx shadcn@latest add ${SHADCN_REGISTRY_NAMESPACE}/heading ${SHADCN_REGISTRY_NAMESPACE}/text ${SHADCN_REGISTRY_NAMESPACE}/invoice-modern`;
+
+export const SHADCN_LIST_COMMAND = `npx shadcn@latest list ${SHADCN_REGISTRY_NAMESPACE}`;
+
+export function shadcnAddCommand(name: string): string {
+  return `npx shadcn@latest add ${SHADCN_REGISTRY_NAMESPACE}/${name}`;
+}

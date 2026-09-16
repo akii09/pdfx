@@ -38,9 +38,9 @@ const sampleData: InvoiceCorporateData = {
     { description: 'Annual Support Package', quantity: 1, unitPrice: 8500 },
   ],
   summary: {
-    subtotal: 57000,
-    tax: 4560,
-    total: 61560,
+    subtotal: 56500,
+    tax: 4520,
+    total: 61020,
   },
   paymentTerms: {
     dueDate: 'March 24, 2026',
@@ -194,7 +194,12 @@ function InvoiceCorporateContent({ data }: { data: InvoiceCorporateData }) {
             </View>
           </View>
         </View>
-        <PageFooter leftText={data.notes} rightText="Page 1 of 1" sticky pagePadding={25} />
+        <PageFooter
+          leftText={data.notes}
+          rightText={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
+          sticky
+          pagePadding={25}
+        />
       </Page>
     </Document>
   );

@@ -41,6 +41,8 @@ export async function getAddCommand(
 
     **Before running:** make sure \`pdfx.json\` exists. Run \`npx pdfx-cli init\` if not.
 
+    **shadcn CLI alternative:** \`npx shadcn@latest add ${args.items.map((name) => `@pdfx/${name}`).join(' ')}\` (requires the \`@pdfx\` registry in \`components.json\`).
+
     **See source first:** call \`${inspectTool}\` with the item name to review the code before adding.
 
     **After adding:** call \`get_audit_checklist\` to verify your setup is correct.

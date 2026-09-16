@@ -150,6 +150,19 @@ export async function getInstallation(
 
     Components are copied into \`src/components/pdfx/\`. You own the source — there is no runtime package dependency.
 
+    ## Alternative — shadcn CLI
+
+    If the project already has \`components.json\`, register \`@pdfx\` and install through shadcn. Files land in the same \`src/components/pdfx/\` tree. Always use the \`@pdfx/\` namespace. Leave \`{name}\` as a placeholder in the registry URL.
+
+    \`\`\`bash
+    npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
+    npx shadcn@latest add @pdfx/heading @pdfx/text @pdfx/table
+    \`\`\`
+
+    Theme files install automatically via \`@pdfx/theme\`, which ships the \`professional\` preset — shadcn has no preset picker, so use \`pdfx-cli theme switch\` to change it, and avoid \`--overwrite\` once \`src/lib/pdfx-theme.ts\` is customized.
+
+    These \`target\` paths are fixed: shadcn writes them verbatim instead of following \`components.json\` aliases, so a project without a \`src/\` directory gets one. Keep using \`pdfx-cli\` for \`theme switch\`, \`diff\`, and the MCP server.
+
     ## Step 4 — Or start with a complete document block
 
     \`\`\`bash
