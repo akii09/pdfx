@@ -34,7 +34,7 @@ npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
 npx shadcn@latest add @pdfx/badge @pdfx/table
 ```
 
-Always use the `@pdfx/` namespace. `npx pdfx-cli init` registers it automatically when `components.json` already exists.
+Always use the `@pdfx/` namespace. When `components.json` already exists, `npx pdfx-cli init` offers to register it for you — it prompts first and uses the registry URL you configured. Pass `--register-shadcn` or `--no-register-shadcn` to answer non-interactively.
 
 ## Available Components
 - `alert`

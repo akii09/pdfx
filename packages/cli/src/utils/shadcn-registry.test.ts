@@ -6,6 +6,8 @@ import {
   SHADCN_NAMESPACE,
   SHADCN_REGISTRY_URL,
   registerShadcnNamespace,
+  shadcnRegistryAddCommand,
+  shadcnRegistryUrlFor,
 } from './shadcn-registry.js';
 
 function tempDir(): string {
@@ -91,5 +93,70 @@ describe('registerShadcnNamespace', () => {
     } finally {
       writeSpy.mockRestore();
     }
+  });
+
+  it('uses the project registry so a self-hosted registry stays self-hosted', () => {
+    const dir = tempDir();
+    dirs.push(dir);
+    const configPath = path.join(dir, 'components.json');
+    fs.writeFileSync(configPath, JSON.stringify({ aliases: {} }, null, 2));
+
+    expect(registerShadcnNamespace(dir, 'https://registry.internal/r')).toEqual({
+      updated: true,
+      reason: 'registered',
+    });
+
+    const written = JSON.parse(fs.readFileSync(configPath, 'utf-8')) as {
+      registries: Record<string, string>;
+    };
+    expect(written.registries[SHADCN_NAMESPACE]).toBe(
+      'https://registry.internal/r/shadcn/{name}.json'
+    );
+  });
+
+  it('preserves the existing indentation and trailing newline', () => {
+    const dir = tempDir();
+    dirs.push(dir);
+    const configPath = path.join(dir, 'components.json');
+    fs.writeFileSync(configPath, `${JSON.stringify({ aliases: { ui: '@/ui' } }, null, 4)}\n`);
+
+    expect(registerShadcnNamespace(dir).updated).toBe(true);
+
+    const raw = fs.readFileSync(configPath, 'utf-8');
+    expect(raw).toContain('\n    "aliases"');
+    expect(raw.endsWith('\n')).toBe(true);
+  });
+
+  it('preserves tab indentation', () => {
+    const dir = tempDir();
+    dirs.push(dir);
+    const configPath = path.join(dir, 'components.json');
+    fs.writeFileSync(configPath, JSON.stringify({ aliases: { ui: '@/ui' } }, null, '\t'));
+
+    expect(registerShadcnNamespace(dir).updated).toBe(true);
+    expect(fs.readFileSync(configPath, 'utf-8')).toContain('\n\t"aliases"');
+  });
+});
+
+describe('shadcnRegistryUrlFor', () => {
+  it('keeps {name} literal and tolerates a trailing slash', () => {
+    expect(shadcnRegistryUrlFor('https://example.com/r')).toBe(
+      'https://example.com/r/shadcn/{name}.json'
+    );
+    expect(shadcnRegistryUrlFor('https://example.com/r///')).toBe(
+      'https://example.com/r/shadcn/{name}.json'
+    );
+  });
+
+  it('backs the public default', () => {
+    expect(SHADCN_REGISTRY_URL).toMatch(/\/shadcn\/\{name\}\.json$/);
+  });
+});
+
+describe('shadcnRegistryAddCommand', () => {
+  it('addresses the namespace at the project registry', () => {
+    expect(shadcnRegistryAddCommand('https://registry.internal/r')).toBe(
+      'npx shadcn@latest registry add @pdfx=https://registry.internal/r/shadcn/{name}.json'
+    );
   });
 });

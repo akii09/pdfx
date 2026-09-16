@@ -171,10 +171,10 @@ export default function Installation() {
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">theme switch</code>,{' '}
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">diff</code>, and MCP.{' '}
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">npx pdfx-cli init</code>{' '}
-                also writes this{' '}
+                offers to write this{' '}
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx</code> entry when{' '}
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">components.json</code>{' '}
-                already exists.
+                already exists — it asks first, and never edits the file unprompted.
               </p>
             </div>
           )}
@@ -433,10 +433,13 @@ npx shadcn@latest list @pdfx`}
             <code className="rounded bg-muted px-1 py-0.5 font-mono">diff</code>, blocks-aware
             prompts, and the MCP server. Running{' '}
             <code className="rounded bg-muted px-1 py-0.5 font-mono">npx pdfx-cli init</code> in a
-            shadcn project also writes the{' '}
-            <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx</code> entry into an
-            existing <code className="rounded bg-muted px-1 py-0.5 font-mono">components.json</code>
-            .
+            shadcn project offers to add the{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx</code> entry to an
+            existing <code className="rounded bg-muted px-1 py-0.5 font-mono">components.json</code>{' '}
+            — it prompts before writing, and uses whichever registry URL you configured. Pass{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">--register-shadcn</code> (or
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">--no-register-shadcn</code>) to
+            skip the question in CI.
           </div>
         </div>
       </section>

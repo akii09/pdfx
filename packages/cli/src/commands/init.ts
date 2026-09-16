@@ -10,12 +10,48 @@ import { generateThemeContextFile, generateThemeFile } from '../utils/generate-t
 import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
 import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
-import { registerShadcnNamespace } from '../utils/shadcn-registry.js';
+import {
+  hasComponentsJson,
+  registerShadcnNamespace,
+  shadcnRegistryAddCommand,
+} from '../utils/shadcn-registry.js';
 import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
 
 interface InitOptions {
   /** Skip all prompts and accept defaults. Suitable for CI / non-interactive environments. */
   yes?: boolean;
+  /**
+   * Register `@pdfx` in an existing shadcn `components.json`. Left undefined we
+   * ask; `components.json` is shadcn's file, so we never rewrite it unprompted.
+   */
+  registerShadcn?: boolean;
+}
+
+/**
+ * `components.json` belongs to shadcn, not to us, so registering `@pdfx` in it
+ * is opt-in: explicit flag wins, `--yes` declines rather than touching a file
+ * the user did not ask us to edit, and otherwise we ask.
+ */
+async function resolveShadcnConsent(cwd: string, options: InitOptions): Promise<boolean> {
+  if (!hasComponentsJson(cwd)) return false;
+  if (options.registerShadcn !== undefined) return options.registerShadcn;
+
+  if (options.yes) {
+    console.log(
+      chalk.dim(
+        '  Found components.json — re-run with --register-shadcn to add the @pdfx registry.'
+      )
+    );
+    return false;
+  }
+
+  const { register } = await prompts({
+    type: 'confirm',
+    name: 'register',
+    message: 'Found components.json. Register the @pdfx registry for the shadcn CLI?',
+    initial: true,
+  });
+  return register === true;
 }
 
 export async function init(options: InitOptions = {}) {
@@ -183,6 +219,9 @@ export async function init(options: InitOptions = {}) {
     process.exit(1);
   }
 
+  // Asked before the spinner starts — a prompt under a live spinner is unreadable.
+  const shouldRegisterShadcn = await resolveShadcnConsent(process.cwd(), options);
+
   const spinner = ora('Creating config and theme files...').start();
 
   try {
@@ -201,13 +240,15 @@ export async function init(options: InitOptions = {}) {
 
     spinner.succeed(`Created pdfx.json + ${config.theme} (${presetName} theme)`);
 
-    const shadcn = registerShadcnNamespace(process.cwd());
+    const shadcn = shouldRegisterShadcn
+      ? registerShadcnNamespace(process.cwd(), config.registry)
+      : { updated: false, reason: 'declined' as const };
     if (shadcn.reason === 'registered') {
       console.log(chalk.green('  Registered @pdfx in components.json (shadcn CLI)'));
     } else if (shadcn.reason === 'write-failed') {
       console.log(
         chalk.yellow(
-          '  Could not update components.json. Register @pdfx with: npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json'
+          `  Could not update components.json. Register @pdfx with: ${shadcnRegistryAddCommand(config.registry)}`
         )
       );
     }
@@ -229,11 +270,7 @@ export async function init(options: InitOptions = {}) {
     if (shadcn.reason === 'registered' || shadcn.reason === 'already-set') {
       console.log(chalk.cyan('  npx shadcn@latest add @pdfx/heading'));
     } else {
-      console.log(
-        chalk.dim(
-          '  shadcn: npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json'
-        )
-      );
+      console.log(chalk.dim(`  shadcn: ${shadcnRegistryAddCommand(config.registry)}`));
     }
     console.log(chalk.dim(`\n  Components: ${path.resolve(process.cwd(), answers.componentDir)}`));
     console.log(chalk.dim(`  Blocks: ${path.resolve(process.cwd(), config.blockDir)}`));
