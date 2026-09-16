@@ -311,6 +311,7 @@ export default function InvoicesContainerPage() {
 
   const current = TEMPLATES.find((t) => t.id === activeId) ?? TEMPLATES[0];
   const installCmd = `npx pdfx-cli block add ${current.id}`;
+  const shadcnCmd = `npx shadcn@latest add @pdfx/${current.id}`;
 
   useDocumentTitle('Invoice Blocks');
 
@@ -337,13 +338,23 @@ export default function InvoicesContainerPage() {
             .
           </p>
         </div>
-        <div className="shrink-0 flex items-center gap-1.5 bg-muted/60 rounded-lg px-3 py-2 border border-border text-xs font-mono text-muted-foreground">
-          <Terminal className="h-3.5 w-3.5 text-primary shrink-0" />
-          <span>{installCmd}</span>
-          <CopyButton
-            value={installCmd}
-            className="ml-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded p-1 transition-colors"
-          />
+        <div className="shrink-0 flex flex-col gap-1.5">
+          <div className="flex items-center gap-1.5 bg-muted/60 rounded-lg px-3 py-2 border border-border text-xs font-mono text-muted-foreground">
+            <Terminal className="h-3.5 w-3.5 text-primary shrink-0" />
+            <span>{installCmd}</span>
+            <CopyButton
+              value={installCmd}
+              className="ml-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded p-1 transition-colors"
+            />
+          </div>
+          <div className="flex items-center gap-1.5 bg-muted/60 rounded-lg px-3 py-2 border border-border text-xs font-mono text-muted-foreground">
+            <Terminal className="h-3.5 w-3.5 text-primary shrink-0" />
+            <span>{shadcnCmd}</span>
+            <CopyButton
+              value={shadcnCmd}
+              className="ml-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded p-1 transition-colors"
+            />
+          </div>
         </div>
       </div>
 

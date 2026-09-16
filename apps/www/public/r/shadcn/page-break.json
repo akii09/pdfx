@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "page-break",
+  "type": "registry:ui",
+  "title": "PageBreak",
+  "description": "Forces content after it to start on a new page",
+  "author": "akii09 <https://github.com/akii09>",
+  "docs": "https://getpdfx.dev/components/page-break",
+  "categories": [
+    "pdf"
+  ],
+  "dependencies": [
+    "@react-pdf/renderer"
+  ],
+  "files": [
+    {
+      "path": "components/pdfx/page-break/pdfx-page-break.tsx",
+      "type": "registry:component",
+      "target": "src/components/pdfx/page-break/pdfx-page-break.tsx",
+      "content": "import { View } from '@react-pdf/renderer';\nimport type { Style } from '@react-pdf/types';\n\n/**\n * Forces a page break at the current position in the PDF document.\n * Props - `style`\n * @see {@link PageBreakProps}\n */\nexport interface PageBreakProps {\n  /** Custom styles to merge with component defaults */\n  style?: Style;\n  children?: never;\n}\n\nexport function PageBreak({ style }: PageBreakProps) {\n  return <View break style={style} />;\n}\n"
+    }
+  ]
+}

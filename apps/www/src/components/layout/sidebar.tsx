@@ -22,7 +22,10 @@ const sections: SidebarSection[] = [
   },
   {
     title: 'Installation',
-    links: [{ title: 'Setup Guide', href: '/installation' }],
+    links: [
+      { title: 'Setup Guide', href: '/installation' },
+      { title: 'shadcn CLI', href: '/installation#shadcn' },
+    ],
   },
   {
     title: 'AI Tools',

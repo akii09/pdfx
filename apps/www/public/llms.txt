@@ -18,6 +18,10 @@ npx pdfx-cli init
 # Add a component — source is copied into YOUR codebase
 npx pdfx-cli add table
 
+# Or with the shadcn CLI (always namespaced)
+npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
+npx shadcn@latest add @pdfx/table
+
 # Add all components at once
 npx pdfx-cli add --all
 
@@ -157,7 +161,8 @@ pdfx/
         index.json           # Registry manifest
       src/lib/
         build-registry.ts    # Transforms source → public/r/*.json
-      public/r/              # HTTP-served JSON consumed by the CLI
+      public/r/              # HTTP-served JSON consumed by pdfx-cli
+        shadcn/              # shadcn CLI catalog + items (@pdfx namespace)
   packages/
     shared/                  # Types, theme presets, Zod schemas, errors
     cli/                     # pdfx-cli — all CLI commands
@@ -169,9 +174,10 @@ pdfx/
 The website and the registry are the same thing — same model as shadcn/ui.
 
 1. Component source lives in `apps/www/src/registry/components/<name>/`
-2. `pnpm build:registry` runs `build-registry.ts` which transforms source into `public/r/<name>.json`
+2. `pnpm build:registry` runs `build-registry.ts` which transforms source into `public/r/<name>.json` (pdfx-cli) and `public/r/shadcn/<name>.json` (shadcn CLI)
 3. `pdfx add <name>` fetches that JSON over HTTPS and writes the files into the user's project
-4. No PDFx package is installed — the user owns the code from that point
+4. `npx shadcn add @pdfx/<name>` installs the same files via the namespaced registry
+5. No PDFx package is installed — the user owns the code from that point
 
 ## Documentation
 

@@ -82,6 +82,17 @@ packages/
 
 The docs site (`apps/www`) serves component source files as JSON. When someone runs `pdfx add badge`, the CLI fetches the badge entry from `registry/index.json`, resolves the file list, and copies the source directly into their project. No runtime dependency on PDFx, the files are theirs once installed.
 
+`pnpm build:registry` emits **two** trees from the same source:
+
+| URL | Consumer |
+|---|---|
+| `/r/index.json`, `/r/{name}.json`, `/r/blocks/{name}.json` | pdfx-cli (do not rename or change `registryDependencies: ["theme"]`) |
+| `/r/shadcn/registry.json`, `/r/shadcn/{name}.json` | shadcn CLI (`@pdfx/<name>`) |
+
+Never hand-edit `public/r/` or `public/r/shadcn/`. After changing a component, run `pnpm build:registry` and commit the generated JSON.
+
+To list PDFx in the official shadcn registry directory after this is deployed, open a PR against [shadcn-ui/ui](https://github.com/shadcn-ui/ui) adding `@pdfx` → `https://getpdfx.dev/r/shadcn/{name}.json` in `apps/v4/registry/directory.json`. The catalog must stay flat under `/r/shadcn/` with no `content` on catalog file entries.
+
 ---
 
 ## Monorepo Packages

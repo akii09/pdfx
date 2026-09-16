@@ -1,0 +1,1064 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "pdfx",
+  "homepage": "https://getpdfx.dev",
+  "items": [
+    {
+      "name": "theme",
+      "type": "registry:lib",
+      "title": "PDFx Theme",
+      "description": "Theme tokens and React context used by every PDFx component.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/installation#theming",
+      "categories": [
+        "theme"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "lib/pdfx-theme.ts",
+          "type": "registry:lib",
+          "target": "src/lib/pdfx-theme.ts"
+        },
+        {
+          "path": "lib/pdfx-theme-context.tsx",
+          "type": "registry:lib",
+          "target": "src/lib/pdfx-theme-context.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "Callout boxes with info, success, warning, and error variants",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/alert",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/alert/pdfx-alert.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/alert/pdfx-alert.tsx"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Inline status badge with 7 color variants and 3 sizes",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/badge",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/badge/pdfx-badge.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/badge/pdfx-badge.tsx"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Bordered container card with title, 3 variants and padding control",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/card",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/card/pdfx-card.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/card/pdfx-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "DataTable",
+      "description": "Convenience API: columns + data array. Uses Table/TableRow/TableCell internally.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/data-table",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme",
+        "@pdfx/table"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/data-table/pdfx-data-table.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/data-table/pdfx-data-table.tsx"
+        },
+        {
+          "path": "components/pdfx/data-table/pdfx-data-table.styles.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/data-table/pdfx-data-table.styles.ts"
+        },
+        {
+          "path": "components/pdfx/data-table/pdfx-data-table.types.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/data-table/pdfx-data-table.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "divider",
+      "type": "registry:ui",
+      "title": "Divider",
+      "description": "Horizontal rule with theme-based spacing",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/divider",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/divider/pdfx-divider.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/divider/pdfx-divider.tsx"
+        }
+      ]
+    },
+    {
+      "name": "form",
+      "type": "registry:ui",
+      "title": "Form",
+      "description": "Form layout with labeled fields in single, two-column, or three-column layouts",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/form",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/form/pdfx-form.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/form/pdfx-form.tsx"
+        },
+        {
+          "path": "components/pdfx/form/pdfx-form.styles.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/form/pdfx-form.styles.ts"
+        },
+        {
+          "path": "components/pdfx/form/pdfx-form.types.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/form/pdfx-form.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "graph",
+      "type": "registry:ui",
+      "title": "Graph",
+      "description": "SVG chart component with bar, line, area, pie, donut, and horizontal-bar variants",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/graph",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/graph/pdfx-graph.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/graph/pdfx-graph.tsx"
+        },
+        {
+          "path": "components/pdfx/graph/pdfx-graph.types.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/graph/pdfx-graph.types.ts"
+        },
+        {
+          "path": "components/pdfx/graph/pdfx-graph.styles.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/graph/pdfx-graph.styles.ts"
+        },
+        {
+          "path": "components/pdfx/graph/pdfx-graph.utils.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/graph/pdfx-graph.utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "heading",
+      "type": "registry:ui",
+      "title": "Heading",
+      "description": "PDF heading component with 6 levels (h1-h6)",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/heading",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/heading/pdfx-heading.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/heading/pdfx-heading.tsx"
+        }
+      ]
+    },
+    {
+      "name": "keep-together",
+      "type": "registry:ui",
+      "title": "KeepTogether",
+      "description": "Prevents page breaks within wrapped content",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/keep-together",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/keep-together/pdfx-keep-together.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/keep-together/pdfx-keep-together.tsx"
+        }
+      ]
+    },
+    {
+      "name": "key-value",
+      "type": "registry:ui",
+      "title": "KeyValue",
+      "description": "Label-value pair display with horizontal/vertical layout and dividers",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/key-value",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/key-value/pdfx-key-value.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/key-value/pdfx-key-value.tsx"
+        }
+      ]
+    },
+    {
+      "name": "link",
+      "type": "registry:ui",
+      "title": "Link",
+      "description": "PDF link component for hyperlinks",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/link",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/link/pdfx-link.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/link/pdfx-link.tsx"
+        }
+      ]
+    },
+    {
+      "name": "list",
+      "type": "registry:ui",
+      "title": "List",
+      "description": "List component with bullet, numbered, checklist, icon, multi-level, and descriptive variants",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/list",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/list/pdfx-list.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/list/pdfx-list.tsx"
+        },
+        {
+          "path": "components/pdfx/list/pdfx-list.styles.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/list/pdfx-list.styles.ts"
+        },
+        {
+          "path": "components/pdfx/list/pdfx-list.types.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/list/pdfx-list.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "page-break",
+      "type": "registry:ui",
+      "title": "PageBreak",
+      "description": "Forces content after it to start on a new page",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/page-break",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/page-break/pdfx-page-break.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/page-break/pdfx-page-break.tsx"
+        }
+      ]
+    },
+    {
+      "name": "page-footer",
+      "type": "registry:ui",
+      "title": "PageFooter",
+      "description": "Fixed or inline page footer with 6 layout variants and contact info support",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/page-footer",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/page-footer/pdfx-page-footer.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/page-footer/pdfx-page-footer.tsx"
+        }
+      ]
+    },
+    {
+      "name": "page-header",
+      "type": "registry:ui",
+      "title": "PageHeader",
+      "description": "Fixed or inline page header with 7 layout variants including logo support",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/page-header",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/page-header/pdfx-page-header.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/page-header/pdfx-page-header.tsx"
+        }
+      ]
+    },
+    {
+      "name": "page-number",
+      "type": "registry:ui",
+      "title": "PageNumber",
+      "description": "Dynamic page numbers with customizable format and alignment",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/page-number",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/page-number/pdfx-page-number.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/page-number/pdfx-page-number.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pdf-image",
+      "type": "registry:ui",
+      "title": "Image",
+      "description": "Image component with 7 display variants, fit modes, and optional captions",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/pdf-image",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/pdf-image/pdfx-pdf-image.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/pdf-image/pdfx-pdf-image.tsx"
+        }
+      ]
+    },
+    {
+      "name": "qrcode",
+      "type": "registry:ui",
+      "title": "QRCode",
+      "description": "Native SVG QR code for URLs, payments, and document verification",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/qrcode",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer",
+        "qrcode"
+      ],
+      "devDependencies": [
+        "@types/qrcode"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/qrcode/pdfx-qrcode.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/qrcode/pdfx-qrcode.tsx"
+        }
+      ]
+    },
+    {
+      "name": "section",
+      "type": "registry:ui",
+      "title": "Section",
+      "description": "Logical section with theme-based spacing",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/section",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/section/pdfx-section.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/section/pdfx-section.tsx"
+        }
+      ]
+    },
+    {
+      "name": "signature",
+      "type": "registry:ui",
+      "title": "Signature",
+      "description": "Signature block with single, double, and inline variants",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/signature",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/signature/pdfx-signature.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/signature/pdfx-signature.tsx"
+        }
+      ]
+    },
+    {
+      "name": "stack",
+      "type": "registry:ui",
+      "title": "Stack",
+      "description": "Vertical layout with theme-based gap",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/stack",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/stack/pdfx-stack.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/stack/pdfx-stack.tsx"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Composable table with Table, TableRow, TableCell",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/table",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/table/pdfx-table.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/table/pdfx-table.tsx"
+        },
+        {
+          "path": "components/pdfx/table/pdfx-table.styles.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/table/pdfx-table.styles.ts"
+        },
+        {
+          "path": "components/pdfx/table/pdfx-table.types.ts",
+          "type": "registry:component",
+          "target": "src/components/pdfx/table/pdfx-table.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "text",
+      "type": "registry:ui",
+      "title": "Text",
+      "description": "PDF text component for paragraphs",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/text",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/text/pdfx-text.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/text/pdfx-text.tsx"
+        }
+      ]
+    },
+    {
+      "name": "watermark",
+      "type": "registry:ui",
+      "title": "Watermark",
+      "description": "Diagonal or positioned text overlay for DRAFT, CONFIDENTIAL, PAID, etc.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/components/watermark",
+      "categories": [
+        "pdf"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "components/pdfx/watermark/pdfx-watermark.tsx",
+          "type": "registry:component",
+          "target": "src/components/pdfx/watermark/pdfx-watermark.tsx"
+        }
+      ]
+    },
+    {
+      "name": "invoice-classic",
+      "type": "registry:block",
+      "title": "Invoice Classic",
+      "description": "Professional A4 invoice with logo-left header, three-column billing section, and zebra-striped grid table.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/invoices",
+      "categories": [
+        "pdf",
+        "invoice"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/page-header",
+        "@pdfx/page-footer",
+        "@pdfx/table",
+        "@pdfx/key-value",
+        "@pdfx/section",
+        "@pdfx/text",
+        "@pdfx/pdf-image",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/invoice-classic/invoice-classic.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-classic/invoice-classic.tsx"
+        },
+        {
+          "path": "templates/pdfx/invoice-classic/invoice-classic.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-classic/invoice-classic.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "invoice-consultant",
+      "type": "registry:block",
+      "title": "Invoice Consultant",
+      "description": "Consultant-focused invoice with hourly rate breakdown, project summary, and professional styling.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/invoices",
+      "categories": [
+        "pdf",
+        "invoice"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/page-header",
+        "@pdfx/page-footer",
+        "@pdfx/table",
+        "@pdfx/key-value",
+        "@pdfx/section",
+        "@pdfx/text",
+        "@pdfx/divider",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/invoice-consultant/invoice-consultant.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-consultant/invoice-consultant.tsx"
+        },
+        {
+          "path": "templates/pdfx/invoice-consultant/invoice-consultant.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-consultant/invoice-consultant.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "invoice-corporate",
+      "type": "registry:block",
+      "title": "Invoice Corporate",
+      "description": "Enterprise invoice with formal layout, purchase order fields, and approval signatures.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/invoices",
+      "categories": [
+        "pdf",
+        "invoice"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/page-header",
+        "@pdfx/page-footer",
+        "@pdfx/table",
+        "@pdfx/key-value",
+        "@pdfx/text",
+        "@pdfx/signature",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/invoice-corporate/invoice-corporate.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-corporate/invoice-corporate.tsx"
+        },
+        {
+          "path": "templates/pdfx/invoice-corporate/invoice-corporate.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-corporate/invoice-corporate.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "invoice-creative",
+      "type": "registry:block",
+      "title": "Invoice Creative",
+      "description": "Creative invoice with accent sidebar, modern typography, and vibrant color highlights.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/invoices",
+      "categories": [
+        "pdf",
+        "invoice"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/page-header",
+        "@pdfx/page-footer",
+        "@pdfx/table",
+        "@pdfx/key-value",
+        "@pdfx/section",
+        "@pdfx/text",
+        "@pdfx/badge",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/invoice-creative/invoice-creative.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-creative/invoice-creative.tsx"
+        },
+        {
+          "path": "templates/pdfx/invoice-creative/invoice-creative.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-creative/invoice-creative.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "invoice-minimal",
+      "type": "registry:block",
+      "title": "Invoice Minimal",
+      "description": "Clean minimal layout with inline invoice stamp, two-column billing info, and compact table.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/invoices",
+      "categories": [
+        "pdf",
+        "invoice"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/page-header",
+        "@pdfx/page-footer",
+        "@pdfx/table",
+        "@pdfx/key-value",
+        "@pdfx/section",
+        "@pdfx/text",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/invoice-minimal/invoice-minimal.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-minimal/invoice-minimal.tsx"
+        },
+        {
+          "path": "templates/pdfx/invoice-minimal/invoice-minimal.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-minimal/invoice-minimal.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "invoice-modern",
+      "type": "registry:block",
+      "title": "Invoice Modern",
+      "description": "Branded full-width banner header, horizontal invoice meta strip, and primary-header table.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/invoices",
+      "categories": [
+        "pdf",
+        "invoice"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/page-header",
+        "@pdfx/page-footer",
+        "@pdfx/table",
+        "@pdfx/key-value",
+        "@pdfx/section",
+        "@pdfx/text",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/invoice-modern/invoice-modern.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-modern/invoice-modern.tsx"
+        },
+        {
+          "path": "templates/pdfx/invoice-modern/invoice-modern.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/invoice-modern/invoice-modern.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "report-financial",
+      "type": "registry:block",
+      "title": "Financial Report",
+      "description": "Executive financial report with KPI cards, trend chart, delivery table, and highlights section.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/reports",
+      "categories": [
+        "pdf",
+        "report"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/badge",
+        "@pdfx/data-table",
+        "@pdfx/divider",
+        "@pdfx/graph",
+        "@pdfx/key-value",
+        "@pdfx/list",
+        "@pdfx/page-footer",
+        "@pdfx/page-header",
+        "@pdfx/section",
+        "@pdfx/stack",
+        "@pdfx/text",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/report-financial/report-financial.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-financial/report-financial.tsx"
+        },
+        {
+          "path": "templates/pdfx/report-financial/report-layout.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-financial/report-layout.tsx"
+        },
+        {
+          "path": "templates/pdfx/report-financial/report.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-financial/report.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "report-marketing",
+      "type": "registry:block",
+      "title": "Growth Report",
+      "description": "Growth and marketing report with acquisition trendline, channel performance, and execution highlights.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/reports",
+      "categories": [
+        "pdf",
+        "report"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/badge",
+        "@pdfx/data-table",
+        "@pdfx/divider",
+        "@pdfx/graph",
+        "@pdfx/key-value",
+        "@pdfx/list",
+        "@pdfx/page-footer",
+        "@pdfx/page-header",
+        "@pdfx/section",
+        "@pdfx/stack",
+        "@pdfx/text",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/report-marketing/report-marketing.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-marketing/report-marketing.tsx"
+        },
+        {
+          "path": "templates/pdfx/report-marketing/report-layout.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-marketing/report-layout.tsx"
+        },
+        {
+          "path": "templates/pdfx/report-marketing/report.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-marketing/report.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "report-operations",
+      "type": "registry:block",
+      "title": "Operations Report",
+      "description": "Operations and delivery report covering SLA health, throughput trends, and risk tracking.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/reports",
+      "categories": [
+        "pdf",
+        "report"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/badge",
+        "@pdfx/data-table",
+        "@pdfx/divider",
+        "@pdfx/graph",
+        "@pdfx/key-value",
+        "@pdfx/list",
+        "@pdfx/page-footer",
+        "@pdfx/page-header",
+        "@pdfx/section",
+        "@pdfx/stack",
+        "@pdfx/text",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/report-operations/report-operations.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-operations/report-operations.tsx"
+        },
+        {
+          "path": "templates/pdfx/report-operations/report-layout.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-operations/report-layout.tsx"
+        },
+        {
+          "path": "templates/pdfx/report-operations/report.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-operations/report.types.ts"
+        }
+      ]
+    },
+    {
+      "name": "report-security",
+      "type": "registry:block",
+      "title": "Security Report",
+      "description": "Security posture report with vulnerability trend tracking, remediation table, and risk summary.",
+      "author": "akii09 <https://github.com/akii09>",
+      "docs": "https://getpdfx.dev/blocks/reports",
+      "categories": [
+        "pdf",
+        "report"
+      ],
+      "dependencies": [
+        "@react-pdf/renderer"
+      ],
+      "registryDependencies": [
+        "@pdfx/badge",
+        "@pdfx/data-table",
+        "@pdfx/divider",
+        "@pdfx/graph",
+        "@pdfx/key-value",
+        "@pdfx/list",
+        "@pdfx/page-footer",
+        "@pdfx/page-header",
+        "@pdfx/section",
+        "@pdfx/stack",
+        "@pdfx/text",
+        "@pdfx/theme"
+      ],
+      "files": [
+        {
+          "path": "templates/pdfx/report-security/report-security.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-security/report-security.tsx"
+        },
+        {
+          "path": "templates/pdfx/report-security/report-layout.tsx",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-security/report-layout.tsx"
+        },
+        {
+          "path": "templates/pdfx/report-security/report.types.ts",
+          "type": "registry:file",
+          "target": "src/blocks/pdfx/report-security/report.types.ts"
+        }
+      ]
+    }
+  ]
+}

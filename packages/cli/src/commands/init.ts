@@ -10,6 +10,7 @@ import { generateThemeContextFile, generateThemeFile } from '../utils/generate-t
 import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
 import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
+import { registerShadcnNamespace } from '../utils/shadcn-registry.js';
 import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
 
 interface InitOptions {
@@ -199,6 +200,12 @@ export async function init(options: InitOptions = {}) {
     fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
 
     spinner.succeed(`Created pdfx.json + ${config.theme} (${presetName} theme)`);
+
+    const shadcn = registerShadcnNamespace(process.cwd());
+    if (shadcn.reason === 'registered') {
+      console.log(chalk.green('  Registered @pdfx in components.json (shadcn CLI)'));
+    }
+
     posthog.capture({
       distinctId,
       event: 'cli_initialized',
@@ -213,6 +220,15 @@ export async function init(options: InitOptions = {}) {
     console.log(chalk.green('\nSuccess! You can now run:'));
     console.log(chalk.cyan('  npx pdfx-cli@latest add heading'));
     console.log(chalk.cyan('  npx pdfx-cli@latest block add invoice-classic'));
+    if (shadcn.reason === 'registered' || shadcn.reason === 'already-set') {
+      console.log(chalk.cyan('  npx shadcn@latest add @pdfx/heading'));
+    } else {
+      console.log(
+        chalk.dim(
+          '  shadcn: npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json'
+        )
+      );
+    }
     console.log(chalk.dim(`\n  Components: ${path.resolve(process.cwd(), answers.componentDir)}`));
     console.log(chalk.dim(`  Blocks: ${path.resolve(process.cwd(), config.blockDir)}`));
     console.log(chalk.dim(`  Theme: ${path.resolve(process.cwd(), config.theme)}`));

@@ -5,6 +5,7 @@
  */
 export const tocItems = [
   { id: 'installation', title: 'Installation', level: 2 },
+  { id: 'shadcn', title: 'shadcn CLI', level: 2 },
   { id: 'usage', title: 'Usage', level: 2 },
   { id: 'cli-commands', title: 'CLI Commands', level: 2 },
   { id: 'theming', title: 'Theming', level: 2 },
@@ -83,7 +84,11 @@ npx pdfx-cli add heading text
 npx pdfx-cli list
 
 # Compare local vs registry
-npx pdfx-cli diff heading`;
+npx pdfx-cli diff heading
+
+# shadcn CLI (same files, namespaced)
+npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
+npx shadcn@latest add @pdfx/heading @pdfx/text`;
 
 export const manualStep1Deps = 'npm install @react-pdf/renderer';
 

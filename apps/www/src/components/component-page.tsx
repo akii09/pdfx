@@ -1,3 +1,4 @@
+import { shadcnAddCommand } from '@/constants/site';
 import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { CodeBlock } from './code-block';
@@ -66,6 +67,7 @@ export function ComponentPage({
           </h2>
           <InstallationTabs
             installCommand={installCommand}
+            shadcnCommand={shadcnAddCommand(componentName)}
             componentName={componentName}
             usageFilename={usageFilename}
           />

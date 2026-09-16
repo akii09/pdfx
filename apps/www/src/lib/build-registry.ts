@@ -1,8 +1,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { type Registry, registryItemSchema, registrySchema } from '@pdfx/shared';
+import { type Registry, registryItemSchema, registrySchema, themePresets } from '@pdfx/shared';
+import {
+  generateThemeContextFile,
+  generateThemeFile,
+} from '../../../../packages/cli/src/utils/generate-theme.js';
 import { SCHEMA_REGISTRY_ITEM_URL } from '../constants/site.js';
+import { type PdfxRegistryItem, buildShadcnRegistry } from './shadcn-registry.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -224,7 +229,7 @@ async function processItem(
   item: SourceRegistryItem,
   registryBaseDir: string,
   outputDir: string
-): Promise<void> {
+): Promise<PdfxRegistryItem> {
   console.log(`Processing ${item.name}...`);
 
   let itemUsesTheme = false;
@@ -289,6 +294,7 @@ async function processItem(
   await fs.writeFile(outputPath, JSON.stringify(output, null, 2));
 
   console.log(`  ${item.name}.json`);
+  return output as unknown as PdfxRegistryItem;
 }
 
 /**
@@ -460,7 +466,7 @@ async function processBlockItem(
   item: SourceRegistryItem,
   registryBaseDir: string,
   outputDir: string
-): Promise<void> {
+): Promise<PdfxRegistryItem> {
   console.log(`Processing block ${item.name}...`);
 
   const files = await Promise.all(
@@ -512,6 +518,7 @@ async function processBlockItem(
   await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`);
 
   console.log(`  ${item.name}.json (block)`);
+  return output as unknown as PdfxRegistryItem;
 }
 
 async function buildRegistry() {
@@ -583,7 +590,47 @@ async function buildRegistry() {
   await fs.writeFile(indexOutputPath, JSON.stringify(registry, null, 2));
   console.log('  index.json');
 
+  const pdfxComponents = componentResults
+    .filter((r): r is PromiseFulfilledResult<PdfxRegistryItem> => r.status === 'fulfilled')
+    .map((r) => r.value);
+  const pdfxBlocks = blockResults
+    .filter((r): r is PromiseFulfilledResult<PdfxRegistryItem> => r.status === 'fulfilled')
+    .map((r) => r.value);
+
+  await writeShadcnRegistry(outputDir, pdfxComponents, pdfxBlocks);
+
   console.log(`\nRegistry built successfully! Output: ${outputDir}\n`);
+}
+
+async function writeShadcnRegistry(
+  outputDir: string,
+  components: PdfxRegistryItem[],
+  blocks: PdfxRegistryItem[]
+): Promise<void> {
+  const shadcnDir = path.join(outputDir, 'shadcn');
+  await fs.rm(shadcnDir, { recursive: true, force: true });
+  await fs.mkdir(shadcnDir, { recursive: true });
+
+  const { catalog, items } = buildShadcnRegistry({
+    components,
+    blocks,
+    themeFile: generateThemeFile(themePresets.professional),
+    themeContextFile: generateThemeContextFile(),
+  });
+
+  await fs.writeFile(
+    path.join(shadcnDir, 'registry.json'),
+    `${JSON.stringify(catalog, null, 2)}\n`
+  );
+  console.log('  shadcn/registry.json');
+
+  await Promise.all(
+    items.map(async (item) => {
+      const itemPath = path.join(shadcnDir, `${item.name}.json`);
+      await fs.writeFile(itemPath, `${JSON.stringify(item, null, 2)}\n`);
+    })
+  );
+  console.log(`  shadcn/*.json (${items.length} items)`);
 }
 
 // Only run when executed directly (not when imported by tests)

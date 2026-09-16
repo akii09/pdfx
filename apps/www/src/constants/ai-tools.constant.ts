@@ -297,7 +297,7 @@ Key facts:
 ## Installation (one-time project setup)
 
 \\\`\\\`\\\`bash
-# 1. Initialize PDFx — creates src/lib/pdfx-theme.ts and installs @pdfx/shared
+# 1. Initialize PDFx — creates src/lib/pdfx-theme.ts
 npx pdfx-cli@latest init
 
 # 2. Add components you need
@@ -305,6 +305,10 @@ npx pdfx-cli@latest add heading text table
 
 # 3. Add a pre-built block
 npx pdfx-cli@latest block add invoice-modern
+
+# Alternative: shadcn CLI (same files, always namespaced @pdfx/…)
+npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
+npx shadcn@latest add @pdfx/heading @pdfx/text @pdfx/table
 \\\`\\\`\\\`
 
 The init command adds a theme file at src/lib/pdfx-theme.ts. All components read from this file.

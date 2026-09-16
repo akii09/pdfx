@@ -14,6 +14,13 @@ npx pdfx-cli init
 npx pdfx-cli add heading text badge
 ```
 
+Already using shadcn? Same components, namespaced so they never collide with `heading` / `table` from shadcn/ui:
+
+```bash
+npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
+npx shadcn@latest add @pdfx/heading @pdfx/text @pdfx/badge
+```
+
 ```tsx
 import { Document, Page } from '@react-pdf/renderer';
 import { Heading, Text, Badge } from './components/pdfx';

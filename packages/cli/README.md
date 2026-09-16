@@ -23,6 +23,17 @@ npx pdfx-cli@latest add badge
 npx pdfx-cli@latest add table form qrcode
 ```
 
+## shadcn CLI
+
+PDFx also publishes a shadcn-compatible registry. pdfx-cli URLs stay unchanged.
+
+```bash
+npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
+npx shadcn@latest add @pdfx/badge @pdfx/table
+```
+
+Always use the `@pdfx/` namespace. `npx pdfx-cli init` registers it automatically when `components.json` already exists.
+
 ## Available Components
 - `alert`
 - `badge`
