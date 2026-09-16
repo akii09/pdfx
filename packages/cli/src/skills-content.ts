@@ -10,12 +10,12 @@ export const PDFX_SKILLS_CONTENT = `# PDFx — AI Context Guide
 
 PDFx is an open-source, shadcn/ui-style PDF component library for React. It is built on
 @react-pdf/renderer and provides 24 type-safe components, 10 pre-built document blocks,
-3 themes, and a CLI. Components are copied into your project (not installed as npm imports
+9 themes, and a CLI. Components are copied into your project (not installed as npm imports
 that expose a public API).
 
 Key facts:
 - Package: pdfx-cli (the CLI that installs components)
-- Registry: https://pdfx.akashpise.dev/r/
+- Registry: https://getpdfx.dev/r/
 - Runtime: Works in browser AND Node.js (Next.js App Router, Express, etc.)
 - React version: 16.8+ (hooks required)
 - Peer dep: @react-pdf/renderer ^3.x

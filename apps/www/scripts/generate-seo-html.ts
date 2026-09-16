@@ -15,10 +15,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { SITE_URL } from '../src/constants/site.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, '../dist');
-const BASE_URL = 'https://pdfx.akashpise.dev';
+const BASE_URL = SITE_URL;
 
 interface RouteMeta {
   title: string;
@@ -258,8 +259,50 @@ async function main() {
     }
   }
 
+  await writeSitemap();
+
   console.log(`\nGenerated ${generated} route HTML files (${failed} failed).`);
   if (failed > 0) process.exit(1);
+}
+
+async function writeSitemap(): Promise<void> {
+  const lastmod = new Date().toISOString().slice(0, 10);
+  const paths = ['/', ...Object.keys(routes)];
+  const urls = paths
+    .map((route) => {
+      const loc = route === '/' ? `${BASE_URL}/` : `${BASE_URL}${route}`;
+      const priority =
+        route === '/'
+          ? '1.0'
+          : route === '/docs' || route === '/installation'
+            ? '0.9'
+            : route === '/components' ||
+                route === '/blocks' ||
+                route === '/mcp' ||
+                route === '/theme-builder'
+              ? '0.8'
+              : '0.7';
+      const changefreq =
+        route === '/' || route === '/docs' || route === '/components' || route === '/blocks'
+          ? 'weekly'
+          : 'monthly';
+      return `  <url>
+    <loc>${loc}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`;
+    })
+    .join('\n');
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>
+`;
+
+  await fs.writeFile(path.join(distDir, 'sitemap.xml'), xml, 'utf-8');
+  console.log('  ✓ /sitemap.xml');
 }
 
 main();

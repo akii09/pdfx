@@ -1,5 +1,5 @@
 {
-  "$schema": "https://pdfx.akashpise.dev/schema/registry-item.json",
+  "$schema": "https://getpdfx.dev/schema/registry-item.json",
   "name": "text",
   "type": "registry:ui",
   "title": "Text",

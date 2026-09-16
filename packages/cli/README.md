@@ -1,6 +1,6 @@
 # pdfx-cli
 
-> The official CLI tool for [PDFx](https://pdfx.akashpise.dev), professional pre-built PDF React components.
+> The official CLI tool for [PDFx](https://getpdfx.dev), professional pre-built PDF React components.
 
 Create beautiful, dynamic, and perfectly typed PDFs in React using standard Tailwind-like utility classes and strict property interfaces. PDFx provides a library of copy-pasteable blocks (Invoices, Reports, Receipts) that you fully own and customize inside your project.
 
@@ -93,11 +93,11 @@ await renderToFile(doc, './output.pdf');
 ```
 
 See the full guide (Express, Next.js API routes, fonts) at
-[pdfx.akashpise.dev/docs/server-side](https://pdfx.akashpise.dev/docs/server-side).
+[getpdfx.dev/docs/server-side](https://getpdfx.dev/docs/server-side).
 
 ## Documentation
 
-Full documentation, real-time PDF previews, and block gallery available at [pdfx.akashpise.dev](https://pdfx.akashpise.dev).
+Full documentation, real-time PDF previews, and block gallery available at [getpdfx.dev](https://getpdfx.dev).
 
 ## License
 

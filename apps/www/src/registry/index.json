@@ -1,7 +1,7 @@
 {
-  "$schema": "https://pdfx.akashpise.dev/schema/registry.json",
+  "$schema": "https://getpdfx.dev/schema/registry.json",
   "name": "pdfx",
-  "homepage": "https://pdfx.akashpise.dev",
+  "homepage": "https://getpdfx.dev",
   "items": [
     {
       "name": "alert",

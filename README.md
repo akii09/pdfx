@@ -5,7 +5,7 @@
 
 Pre-built PDF components for React. Copy them into your project, own them completely. Built on [@react-pdf/renderer](https://react-pdf.org/). No runtime dependency on PDFx.
 
-[![PDFx Demo](https://pdfx.akashpise.dev/og-image.png)](https://pdfx.akashpise.dev/)
+[![PDFx Demo](https://getpdfx.dev/og-image.png)](https://getpdfx.dev/)
 
 ## Get started
 
@@ -31,11 +31,11 @@ export default () => (
 
 ## Documentation
 
-Visit [pdfx.akashpise.dev](https://pdfx.akashpise.dev/docs) for the full docs, component previews, and block templates.
+Visit [getpdfx.dev](https://getpdfx.dev/docs) for the full docs, component previews, and block templates.
 
 ## Releases
 
-- User-facing release notes: [pdfx.akashpise.dev/releases](https://pdfx.akashpise.dev/releases)
+- User-facing release notes: [getpdfx.dev/releases](https://getpdfx.dev/releases)
 - CLI changelog: [packages/cli/CHANGELOG.md](./packages/cli/CHANGELOG.md)
 - GitHub Releases: [github.com/akii09/pdfx/releases](https://github.com/akii09/pdfx/releases)
 
