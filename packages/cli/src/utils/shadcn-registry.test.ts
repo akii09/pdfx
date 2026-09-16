@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   SHADCN_NAMESPACE,
   SHADCN_REGISTRY_URL,
@@ -83,11 +83,13 @@ describe('registerShadcnNamespace', () => {
     dirs.push(dir);
     const configPath = path.join(dir, 'components.json');
     fs.writeFileSync(configPath, JSON.stringify({ aliases: {} }));
-    fs.chmodSync(configPath, 0o444);
+    const writeSpy = vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {
+      throw new Error('EACCES');
+    });
     try {
       expect(registerShadcnNamespace(dir)).toEqual({ updated: false, reason: 'write-failed' });
     } finally {
-      fs.chmodSync(configPath, 0o644);
+      writeSpy.mockRestore();
     }
   });
 });
