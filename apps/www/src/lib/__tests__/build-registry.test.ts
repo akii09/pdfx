@@ -103,10 +103,15 @@ describe('transformForRegistry: PdfxTheme alias injection', () => {
     expect(content).toContain('type PdfxTheme = ReturnType<typeof usePdfxTheme>');
   });
 
-  it('does not inject alias when PdfxTheme is absent', () => {
-    const input = `import { usePdfxTheme } from '../lib/pdfx-theme-context';\nexport function Heading() {}`;
+  it('injects a PdfxTheme alias in utility modules without StyleSheet', () => {
+    const input = [
+      `import type { PdfxTheme } from '@pdfx/shared';`,
+      'export function getGraphWidth(theme: PdfxTheme): number { return 0; }',
+    ].join('\n');
     const { content } = transformForRegistry(input);
-    expect(content).not.toContain('ReturnType');
+    expect(content).not.toContain("'@pdfx/shared'");
+    expect(content).toContain("from '../lib/pdfx-theme-context'");
+    expect(content).toContain('type PdfxTheme = ReturnType<typeof usePdfxTheme>');
   });
 });
 
@@ -139,6 +144,13 @@ describe('transformForRegistry: intra-component import rewriting', () => {
     const { content } = transformForRegistry(input);
     expect(content).toContain("from './pdfx-heading.types'");
     expect(content).not.toContain("'./heading.types'");
+  });
+
+  it('rewrites ./graph.utils to ./pdfx-graph.utils', () => {
+    const input = `import { getGraphWidth } from './graph.utils';\nexport function PdfGraph() {}`;
+    const { content } = transformForRegistry(input);
+    expect(content).toContain("from './pdfx-graph.utils'");
+    expect(content).not.toContain("'./graph.utils'");
   });
 
   it('rewrites cross-component ../table/table.types to ../table/pdfx-table.types', () => {

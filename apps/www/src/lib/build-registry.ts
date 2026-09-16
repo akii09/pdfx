@@ -137,10 +137,16 @@ export function transformForRegistry(content: string): { content: string; usesTh
     } else {
       // .styles.ts files: PdfxTheme came from @pdfx/shared (now removed) and there is no
       // usePdfxTheme import yet.  Add a minimal import + alias after the StyleSheet import.
-      result = result.replace(
+      const withStylesheet = result.replace(
         /(import\s+\{[^}]*StyleSheet[^}]*\}\s+from\s+['"]@react-pdf\/renderer['"];?\n)/,
         "$1import { usePdfxTheme } from '../lib/pdfx-theme-context';\ntype PdfxTheme = ReturnType<typeof usePdfxTheme>;\n"
       );
+      if (withStylesheet !== result) {
+        result = withStylesheet;
+      } else if (!result.includes('type PdfxTheme')) {
+        // .utils.ts and similar: no StyleSheet import to anchor on.
+        result = `import { usePdfxTheme } from '../lib/pdfx-theme-context';\ntype PdfxTheme = ReturnType<typeof usePdfxTheme>;\n${result}`;
+      }
     }
   }
 
@@ -161,6 +167,8 @@ export function transformForRegistry(content: string): { content: string; usesTh
   result = result.replace(/from\s+['"]\.\/([^'"]+)\.styles['"]/g, "from './pdfx-$1.styles'");
   // ./X.types  →  ./pdfx-X.types   (component imports its types file)
   result = result.replace(/from\s+['"]\.\/([^'"]+)\.types['"]/g, "from './pdfx-$1.types'");
+  // ./X.utils  →  ./pdfx-X.utils   (graph imports its utils file)
+  result = result.replace(/from\s+['"]\.\/([^'"]+)\.utils['"]/g, "from './pdfx-$1.utils'");
 
   // 6. Rewrite cross-component type imports
   // ../foo/foo.types  →  ../foo/pdfx-foo.types  (e.g. data-table.types imports TableVariant)

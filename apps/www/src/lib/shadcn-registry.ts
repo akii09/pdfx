@@ -96,10 +96,24 @@ function categoriesFor(kind: 'component' | 'block' | 'lib', name: string): strin
   return ['pdf'];
 }
 
+function shadcnDevDependencies(item: PdfxRegistryItem): string[] | undefined {
+  const extras = item.files.some((file) => /from\s+['"]@react-pdf\/types['"]/.test(file.content))
+    ? ['@react-pdf/types']
+    : [];
+  const deps = unique([...(item.devDependencies ?? []), ...extras]);
+  return deps.length > 0 ? deps : undefined;
+}
+
+/** pdfx-cli rewrites these at install time; shadcn does not. */
+export function rewriteBlockImportsForShadcn(content: string): string {
+  return content.replace(/from\s+(['"])\.\.\/\.\.\/(lib|components)\//g, 'from $1../../../$2/');
+}
+
 export function toShadcnComponentItem(item: PdfxRegistryItem): ShadcnRegistryItem {
   const registryDependencies = unique(
     (item.registryDependencies ?? []).map(toShadcnRegistryDependency)
   );
+  const devDependencies = shadcnDevDependencies(item);
 
   return {
     $schema: SHADCN_ITEM_SCHEMA,
@@ -111,9 +125,7 @@ export function toShadcnComponentItem(item: PdfxRegistryItem): ShadcnRegistryIte
     docs: docsUrlFor(item, 'component'),
     categories: categoriesFor('component', item.name),
     dependencies: item.dependencies ?? [],
-    ...(item.devDependencies && item.devDependencies.length > 0
-      ? { devDependencies: item.devDependencies }
-      : {}),
+    ...(devDependencies ? { devDependencies } : {}),
     ...(registryDependencies.length > 0 ? { registryDependencies } : {}),
     files: item.files.map((file) => ({
       path: file.path,
@@ -126,7 +138,7 @@ export function toShadcnComponentItem(item: PdfxRegistryItem): ShadcnRegistryIte
 
 /** Fresh regex each call — `/g` patterns are stateful via `lastIndex`. */
 function blockComponentImportPattern(): RegExp {
-  return /from\s+['"]\.\.\/\.\.\/components\/pdfx\/([a-z0-9-]+)\//g;
+  return /from\s+['"](?:\.\.\/)+components\/pdfx\/([a-z0-9-]+)\//g;
 }
 
 function blockComponentImports(item: PdfxRegistryItem): string[] {
@@ -151,6 +163,7 @@ export function toShadcnBlockItem(item: PdfxRegistryItem): ShadcnRegistryItem {
     ...fromImports,
     ...(usesTheme ? [`${SHADCN_REGISTRY_NAMESPACE}/theme`] : []),
   ]);
+  const devDependencies = shadcnDevDependencies(item);
 
   return {
     $schema: SHADCN_ITEM_SCHEMA,
@@ -162,9 +175,7 @@ export function toShadcnBlockItem(item: PdfxRegistryItem): ShadcnRegistryItem {
     docs: docsUrlFor(item, 'block'),
     categories: categoriesFor('block', item.name),
     dependencies: item.dependencies ?? [],
-    ...(item.devDependencies && item.devDependencies.length > 0
-      ? { devDependencies: item.devDependencies }
-      : {}),
+    ...(devDependencies ? { devDependencies } : {}),
     ...(registryDependencies.length > 0 ? { registryDependencies } : {}),
     files: item.files.map((file) => {
       const fileName = file.path.split('/').pop() ?? file.path;
@@ -173,7 +184,7 @@ export function toShadcnBlockItem(item: PdfxRegistryItem): ShadcnRegistryItem {
         path: file.path,
         type: file.type,
         target,
-        content: file.content,
+        content: rewriteBlockImportsForShadcn(file.content),
       };
     }),
   };

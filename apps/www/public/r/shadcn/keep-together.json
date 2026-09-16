@@ -12,6 +12,9 @@
   "dependencies": [
     "@react-pdf/renderer"
   ],
+  "devDependencies": [
+    "@react-pdf/types"
+  ],
   "files": [
     {
       "path": "components/pdfx/keep-together/pdfx-keep-together.tsx",

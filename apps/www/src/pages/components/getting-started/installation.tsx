@@ -102,9 +102,17 @@ export default function Installation() {
                 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                   @pdfx
                 </code>{' '}
-                so names never collide with shadcn/ui. Files still land in{' '}
+                so names never collide with shadcn/ui. Components land in{' '}
                 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
                   src/components/pdfx/
+                </code>
+                . Blocks such as{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  @pdfx/invoice-modern
+                </code>{' '}
+                land in{' '}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono font-semibold">
+                  src/blocks/pdfx/&lt;name&gt;/
                 </code>
                 .
               </p>

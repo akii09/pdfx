@@ -12,6 +12,9 @@
   "dependencies": [
     "@react-pdf/renderer"
   ],
+  "devDependencies": [
+    "@react-pdf/types"
+  ],
   "registryDependencies": [
     "@pdfx/theme",
     "@pdfx/table"

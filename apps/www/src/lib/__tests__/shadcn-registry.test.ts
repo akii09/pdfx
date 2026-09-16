@@ -130,6 +130,19 @@ describe('toShadcnComponentItem', () => {
     const item = toShadcnComponentItem(dataTable);
     expect(item.registryDependencies).toEqual(['@pdfx/theme', '@pdfx/table']);
   });
+
+  it('adds @react-pdf/types when generated files import it', () => {
+    const item = toShadcnComponentItem({
+      ...heading,
+      files: [
+        {
+          ...heading.files[0],
+          content: "import type { Style } from '@react-pdf/types';\nexport function Heading() {}\n",
+        },
+      ],
+    });
+    expect(item.devDependencies).toEqual(['@react-pdf/types']);
+  });
 });
 
 describe('toShadcnBlockItem', () => {
@@ -138,7 +151,8 @@ describe('toShadcnBlockItem', () => {
     expect(item.type).toBe('registry:block');
     expect(item.files[0]?.target).toBe('src/blocks/pdfx/invoice-modern/invoice-modern.tsx');
     expect(item.files[0]?.type).toBe('registry:file');
-    expect(item.files[0]?.content).toContain("from '../../lib/pdfx-theme-context'");
+    expect(item.files[0]?.content).toContain("from '../../../lib/pdfx-theme-context'");
+    expect(item.files[0]?.content).not.toContain("from '../../lib/pdfx-theme-context'");
     expect(item.registryDependencies).toEqual(['@pdfx/text', '@pdfx/table', '@pdfx/theme']);
   });
 
@@ -156,6 +170,9 @@ describe('toShadcnBlockItem', () => {
       ],
     });
     expect(item.registryDependencies).toEqual(['@pdfx/text', '@pdfx/pdf-image']);
+    expect(item.files[0]?.content).toContain(
+      "from '../../../components/pdfx/pdf-image/pdfx-pdf-image'"
+    );
   });
 });
 
@@ -238,5 +255,17 @@ describe('generated registry contract', () => {
     };
     expect(item.registryDependencies).toContain('theme');
     expect(item.registryDependencies).not.toContain('@pdfx/theme');
+  });
+
+  it('rewrites graph companion imports and inlines PdfxTheme in utils', () => {
+    const item = JSON.parse(fs.readFileSync(path.join(publicR, 'shadcn/graph.json'), 'utf-8')) as {
+      files: Array<{ path: string; content: string }>;
+    };
+    const tsx = item.files.find((file) => file.path.endsWith('pdfx-graph.tsx'));
+    const utils = item.files.find((file) => file.path.endsWith('pdfx-graph.utils.ts'));
+    expect(tsx?.content).toContain("from './pdfx-graph.utils'");
+    expect(tsx?.content).not.toContain("from './graph.utils'");
+    expect(utils?.content).toContain('type PdfxTheme = ReturnType<typeof usePdfxTheme>');
+    expect(utils?.content).not.toContain("'@pdfx/shared'");
   });
 });

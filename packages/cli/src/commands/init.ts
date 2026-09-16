@@ -204,6 +204,12 @@ export async function init(options: InitOptions = {}) {
     const shadcn = registerShadcnNamespace(process.cwd());
     if (shadcn.reason === 'registered') {
       console.log(chalk.green('  Registered @pdfx in components.json (shadcn CLI)'));
+    } else if (shadcn.reason === 'write-failed') {
+      console.log(
+        chalk.yellow(
+          '  Could not update components.json. Register @pdfx with: npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json'
+        )
+      );
     }
 
     posthog.capture({

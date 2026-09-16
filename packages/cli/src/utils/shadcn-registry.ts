@@ -11,7 +11,7 @@ interface ComponentsJson {
 
 export interface RegisterShadcnResult {
   updated: boolean;
-  reason: 'missing' | 'invalid' | 'already-set' | 'registered';
+  reason: 'missing' | 'invalid' | 'already-set' | 'registered' | 'write-failed';
 }
 
 /**
@@ -36,9 +36,20 @@ export function registerShadcnNamespace(cwd: string): RegisterShadcnResult {
   }
 
   const json = parsed as ComponentsJson;
+  const registriesValue: unknown = json.registries;
+  if (registriesValue !== undefined) {
+    if (
+      registriesValue === null ||
+      typeof registriesValue !== 'object' ||
+      Array.isArray(registriesValue)
+    ) {
+      return { updated: false, reason: 'invalid' };
+    }
+  }
+
   const registries =
-    json.registries && typeof json.registries === 'object' && !Array.isArray(json.registries)
-      ? { ...json.registries }
+    registriesValue && typeof registriesValue === 'object' && !Array.isArray(registriesValue)
+      ? { ...(registriesValue as Record<string, unknown>) }
       : {};
 
   if (registries[SHADCN_NAMESPACE] !== undefined) {
@@ -53,6 +64,10 @@ export function registerShadcnNamespace(cwd: string): RegisterShadcnResult {
     },
   };
 
-  fs.writeFileSync(configPath, `${JSON.stringify(next, null, 2)}\n`);
+  try {
+    fs.writeFileSync(configPath, `${JSON.stringify(next, null, 2)}\n`);
+  } catch {
+    return { updated: false, reason: 'write-failed' };
+  }
   return { updated: true, reason: 'registered' };
 }

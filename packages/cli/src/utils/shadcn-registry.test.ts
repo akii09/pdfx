@@ -68,4 +68,26 @@ describe('registerShadcnNamespace', () => {
     fs.writeFileSync(path.join(dir, 'components.json'), '{not json');
     expect(registerShadcnNamespace(dir)).toEqual({ updated: false, reason: 'invalid' });
   });
+
+  it('does not overwrite a non-object registries value', () => {
+    const dir = tempDir();
+    dirs.push(dir);
+    const configPath = path.join(dir, 'components.json');
+    fs.writeFileSync(configPath, JSON.stringify({ registries: [] }));
+    expect(registerShadcnNamespace(dir)).toEqual({ updated: false, reason: 'invalid' });
+    expect(JSON.parse(fs.readFileSync(configPath, 'utf-8'))).toEqual({ registries: [] });
+  });
+
+  it('returns write-failed when components.json cannot be written', () => {
+    const dir = tempDir();
+    dirs.push(dir);
+    const configPath = path.join(dir, 'components.json');
+    fs.writeFileSync(configPath, JSON.stringify({ aliases: {} }));
+    fs.chmodSync(configPath, 0o444);
+    try {
+      expect(registerShadcnNamespace(dir)).toEqual({ updated: false, reason: 'write-failed' });
+    } finally {
+      fs.chmodSync(configPath, 0o644);
+    }
+  });
 });

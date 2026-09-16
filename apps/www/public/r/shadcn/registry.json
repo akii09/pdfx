@@ -40,6 +40,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -63,6 +66,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -88,6 +94,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -111,6 +120,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme",
@@ -147,6 +159,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -170,6 +185,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -204,6 +222,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -244,6 +265,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -268,6 +292,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "files": [
         {
           "path": "components/pdfx/keep-together/pdfx-keep-together.tsx",
@@ -288,6 +315,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -313,6 +343,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -336,6 +369,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -371,6 +407,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "files": [
         {
           "path": "components/pdfx/page-break/pdfx-page-break.tsx",
@@ -391,6 +430,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -416,6 +458,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -440,6 +485,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -463,6 +511,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -490,7 +541,8 @@
         "qrcode"
       ],
       "devDependencies": [
-        "@types/qrcode"
+        "@types/qrcode",
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -516,6 +568,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -539,6 +594,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -564,6 +622,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -587,6 +648,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -622,6 +686,9 @@
       "dependencies": [
         "@react-pdf/renderer"
       ],
+      "devDependencies": [
+        "@react-pdf/types"
+      ],
       "registryDependencies": [
         "@pdfx/theme"
       ],
@@ -645,6 +712,9 @@
       ],
       "dependencies": [
         "@react-pdf/renderer"
+      ],
+      "devDependencies": [
+        "@react-pdf/types"
       ],
       "registryDependencies": [
         "@pdfx/theme"
@@ -751,7 +821,6 @@
         "@pdfx/table",
         "@pdfx/key-value",
         "@pdfx/text",
-        "@pdfx/signature",
         "@pdfx/pdf-image",
         "@pdfx/theme"
       ],

@@ -331,6 +331,12 @@ export default function ReportsContainerPage() {
               className="ml-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded p-1 transition-colors"
             />
           </div>
+          <p className="text-[11px] text-muted-foreground text-right">
+            Register <code className="font-mono">@pdfx</code> first.{' '}
+            <Link to="/installation#shadcn" className="underline hover:text-foreground">
+              shadcn setup
+            </Link>
+          </p>
         </div>
       </div>
 

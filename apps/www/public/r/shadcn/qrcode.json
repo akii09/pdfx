@@ -14,7 +14,8 @@
     "qrcode"
   ],
   "devDependencies": [
-    "@types/qrcode"
+    "@types/qrcode",
+    "@react-pdf/types"
   ],
   "registryDependencies": [
     "@pdfx/theme"

@@ -16,7 +16,9 @@
         "src/registry/blocks/**",
         "src/lib/build-registry.ts",
         "src/lib/shadcn-registry.ts",
-        "src/constants/site.ts"
+        "src/constants/site.ts",
+        "$TURBO_ROOT$/packages/shared/src/index.ts",
+        "$TURBO_ROOT$/packages/shared/src/themes/**"
       ],
       "outputs": ["public/r/**"],
       "cache": true
