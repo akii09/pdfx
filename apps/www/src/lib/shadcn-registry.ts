@@ -124,13 +124,31 @@ export function toShadcnComponentItem(item: PdfxRegistryItem): ShadcnRegistryIte
   };
 }
 
+/** Fresh regex each call — `/g` patterns are stateful via `lastIndex`. */
+function blockComponentImportPattern(): RegExp {
+  return /from\s+['"]\.\.\/\.\.\/components\/pdfx\/([a-z0-9-]+)\//g;
+}
+
+function blockComponentImports(item: PdfxRegistryItem): string[] {
+  const names = new Set<string>();
+  for (const file of item.files) {
+    for (const match of file.content.matchAll(blockComponentImportPattern())) {
+      const name = match[1];
+      if (name) names.add(name);
+    }
+  }
+  return [...names];
+}
+
 export function toShadcnBlockItem(item: PdfxRegistryItem): ShadcnRegistryItem {
   const fromPeers = (item.peerComponents ?? []).map(toShadcnRegistryDependency);
   const fromDeclared = (item.registryDependencies ?? []).map(toShadcnRegistryDependency);
+  const fromImports = blockComponentImports(item).map(toShadcnRegistryDependency);
   const usesTheme = item.files.some((file) => file.content.includes('pdfx-theme'));
   const registryDependencies = unique([
     ...fromDeclared,
     ...fromPeers,
+    ...fromImports,
     ...(usesTheme ? [`${SHADCN_REGISTRY_NAMESPACE}/theme`] : []),
   ]);
 
@@ -266,6 +284,21 @@ export function assertShadcnRegistry(items: ShadcnRegistryItem[]): void {
         throw new Error(
           `shadcn item "${item.name}" depends on "${dep}" but that item is not in the registry`
         );
+      }
+    }
+
+    if (item.type === 'registry:block') {
+      const deps = new Set(item.registryDependencies ?? []);
+      const content = item.files.map((file) => file.content ?? '').join('\n');
+      for (const match of content.matchAll(blockComponentImportPattern())) {
+        const imported = match[1];
+        if (!imported) continue;
+        const dep = `${prefix}${imported}`;
+        if (!deps.has(dep)) {
+          throw new Error(
+            `shadcn block "${item.name}" imports "${dep}" but that item is not in registryDependencies`
+          );
+        }
       }
     }
   }

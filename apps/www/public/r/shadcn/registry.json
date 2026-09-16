@@ -752,6 +752,7 @@
         "@pdfx/key-value",
         "@pdfx/text",
         "@pdfx/signature",
+        "@pdfx/pdf-image",
         "@pdfx/theme"
       ],
       "files": [

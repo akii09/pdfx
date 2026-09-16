@@ -141,6 +141,22 @@ describe('toShadcnBlockItem', () => {
     expect(item.files[0]?.content).toContain("from '../../lib/pdfx-theme-context'");
     expect(item.registryDependencies).toEqual(['@pdfx/text', '@pdfx/table', '@pdfx/theme']);
   });
+
+  it('adds imported peers even when peerComponents omitted them', () => {
+    const item = toShadcnBlockItem({
+      ...invoice,
+      peerComponents: ['text'],
+      files: [
+        {
+          path: 'templates/pdfx/invoice-corporate/invoice-corporate.tsx',
+          type: 'registry:file',
+          content:
+            "import { PdfImage } from '../../components/pdfx/pdf-image/pdfx-pdf-image';\nimport { Text } from '../../components/pdfx/text/pdfx-text';\n",
+        },
+      ],
+    });
+    expect(item.registryDependencies).toEqual(['@pdfx/text', '@pdfx/pdf-image']);
+  });
 });
 
 describe('buildShadcnRegistry', () => {
