@@ -152,7 +152,7 @@ export async function getInstallation(
 
     ## Alternative — shadcn CLI
 
-    If the project already has \`components.json\`, register \`@pdfx\` and install through shadcn. Files land in the same \`src/components/pdfx/\` tree. Always use the \`@pdfx/\` namespace.
+    If the project already has \`components.json\`, register \`@pdfx\` and install through shadcn. Files land in the same \`src/components/pdfx/\` tree. Always use the \`@pdfx/\` namespace. Leave \`{name}\` as a placeholder in the registry URL.
 
     \`\`\`bash
     npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json

@@ -86,9 +86,11 @@ npx pdfx-cli list
 # Compare local vs registry
 npx pdfx-cli diff heading
 
-# shadcn CLI (same files, namespaced)
+# shadcn CLI — requires components.json (npx shadcn@latest init).
+# Keep {name} as a placeholder; do not replace it with an item id.
 npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
-npx shadcn@latest add @pdfx/heading @pdfx/text`;
+npx shadcn@latest add @pdfx/heading @pdfx/text
+npx shadcn@latest list @pdfx`;
 
 export const manualStep1Deps = 'npm install @react-pdf/renderer';
 

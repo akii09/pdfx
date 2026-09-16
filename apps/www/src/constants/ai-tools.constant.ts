@@ -306,7 +306,7 @@ npx pdfx-cli@latest add heading text table
 # 3. Add a pre-built block
 npx pdfx-cli@latest block add invoice-modern
 
-# Alternative: shadcn CLI (same files, always namespaced @pdfx/…)
+# Alternative: shadcn CLI (requires components.json; keep {name} as a placeholder)
 npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
 npx shadcn@latest add @pdfx/heading @pdfx/text @pdfx/table
 \\\`\\\`\\\`

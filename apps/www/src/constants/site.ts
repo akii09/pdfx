@@ -20,6 +20,10 @@ export const SHADCN_REGISTRY_CATALOG_URL = `${SITE_URL}/r/shadcn/registry.json`;
 
 export const SHADCN_REGISTRY_ADD_COMMAND = `npx shadcn@latest registry add ${SHADCN_REGISTRY_NAMESPACE}=${SHADCN_REGISTRY_URL}`;
 
+export const SHADCN_ADD_EXAMPLE_COMMAND = `npx shadcn@latest add ${SHADCN_REGISTRY_NAMESPACE}/heading ${SHADCN_REGISTRY_NAMESPACE}/text ${SHADCN_REGISTRY_NAMESPACE}/invoice-modern`;
+
+export const SHADCN_LIST_COMMAND = `npx shadcn@latest list ${SHADCN_REGISTRY_NAMESPACE}`;
+
 export function shadcnAddCommand(name: string): string {
   return `npx shadcn@latest add ${SHADCN_REGISTRY_NAMESPACE}/${name}`;
 }

@@ -14,7 +14,7 @@ npx pdfx-cli init
 npx pdfx-cli add heading text badge
 ```
 
-Already using shadcn? Same components, namespaced so they never collide with `heading` / `table` from shadcn/ui:
+Already using shadcn? Same components, namespaced so they never collide with `heading` / `table` from shadcn/ui. Requires an existing `components.json` (`npx shadcn@latest init` first). Leave `{name}` as a placeholder:
 
 ```bash
 npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json

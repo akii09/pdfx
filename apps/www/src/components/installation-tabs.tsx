@@ -139,7 +139,13 @@ export function InstallationTabs({
           <p className="text-sm text-muted-foreground">
             One-time: add the{' '}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">@pdfx</code> registry
-            to your shadcn project, then install this component. Files land in{' '}
+            to an existing shadcn project (
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+              components.json
+            </code>
+            ), then install this component. Leave{' '}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{'{name}'}</code> as
+            a placeholder. Files land in{' '}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
               src/components/pdfx/
             </code>

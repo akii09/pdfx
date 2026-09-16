@@ -27,6 +27,8 @@ npx pdfx-cli@latest add table form qrcode
 
 PDFx also publishes a shadcn-compatible registry. pdfx-cli URLs stay unchanged.
 
+Requires an existing `components.json` (`npx shadcn@latest init` first). Leave `{name}` as a placeholder — the CLI substitutes the item name.
+
 ```bash
 npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
 npx shadcn@latest add @pdfx/badge @pdfx/table
