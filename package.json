@@ -18,7 +18,7 @@
     "clean": "turbo clean && rm -rf node_modules",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "pnpm build && changeset publish --tag beta",
+    "release": "pnpm build && changeset publish",
     "sync:project": "node scripts/sync-to-project.mjs",
     "check": "turbo lint && turbo typecheck && turbo build && turbo test"
   },
