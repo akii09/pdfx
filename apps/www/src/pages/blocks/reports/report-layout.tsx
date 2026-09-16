@@ -273,7 +273,7 @@ export function ReportLayout({
           variant="three-column"
           leftText="Confidential — Internal Use"
           centerText="Generated with PDFx"
-          rightText="Page 1 of 1"
+          rightText={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
           sticky
           pagePadding={theme.spacing.page.marginLeft}
         />

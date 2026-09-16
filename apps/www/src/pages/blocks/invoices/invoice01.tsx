@@ -183,7 +183,7 @@ function Invoice01Content() {
         </Section>
         <PageFooter
           leftText={invoiceDetails.notes}
-          rightText="Page 1 of 1"
+          rightText={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
           sticky
           pagePadding={25}
         />

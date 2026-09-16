@@ -12,15 +12,28 @@ export type PageFooterVariant =
   | 'three-column'
   | 'detailed';
 
+/** Page context react-pdf resolves per rendered page. */
+export interface PageFooterPageInfo {
+  pageNumber: number;
+  totalPages: number;
+}
+
+/**
+ * Footer slot content. Pass a string for static text, or a function to resolve
+ * it per page — the footer must be `fixed` or `sticky` for the function to run
+ * on every page rather than only the one it lands on.
+ */
+export type PageFooterText = string | ((info: PageFooterPageInfo) => string);
+
 /**
  * Footer row with layout variants, optional sticky or fixed positioning, and contact info support.
  * Props - `leftText` | `rightText` | `centerText` | `variant` | `background` | `textColor` | `marginTop` | `address` | `phone` | `email` | `website` | `fixed` | `sticky` | `pagePadding` | `noWrap` | `style`
  * @see {@link PageFooterProps}
  */
 export interface PageFooterProps extends Omit<PDFComponentProps, 'children'> {
-  leftText?: string;
-  rightText?: string;
-  centerText?: string;
+  leftText?: PageFooterText;
+  rightText?: PageFooterText;
+  centerText?: PageFooterText;
   /**
    * @default 'simple'
    */
@@ -212,6 +225,38 @@ function createPageFooterStyles(t: PdfxTheme) {
   });
 }
 
+/**
+ * react-pdf silently draws nothing for a <Text> that combines `lineHeight` with
+ * a dynamic `render` callback — the callback still runs, but the glyphs never
+ * reach the page, and a `sticky` footer collapses entirely. Drop `lineHeight`
+ * on the dynamic path only; static slots keep the theme's line height. This is
+ * why PdfPageNumber, which never sets one, has always rendered correctly.
+ */
+function withoutLineHeight(style: Style[]): Style[] {
+  return style.map((entry) => {
+    if (!entry || typeof entry !== 'object' || !('lineHeight' in entry)) return entry;
+    const { lineHeight: _lineHeight, ...rest } = entry;
+    return rest;
+  });
+}
+
+/**
+ * Render a footer slot. A function is handed to react-pdf's `render` prop so it
+ * re-resolves on every page; a plain string renders as-is.
+ */
+function renderFooterText(value: PageFooterText | undefined, style: Style[]) {
+  if (!value) return null;
+  if (typeof value === 'function') {
+    return (
+      <PDFText
+        style={withoutLineHeight(style)}
+        render={({ pageNumber, totalPages }) => value({ pageNumber, totalPages })}
+      />
+    );
+  }
+  return <PDFText style={style}>{value}</PDFText>;
+}
+
 export function PageFooter({
   leftText,
   rightText,
@@ -259,8 +304,8 @@ export function PageFooter({
 
     return (
       <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
-        {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
-        {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
+        {renderFooterText(leftText, lStyle)}
+        {renderFooterText(rightText, rStyle)}
       </View>
     );
   }
@@ -273,8 +318,8 @@ export function PageFooter({
 
     return (
       <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
-        {leftText && <PDFText style={tStyle}>{leftText}</PDFText>}
-        {rightText && <PDFText style={tStyle}>{rightText}</PDFText>}
+        {renderFooterText(leftText, tStyle)}
+        {renderFooterText(rightText, tStyle)}
       </View>
     );
   }
@@ -294,7 +339,7 @@ export function PageFooter({
     return (
       <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
         <View style={styles.threeColumnLeft}>
-          {leftText && <PDFText style={leftStyle}>{leftText}</PDFText>}
+          {renderFooterText(leftText, leftStyle)}
           {address && <PDFText style={styles.textLeft}>{address}</PDFText>}
         </View>
         <View style={styles.threeColumnCenter}>
@@ -302,9 +347,7 @@ export function PageFooter({
           {email && <PDFText style={centerStyle}>{email}</PDFText>}
           {website && <PDFText style={centerStyle}>{website}</PDFText>}
         </View>
-        <View style={styles.threeColumnRight}>
-          {rightText && <PDFText style={rightStyle}>{rightText}</PDFText>}
-        </View>
+        <View style={styles.threeColumnRight}>{renderFooterText(rightText, rightStyle)}</View>
       </View>
     );
   }
@@ -327,7 +370,7 @@ export function PageFooter({
       <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
         <View style={styles.detailedTopRow}>
           <View style={styles.detailedLeft}>
-            {leftText && <PDFText style={companyStyle}>{leftText}</PDFText>}
+            {renderFooterText(leftText, companyStyle)}
             {address && <PDFText style={addrStyle}>{address}</PDFText>}
           </View>
           <View style={styles.detailedRight}>
@@ -336,7 +379,7 @@ export function PageFooter({
             {website && <PDFText style={contactStyle}>{`Web: ${website}`}</PDFText>}
           </View>
         </View>
-        {rightText && <PDFText style={pageNumStyle}>{rightText}</PDFText>}
+        {renderFooterText(rightText, pageNumStyle)}
       </View>
     );
   }
@@ -353,8 +396,8 @@ export function PageFooter({
 
     return (
       <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
-        {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
-        {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
+        {renderFooterText(leftText, lStyle)}
+        {renderFooterText(rightText, rStyle)}
       </View>
     );
   }
@@ -372,9 +415,9 @@ export function PageFooter({
 
   return (
     <View wrap={!noWrap} fixed={isFixed} style={containerStyles}>
-      {leftText && <PDFText style={lStyle}>{leftText}</PDFText>}
-      {centerText && <PDFText style={cStyle}>{centerText}</PDFText>}
-      {rightText && <PDFText style={rStyle}>{rightText}</PDFText>}
+      {renderFooterText(leftText, lStyle)}
+      {renderFooterText(centerText, cStyle)}
+      {renderFooterText(rightText, rStyle)}
     </View>
   );
 }

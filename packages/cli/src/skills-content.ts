@@ -346,7 +346,7 @@ import { PageFooter } from '@/components/pdfx/page-footer/pdfx-page-footer';
 <PageFooter
   leftText="© 2024 Acme Corp"   // string
   centerText="Confidential"      // string
-  rightText="Page 1 of 1"        // string
+  rightText={({ pageNumber, totalPages }) => \`Page \${pageNumber} of \${totalPages}\`}  // string | (info) => string — use the function form for live page numbers (needs fixed/sticky)
   variant="simple"               // 'simple' | 'centered' | 'branded' | 'minimal' | 'three-column' | 'detailed'
   background="#18181b"            // string
   textColor="#fff"                // string
@@ -667,7 +667,7 @@ export function InvoiceDoc() {
           </TableBody>
         </Table>
         <Badge label="PAID" variant="success" />
-        <PageFooter leftText="Acme Corp" rightText="Page 1 of 1" />
+        <PageFooter leftText="Acme Corp" rightText={({ pageNumber, totalPages }) => \`Page \${pageNumber} of \${totalPages}\`} sticky />
       </Page>
     </Document>
   );

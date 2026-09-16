@@ -33,7 +33,7 @@ const renderPreviewDocument = (variant: PageFooterVariant) => (
       <PageFooter
         leftText="© 2026 Acme Corp. All rights reserved."
         centerText="Confidential"
-        rightText="Page 1 of 1"
+        rightText={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`}
         variant={variant}
         address={
           variant === 'three-column' || variant === 'detailed'
