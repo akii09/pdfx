@@ -34,6 +34,8 @@ npx shadcn@latest registry add @pdfx=https://getpdfx.dev/r/shadcn/{name}.json
 npx shadcn@latest add @pdfx/badge @pdfx/table
 ```
 
+Components land in `src/components/pdfx/`, blocks in `src/blocks/pdfx/<name>/`. These targets are fixed — shadcn writes them verbatim rather than following your `components.json` aliases, and a project with no `src/` directory gets one. `@pdfx/theme` installs the `professional` preset; use `npx pdfx-cli theme switch` to change it, and avoid `shadcn add --overwrite` once you have edited `src/lib/pdfx-theme.ts`.
+
 Always use the `@pdfx/` namespace. When `components.json` already exists, `npx pdfx-cli init` offers to register it for you — it prompts first and uses the registry URL you configured. Pass `--register-shadcn` or `--no-register-shadcn` to answer non-interactively.
 
 ## Available Components

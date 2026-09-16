@@ -157,6 +157,15 @@ export function InstallationTabs({
           />
           <PackageManagerTabs command={shadcnCommand} className="border-0 rounded-lg shadow-none" />
           <p className="text-xs text-muted-foreground">
+            Paths are fixed rather than alias-driven, and{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx/theme</code> installs the{' '}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono">professional</code> preset —{' '}
+            <Link to="/installation#shadcn" className="underline hover:text-foreground">
+              details
+            </Link>
+            .
+          </p>
+          <p className="text-xs text-muted-foreground">
             Prefer the PDF-native CLI? Use the pdfx-cli tab —{' '}
             <code className="rounded bg-muted px-1 py-0.5 font-mono">theme switch</code>,{' '}
             <code className="rounded bg-muted px-1 py-0.5 font-mono">diff</code>, and MCP stay

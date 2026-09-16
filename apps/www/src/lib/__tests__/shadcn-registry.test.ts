@@ -232,6 +232,48 @@ describe('assertShadcnRegistry', () => {
     const headingItem = toShadcnComponentItem(heading);
     expect(() => assertShadcnRegistry([theme, headingItem, dup])).toThrow(/duplicate/);
   });
+
+  it('rejects a relative import that no item emits', () => {
+    const theme = createShadcnThemeItem('a', 'b');
+    const broken = toShadcnComponentItem({
+      ...heading,
+      files: [
+        {
+          path: 'components/pdfx/heading/pdfx-heading.tsx',
+          type: 'registry:component',
+          // `../lib/pdfx-format` is outside the rewrite allow-list, so it stays
+          // one level short and resolves nowhere.
+          content: "import { fmt } from '../lib/pdfx-format';\n",
+        },
+      ],
+    });
+    expect(() => assertShadcnRegistry([theme, broken])).toThrow(
+      /imports "\.\.\/lib\/pdfx-format".*which no registry item emits/s
+    );
+  });
+
+  it('accepts imports that resolve onto another item', () => {
+    const theme = createShadcnThemeItem('a', 'b');
+    expect(() => assertShadcnRegistry([theme, toShadcnComponentItem(heading)])).not.toThrow();
+  });
+});
+
+describe('block families', () => {
+  it('routes reports and invoices to their own docs and categories', () => {
+    const report = toShadcnBlockItem({ ...invoice, name: 'report-financial' });
+    expect(report.docs).toMatch(/\/blocks\/reports$/);
+    expect(report.categories).toEqual(['pdf', 'report']);
+
+    const item = toShadcnBlockItem(invoice);
+    expect(item.docs).toMatch(/\/blocks\/invoices$/);
+    expect(item.categories).toEqual(['pdf', 'invoice']);
+  });
+
+  it('fails on an unclassified block instead of defaulting to invoice', () => {
+    expect(() => toShadcnBlockItem({ ...invoice, name: 'resume-modern' })).toThrow(
+      /block "resume-modern" has no family/
+    );
+  });
 });
 
 describe('buildShadcnCatalog', () => {

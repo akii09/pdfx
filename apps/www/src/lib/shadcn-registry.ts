@@ -78,21 +78,56 @@ function unique(values: string[]): string[] {
   return [...new Set(values)];
 }
 
+interface BlockFamily {
+  /** Docs route on the site, e.g. `/blocks/invoices`. */
+  docsPath: string;
+  /** shadcn `categories`, after the shared `pdf` entry. */
+  category: string;
+}
+
+const BLOCK_FAMILIES: Record<string, BlockFamily> = {
+  invoice: { docsPath: '/blocks/invoices', category: 'invoice' },
+  report: { docsPath: '/blocks/reports', category: 'report' },
+};
+
+/**
+ * Block name → family. Explicit rather than a prefix test so a block that is
+ * neither an invoice nor a report fails the build instead of silently
+ * inheriting the invoice docs link and category.
+ */
+const BLOCK_FAMILY_BY_NAME: Record<string, keyof typeof BLOCK_FAMILIES> = {
+  'invoice-classic': 'invoice',
+  'invoice-consultant': 'invoice',
+  'invoice-corporate': 'invoice',
+  'invoice-creative': 'invoice',
+  'invoice-minimal': 'invoice',
+  'invoice-modern': 'invoice',
+  'report-financial': 'report',
+  'report-marketing': 'report',
+  'report-operations': 'report',
+  'report-security': 'report',
+};
+
+function blockFamily(name: string): BlockFamily {
+  const key = BLOCK_FAMILY_BY_NAME[name];
+  const family = key ? BLOCK_FAMILIES[key] : undefined;
+  if (!family) {
+    throw new Error(
+      `shadcn registry: block "${name}" has no family. Add it to BLOCK_FAMILY_BY_NAME in apps/www/src/lib/shadcn-registry.ts so it gets the right docs link and categories.`
+    );
+  }
+  return family;
+}
+
 function docsUrlFor(item: PdfxRegistryItem, kind: 'component' | 'block' | 'lib'): string {
   if (kind === 'lib') return `${SITE_URL}/installation#theming`;
-  if (kind === 'block') {
-    return item.name.startsWith('report-')
-      ? `${SITE_URL}/blocks/reports`
-      : `${SITE_URL}/blocks/invoices`;
-  }
+  if (kind === 'block') return `${SITE_URL}${blockFamily(item.name).docsPath}`;
   return `${SITE_URL}/components/${item.name}`;
 }
 
 function categoriesFor(kind: 'component' | 'block' | 'lib', name: string): string[] {
   if (kind === 'lib') return ['theme'];
-  if (kind === 'block') {
-    return name.startsWith('report-') ? ['pdf', 'report'] : ['pdf', 'invoice'];
-  }
+  if (kind === 'block') return ['pdf', blockFamily(name).category];
   return ['pdf'];
 }
 
@@ -258,6 +293,60 @@ export function buildShadcnRegistry(options: {
   };
 }
 
+/** Every relative `from '…'` specifier in an emitted file. */
+function relativeImportPattern(): RegExp {
+  return /from\s+['"](\.[^'"]*)['"]/g;
+}
+
+/**
+ * Resolve `specifier` against `fromTarget`'s directory. Hand-rolled rather than
+ * `node:path` so this module stays environment-agnostic — it is imported by the
+ * build script and by Vitest, and targets are always POSIX-style.
+ */
+function resolveTarget(fromTarget: string, specifier: string): string {
+  const segments = fromTarget.split('/').slice(0, -1);
+  for (const segment of specifier.split('/')) {
+    if (segment === '.' || segment === '') continue;
+    if (segment === '..') segments.pop();
+    else segments.push(segment);
+  }
+  return segments.join('/');
+}
+
+const SOURCE_EXTENSIONS = ['.tsx', '.ts'];
+
+function stripExtension(target: string): string {
+  const ext = SOURCE_EXTENSIONS.find((candidate) => target.endsWith(candidate));
+  return ext ? target.slice(0, -ext.length) : target;
+}
+
+/**
+ * The import rewrites are per-filename allow-lists, so a component that picks up
+ * a new `../lib/*` import would otherwise ship a path one level short and only
+ * fail after install. Resolve every relative import against the targets the
+ * registry actually emits and fail the build instead.
+ */
+function assertImportsResolve(items: ShadcnRegistryItem[]): void {
+  const emitted = new Set(
+    items.flatMap((item) => item.files.map((file) => stripExtension(file.target)))
+  );
+
+  for (const item of items) {
+    for (const file of item.files) {
+      for (const match of (file.content ?? '').matchAll(relativeImportPattern())) {
+        const specifier = match[1];
+        if (!specifier) continue;
+        const resolved = resolveTarget(file.target, specifier);
+        if (!emitted.has(stripExtension(resolved))) {
+          throw new Error(
+            `shadcn item "${item.name}" file "${file.target}" imports "${specifier}" (resolves to "${resolved}"), which no registry item emits`
+          );
+        }
+      }
+    }
+  }
+}
+
 /** Fail the registry build if the shadcn tree would be uninstallable. */
 export function assertShadcnRegistry(items: ShadcnRegistryItem[]): void {
   const names = items.map((item) => item.name);
@@ -282,9 +371,6 @@ export function assertShadcnRegistry(items: ShadcnRegistryItem[]): void {
       }
       if (!file.content || file.content.length === 0) {
         throw new Error(`shadcn item "${item.name}" file "${file.path}" is missing content`);
-      }
-      if (file.type === 'registry:file' && !file.target) {
-        throw new Error(`shadcn item "${item.name}" registry:file is missing target`);
       }
     }
 
@@ -313,6 +399,8 @@ export function assertShadcnRegistry(items: ShadcnRegistryItem[]): void {
       }
     }
   }
+
+  assertImportsResolve(items);
 
   const catalog = buildShadcnCatalog(items);
   for (const catalogItem of catalog.items) {

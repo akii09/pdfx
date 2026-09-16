@@ -167,7 +167,13 @@ export default function Installation() {
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">@react-pdf/renderer</code>{' '}
                 are pulled in automatically via{' '}
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx/theme</code> and each
-                item&apos;s dependencies. pdfx-cli stays the PDF-native CLI for{' '}
+                item&apos;s dependencies — the{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">professional</code> preset,
+                written to fixed{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">src/</code> paths rather
+                than your{' '}
+                <code className="rounded bg-muted px-1 py-0.5 font-mono">components.json</code>{' '}
+                aliases. pdfx-cli stays the PDF-native CLI for{' '}
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">theme switch</code>,{' '}
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">diff</code>, and MCP.{' '}
                 <code className="rounded bg-muted px-1 py-0.5 font-mono">npx pdfx-cli init</code>{' '}
@@ -426,6 +432,38 @@ npx shadcn@latest list @pdfx`}
             language="bash"
             filename="terminal"
           />
+          <div className="rounded-lg border border-border/60 bg-muted/30 p-4 space-y-3">
+            <p>
+              <strong className="text-foreground">Fixed paths, not aliases.</strong> PDFx items
+              carry explicit <code className="rounded bg-muted px-1 py-0.5 font-mono">target</code>{' '}
+              paths, so files always land under{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">src/</code> — they do not
+              follow the <code className="rounded bg-muted px-1 py-0.5 font-mono">aliases</code> in
+              your <code className="rounded bg-muted px-1 py-0.5 font-mono">components.json</code>.
+              If your project keeps source at the repo root (no{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">src/</code> directory), the
+              shadcn install creates one. Components import each other by relative path, so they
+              compile wherever they land — but move the whole{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">pdfx</code> tree together if
+              you relocate it.
+            </p>
+            <p>
+              <strong className="text-foreground">Themes.</strong>{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">@pdfx/theme</code> installs
+              the <code className="rounded bg-muted px-1 py-0.5 font-mono">professional</code>{' '}
+              preset — the shadcn CLI has no preset picker. Run{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">
+                npx pdfx-cli theme switch
+              </code>{' '}
+              to change it. Once you have edited{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">src/lib/pdfx-theme.ts</code>,
+              avoid{' '}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono">shadcn add --overwrite</code>{' '}
+              — it resets the file back to the preset. Without that flag shadcn leaves your existing
+              theme alone.
+            </p>
+          </div>
+
           <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
             <strong className="text-foreground">Keep both CLIs.</strong> shadcn copies components.
             Use pdfx-cli for{' '}

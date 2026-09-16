@@ -2,10 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { type Registry, registryItemSchema, registrySchema, themePresets } from '@pdfx/shared';
-import {
-  generateThemeContextFile,
-  generateThemeFile,
-} from '../../../../packages/cli/src/utils/generate-theme.js';
+import { generateThemeContextFile, generateThemeFile } from 'pdfx-cli/theme';
 import { SCHEMA_REGISTRY_ITEM_URL } from '../constants/site.js';
 import { type PdfxRegistryItem, buildShadcnRegistry } from './shadcn-registry.js';
 
@@ -266,7 +263,7 @@ async function processItem(
     })
   );
 
-  const output: Record<string, unknown> = {
+  const output: PdfxRegistryItem = {
     $schema: SCHEMA_REGISTRY_ITEM_URL,
     name: item.name,
     type: item.type,
@@ -302,7 +299,7 @@ async function processItem(
   await fs.writeFile(outputPath, JSON.stringify(output, null, 2));
 
   console.log(`  ${item.name}.json`);
-  return output as unknown as PdfxRegistryItem;
+  return output;
 }
 
 /**
@@ -501,7 +498,7 @@ async function processBlockItem(
     })
   );
 
-  const output: Record<string, unknown> = {
+  const output: PdfxRegistryItem = {
     $schema: SCHEMA_REGISTRY_ITEM_URL,
     name: item.name,
     type: item.type,
@@ -526,7 +523,7 @@ async function processBlockItem(
   await fs.writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`);
 
   console.log(`  ${item.name}.json (block)`);
-  return output as unknown as PdfxRegistryItem;
+  return output;
 }
 
 async function buildRegistry() {

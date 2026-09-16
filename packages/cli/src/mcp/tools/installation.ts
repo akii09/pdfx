@@ -159,7 +159,9 @@ export async function getInstallation(
     npx shadcn@latest add @pdfx/heading @pdfx/text @pdfx/table
     \`\`\`
 
-    Theme files install automatically via \`@pdfx/theme\`. Keep using \`pdfx-cli\` for \`theme switch\`, \`diff\`, and the MCP server.
+    Theme files install automatically via \`@pdfx/theme\`, which ships the \`professional\` preset — shadcn has no preset picker, so use \`pdfx-cli theme switch\` to change it, and avoid \`--overwrite\` once \`src/lib/pdfx-theme.ts\` is customized.
+
+    These \`target\` paths are fixed: shadcn writes them verbatim instead of following \`components.json\` aliases, so a project without a \`src/\` directory gets one. Keep using \`pdfx-cli\` for \`theme switch\`, \`diff\`, and the MCP server.
 
     ## Step 4 — Or start with a complete document block
 
