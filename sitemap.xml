@@ -1,208 +1,213 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- Core pages -->
   <url>
-    <loc>https://pdfx.akashpise.dev/</loc>
-    <lastmod>2025-03-21</lastmod>
+    <loc>https://getpdfx.dev/</loc>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://pdfx.akashpise.dev/docs</loc>
-    <lastmod>2025-03-21</lastmod>
+    <loc>https://getpdfx.dev/docs</loc>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://pdfx.akashpise.dev/installation</loc>
-    <lastmod>2025-03-21</lastmod>
+    <loc>https://getpdfx.dev/docs/server-side</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/installation</loc>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- Components hub -->
   <url>
-    <loc>https://pdfx.akashpise.dev/components</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://getpdfx.dev/mcp</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Typography -->
   <url>
-    <loc>https://pdfx.akashpise.dev/components/heading</loc>
-    <lastmod>2025-03-21</lastmod>
+    <loc>https://getpdfx.dev/theme-builder</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/releases</loc>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://pdfx.akashpise.dev/components/text</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/link</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Layout -->
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/stack</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/section</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/divider</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/page-break</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/keep-together</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/card</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Page Chrome -->
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/page-header</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/page-footer</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/page-number</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/watermark</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Data Display -->
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/table</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/data-table</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/list</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/badge</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/key-value</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/alert</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Media & Visuals -->
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/pdf-image</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/graph</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/qrcode</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Forms & Documents -->
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/form</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://pdfx.akashpise.dev/components/signature</loc>
-    <lastmod>2025-03-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Blocks -->
-  <url>
-    <loc>https://pdfx.akashpise.dev/blocks</loc>
-    <lastmod>2025-03-21</lastmod>
+    <loc>https://getpdfx.dev/components</loc>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pdfx.akashpise.dev/blocks/invoices</loc>
-    <lastmod>2025-03-21</lastmod>
+    <loc>https://getpdfx.dev/components/heading</loc>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://pdfx.akashpise.dev/blocks/reports</loc>
-    <lastmod>2025-03-21</lastmod>
+    <loc>https://getpdfx.dev/components/text</loc>
+    <lastmod>2026-09-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
+  <url>
+    <loc>https://getpdfx.dev/components/link</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/divider</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/page-break</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/stack</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/section</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/table</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/data-table</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/list</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/card</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/form</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/signature</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/page-header</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/page-footer</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/badge</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/key-value</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/keep-together</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/pdf-image</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/graph</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/page-number</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/watermark</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/qrcode</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/components/alert</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/blocks</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/blocks/invoices</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://getpdfx.dev/blocks/reports</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
