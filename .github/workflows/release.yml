@@ -36,6 +36,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # npm answers an unauthenticated publish with "E404 Not Found" rather than 401/403,
+      # so an expired token surfaces as if the package did not exist — and only after the
+      # version bump has already been committed. Surface it up front instead.
+      # Warns rather than fails: opening the release PR does not need npm credentials.
+      - name: Check npm authentication
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if npm whoami > /dev/null 2>&1; then
+            echo "npm: authenticated as $(npm whoami)"
+          else
+            echo "::warning::npm authentication failed - NPM_TOKEN is missing, expired, or lacks publish access to pdfx-cli. Publishing will fail with a misleading E404. Rotate the token and update the repository secret."
+          fi
+
       - name: Create Release Pull Request or Publish
         uses: changesets/action@v1
         with:
@@ -44,4 +58,5 @@ jobs:
           commit: "chore: release packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
