@@ -1,6 +1,6 @@
 {
   "name": "pdfx-cli",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "license": "MIT",
   "description": "CLI for PDFx components",
   "type": "module",
