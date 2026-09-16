@@ -47,7 +47,7 @@ describe('generateThemeFile', () => {
 
   it('should include the inline PdfxTheme type', () => {
     const content = generateThemeFile(professionalTheme);
-    expect(content).toContain('interface PdfxTheme');
+    expect(content).toContain('export interface PdfxTheme');
   });
 
   it('should generate different content for different presets', () => {
