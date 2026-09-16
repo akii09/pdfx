@@ -195,12 +195,14 @@ export function generateThemeContextFile(): string {
 // Provides runtime theme overrides via React context.
 // Wrap a subtree in <PdfxThemeProvider theme={myTheme}> to override defaults.
 
+import { type DependencyList, type ReactNode, createContext, useContext } from 'react';
+import { theme as defaultTheme } from './pdfx-theme';
+
 /* eslint-disable react-refresh/only-export-components */
 // Intentional: this module exports both a component and hooks/context.
 // Keeping a single import surface preserves the generated public API.
-
-import { type DependencyList, type ReactNode, createContext, useContext } from 'react';
-import { theme as defaultTheme } from './pdfx-theme';
+// Placed after the imports on purpose — the shadcn CLI drops a file's leading
+// comment block, which would otherwise take this directive with it.
 
 type PdfxTheme = typeof defaultTheme;
 
