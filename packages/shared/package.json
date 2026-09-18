@@ -23,7 +23,7 @@
     "zod": "^3.24.0"
   },
   "devDependencies": {
-    "@react-pdf/types": "^2.11.1",
+    "@react-pdf/types": "^2.11.2",
     "@types/react": "catalog:",
     "react": "catalog:",
     "typescript": "catalog:",
