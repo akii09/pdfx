@@ -278,14 +278,25 @@ function parseThemeObject(themePath: string): unknown {
       const parsed = toPlainValue(decl.initializer);
       if (parsed === undefined) {
         throw new Error(
-          'Could not statically parse exported theme object. Keep `export const theme = { ... }` as a plain object literal.'
+          [
+            `Could not statically parse the named \`theme\` export in "${themePath}".`,
+            '  Use `export const theme = { ... }` with a plain object literal.',
+            '  This validator does not evaluate function calls, variable references, or spreads.',
+          ].join('\n')
         );
       }
       return parsed;
     }
   }
 
-  throw new Error('No exported `theme` object found.');
+  throw new Error(
+    [
+      `No supported named \`theme\` export found in "${themePath}".`,
+      '  Export your tokens directly as `export const theme = { ... }` (an optional type annotation is supported).',
+      '  Default exports, differently named exports, and separate `export { theme }` declarations are not supported.',
+      '  Keep your existing tokens when updating the declaration, and check that "theme" in pdfx.json points to this file.',
+    ].join('\n')
+  );
 }
 
 /**
