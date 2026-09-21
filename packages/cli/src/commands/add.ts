@@ -16,7 +16,7 @@ import chalk from 'chalk';
 import { execa } from 'execa';
 import ora from 'ora';
 import prompts from 'prompts';
-import { FETCH_TIMEOUT_MS } from '../constants.js';
+import { DEFAULTS, FETCH_TIMEOUT_MS } from '../constants.js';
 import { validateReactPdfRenderer } from '../utils/dependency-validator.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
@@ -62,7 +62,9 @@ export function readConfig(configPath: string): Config {
       .join('; ');
     throw new ConfigError(
       `Invalid pdfx.json: ${issues}`,
-      `Fix the config or re-run ${chalk.cyan('npx pdfx-cli@latest init')}`
+      result.error.issues.some((issue) => issue.path[0] === 'registry')
+        ? `Set "registry" in pdfx.json to an HTTP(S) registry base URL (default: ${DEFAULTS.REGISTRY_URL}).`
+        : `Fix the config or re-run ${chalk.cyan('npx pdfx-cli@latest init')}`
     );
   }
 

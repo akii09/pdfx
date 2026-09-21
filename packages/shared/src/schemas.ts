@@ -104,7 +104,17 @@ export const themeSchema = z.object({
 export const configSchema = z.object({
   $schema: z.string().optional(),
   componentDir: z.string().min(1, 'componentDir must not be empty'),
-  registry: z.string().url('registry must be a valid URL'),
+  registry: z
+    .string({ required_error: 'registry is required' })
+    .trim()
+    .url('registry must be a valid HTTP(S) URL')
+    .refine((value) => /^https?:\/\//i.test(value), 'registry must start with http:// or https://')
+    .refine(
+      (value) => !/[?#]/.test(value) && !/^https?:\/\/[^/]*@/i.test(value),
+      'registry must be a base URL without credentials, a query string, or a fragment'
+    )
+    // Callers append registry paths; remove trailing slashes without changing the base path.
+    .transform((value) => value.replace(/\/+$/, '')),
   theme: z.string().min(1).optional(),
   blockDir: z.string().min(1).optional(),
 });
