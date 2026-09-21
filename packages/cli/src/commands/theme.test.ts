@@ -1,7 +1,267 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { minimalTheme, modernTheme, professionalTheme, themePresets } from '@pdfx/shared';
-import { describe, expect, it } from 'vitest';
-import { generateThemeFile } from '../utils/generate-theme';
+import prompts from 'prompts';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { DEFAULTS } from '../constants.js';
+import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme';
 import { normalizeThemePath, validateThemePath } from '../utils/theme-path';
+import { init } from './init.js';
+import { themeInit, themeSwitch } from './theme.js';
+
+const spinner = vi.hoisted(() => ({
+  start: vi.fn(),
+  succeed: vi.fn(),
+  fail: vi.fn(),
+}));
+
+vi.mock('ora', () => ({ default: vi.fn(() => spinner) }));
+vi.mock('prompts', () => ({ default: vi.fn() }));
+vi.mock('../utils/posthog.js', () => ({
+  distinctId: 'test',
+  posthog: { capture: vi.fn(), captureException: vi.fn() },
+  shutdownPosthog: vi.fn().mockResolvedValue(true),
+}));
+vi.mock('../utils/pre-flight.js', () => ({
+  runPreFlightChecks: vi.fn(() => ({
+    canProceed: true,
+    dependencies: { reactPdfRenderer: { installed: true, valid: true } },
+  })),
+  displayPreFlightResults: vi.fn(),
+}));
+vi.mock('../utils/install-dependencies.js', () => ({
+  ensureReactPdfRenderer: vi.fn(async () => true),
+}));
+
+describe('theme file destinations', () => {
+  let testDir: string;
+  let configPath: string;
+  let themePath: string;
+  let contextPath: string;
+
+  function writeConfig(theme: string = DEFAULTS.THEME_FILE) {
+    const config = {
+      componentDir: DEFAULTS.COMPONENT_DIR,
+      registry: DEFAULTS.REGISTRY_URL,
+      theme,
+      customSetting: 'preserve me',
+    };
+    const content = JSON.stringify(config, null, 2);
+    fs.writeFileSync(configPath, content);
+    return content;
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    testDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pdfx-theme-destination-'));
+    vi.spyOn(process, 'cwd').mockReturnValue(testDir);
+    configPath = path.join(testDir, 'pdfx.json');
+    themePath = path.resolve(testDir, DEFAULTS.THEME_FILE);
+    contextPath = path.join(path.dirname(themePath), 'pdfx-theme-context.tsx');
+    spinner.start.mockReturnValue(spinner);
+    vi.mocked(prompts).mockResolvedValue({
+      confirm: true,
+      preset: 'modern',
+      themePath: DEFAULTS.THEME_FILE,
+    });
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(process, 'exit').mockImplementation((code) => {
+      throw new Error(`process.exit(${code})`);
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    fs.rmSync(testDir, { recursive: true, force: true });
+  });
+
+  const commands = [
+    { name: 'theme switch', run: () => themeSwitch('modern') },
+    { name: 'theme init', run: () => themeInit() },
+    { name: 'init --yes', run: () => init({ yes: true }) },
+    {
+      name: 'interactive init',
+      run: () => {
+        vi.mocked(prompts).mockResolvedValueOnce({ overwrite: true }).mockResolvedValueOnce({
+          componentDir: DEFAULTS.COMPONENT_DIR,
+          registry: DEFAULTS.REGISTRY_URL,
+          themePath: DEFAULTS.THEME_FILE,
+          themePreset: 'modern',
+        });
+        return init();
+      },
+    },
+  ];
+
+  describe.each(commands)('$name', ({ run }) => {
+    it.each(['theme', 'context'])(
+      'rejects a %s directory without changing files',
+      async (target) => {
+        const configBefore = writeConfig();
+        const directoryPath = target === 'theme' ? themePath : contextPath;
+        const otherPath = target === 'theme' ? contextPath : themePath;
+        fs.mkdirSync(directoryPath, { recursive: true });
+        fs.writeFileSync(path.join(directoryPath, 'sentinel.txt'), 'keep directory contents');
+        fs.writeFileSync(otherPath, 'keep existing file');
+
+        await expect(run()).rejects.toThrow('process.exit(1)');
+
+        expect(console.error).toHaveBeenCalledWith(expect.stringContaining('is a directory'));
+        expect(console.error).toHaveBeenCalledWith(expect.stringContaining(directoryPath));
+        expect(console.error).not.toHaveBeenCalledWith(expect.stringContaining('EISDIR'));
+        expect(console.log).toHaveBeenCalledWith(expect.stringContaining('"theme" in pdfx.json'));
+        expect(fs.readFileSync(configPath, 'utf-8')).toBe(configBefore);
+        expect(fs.readFileSync(otherPath, 'utf-8')).toBe('keep existing file');
+        expect(fs.readdirSync(directoryPath)).toEqual(['sentinel.txt']);
+        expect(fs.readFileSync(path.join(directoryPath, 'sentinel.txt'), 'utf-8')).toBe(
+          'keep directory contents'
+        );
+        expect(spinner.succeed).not.toHaveBeenCalled();
+      }
+    );
+  });
+
+  it.each(['./src/lib/custom-theme.tsx', './src/lib'])(
+    'rejects a configured directory at %s without appending a filename',
+    async (configuredPath) => {
+      writeConfig(configuredPath);
+      const directoryPath = path.resolve(testDir, configuredPath);
+      fs.mkdirSync(directoryPath, { recursive: true });
+
+      await expect(themeSwitch('modern')).rejects.toThrow('process.exit(1)');
+
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining('is a directory'));
+      expect(fs.readdirSync(directoryPath)).toEqual([]);
+    }
+  );
+
+  it.each(['theme', 'context'])('rejects a symlink to a %s directory', async (target) => {
+    const configBefore = writeConfig();
+    const linkPath = target === 'theme' ? themePath : contextPath;
+    const directoryPath = path.join(testDir, 'linked-directory');
+    fs.mkdirSync(directoryPath);
+    fs.mkdirSync(path.dirname(themePath), { recursive: true });
+    fs.writeFileSync(path.join(directoryPath, 'sentinel.txt'), 'keep linked contents');
+    if (target === 'context') fs.writeFileSync(themePath, 'original theme');
+    fs.symlinkSync(directoryPath, linkPath, 'dir');
+
+    await expect(themeSwitch('modern')).rejects.toThrow('process.exit(1)');
+
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('is a directory'));
+    expect(fs.lstatSync(linkPath).isSymbolicLink()).toBe(true);
+    expect(fs.readFileSync(path.join(directoryPath, 'sentinel.txt'), 'utf-8')).toBe(
+      'keep linked contents'
+    );
+    expect(fs.readFileSync(configPath, 'utf-8')).toBe(configBefore);
+    if (target === 'context') {
+      expect(fs.readFileSync(themePath, 'utf-8')).toBe('original theme');
+    }
+  });
+
+  it.each(['professional', 'modern', 'minimal', 'default'] as const)(
+    'switches to %s while preserving existing context and configuration',
+    async (preset) => {
+      const configBefore = writeConfig();
+      fs.mkdirSync(path.dirname(themePath), { recursive: true });
+      fs.writeFileSync(themePath, 'old theme');
+      fs.writeFileSync(contextPath, 'custom context');
+
+      await themeSwitch(preset);
+
+      const expectedPreset = preset === 'default' ? 'professional' : preset;
+      expect(fs.readFileSync(themePath, 'utf-8')).toBe(
+        generateThemeFile(themePresets[expectedPreset])
+      );
+      expect(fs.readFileSync(contextPath, 'utf-8')).toBe('custom context');
+      expect(fs.readFileSync(configPath, 'utf-8')).toBe(configBefore);
+      expect(process.exit).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each(['./src/lib/custom.ts', 'src/nested/custom.tsx'])(
+    'creates a missing theme, context, and parent directories for %s',
+    async (configuredPath) => {
+      const configBefore = writeConfig(configuredPath);
+
+      await themeSwitch('modern');
+
+      const destination = path.resolve(testDir, configuredPath);
+      expect(fs.readFileSync(destination, 'utf-8')).toBe(generateThemeFile(modernTheme));
+      expect(
+        fs.readFileSync(path.join(path.dirname(destination), 'pdfx-theme-context.tsx'), 'utf-8')
+      ).toBe(generateThemeContextFile());
+      expect(fs.readFileSync(configPath, 'utf-8')).toBe(configBefore);
+    }
+  );
+
+  it('continues to support an absolute configured theme file', async () => {
+    writeConfig(themePath);
+
+    await themeSwitch('modern');
+
+    expect(fs.readFileSync(themePath, 'utf-8')).toBe(generateThemeFile(modernTheme));
+  });
+
+  it('continues to support a symlink to a regular theme file', async () => {
+    writeConfig();
+    fs.mkdirSync(path.dirname(themePath), { recursive: true });
+    const realFile = path.join(testDir, 'linked-theme.ts');
+    fs.writeFileSync(realFile, 'old theme');
+    fs.symlinkSync(realFile, themePath, 'file');
+
+    await themeSwitch('modern');
+
+    expect(fs.lstatSync(themePath).isSymbolicLink()).toBe(true);
+    expect(fs.readFileSync(realFile, 'utf-8')).toBe(generateThemeFile(modernTheme));
+  });
+
+  it('does not write anything when switching is cancelled', async () => {
+    const configBefore = writeConfig();
+    fs.mkdirSync(path.dirname(themePath), { recursive: true });
+    fs.writeFileSync(themePath, 'old theme');
+    vi.mocked(prompts).mockResolvedValue({ confirm: false });
+
+    await themeSwitch('modern');
+
+    expect(fs.readFileSync(themePath, 'utf-8')).toBe('old theme');
+    expect(fs.existsSync(contextPath)).toBe(false);
+    expect(fs.readFileSync(configPath, 'utf-8')).toBe(configBefore);
+    expect(process.exit).not.toHaveBeenCalled();
+  });
+
+  it('theme init creates theme files and updates the configured path', async () => {
+    writeConfig('./old-theme.ts');
+
+    await themeInit();
+
+    expect(fs.readFileSync(themePath, 'utf-8')).toBe(generateThemeFile(modernTheme));
+    expect(fs.readFileSync(contextPath, 'utf-8')).toBe(generateThemeContextFile());
+    expect(JSON.parse(fs.readFileSync(configPath, 'utf-8')).theme).toBe(DEFAULTS.THEME_FILE);
+    expect(process.exit).not.toHaveBeenCalled();
+  });
+
+  it('init --yes rejects a directory before creating a new configuration', async () => {
+    fs.mkdirSync(themePath, { recursive: true });
+
+    await expect(init({ yes: true })).rejects.toThrow('process.exit(1)');
+
+    expect(fs.existsSync(configPath)).toBe(false);
+    expect(fs.existsSync(contextPath)).toBe(false);
+    expect(fs.existsSync(path.resolve(testDir, DEFAULTS.COMPONENT_DIR))).toBe(false);
+    expect(fs.readdirSync(themePath)).toEqual([]);
+  });
+
+  it('init --yes creates configuration and theme files at valid destinations', async () => {
+    await init({ yes: true });
+
+    expect(fs.readFileSync(themePath, 'utf-8')).toBe(generateThemeFile(professionalTheme));
+    expect(fs.readFileSync(contextPath, 'utf-8')).toBe(generateThemeContextFile());
+    expect(JSON.parse(fs.readFileSync(configPath, 'utf-8')).theme).toBe(DEFAULTS.THEME_FILE);
+    expect(process.exit).not.toHaveBeenCalled();
+  });
+});
 
 describe('generateThemeFile', () => {
   it.each(['professional', 'modern', 'minimal'] as const)(

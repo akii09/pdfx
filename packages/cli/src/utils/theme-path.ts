@@ -1,4 +1,6 @@
+import fs from 'node:fs';
 import path from 'node:path';
+import { ValidationError } from '@pdfx/shared';
 
 /**
  * Auto-normalises a user-provided theme path so that bare paths are
@@ -16,6 +18,28 @@ export function normalizeThemePath(value: string): string {
     return `./${trimmed}`;
   }
   return trimmed;
+}
+
+/**
+ * Resolves both theme destinations and checks existing entries before either file is written.
+ * Missing files are allowed; stat follows symlinks so links to directories are rejected too.
+ */
+export function resolveThemeFilePaths(value: string): { themePath: string; contextPath: string } {
+  const themePath = path.resolve(process.cwd(), value);
+  const contextPath = path.join(path.dirname(themePath), 'pdfx-theme-context.tsx');
+
+  for (const filePath of [themePath, contextPath]) {
+    const stats = fs.statSync(filePath, { throwIfNoEntry: false });
+    if (stats && !stats.isFile()) {
+      const reason = stats.isDirectory() ? 'is a directory' : 'is not a regular file';
+      throw new ValidationError(
+        `Cannot write "${filePath}": path ${reason}.`,
+        'Check "theme" in pdfx.json: the theme and its sibling pdfx-theme-context.tsx must be files. Choose a different theme directory or move the conflicting entry before retrying.'
+      );
+    }
+  }
+
+  return { themePath, contextPath };
 }
 
 /**
