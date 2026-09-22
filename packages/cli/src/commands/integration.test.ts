@@ -3,6 +3,22 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
+import { blockAdd } from './block.js';
+
+const spinner = vi.hoisted(() => ({
+  start: vi.fn(),
+  stop: vi.fn(),
+  succeed: vi.fn(),
+  fail: vi.fn(),
+  info: vi.fn(),
+}));
+
+vi.mock('ora', () => ({ default: vi.fn(() => spinner) }));
+vi.mock('../utils/posthog.js', () => ({
+  distinctId: 'test',
+  posthog: { capture: vi.fn(), captureException: vi.fn() },
+  shutdownPosthog: vi.fn().mockResolvedValue(true),
+}));
 
 /**
  * CLI Integration Tests
@@ -150,6 +166,133 @@ describe('fetchComponent', () => {
   it('throws NetworkError on fetch network failure', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('Network error')));
     await expect(fetchComponent('heading', 'https://example.com/r')).rejects.toThrow();
+  });
+});
+
+describe('block add: invoice name guidance', () => {
+  let testDir: string;
+  let configBefore: string;
+  const registry = 'https://example.com/custom/r';
+  const blockNames = ['invoice-modern', 'invoice-classic', 'invoice-minimal'];
+  const index = {
+    $schema: 'https://example.com/schema.json',
+    name: 'custom',
+    homepage: 'https://example.com',
+    items: blockNames.map((name) => ({
+      name,
+      type: 'registry:block',
+      title: name,
+      description: 'Invoice template',
+      files: [],
+    })),
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    testDir = createTempDir();
+    writePdfxJson(testDir, {
+      componentDir: './components/pdfx',
+      blockDir: './blocks/pdfx',
+      registry,
+    });
+    configBefore = fs.readFileSync(path.join(testDir, 'pdfx.json'), 'utf-8');
+    vi.spyOn(process, 'cwd').mockReturnValue(testDir);
+    vi.spyOn(process, 'exit').mockImplementation((code) => {
+      throw new Error(`process.exit(${code})`);
+    });
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(fs, 'writeFileSync');
+    spinner.start.mockReturnValue(spinner);
+    vi.stubGlobal('fetch', vi.fn());
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+    fs.rmSync(testDir, { recursive: true, force: true });
+  });
+
+  it('suggests explicit invoice variants from the configured registry without installing one', async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(Response.json({}, { status: 404 }))
+      .mockResolvedValueOnce(Response.json(index));
+
+    await expect(blockAdd(['invoice'])).rejects.toThrow('process.exit(1)');
+
+    expect(spinner.fail).toHaveBeenCalledWith('Block "invoice" not found in registry');
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining('Did you mean: invoice-classic, invoice-minimal, invoice-modern?')
+    );
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining('npx pdfx-cli@latest block list')
+    );
+    expect(fetch).toHaveBeenNthCalledWith(
+      1,
+      `${registry}/blocks/invoice.json`,
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
+    expect(fetch).toHaveBeenNthCalledWith(
+      2,
+      `${registry}/index.json`,
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
+    expect(fetch).toHaveBeenCalledTimes(2);
+    expect(fs.writeFileSync).not.toHaveBeenCalled();
+    expect(fs.readdirSync(testDir)).toEqual(['pdfx.json']);
+    expect(fs.readFileSync(path.join(testDir, 'pdfx.json'), 'utf-8')).toBe(configBefore);
+  });
+
+  it.each(['timeout', 'HTTP error', 'invalid JSON', 'invalid schema'])(
+    'preserves the original error and list hint when the index returns %s',
+    async (failure) => {
+      vi.mocked(fetch).mockResolvedValueOnce(Response.json({}, { status: 404 }));
+      if (failure === 'timeout') {
+        vi.mocked(fetch).mockRejectedValueOnce(new DOMException('Timed out', 'TimeoutError'));
+      } else if (failure === 'HTTP error') {
+        vi.mocked(fetch).mockResolvedValueOnce(new Response(null, { status: 503 }));
+      } else if (failure === 'invalid JSON') {
+        vi.mocked(fetch).mockResolvedValueOnce(new Response('not JSON'));
+      } else {
+        // Valid block names behind an invalid envelope: if schema validation were skipped,
+        // these names would surface as suggestions and fail the assertion below.
+        vi.mocked(fetch).mockResolvedValueOnce(Response.json({ ...index, name: 42 }));
+      }
+
+      await expect(blockAdd(['invoice'])).rejects.toThrow('process.exit(1)');
+
+      expect(spinner.fail).toHaveBeenCalledWith('Block "invoice" not found in registry');
+      expect(console.log).toHaveBeenCalledWith(
+        expect.stringContaining('Run "npx pdfx-cli@latest block list" to see everything available')
+      );
+      expect(console.log).not.toHaveBeenCalledWith(expect.stringContaining('Did you mean:'));
+      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(fs.writeFileSync).not.toHaveBeenCalled();
+      expect(fs.readdirSync(testDir)).toEqual(['pdfx.json']);
+    }
+  );
+
+  it('installs a canonical invoice block without fetching suggestions', async () => {
+    const content = 'export function InvoiceModern() {}';
+    vi.mocked(fetch).mockResolvedValueOnce(
+      Response.json({
+        name: 'invoice-modern',
+        type: 'registry:block',
+        files: [{ path: 'invoice-modern.tsx', type: 'registry:block', content }],
+      })
+    );
+
+    await blockAdd(['invoice-modern']);
+
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith(
+      `${registry}/blocks/invoice-modern.json`,
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
+    expect(
+      fs.readFileSync(path.join(testDir, 'blocks/pdfx/invoice-modern/invoice-modern.tsx'), 'utf-8')
+    ).toBe(content);
+    expect(process.exit).not.toHaveBeenCalled();
   });
 });
 

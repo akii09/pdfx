@@ -71,6 +71,17 @@ npx pdfx-cli@latest block add invoice-modern
 npx pdfx-cli@latest block add report-financial
 ```
 
+`invoice` is a template family, not an installable block name in the public registry.
+Choose a specific variant, such as `invoice-classic` or `invoice-modern`. To see
+which block names are available in your configured registry, run:
+
+```bash
+npx pdfx-cli@latest block list
+```
+
+If a block name is not found, the CLI suggests similar names from that registry.
+If the registry index is unavailable, it still points you to `block list`.
+
 ## MCP & AI Agents
 
 PDFx comes with first-class AI Agent integration via MCP (Model Context Protocol). Connect your AI IDE or Agent directly to the PDFx registry to instantly gain fluent context about PDFx component structures.

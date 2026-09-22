@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { type ThemePresetName, configSchema, themePresets } from '@pdfx/shared';
+import { type ThemePresetName, ValidationError, configSchema, themePresets } from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
@@ -15,7 +15,11 @@ import {
   registerShadcnNamespace,
   shadcnRegistryAddCommand,
 } from '../utils/shadcn-registry.js';
-import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
+import {
+  normalizeThemePath,
+  resolveThemeFilePaths,
+  validateThemePath,
+} from '../utils/theme-path.js';
 
 interface InitOptions {
   /** Skip all prompts and accept defaults. Suitable for CI / non-interactive environments. */
@@ -225,17 +229,16 @@ export async function init(options: InitOptions = {}) {
   const spinner = ora('Creating config and theme files...').start();
 
   try {
+    const { themePath, contextPath } = resolveThemeFilePaths(config.theme);
     const componentDirPath = path.resolve(process.cwd(), answers.componentDir);
     ensureDir(componentDirPath);
     fs.writeFileSync(path.join(process.cwd(), 'pdfx.json'), JSON.stringify(config, null, 2));
 
     const presetName = (answers.themePreset || 'professional') as ThemePresetName;
     const preset = themePresets[presetName];
-    const themePath = path.resolve(process.cwd(), config.theme);
     ensureDir(path.dirname(themePath));
     fs.writeFileSync(themePath, generateThemeFile(preset), 'utf-8');
 
-    const contextPath = path.join(path.dirname(themePath), 'pdfx-theme-context.tsx');
     fs.writeFileSync(contextPath, generateThemeContextFile(), 'utf-8');
 
     spinner.succeed(`Created pdfx.json + ${config.theme} (${presetName} theme)`);
@@ -283,6 +286,9 @@ export async function init(options: InitOptions = {}) {
     spinner.fail('Failed to create config');
     const message = error instanceof Error ? error.message : String(error);
     console.error(chalk.dim(`  ${message}`));
+    if (error instanceof ValidationError && error.suggestion) {
+      console.log(chalk.dim(`  Hint: ${error.suggestion}`));
+    }
     process.exit(1);
   }
 }
