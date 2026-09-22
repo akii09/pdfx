@@ -1,6 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { type ThemePresetName, configSchema, themePresets, themeSchema } from '@pdfx/shared';
+import {
+  type ThemePresetName,
+  ValidationError,
+  configSchema,
+  themePresets,
+  themeSchema,
+} from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
@@ -10,7 +16,11 @@ import { checkFileExists, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { readJsonFile } from '../utils/read-json.js';
-import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
+import {
+  normalizeThemePath,
+  resolveThemeFilePaths,
+  validateThemePath,
+} from '../utils/theme-path.js';
 
 /**
  * Interactive theme initialization.
@@ -82,10 +92,8 @@ export async function themeInit() {
   const spinner = ora(`Scaffolding ${presetName} theme...`).start();
 
   try {
-    const absThemePath = path.resolve(process.cwd(), themePath);
+    const { themePath: absThemePath, contextPath } = resolveThemeFilePaths(themePath);
     writeFile(absThemePath, generateThemeFile(preset));
-
-    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
     writeFile(contextPath, generateThemeContextFile());
 
     spinner.succeed(`Created ${themePath} with ${presetName} theme`);
@@ -117,6 +125,9 @@ export async function themeInit() {
     spinner.fail('Failed to create theme file');
     const message = error instanceof Error ? error.message : String(error);
     console.error(chalk.dim(`  ${message}`));
+    if (error instanceof ValidationError && error.suggestion) {
+      console.log(chalk.dim(`  Hint: ${error.suggestion}`));
+    }
     process.exit(1);
   }
 }
@@ -177,10 +188,9 @@ export async function themeSwitch(presetName: string) {
 
   try {
     const preset = themePresets[validatedPreset];
-    const absThemePath = path.resolve(process.cwd(), config.theme);
+    const { themePath: absThemePath, contextPath } = resolveThemeFilePaths(config.theme);
     writeFile(absThemePath, generateThemeFile(preset));
 
-    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
     if (!checkFileExists(contextPath)) {
       writeFile(contextPath, generateThemeContextFile());
     }
@@ -198,6 +208,9 @@ export async function themeSwitch(presetName: string) {
     spinner.fail('Failed to switch theme');
     const message = error instanceof Error ? error.message : String(error);
     console.error(chalk.dim(`  ${message}`));
+    if (error instanceof ValidationError && error.suggestion) {
+      console.log(chalk.dim(`  Hint: ${error.suggestion}`));
+    }
     process.exit(1);
   }
 }
