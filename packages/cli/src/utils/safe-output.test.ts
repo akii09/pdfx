@@ -75,13 +75,22 @@ describe('installEpipeGuards', () => {
   });
 });
 
-// Load the actual entrypoint, skills command, and guards into isolated Node processes.
-// In-memory modules replace filesystem writes, preflight checks, and unrelated commands
-// so these regressions need neither a build nor a real skills installation or telemetry.
+/*
+ * Load the actual entrypoint, skills command, and guards into isolated Node processes.
+ * In-memory modules replace filesystem writes, preflight checks, and unrelated commands
+ * so these regressions need neither a build nor a real skills installation or telemetry.
+ */
+
+/** Wraps JavaScript source in a `data:` URL so it can be imported as an ES module. */
 function moduleUrl(source: string): string {
   return `data:text/javascript;base64,${Buffer.from(source).toString('base64')}`;
 }
 
+/**
+ * Compiles a real source file to an importable module, rewriting the imports named in
+ * `imports` to the given replacements. Rewriting at the AST level keeps the module under
+ * test untouched — no production seam exists purely for these tests.
+ */
 function sourceModuleUrl(file: string, imports: Record<string, string> = {}): string {
   const source = readFileSync(new URL(file, import.meta.url), 'utf-8');
   const compiled = ts.transpileModule(source, {
@@ -117,6 +126,11 @@ function sourceModuleUrl(file: string, imports: Record<string, string> = {}): st
   return moduleUrl(`${compiled.outputText}\n//# sourceURL=pdfx-test/${file}`);
 }
 
+/**
+ * Builds the CLI entrypoint used by the subprocess: the real `index.ts` and `skills.ts`,
+ * with every unrelated command stubbed out. `guarded: false` swaps `installEpipeGuards`
+ * for a no-op, which is the negative control proving the guards are what prevent EPIPE.
+ */
 function skillsEntrypoint(guarded: boolean): string {
   const require = createRequire(import.meta.url);
   const dependencies = {
@@ -179,6 +193,14 @@ interface SkillsProcessResult {
   writes: unknown[];
 }
 
+/**
+ * Runs `skills init` in a child process over real OS pipes and reports its exit status,
+ * output, and the writes it attempted.
+ *
+ * The child waits on an IPC message before importing the entrypoint, so `closedStream`
+ * destroys the reader before any command output is produced. Sequencing it this way
+ * avoids the timing-dependent reproduction a plain `| head` would give.
+ */
 function runSkillsProcess(
   entrypoint: string,
   options: { closedStream?: 'stdout' | 'stderr'; failWrite?: boolean } = {}
