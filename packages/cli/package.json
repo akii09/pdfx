@@ -29,7 +29,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "rimraf dist && tsup",
     "dev": "tsup --watch",
     "clean": "rimraf dist",
     "test": "vitest run --passWithNoTests",
