@@ -20,7 +20,9 @@ export async function getAddCommand(
     ? `npx pdfx-cli block add ${args.items.join(' ')}`
     : `npx pdfx-cli add ${args.items.join(' ')}`;
 
-  const installDir = isBlock ? 'src/blocks/pdfx/' : 'src/components/pdfx/';
+  // Named by pdfx.json, whose defaults follow the project layout, so describe the field
+  // rather than stating a path this project may not use.
+  const installDir = isBlock ? '`blockDir`' : '`componentDir`';
   const inspectTool = isBlock ? 'get_block' : 'get_component';
   const itemList = args.items.map((i) => `- \`${i}\``).join('\n');
 
@@ -35,7 +37,7 @@ export async function getAddCommand(
     ${itemList}
 
     **What this does:**
-    - Copies source files into \`${installDir}\`
+    - Copies source files into the ${installDir} directory set in \`pdfx.json\`
     - You own the code — no runtime package is added
     ${isBlock ? '- The block includes a complete document layout ready to customize' : '- Each component gets its own subdirectory inside componentDir'}
 
