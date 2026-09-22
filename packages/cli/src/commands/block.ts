@@ -32,7 +32,10 @@ async function fetchBlock(name: string, registryUrl: string): Promise<RegistryIt
   } catch (err) {
     const isTimeout = err instanceof Error && err.name === 'TimeoutError';
     throw new NetworkError(
-      isTimeout ? 'Registry request timed out' : `Could not reach ${registryUrl}`
+      isTimeout ? 'Registry request timed out' : `Could not reach ${registryUrl}`,
+      isTimeout
+        ? 'Check your internet connection and registry server, then try again.'
+        : `Check "registry" in pdfx.json: replace any placeholder URL with a reachable registry base URL (default: ${DEFAULTS.REGISTRY_URL}). For a custom registry, verify its hostname resolves and the server is reachable.`
     );
   }
 

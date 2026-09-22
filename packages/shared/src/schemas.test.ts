@@ -35,6 +35,50 @@ describe('configSchema', () => {
     expect(result.success).toBe(false);
   });
 
+  it.each([
+    undefined,
+    null,
+    '',
+    '   ',
+    'REG',
+    'http://',
+    'https:/example.com/r',
+    'ftp://example.com/r',
+    'file:///tmp/registry',
+    'javascript:alert(1)',
+    'https://bad host/r',
+    'https://example.com/r?token=test',
+    'https://example.com/r#registry',
+    'https://example.com/r?',
+    'https://example.com/r#',
+    'https://user:password@example.com/r',
+    'https://user@example.com/r',
+    'https://user%40example.com:p%40ss@example.com/r',
+  ])('rejects unsupported registry base URL: %s', (registry) => {
+    const result = configSchema.safeParse({ componentDir: './src/components', registry });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0]?.path).toEqual(['registry']);
+    }
+  });
+
+  it.each([
+    ['https://example.com/r', 'https://example.com/r'],
+    ['https://example.com/@team/r', 'https://example.com/@team/r'],
+    ['https://example.com/custom/registry///', 'https://example.com/custom/registry'],
+    ['  https://example.com/r/  ', 'https://example.com/r'],
+    ['https://example.com/', 'https://example.com'],
+    ['http://localhost:3000/r/', 'http://localhost:3000/r'],
+    ['http://127.0.0.1:8080/r', 'http://127.0.0.1:8080/r'],
+    ['http://[::1]:8080/r', 'http://[::1]:8080/r'],
+    ['http://REG', 'http://REG'],
+    ['http://registry.internal/r', 'http://registry.internal/r'],
+    ['HTTPS://example.com/r', 'HTTPS://example.com/r'],
+  ])('accepts and normalizes registry base URL: %s', (registry, expected) => {
+    const config = configSchema.parse({ componentDir: './src/components', registry });
+    expect(config.registry).toBe(expected);
+  });
+
   it('should reject missing fields', () => {
     const result = configSchema.safeParse({});
     expect(result.success).toBe(false);

@@ -1,6 +1,31 @@
-import { describe, expect, it } from 'vitest';
+import path from 'node:path';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULTS } from '../constants.js';
-import { resolveBlockImports } from './block.js';
+import { checkFileExists, ensureDir, writeFile } from '../utils/file-system.js';
+import { readJsonFile } from '../utils/read-json.js';
+import { blockAdd, blockList, resolveBlockImports } from './block.js';
+
+const spinner = vi.hoisted(() => ({
+  start: vi.fn().mockReturnThis(),
+  stop: vi.fn(),
+  fail: vi.fn(),
+  succeed: vi.fn(),
+  info: vi.fn(),
+}));
+
+vi.mock('ora', () => ({ default: vi.fn(() => spinner) }));
+vi.mock('../utils/read-json.js', () => ({ readJsonFile: vi.fn() }));
+vi.mock('../utils/file-system.js', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../utils/file-system.js')>()),
+  checkFileExists: vi.fn(),
+  ensureDir: vi.fn(),
+  writeFile: vi.fn(),
+}));
+vi.mock('../utils/posthog.js', () => ({
+  distinctId: 'test',
+  posthog: { capture: vi.fn(), captureException: vi.fn() },
+  shutdownPosthog: vi.fn().mockResolvedValue(undefined),
+}));
 
 /**
  * Unit tests for resolveBlockImports.
@@ -26,6 +51,182 @@ const defaultConfig = {
   blockDir: './src/blocks/pdfx',
   registry: DEFAULTS.REGISTRY_URL,
 };
+
+describe('block registry requests', () => {
+  const block = {
+    name: 'invoice-classic',
+    files: [
+      {
+        path: 'invoice-classic.tsx',
+        content: 'export const Invoice = {};',
+        type: 'registry:block',
+      },
+    ],
+    peerComponents: ['heading'],
+  };
+  const component = {
+    name: 'heading',
+    files: [
+      {
+        path: 'pdfx-heading.tsx',
+        content: 'export const Heading = {};',
+        type: 'registry:component',
+      },
+    ],
+  };
+  const registryIndex = {
+    $schema: 'https://example.com/schema.json',
+    name: 'test',
+    homepage: 'https://example.com',
+    items: [],
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    spinner.start.mockReturnValue(spinner);
+    vi.mocked(readJsonFile).mockReturnValue({ ...defaultConfig });
+    vi.mocked(checkFileExists).mockImplementation((filePath) =>
+      filePath.endsWith(`${path.sep}pdfx.json`)
+    );
+    vi.stubGlobal('fetch', vi.fn());
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(process, 'exit').mockImplementation((code) => {
+      throw new Error(`process.exit(${code})`);
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
+  it.each([
+    undefined,
+    '',
+    'REG',
+    'http://',
+    'ftp://example.com/r',
+    'https://example.com/r?token=test',
+    'https://example.com/r#registry',
+    'https://user:password@example.com/r',
+  ])('rejects invalid registry %s before fetching or writing files', async (registry) => {
+    vi.mocked(readJsonFile).mockReturnValue({ ...defaultConfig, registry });
+
+    await expect(blockAdd(['invoice-classic'])).rejects.toThrow('process.exit(1)');
+
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Invalid pdfx.json'));
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('"registry"'));
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining(DEFAULTS.REGISTRY_URL));
+    expect(fetch).not.toHaveBeenCalled();
+    expect(ensureDir).not.toHaveBeenCalled();
+    expect(writeFile).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [DEFAULTS.REGISTRY_URL, DEFAULTS.REGISTRY_URL],
+    ['https://example.com/custom/registry///', 'https://example.com/custom/registry'],
+    ['  https://example.com/r/  ', 'https://example.com/r'],
+    ['http://localhost:3000/r/', 'http://localhost:3000/r'],
+    ['http://127.0.0.1:8080/r', 'http://127.0.0.1:8080/r'],
+    ['http://[::1]:8080/r', 'http://[::1]:8080/r'],
+    ['http://REG', 'http://REG'],
+  ])('installs a block and its peers from %s', async (registry, baseUrl) => {
+    vi.mocked(readJsonFile).mockReturnValue({ ...defaultConfig, registry });
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(Response.json(block))
+      .mockResolvedValueOnce(Response.json(component));
+
+    await blockAdd(['invoice-classic']);
+
+    expect(fetch).toHaveBeenNthCalledWith(
+      1,
+      `${baseUrl}/blocks/invoice-classic.json`,
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
+    expect(fetch).toHaveBeenNthCalledWith(
+      2,
+      `${baseUrl}/heading.json`,
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      path.resolve(defaultConfig.blockDir, 'invoice-classic/invoice-classic.tsx'),
+      block.files[0].content
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      path.resolve(defaultConfig.componentDir, 'heading/pdfx-heading.tsx'),
+      component.files[0].content
+    );
+    expect(process.exit).not.toHaveBeenCalled();
+  });
+
+  it('explains how to fix an unreachable placeholder registry without falling back', async () => {
+    vi.mocked(readJsonFile).mockReturnValue({ ...defaultConfig, registry: 'http://REG' });
+    vi.mocked(fetch).mockRejectedValue(
+      new TypeError('fetch failed', { cause: { code: 'ENOTFOUND' } })
+    );
+
+    await expect(blockAdd(['invoice-classic'])).rejects.toThrow('process.exit(1)');
+
+    expect(spinner.fail).toHaveBeenCalledWith(
+      expect.stringContaining('Could not reach http://REG')
+    );
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining('"registry" in pdfx.json'));
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining('placeholder'));
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining(DEFAULTS.REGISTRY_URL));
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(ensureDir).not.toHaveBeenCalled();
+    expect(writeFile).not.toHaveBeenCalled();
+  });
+
+  it('keeps timeout errors distinct from invalid configuration', async () => {
+    vi.mocked(fetch).mockRejectedValue(new DOMException('Timed out', 'TimeoutError'));
+
+    await expect(blockAdd(['invoice-classic'])).rejects.toThrow('process.exit(1)');
+
+    expect(spinner.fail).toHaveBeenCalledWith('Registry request timed out');
+    expect(writeFile).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [404, {}, 'not found in registry'],
+    [500, {}, 'HTTP 500'],
+    [200, {}, 'Invalid registry entry'],
+  ])('preserves registry response errors for HTTP %s', async (status, body, message) => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(Response.json(body, { status }))
+      .mockResolvedValueOnce(Response.json(registryIndex));
+
+    await expect(blockAdd(['invoice-classic'])).rejects.toThrow('process.exit(1)');
+
+    expect(spinner.fail).toHaveBeenCalledWith(expect.stringContaining(message));
+    expect(writeFile).not.toHaveBeenCalled();
+  });
+
+  it('reports invalid JSON without writing files', async () => {
+    vi.mocked(fetch).mockResolvedValue(new Response('not json'));
+
+    await expect(blockAdd(['invoice-classic'])).rejects.toThrow('process.exit(1)');
+
+    expect(spinner.fail).toHaveBeenCalledWith(expect.stringContaining('not valid JSON'));
+    expect(writeFile).not.toHaveBeenCalled();
+  });
+
+  it('normalizes the registry URL for block list', async () => {
+    vi.mocked(readJsonFile).mockReturnValue({
+      ...defaultConfig,
+      registry: 'https://example.com/custom/r/',
+    });
+    vi.mocked(fetch).mockResolvedValue(Response.json(registryIndex));
+
+    await blockList();
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://example.com/custom/r/index.json',
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
+    );
+  });
+});
 
 describe('resolveBlockImports: no rewrites needed', () => {
   it('returns content unchanged when there are no pdfx imports', () => {

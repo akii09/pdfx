@@ -16,7 +16,8 @@ import chalk from 'chalk';
 import { execa } from 'execa';
 import ora from 'ora';
 import prompts from 'prompts';
-import { FETCH_TIMEOUT_MS } from '../constants.js';
+import type { z } from 'zod';
+import { DEFAULTS, FETCH_TIMEOUT_MS } from '../constants.js';
 import { validateReactPdfRenderer } from '../utils/dependency-validator.js';
 import { checkFileExists, ensureDir, safePath, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile } from '../utils/generate-theme.js';
@@ -49,20 +50,46 @@ interface MissingDependencies {
   dev: string[];
 }
 
+function describeConfigIssues(error: z.ZodError): string {
+  return error.issues
+    .map((i) => {
+      const fieldPath = i.path.length > 0 ? i.path.join('.') : 'root';
+      return `"${fieldPath}": ${i.message}`;
+    })
+    .join('; ');
+}
+
 export function readConfig(configPath: string): Config {
   const raw = readJsonFile(configPath);
   const result = configSchema.safeParse(raw);
 
   if (!result.success) {
-    const issues = result.error.issues
-      .map((i) => {
-        const fieldPath = i.path.length > 0 ? i.path.join('.') : 'root';
-        return `"${fieldPath}": ${i.message}`;
-      })
-      .join('; ');
     throw new ConfigError(
-      `Invalid pdfx.json: ${issues}`,
-      `Fix the config or re-run ${chalk.cyan('npx pdfx-cli@latest init')}`
+      `Invalid pdfx.json: ${describeConfigIssues(result.error)}`,
+      result.error.issues.some((issue) => issue.path[0] === 'registry')
+        ? `Set "registry" in pdfx.json to an HTTP(S) registry base URL (default: ${DEFAULTS.REGISTRY_URL}).`
+        : `Fix the config or re-run ${chalk.cyan('npx pdfx-cli@latest init')}`
+    );
+  }
+
+  return result.data;
+}
+
+/**
+ * Applies a `--registry` override through the same schema the config file goes through.
+ *
+ * Without this the flag bypasses validation entirely: `--registry REG` reaches the fetch
+ * untouched and fails as an unreachable host, which is the failure this command's registry
+ * validation exists to prevent. Reusing the schema also applies its normalization, so an
+ * override with a trailing slash does not produce a double slash in request URLs.
+ */
+export function applyRegistryOverride(config: Config, registry: string): Config {
+  const result = configSchema.safeParse({ ...config, registry });
+
+  if (!result.success) {
+    throw new ConfigError(
+      `Invalid --registry value: ${describeConfigIssues(result.error)}`,
+      `Pass an HTTP(S) registry base URL (default: ${DEFAULTS.REGISTRY_URL}).`
     );
   }
 
@@ -439,8 +466,10 @@ export async function add(components: string[], options: AddOptions = {}) {
   try {
     config = readConfig(configPath);
 
-    if (options.registry) {
-      config = { ...config, registry: options.registry };
+    // Explicit undefined check: `--registry ""` is falsy but is still an override the
+    // user asked for, and silently keeping the configured value would hide the mistake.
+    if (options.registry !== undefined) {
+      config = applyRegistryOverride(config, options.registry);
     }
   } catch (error: unknown) {
     if (error instanceof ConfigError) {
