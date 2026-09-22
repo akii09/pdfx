@@ -10,6 +10,7 @@ import { generateThemeContextFile, generateThemeFile } from '../utils/generate-t
 import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
 import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
+import { detectProjectLayout } from '../utils/project-layout.js';
 import {
   hasComponentsJson,
   registerShadcnNamespace,
@@ -97,14 +98,23 @@ export async function init(options: InitOptions = {}) {
     }
   }
 
+  // Propose destinations that match the project's layout rather than assuming `src/`.
+  // Prompts stay editable, so this only changes what is pre-filled.
+  const layout = detectProjectLayout(process.cwd());
+  if (!layout.usesSrcDirectory) {
+    console.log(
+      chalk.dim('  No src/ directory found — suggesting root-level paths (components/, lib/).\n')
+    );
+  }
+
   // In --yes mode, skip all prompts and use sensible defaults.
   const answers = options.yes
     ? {
-        componentDir: DEFAULTS.COMPONENT_DIR,
-        blockDir: DEFAULTS.BLOCK_DIR,
+        componentDir: layout.componentDir,
+        blockDir: layout.blockDir,
         registry: DEFAULTS.REGISTRY_URL,
         themePreset: 'professional' as const,
-        themePath: normalizeThemePath(DEFAULTS.THEME_FILE),
+        themePath: normalizeThemePath(layout.themeFile),
       }
     : await prompts(
         [
@@ -112,7 +122,7 @@ export async function init(options: InitOptions = {}) {
             type: 'text',
             name: 'componentDir',
             message: 'Where should we install components?',
-            initial: DEFAULTS.COMPONENT_DIR,
+            initial: layout.componentDir,
             validate: (value: string) => {
               if (!value || value.trim().length === 0) {
                 return 'Component directory is required';
@@ -132,7 +142,7 @@ export async function init(options: InitOptions = {}) {
             type: 'text',
             name: 'blockDir',
             message: 'Where should we install blocks?',
-            initial: DEFAULTS.BLOCK_DIR,
+            initial: layout.blockDir,
             validate: (value: string) => {
               if (!value || value.trim().length === 0) {
                 return 'Block directory is required';
@@ -185,7 +195,7 @@ export async function init(options: InitOptions = {}) {
             type: 'text',
             name: 'themePath',
             message: 'Where should we create the theme file?',
-            initial: DEFAULTS.THEME_FILE,
+            initial: layout.themeFile,
             format: normalizeThemePath,
             validate: validateThemePath,
           },

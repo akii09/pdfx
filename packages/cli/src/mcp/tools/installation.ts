@@ -140,7 +140,7 @@ export async function getInstallation(
     npx pdfx-cli init
     \`\`\`
 
-    This creates \`pdfx.json\` in your project root and generates a theme file at \`src/lib/pdfx-theme.ts\`.
+    This creates \`pdfx.json\` in your project root and generates a theme file at \`src/lib/pdfx-theme.ts\`. Projects without a \`src/\` directory get \`lib/pdfx-theme.ts\` instead; every path is confirmed at the prompt.
 
     ## Step 3 — Add your first component
 
@@ -148,7 +148,7 @@ export async function getInstallation(
     npx pdfx-cli add heading text table
     \`\`\`
 
-    Components are copied into \`src/components/pdfx/\`. You own the source — there is no runtime package dependency.
+    Components are copied into the \`componentDir\` set in \`pdfx.json\` — \`src/components/pdfx/\` by default, or \`components/pdfx/\` in a project without \`src/\`. You own the source — there is no runtime package dependency.
 
     ## Alternative — shadcn CLI
 

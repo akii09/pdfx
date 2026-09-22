@@ -55,6 +55,9 @@ describe('theme file destinations', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     testDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pdfx-theme-destination-'));
+    // These cases are about write destinations, not layout detection. Give the project a
+    // src/ directory so `init` keeps proposing the src/ defaults these assertions use.
+    fs.mkdirSync(path.join(testDir, 'src'), { recursive: true });
     vi.spyOn(process, 'cwd').mockReturnValue(testDir);
     configPath = path.join(testDir, 'pdfx.json');
     themePath = path.resolve(testDir, DEFAULTS.THEME_FILE);
@@ -190,7 +193,7 @@ describe('theme file destinations', () => {
 
   it('rejects a file blocking the theme parent directory without changing files', async () => {
     const configBefore = writeConfig('./src/lib/custom-theme.ts');
-    fs.mkdirSync(path.join(testDir, 'src'));
+    fs.mkdirSync(path.join(testDir, 'src'), { recursive: true });
     const blockingFile = path.join(testDir, 'src', 'lib');
     fs.writeFileSync(blockingFile, 'not a directory');
 
@@ -206,7 +209,7 @@ describe('theme file destinations', () => {
 
   it('rejects a dangling symlink in the theme parent chain', async () => {
     const configBefore = writeConfig('./src/lib/custom-theme.ts');
-    fs.mkdirSync(path.join(testDir, 'src'));
+    fs.mkdirSync(path.join(testDir, 'src'), { recursive: true });
     const linkedDir = path.join(testDir, 'src', 'lib');
     fs.symlinkSync(path.join(testDir, 'missing-dir'), linkedDir, 'dir');
 

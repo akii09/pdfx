@@ -9,8 +9,8 @@ export async function getAuditChecklist(): Promise<ReturnType<typeof textRespons
 
     ## Configuration
     - [ ] \`pdfx.json\` exists in the project root
-    - [ ] \`componentDir\` path in \`pdfx.json\` is correct (default: \`./src/components/pdfx\`)
-    - [ ] Theme file exists at the path set in \`pdfx.json\` (default: \`./src/lib/pdfx-theme.ts\`)
+    - [ ] \`componentDir\` path in \`pdfx.json\` is correct (default: \`./src/components/pdfx\`, or \`./components/pdfx\` in a project without \`src/\`)
+    - [ ] Theme file exists at the path set in \`pdfx.json\` (default: \`./src/lib/pdfx-theme.ts\`, or \`./lib/pdfx-theme.ts\` in a project without \`src/\`)
 
     ## Dependencies
     - [ ] \`@react-pdf/renderer\` is installed — run \`npm ls @react-pdf/renderer\` to confirm
