@@ -1,5 +1,36 @@
 # pdfx-cli
 
+## 0.7.1
+
+### Patch Changes
+
+- [#198](https://github.com/akii09/pdfx/pull/198) [`3fa3287`](https://github.com/akii09/pdfx/commit/3fa3287cf0cd636945ae55037c2d1417d76a48d3) Thanks [@akii09](https://github.com/akii09)! - Fix `theme switch`, `theme init`, and `init` failing with a raw `EISDIR` when the
+  configured theme destination is a directory — including a directory whose name ends
+  in `.ts` or `.tsx`.
+
+  Both the theme file and its sibling `pdfx-theme-context.tsx` are now checked before
+  either is written, so a collision on the context file can no longer leave a
+  half-updated theme behind. Rejected destinations name the conflicting path and explain
+  how to correct it; existing directories are never deleted and no filename is silently
+  appended.
+
+  Dangling symlinks and destinations sitting under a non-directory parent are rejected
+  for the same reason — both previously read as "missing" and surfaced later as a raw
+  `ENOENT` or `ENOTDIR`, after the theme file had already been replaced.
+
+- [#201](https://github.com/akii09/pdfx/pull/201) [`af386a7`](https://github.com/akii09/pdfx/commit/af386a78f370bad70fd429a3a5e2068e77531c57) Thanks [@akii09](https://github.com/akii09)! - Make `theme validate` actionable when a theme file has no supported named `theme`
+  export. The error replaces "No exported `theme` object found." with the file it
+  inspected, the required `export const theme = { ... }` form, and an explicit note that
+  default exports, differently named exports, and separate `export { theme }`
+  declarations are not supported. Static-parsing failures explain why dynamic
+  expressions cannot be evaluated.
+
+  Theme paths are reported as configured in `pdfx.json` rather than resolved, so an
+  absolute configured path no longer puts the user's home directory into an error
+  message that is sent to exception telemetry.
+
+  Validation still uses TypeScript AST parsing and never executes the theme module.
+
 ## 0.7.0
 
 ### Minor Changes
