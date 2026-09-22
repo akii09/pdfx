@@ -466,7 +466,9 @@ export async function add(components: string[], options: AddOptions = {}) {
   try {
     config = readConfig(configPath);
 
-    if (options.registry) {
+    // Explicit undefined check: `--registry ""` is falsy but is still an override the
+    // user asked for, and silently keeping the configured value would hide the mistake.
+    if (options.registry !== undefined) {
       config = applyRegistryOverride(config, options.registry);
     }
   } catch (error: unknown) {
