@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fetchComponent, readConfig, resolveThemeImport } from './add.js';
+import { applyRegistryOverride, fetchComponent, readConfig, resolveThemeImport } from './add.js';
 import { blockAdd } from './block.js';
 
 const spinner = vi.hoisted(() => ({
@@ -119,6 +119,38 @@ describe('readConfig', () => {
     writePdfxJson(testDir, cfg);
     const result = readConfig(path.join(testDir, 'pdfx.json'));
     expect(result.blockDir).toBe('./src/blocks');
+  });
+});
+
+// ─── applyRegistryOverride ───────────────────────────────────────────────────
+
+describe('applyRegistryOverride', () => {
+  const config = {
+    componentDir: './src/components/pdfx',
+    registry: 'https://example.com/r',
+    theme: './src/lib/pdfx-theme.ts',
+  };
+
+  it.each(['REG', 'ftp://example.com/r', 'example.com/r', 'https://example.com/r?token=1', ''])(
+    'rejects the malformed --registry override %o instead of fetching it',
+    (registry) => {
+      expect(() => applyRegistryOverride(config, registry)).toThrow(/Invalid --registry value/);
+      expect(() => applyRegistryOverride(config, registry)).toThrow(/"registry"/);
+    }
+  );
+
+  it('keeps a valid override and leaves the rest of the config untouched', () => {
+    const result = applyRegistryOverride(config, 'https://custom.example.com/registry');
+
+    expect(result.registry).toBe('https://custom.example.com/registry');
+    expect(result.componentDir).toBe(config.componentDir);
+    expect(result.theme).toBe(config.theme);
+  });
+
+  it('normalizes a trailing slash so request URLs do not double up', () => {
+    const result = applyRegistryOverride(config, 'https://custom.example.com/r/');
+
+    expect(result.registry).toBe('https://custom.example.com/r');
   });
 });
 
