@@ -254,7 +254,9 @@ describe('block add: invoice name guidance', () => {
       } else if (failure === 'invalid JSON') {
         vi.mocked(fetch).mockResolvedValueOnce(new Response('not JSON'));
       } else {
-        vi.mocked(fetch).mockResolvedValueOnce(Response.json({ items: [] }));
+        // Valid block names behind an invalid envelope: if schema validation were skipped,
+        // these names would surface as suggestions and fail the assertion below.
+        vi.mocked(fetch).mockResolvedValueOnce(Response.json({ ...index, name: 42 }));
       }
 
       await expect(blockAdd(['invoice'])).rejects.toThrow('process.exit(1)');
