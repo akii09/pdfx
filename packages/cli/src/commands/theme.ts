@@ -259,13 +259,30 @@ function toPlainValue(node: ts.Expression): unknown {
 }
 
 /**
+ * Renders a theme path for an error message without leaking where the project lives.
+ *
+ * These messages reach exception telemetry, so an absolute path would ship the user's
+ * home directory and give every user a distinct message for what is one error. Inside
+ * the project the path stays project-relative, which is what users recognise; anything
+ * outside it falls back to the file name.
+ *
+ * `theme` in pdfx.json is any non-empty string, so an absolute value gets here too — it
+ * cannot be assumed relative just because the prompts reject absolute input.
+ */
+function displayThemePath(configuredPath: string): string {
+  const relative = path.relative(process.cwd(), path.resolve(process.cwd(), configuredPath));
+  if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) {
+    return path.basename(configuredPath);
+  }
+  return `./${relative.split(path.sep).join('/')}`;
+}
+
+/**
  * Reads the named `theme` export out of a theme file without executing it.
  *
- * `configuredPath` is what the user wrote in pdfx.json and is the only path put into
- * error messages. Those messages reach exception telemetry, and an absolute path there
- * would ship the user's home directory and fragment grouping for what is one error.
+ * Only `displayPath` is put into error messages; see {@link displayThemePath}.
  */
-function parseThemeObject(themePath: string, configuredPath: string): unknown {
+function parseThemeObject(themePath: string, displayPath: string): unknown {
   const content = fs.readFileSync(themePath, 'utf-8');
   const sourceFile = ts.createSourceFile(
     themePath,
@@ -286,7 +303,7 @@ function parseThemeObject(themePath: string, configuredPath: string): unknown {
       if (parsed === undefined) {
         throw new Error(
           [
-            `Could not statically parse the named \`theme\` export in "${configuredPath}".`,
+            `Could not statically parse the named \`theme\` export in "${displayPath}".`,
             '  Use `export const theme = { ... }` with a plain object literal.',
             '  This validator does not evaluate function calls, variable references, or spreads.',
           ].join('\n')
@@ -298,7 +315,7 @@ function parseThemeObject(themePath: string, configuredPath: string): unknown {
 
   throw new Error(
     [
-      `No supported named \`theme\` export found in "${configuredPath}".`,
+      `No supported named \`theme\` export found in "${displayPath}".`,
       '  Export your tokens directly as `export const theme = { ... }` (an optional type annotation is supported).',
       '  Default exports, differently named exports, and separate `export { theme }` declarations are not supported.',
       '  Keep your existing tokens when updating the declaration, and check that "theme" in pdfx.json points to this file.',
@@ -341,7 +358,7 @@ export async function themeValidate() {
   const spinner = ora('Validating theme file...').start();
 
   try {
-    const parsedTheme = parseThemeObject(absThemePath, configResult.data.theme);
+    const parsedTheme = parseThemeObject(absThemePath, displayThemePath(configResult.data.theme));
     const result = themeSchema.safeParse(parsedTheme);
 
     if (!result.success) {

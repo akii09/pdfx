@@ -1,8 +1,10 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { professionalTheme, themePresets } from '@pdfx/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { generateThemeFile } from '../utils/generate-theme.js';
+import { readJsonFile } from '../utils/read-json.js';
 import { themeValidate } from './theme.js';
 
 const spinner = vi.hoisted(() => ({
@@ -29,13 +31,16 @@ vi.mock('../utils/posthog.js', () => ({
 describe('theme validate: export guidance', () => {
   const configuredPath = './custom/theme.tsx';
   const themePath = path.resolve('custom/theme.tsx');
+  const homeDirectory = os.homedir();
   const literal = JSON.stringify(professionalTheme);
 
   beforeEach(() => {
     vi.clearAllMocks();
     spinner.start.mockReturnValue(spinner);
     vi.spyOn(fs, 'readFileSync').mockReturnValue('');
-    vi.spyOn(fs, 'writeFileSync');
+    // Stubbed, not just observed: a regression that writes must not touch the worktree
+    // before afterEach gets a chance to report the unexpected call.
+    vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
     vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(process, 'exit').mockImplementation((code) => {
@@ -144,6 +149,25 @@ describe('theme validate: export guidance', () => {
       expect(spinner.succeed).not.toHaveBeenCalled();
     }
   );
+
+  it.each([
+    ['absolute inside the project', path.resolve('custom/theme.tsx'), './custom/theme.tsx'],
+    ['outside the project', '../shared/pdfx-theme.ts', 'pdfx-theme.ts'],
+  ])('keeps an %s theme path out of the reported message', async (_name, configured, expected) => {
+    vi.mocked(readJsonFile).mockReturnValueOnce({
+      componentDir: './components/pdfx',
+      registry: 'https://example.com/r',
+      theme: configured,
+    });
+    vi.mocked(fs.readFileSync).mockReturnValue(`export default ${literal};`);
+
+    await expect(themeValidate()).rejects.toThrow('process.exit(1)');
+
+    const reported = vi.mocked(console.error).mock.calls.flat().join('\n');
+    expect(reported).toContain(`"${expected}"`);
+    expect(reported).not.toContain(homeDirectory);
+    expect(reported).not.toContain(path.resolve(configured));
+  });
 
   it('does not let a valid default export hide an invalid named export', async () => {
     vi.mocked(fs.readFileSync).mockReturnValue(
