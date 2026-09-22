@@ -1,5 +1,8 @@
 import { defineConfig } from 'tsup';
 
+// tsup runs these three configs concurrently against one `dist`, so none of them may
+// clean it — a `clean: true` here deletes whatever the siblings have already emitted.
+// `pnpm build` clears `dist` once, before tsup starts.
 export default defineConfig([
   // Main CLI binary — gets the shebang so it's directly executable
   {
@@ -7,7 +10,6 @@ export default defineConfig([
     format: ['esm'],
     dts: true,
     sourcemap: false,
-    clean: true,
     target: 'node20',
     noExternal: ['@pdfx/shared'],
     banner: {
