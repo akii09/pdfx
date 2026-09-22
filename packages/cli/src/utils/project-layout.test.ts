@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { ValidationError } from '@pdfx/shared';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { DEFAULTS } from '../constants.js';
 import { detectProjectLayout, usesSrcDirectory } from './project-layout.js';
@@ -83,6 +84,29 @@ describe('project layout detection', () => {
     fs.symlinkSync(path.join(testDir, 'missing'), path.join(testDir, 'src'), 'dir');
 
     expect(usesSrcDirectory(testDir)).toBe(false);
+  });
+
+  it('reports a symlink loop instead of guessing the root layout', () => {
+    // src → loop-b → src. statSync reports ELOOP, which is not "there is no src/".
+    fs.symlinkSync(path.join(testDir, 'loop-b'), path.join(testDir, 'src'), 'dir');
+    fs.symlinkSync(path.join(testDir, 'src'), path.join(testDir, 'loop-b'), 'dir');
+
+    expect(() => usesSrcDirectory(testDir)).toThrow(/Could not determine the project layout/);
+    expect(() => usesSrcDirectory(testDir)).toThrow(/ELOOP/);
+    expect(() => detectProjectLayout(testDir)).toThrow(ValidationError);
+  });
+
+  it('carries a hint pointing at the fields to set by hand', () => {
+    fs.symlinkSync(path.join(testDir, 'loop-b'), path.join(testDir, 'src'), 'dir');
+    fs.symlinkSync(path.join(testDir, 'src'), path.join(testDir, 'loop-b'), 'dir');
+
+    try {
+      usesSrcDirectory(testDir);
+      expect.unreachable('expected a ValidationError');
+    } catch (error) {
+      expect(error).toBeInstanceOf(ValidationError);
+      expect((error as ValidationError).suggestion).toContain('componentDir');
+    }
   });
 
   it('does not throw for a directory that does not exist', () => {

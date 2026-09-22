@@ -10,7 +10,7 @@ import { generateThemeContextFile, generateThemeFile } from '../utils/generate-t
 import { ensureReactPdfRenderer } from '../utils/install-dependencies.js';
 import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { displayPreFlightResults, runPreFlightChecks } from '../utils/pre-flight.js';
-import { detectProjectLayout } from '../utils/project-layout.js';
+import { type ProjectLayout, detectProjectLayout } from '../utils/project-layout.js';
 import {
   hasComponentsJson,
   registerShadcnNamespace,
@@ -100,7 +100,18 @@ export async function init(options: InitOptions = {}) {
 
   // Propose destinations that match the project's layout rather than assuming `src/`.
   // Prompts stay editable, so this only changes what is pre-filled.
-  const layout = detectProjectLayout(process.cwd());
+  let layout: ProjectLayout;
+  try {
+    layout = detectProjectLayout(process.cwd());
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(chalk.red(`\n  ${message}`));
+    if (error instanceof ValidationError && error.suggestion) {
+      console.log(chalk.dim(`  Hint: ${error.suggestion}\n`));
+    }
+    process.exit(1);
+  }
+
   if (!layout.usesSrcDirectory) {
     console.log(
       chalk.dim('  No src/ directory found — suggesting root-level paths (components/, lib/).\n')

@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { ValidationError } from '@pdfx/shared';
 import { DEFAULTS } from '../constants.js';
 
 /** Install destinations `init` proposes for a project. */
@@ -29,15 +30,26 @@ const ROOT_LAYOUT = {
  * Reports whether `cwd` keeps its source under a `src/` directory.
  *
  * A symlinked `src` counts: `statSync` follows it, and what matters is that the path
- * resolves to a directory the project writes into.
+ * resolves to a directory the project writes into. A dangling one does not — it reports
+ * ENOENT, the same as no `src` at all.
+ *
+ * Only ENOENT and ENOTDIR mean "there is no `src/` directory". Any other failure means
+ * the layout could not be determined, and answering `false` there would quietly pick the
+ * root layout and write a tree the project may not use — so it is reported instead.
  */
 export function usesSrcDirectory(cwd: string = process.cwd()): boolean {
+  const srcPath = path.join(cwd, 'src');
+
   try {
-    return fs.statSync(path.join(cwd, 'src')).isDirectory();
-  } catch {
-    // Missing, unreadable, or below a non-directory — treat all as "no src/ layout"
-    // rather than failing init over a filesystem probe.
-    return false;
+    return fs.statSync(srcPath).isDirectory();
+  } catch (error) {
+    const code = (error as NodeJS.ErrnoException).code;
+    if (code === 'ENOENT' || code === 'ENOTDIR') return false;
+
+    throw new ValidationError(
+      `Could not determine the project layout: reading "${srcPath}" failed with ${code ?? 'an unknown error'}.`,
+      'Fix access to that path, or set "componentDir", "blockDir", and "theme" in pdfx.json yourself instead of relying on detection.'
+    );
   }
 }
 

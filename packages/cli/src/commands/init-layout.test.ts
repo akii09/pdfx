@@ -111,6 +111,25 @@ describe('init: project layout defaults', () => {
     }
   );
 
+  it('stops with an actionable message when the layout cannot be determined', async () => {
+    fs.symlinkSync(path.join(testDir, 'loop-b'), path.join(testDir, 'src'), 'dir');
+    fs.symlinkSync(path.join(testDir, 'src'), path.join(testDir, 'loop-b'), 'dir');
+    vi.spyOn(process, 'exit').mockImplementation((code) => {
+      throw new Error(`process.exit(${code})`);
+    });
+
+    await expect(init({ yes: true })).rejects.toThrow('process.exit(1)');
+
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining('Could not determine the project layout')
+    );
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining('componentDir'));
+    // Nothing written on a layout it could not read.
+    expect(fs.existsSync(path.join(testDir, 'pdfx.json'))).toBe(false);
+    expect(fs.existsSync(path.join(testDir, 'components'))).toBe(false);
+    expect(fs.existsSync(path.join(testDir, 'lib'))).toBe(false);
+  });
+
   it('explains the root-level suggestion only when there is no src/', async () => {
     await init({ yes: true });
     expect(console.log).toHaveBeenCalledWith(expect.stringContaining('No src/ directory found'));

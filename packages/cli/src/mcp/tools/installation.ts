@@ -173,6 +173,8 @@ export async function getInstallation(
 
     ## Generated pdfx.json
 
+    Path defaults follow the project layout. A project with a \`src/\` directory:
+
     \`\`\`json
     {
       "$schema": "https://getpdfx.dev/schema.json",
@@ -183,16 +185,30 @@ export async function getInstallation(
     }
     \`\`\`
 
+    A project without one — a Next.js App Router app, for example:
+
+    \`\`\`json
+    {
+      "$schema": "https://getpdfx.dev/schema.json",
+      "componentDir": "./components/pdfx",
+      "blockDir": "./blocks/pdfx",
+      "registry": "https://getpdfx.dev/r",
+      "theme": "./lib/pdfx-theme.ts"
+    }
+    \`\`\`
+
+    Always read the real paths from the project's \`pdfx.json\` rather than assuming either.
+
     ## pdfx.json Field Reference
 
     All four fields are **required**. Relative paths must start with \`./\` or \`../\`.
 
-    | Field | Type | Description | Default |
-    |-------|------|-------------|---------|
-    | \`componentDir\` | string | Where individual components are installed | \`./src/components/pdfx\` |
-    | \`blockDir\` | string | Where full document blocks are installed | \`./src/blocks/pdfx\` |
-    | \`registry\` | string (URL) | Registry base URL (must start with http) | \`https://getpdfx.dev/r\` |
-    | \`theme\` | string | Path to your generated theme file | \`./src/lib/pdfx-theme.ts\` |
+    | Field | Type | Description | Default (with \`src/\`) | Default (no \`src/\`) |
+    |-------|------|-------------|------------------------|---------------------|
+    | \`componentDir\` | string | Where individual components are installed | \`./src/components/pdfx\` | \`./components/pdfx\` |
+    | \`blockDir\` | string | Where full document blocks are installed | \`./src/blocks/pdfx\` | \`./blocks/pdfx\` |
+    | \`registry\` | string (URL) | Registry base URL (must start with http) | \`https://getpdfx.dev/r\` | \`https://getpdfx.dev/r\` |
+    | \`theme\` | string | Path to your generated theme file | \`./src/lib/pdfx-theme.ts\` | \`./lib/pdfx-theme.ts\` |
 
     > **Non-interactive init (CI / AI agents):** pass \`--yes\` to accept all defaults:
     > \`\`\`bash
