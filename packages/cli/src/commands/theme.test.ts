@@ -160,6 +160,78 @@ describe('theme file destinations', () => {
     }
   });
 
+  it.each(['theme', 'context'])(
+    'rejects a dangling symlink at the %s destination without changing files',
+    async (target) => {
+      const configBefore = writeConfig();
+      const linkPath = target === 'theme' ? themePath : contextPath;
+      fs.mkdirSync(path.dirname(themePath), { recursive: true });
+      if (target === 'context') fs.writeFileSync(themePath, 'original theme');
+      fs.symlinkSync(path.join(testDir, 'missing', 'target.ts'), linkPath, 'file');
+
+      await expect(themeSwitch('modern')).rejects.toThrow('process.exit(1)');
+
+      expect(console.error).toHaveBeenCalledWith(
+        expect.stringContaining('is a symlink to a missing target')
+      );
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(linkPath));
+      expect(console.error).not.toHaveBeenCalledWith(expect.stringContaining('ENOENT'));
+      expect(fs.lstatSync(linkPath).isSymbolicLink()).toBe(true);
+      expect(fs.existsSync(path.join(testDir, 'missing'))).toBe(false);
+      expect(fs.readFileSync(configPath, 'utf-8')).toBe(configBefore);
+      if (target === 'context') {
+        expect(fs.readFileSync(themePath, 'utf-8')).toBe('original theme');
+      } else {
+        expect(fs.existsSync(contextPath)).toBe(false);
+      }
+      expect(spinner.succeed).not.toHaveBeenCalled();
+    }
+  );
+
+  it('rejects a file blocking the theme parent directory without changing files', async () => {
+    const configBefore = writeConfig('./src/lib/custom-theme.ts');
+    fs.mkdirSync(path.join(testDir, 'src'));
+    const blockingFile = path.join(testDir, 'src', 'lib');
+    fs.writeFileSync(blockingFile, 'not a directory');
+
+    await expect(themeSwitch('modern')).rejects.toThrow('process.exit(1)');
+
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('is not a directory'));
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining(blockingFile));
+    expect(console.error).not.toHaveBeenCalledWith(expect.stringContaining('ENOTDIR'));
+    expect(fs.readFileSync(blockingFile, 'utf-8')).toBe('not a directory');
+    expect(fs.readFileSync(configPath, 'utf-8')).toBe(configBefore);
+    expect(spinner.succeed).not.toHaveBeenCalled();
+  });
+
+  it('rejects a dangling symlink in the theme parent chain', async () => {
+    const configBefore = writeConfig('./src/lib/custom-theme.ts');
+    fs.mkdirSync(path.join(testDir, 'src'));
+    const linkedDir = path.join(testDir, 'src', 'lib');
+    fs.symlinkSync(path.join(testDir, 'missing-dir'), linkedDir, 'dir');
+
+    await expect(themeSwitch('modern')).rejects.toThrow('process.exit(1)');
+
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining('is a symlink to a missing target')
+    );
+    expect(fs.existsSync(path.join(testDir, 'missing-dir'))).toBe(false);
+    expect(fs.readFileSync(configPath, 'utf-8')).toBe(configBefore);
+  });
+
+  it('init --yes rejects a blocked parent before creating a new configuration', async () => {
+    const blockingFile = path.dirname(themePath);
+    fs.mkdirSync(path.dirname(blockingFile), { recursive: true });
+    fs.writeFileSync(blockingFile, 'not a directory');
+
+    await expect(init({ yes: true })).rejects.toThrow('process.exit(1)');
+
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('is not a directory'));
+    expect(fs.existsSync(configPath)).toBe(false);
+    expect(fs.existsSync(path.resolve(testDir, DEFAULTS.COMPONENT_DIR))).toBe(false);
+    expect(fs.readFileSync(blockingFile, 'utf-8')).toBe('not a directory');
+  });
+
   it.each(['professional', 'modern', 'minimal', 'default'] as const)(
     'switches to %s while preserving existing context and configuration',
     async (preset) => {
