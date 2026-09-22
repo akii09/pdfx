@@ -27,6 +27,7 @@ vi.mock('../utils/posthog.js', () => ({
 }));
 
 describe('theme validate: export guidance', () => {
+  const configuredPath = './custom/theme.tsx';
   const themePath = path.resolve('custom/theme.tsx');
   const literal = JSON.stringify(professionalTheme);
 
@@ -92,7 +93,8 @@ describe('theme validate: export guidance', () => {
 
       await expect(themeValidate()).rejects.toThrow('process.exit(1)');
 
-      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(themePath));
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(configuredPath));
+      expect(console.error).not.toHaveBeenCalledWith(expect.stringContaining(themePath));
       expect(console.error).toHaveBeenCalledWith(
         expect.stringContaining('export const theme = { ... }')
       );
@@ -119,7 +121,8 @@ describe('theme validate: export guidance', () => {
 
       await expect(themeValidate()).rejects.toThrow('process.exit(1)');
 
-      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(themePath));
+      expect(console.error).toHaveBeenCalledWith(expect.stringContaining(configuredPath));
+      expect(console.error).not.toHaveBeenCalledWith(expect.stringContaining(themePath));
       expect(console.error).toHaveBeenCalledWith(
         expect.stringContaining('export const theme = { ... }')
       );

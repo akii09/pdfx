@@ -258,7 +258,14 @@ function toPlainValue(node: ts.Expression): unknown {
   return undefined;
 }
 
-function parseThemeObject(themePath: string): unknown {
+/**
+ * Reads the named `theme` export out of a theme file without executing it.
+ *
+ * `configuredPath` is what the user wrote in pdfx.json and is the only path put into
+ * error messages. Those messages reach exception telemetry, and an absolute path there
+ * would ship the user's home directory and fragment grouping for what is one error.
+ */
+function parseThemeObject(themePath: string, configuredPath: string): unknown {
   const content = fs.readFileSync(themePath, 'utf-8');
   const sourceFile = ts.createSourceFile(
     themePath,
@@ -279,7 +286,7 @@ function parseThemeObject(themePath: string): unknown {
       if (parsed === undefined) {
         throw new Error(
           [
-            `Could not statically parse the named \`theme\` export in "${themePath}".`,
+            `Could not statically parse the named \`theme\` export in "${configuredPath}".`,
             '  Use `export const theme = { ... }` with a plain object literal.',
             '  This validator does not evaluate function calls, variable references, or spreads.',
           ].join('\n')
@@ -291,7 +298,7 @@ function parseThemeObject(themePath: string): unknown {
 
   throw new Error(
     [
-      `No supported named \`theme\` export found in "${themePath}".`,
+      `No supported named \`theme\` export found in "${configuredPath}".`,
       '  Export your tokens directly as `export const theme = { ... }` (an optional type annotation is supported).',
       '  Default exports, differently named exports, and separate `export { theme }` declarations are not supported.',
       '  Keep your existing tokens when updating the declaration, and check that "theme" in pdfx.json points to this file.',
@@ -334,7 +341,7 @@ export async function themeValidate() {
   const spinner = ora('Validating theme file...').start();
 
   try {
-    const parsedTheme = parseThemeObject(absThemePath);
+    const parsedTheme = parseThemeObject(absThemePath, configResult.data.theme);
     const result = themeSchema.safeParse(parsedTheme);
 
     if (!result.success) {
