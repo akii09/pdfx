@@ -1,6 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { type ThemePresetName, configSchema, themePresets, themeSchema } from '@pdfx/shared';
+import {
+  type ThemePresetName,
+  ValidationError,
+  configSchema,
+  themePresets,
+  themeSchema,
+} from '@pdfx/shared';
 import chalk from 'chalk';
 import ora from 'ora';
 import prompts from 'prompts';
@@ -10,7 +16,11 @@ import { checkFileExists, writeFile } from '../utils/file-system.js';
 import { generateThemeContextFile, generateThemeFile } from '../utils/generate-theme.js';
 import { distinctId, posthog, shutdownPosthog } from '../utils/posthog.js';
 import { readJsonFile } from '../utils/read-json.js';
-import { normalizeThemePath, validateThemePath } from '../utils/theme-path.js';
+import {
+  normalizeThemePath,
+  resolveThemeFilePaths,
+  validateThemePath,
+} from '../utils/theme-path.js';
 
 /**
  * Interactive theme initialization.
@@ -82,10 +92,8 @@ export async function themeInit() {
   const spinner = ora(`Scaffolding ${presetName} theme...`).start();
 
   try {
-    const absThemePath = path.resolve(process.cwd(), themePath);
+    const { themePath: absThemePath, contextPath } = resolveThemeFilePaths(themePath);
     writeFile(absThemePath, generateThemeFile(preset));
-
-    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
     writeFile(contextPath, generateThemeContextFile());
 
     spinner.succeed(`Created ${themePath} with ${presetName} theme`);
@@ -117,6 +125,9 @@ export async function themeInit() {
     spinner.fail('Failed to create theme file');
     const message = error instanceof Error ? error.message : String(error);
     console.error(chalk.dim(`  ${message}`));
+    if (error instanceof ValidationError && error.suggestion) {
+      console.log(chalk.dim(`  Hint: ${error.suggestion}`));
+    }
     process.exit(1);
   }
 }
@@ -177,10 +188,9 @@ export async function themeSwitch(presetName: string) {
 
   try {
     const preset = themePresets[validatedPreset];
-    const absThemePath = path.resolve(process.cwd(), config.theme);
+    const { themePath: absThemePath, contextPath } = resolveThemeFilePaths(config.theme);
     writeFile(absThemePath, generateThemeFile(preset));
 
-    const contextPath = path.join(path.dirname(absThemePath), 'pdfx-theme-context.tsx');
     if (!checkFileExists(contextPath)) {
       writeFile(contextPath, generateThemeContextFile());
     }
@@ -198,6 +208,9 @@ export async function themeSwitch(presetName: string) {
     spinner.fail('Failed to switch theme');
     const message = error instanceof Error ? error.message : String(error);
     console.error(chalk.dim(`  ${message}`));
+    if (error instanceof ValidationError && error.suggestion) {
+      console.log(chalk.dim(`  Hint: ${error.suggestion}`));
+    }
     process.exit(1);
   }
 }
@@ -258,7 +271,31 @@ function toPlainValue(node: ts.Expression): unknown {
   return undefined;
 }
 
-function parseThemeObject(themePath: string): unknown {
+/**
+ * Renders a theme path for an error message without leaking where the project lives.
+ *
+ * These messages reach exception telemetry, so an absolute path would ship the user's
+ * home directory and give every user a distinct message for what is one error. Inside
+ * the project the path stays project-relative, which is what users recognise; anything
+ * outside it falls back to the file name.
+ *
+ * `theme` in pdfx.json is any non-empty string, so an absolute value gets here too — it
+ * cannot be assumed relative just because the prompts reject absolute input.
+ */
+function displayThemePath(configuredPath: string): string {
+  const relative = path.relative(process.cwd(), path.resolve(process.cwd(), configuredPath));
+  if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) {
+    return path.basename(configuredPath);
+  }
+  return `./${relative.split(path.sep).join('/')}`;
+}
+
+/**
+ * Reads the named `theme` export out of a theme file without executing it.
+ *
+ * Only `displayPath` is put into error messages; see {@link displayThemePath}.
+ */
+function parseThemeObject(themePath: string, displayPath: string): unknown {
   const content = fs.readFileSync(themePath, 'utf-8');
   const sourceFile = ts.createSourceFile(
     themePath,
@@ -278,14 +315,25 @@ function parseThemeObject(themePath: string): unknown {
       const parsed = toPlainValue(decl.initializer);
       if (parsed === undefined) {
         throw new Error(
-          'Could not statically parse exported theme object. Keep `export const theme = { ... }` as a plain object literal.'
+          [
+            `Could not statically parse the named \`theme\` export in "${displayPath}".`,
+            '  Use `export const theme = { ... }` with a plain object literal.',
+            '  This validator does not evaluate function calls, variable references, or spreads.',
+          ].join('\n')
         );
       }
       return parsed;
     }
   }
 
-  throw new Error('No exported `theme` object found.');
+  throw new Error(
+    [
+      `No supported named \`theme\` export found in "${displayPath}".`,
+      '  Export your tokens directly as `export const theme = { ... }` (an optional type annotation is supported).',
+      '  Default exports, differently named exports, and separate `export { theme }` declarations are not supported.',
+      '  Keep your existing tokens when updating the declaration, and check that "theme" in pdfx.json points to this file.',
+    ].join('\n')
+  );
 }
 
 /**
@@ -323,7 +371,7 @@ export async function themeValidate() {
   const spinner = ora('Validating theme file...').start();
 
   try {
-    const parsedTheme = parseThemeObject(absThemePath);
+    const parsedTheme = parseThemeObject(absThemePath, displayThemePath(configResult.data.theme));
     const result = themeSchema.safeParse(parsedTheme);
 
     if (!result.success) {
