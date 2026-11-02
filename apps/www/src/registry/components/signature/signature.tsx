@@ -17,9 +17,15 @@ export interface SignatureSigner {
   date?: string;
 }
 
+/** Signer details for the double layout: 2–4 entries. */
+export type SignatureSigners =
+  | [SignatureSigner, SignatureSigner]
+  | [SignatureSigner, SignatureSigner, SignatureSigner]
+  | [SignatureSigner, SignatureSigner, SignatureSigner, SignatureSigner];
+
 /**
  * Signature block properties.
- * Props - `variant` | `label` | `name` | `title` | `date` | `signers` | `style`
+ * Props - `variant` | `label` | `name` | `title` | `date` | `count` | `signers` | `style`
  * @see {@link PdfSignatureBlockProps}
  */
 export interface PdfSignatureBlockProps {
@@ -32,7 +38,10 @@ export interface PdfSignatureBlockProps {
   name?: string;
   title?: string;
   date?: string;
-  signers?: [SignatureSigner, SignatureSigner];
+  /** Number of signature places in the double layout (2–4). Defaults to signers.length or 2. */
+  count?: 2 | 3 | 4;
+  /** Signer details for the double layout. Provide 2–4 entries. */
+  signers?: SignatureSigners;
   style?: Style;
 }
 
@@ -72,6 +81,7 @@ function createSignatureStyles(t: PdfxTheme) {
       marginTop: 1,
     },
     doubleRow: { flexDirection: 'row', justifyContent: 'space-between', gap: spacing[8] },
+    doubleRowContinuation: { marginTop: spacing[4] },
     inlineRow: { flexDirection: 'row', alignItems: 'center', gap: spacing[3], flexWrap: 'wrap' },
     inlineLabel: {
       fontFamily: t.typography.body.fontFamily,
@@ -96,10 +106,11 @@ function createSignatureStyles(t: PdfxTheme) {
 
 function renderSignerBlock(
   signer: SignatureSigner,
-  styles: ReturnType<typeof createSignatureStyles>
+  styles: ReturnType<typeof createSignatureStyles>,
+  key?: number
 ) {
   return (
-    <View style={styles.block}>
+    <View key={key} style={styles.block}>
       {signer.label ? <PDFText style={styles.label}>{signer.label}</PDFText> : null}
       <View style={styles.line} />
       {signer.name ? <PDFText style={styles.name}>{signer.name}</PDFText> : null}
@@ -115,6 +126,7 @@ export function PdfSignatureBlock({
   name,
   title,
   date,
+  count,
   signers,
   style,
 }: PdfSignatureBlockProps) {
@@ -136,16 +148,28 @@ export function PdfSignatureBlock({
   }
 
   if (variant === 'double') {
-    const [first, second] = signers ?? [
-      { label: 'Authorized by', name: '', title: '', date: '' },
-      { label: 'Approved by', name: '', title: '', date: '' },
-    ];
+    const signerCount = Math.min(4, Math.max(2, count ?? signers?.length ?? 2));
+    const defaultLabels = ['Authorized by', 'Approved by', 'Signer 3', 'Signer 4'];
+    const signerBlocks = Array.from({ length: signerCount }, (_, index) =>
+      renderSignerBlock(
+        signers?.[index] ?? { label: defaultLabels[index], name: '', title: '', date: '' },
+        styles,
+        index
+      )
+    );
+
     return (
       <View wrap={false} style={containerStyles}>
         <View style={styles.doubleRow}>
-          {renderSignerBlock(first, styles)}
-          {renderSignerBlock(second, styles)}
+          {signerBlocks[0]}
+          {signerBlocks[1]}
         </View>
+        {signerCount > 2 ? (
+          <View style={[styles.doubleRow, styles.doubleRowContinuation]}>
+            {signerBlocks[2]}
+            {signerBlocks[3] ?? <View style={styles.block} />}
+          </View>
+        ) : null}
       </View>
     );
   }

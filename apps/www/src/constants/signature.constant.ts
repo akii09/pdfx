@@ -14,12 +14,14 @@ export function MyDocument() {
           date="15 February 2026"
         />
 
-        {/* Double signature side by side */}
+        {/* Three signature places, arranged in two columns */}
         <PdfSignatureBlock
           variant="double"
+          count={3}
           signers={[
             { label: 'Authorized By', name: 'John Doe', title: 'CEO' },
             { label: 'Approved By', name: 'Jane Smith', title: 'CFO' },
+            { label: 'Witness', name: 'Alex Lee', title: 'Witness' },
           ]}
         />
 
@@ -41,7 +43,7 @@ export const signatureProps = [
     type: "'single' | 'double' | 'inline'",
     defaultValue: "'single'",
     description:
-      'Layout variant. single = one signature block with line, name, title, date. double = two blocks side by side. inline = compact horizontal row.',
+      'Layout variant. single = one signature block with line, name, title, date. double = 2–4 signature blocks, arranged in rows of up to two. inline = compact horizontal row.',
   },
   {
     name: 'label',
@@ -68,11 +70,18 @@ export const signatureProps = [
     description: 'Date string displayed below the signature area.',
   },
   {
+    name: 'count',
+    type: '2 | 3 | 4',
+    defaultValue: 'signers.length or 2',
+    description:
+      'Number of signature places in the double variant. Additional signers appear in a second row, with up to two signers per row.',
+  },
+  {
     name: 'signers',
-    type: '[SignatureSigner, SignatureSigner]',
+    type: '2–4 SignatureSigner entries',
     defaultValue: '-',
     description:
-      'Array of exactly 2 signers for the double variant. Each has label, name, and optional title.',
+      'Signer details for the double variant. Each entry can include a label, name, title, and date. When count is larger than the provided array, remaining places use default labels.',
   },
   {
     name: 'style',
