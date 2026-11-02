@@ -38,7 +38,7 @@ pnpm-debug.log*
 coverage/
 
 # Misc
-.tsbuildinfo
+*.tsbuildinfo
 
 # Other
 /docs
