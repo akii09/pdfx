@@ -115,6 +115,7 @@ export {
   type PdfSignatureBlockProps,
   type SignatureVariant,
   type SignatureSigner,
+  type SignatureSigners,
 } from './signature';
 export { KeepTogether, type KeepTogetherProps } from './keep-together';
 export {

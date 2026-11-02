@@ -17,16 +17,17 @@ export interface SignatureSigner {
   date?: string;
 }
 
+/** Signer details for the double layout: 2–4 entries. */
+export type SignatureSigners =
+  | [SignatureSigner, SignatureSigner]
+  | [SignatureSigner, SignatureSigner, SignatureSigner]
+  | [SignatureSigner, SignatureSigner, SignatureSigner, SignatureSigner];
+
 /**
  * Signature block properties.
  * Props - `variant` | `label` | `name` | `title` | `date` | `count` | `signers` | `style`
  * @see {@link PdfSignatureBlockProps}
  */
-type SignatureSigners =
-  | [SignatureSigner, SignatureSigner]
-  | [SignatureSigner, SignatureSigner, SignatureSigner]
-  | [SignatureSigner, SignatureSigner, SignatureSigner, SignatureSigner];
-
 export interface PdfSignatureBlockProps {
   /**
    * Layout variant: [single, double, inline]
@@ -147,7 +148,7 @@ export function PdfSignatureBlock({
   }
 
   if (variant === 'double') {
-    const signerCount = count ?? signers?.length ?? 2;
+    const signerCount = Math.min(4, Math.max(2, count ?? signers?.length ?? 2));
     const defaultLabels = ['Authorized by', 'Approved by', 'Signer 3', 'Signer 4'];
     const signerBlocks = Array.from({ length: signerCount }, (_, index) =>
       renderSignerBlock(

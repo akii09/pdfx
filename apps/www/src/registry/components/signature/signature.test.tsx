@@ -62,11 +62,22 @@ describe('PdfSignatureBlock', () => {
     expect(output).toContain('Person 3');
   });
 
-  it('renders four signer places when count is 4', () => {
-    const output = collectText(PdfSignatureBlock({ variant: 'double', count: 4 }));
+  it('fills missing signer entries with default labels when count is 4', () => {
+    const output = collectText(
+      PdfSignatureBlock({
+        variant: 'double',
+        count: 4,
+        signers: [{ name: 'Person 1' }, { name: 'Person 2' }],
+      })
+    );
 
-    expect(output).toContain('Signer 3');
-    expect(output).toContain('Signer 4');
+    expect(output).toEqual(['Person 1', 'Person 2', 'Signer 3', 'Signer 4']);
+  });
+
+  it('renders four signer places when count exceeds 4', () => {
+    const output = collectText(PdfSignatureBlock({ variant: 'double', count: 5 as never }));
+
+    expect(output).toEqual(['Authorized by', 'Approved by', 'Signer 3', 'Signer 4']);
   });
 
   it('keeps a lone third signer half-width and separated from first row', () => {
@@ -77,9 +88,16 @@ describe('PdfSignatureBlock', () => {
     expect(isValidElement<{ children?: ReactNode; style?: unknown }>(continuation)).toBe(true);
     if (!isValidElement<{ children?: ReactNode; style?: unknown }>(continuation)) return;
 
-    expect(Children.toArray(continuation.props.children)).toHaveLength(2);
+    const [thirdSigner, emptyPlaceholder] = Children.toArray(continuation.props.children);
     expect(continuation.props.style).toEqual(
       expect.arrayContaining([expect.objectContaining({ marginTop: expect.any(Number) })])
     );
+    expect(isValidElement<{ children?: ReactNode; style?: unknown }>(thirdSigner)).toBe(true);
+    expect(isValidElement<{ children?: ReactNode; style?: unknown }>(emptyPlaceholder)).toBe(true);
+    if (!isValidElement<{ children?: ReactNode; style?: unknown }>(thirdSigner)) return;
+    if (!isValidElement<{ children?: ReactNode; style?: unknown }>(emptyPlaceholder)) return;
+
+    expect(emptyPlaceholder.props.children).toBeUndefined();
+    expect(emptyPlaceholder.props.style).toBe(thirdSigner.props.style);
   });
 });

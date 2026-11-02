@@ -1,7 +1,7 @@
 import { signatureProps, signatureUsageCode } from '@/constants';
-import { PdfSignatureBlock } from '@pdfx/components';
+import { PdfSignatureBlock, type SignatureSigners } from '@pdfx/components';
 import { Document, Page, StyleSheet } from '@react-pdf/renderer';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ComponentPage } from '../../components/component-page';
 import DropDown from '../../components/drop-down';
 import { PDFPreview } from '../../components/pdf-preview';
@@ -13,20 +13,16 @@ const styles = StyleSheet.create({
 
 type SignatureVariant = 'single' | 'double' | 'inline';
 type SignerCount = 2 | 3 | 4;
+const DEFAULT_VARIANT: SignatureVariant = 'single';
+
+const signers: SignatureSigners = [
+  { label: 'Authorized By', name: 'John Doe', title: 'CEO, Acme Corp' },
+  { label: 'Approved By', name: 'Jane Smith', title: 'CFO, Acme Corp' },
+  { label: 'Witness', name: 'Alex Lee', title: 'Witness' },
+  { label: 'Additional Signer', name: 'Sam Taylor', title: 'Legal Counsel' },
+];
 
 const renderPreviewDocument = (variant: SignatureVariant, count: SignerCount) => {
-  const signers: [
-    { label: string; name: string; title: string },
-    { label: string; name: string; title: string },
-    { label: string; name: string; title: string },
-    { label: string; name: string; title: string },
-  ] = [
-    { label: 'Authorized By', name: 'John Doe', title: 'CEO, Acme Corp' },
-    { label: 'Approved By', name: 'Jane Smith', title: 'CFO, Acme Corp' },
-    { label: 'Witness', name: 'Alex Lee', title: 'Witness' },
-    { label: 'Additional Signer', name: 'Sam Taylor', title: 'Legal Counsel' },
-  ];
-
   return (
     <Document title="PDFx Signature Preview">
       <Page size="A4" style={styles.page}>
@@ -53,10 +49,10 @@ const renderPreviewDocument = (variant: SignatureVariant, count: SignerCount) =>
   );
 };
 
-const variantOptions = [
-  { value: 'single' as SignatureVariant, label: 'Single' },
-  { value: 'double' as SignatureVariant, label: 'Double' },
-  { value: 'inline' as SignatureVariant, label: 'Inline' },
+const variantOptions: { value: SignatureVariant; label: string }[] = [
+  { value: 'single', label: 'Single' },
+  { value: 'double', label: 'Double' },
+  { value: 'inline', label: 'Inline' },
 ];
 
 const countOptions = [
@@ -67,13 +63,17 @@ const countOptions = [
 
 export default function SignatureComponentPage() {
   useDocumentTitle('Signature Component');
-  const [variant, setVariant] = useState<SignatureVariant>('single');
+  const [variant, setVariant] = useState<SignatureVariant>(DEFAULT_VARIANT);
   const [count, setCount] = useState<SignerCount>(2);
+  const renderPreview = useCallback(
+    (selectedVariant: SignatureVariant) => renderPreviewDocument(selectedVariant, count),
+    [count]
+  );
 
   return (
     <ComponentPage
       title="Signature"
-      description="A PDF signature block component with three layout variants: single, double (side-by-side), and inline."
+      description="A PDF signature block component with three layout variants: single, double (2–4 signers, up to two per row), and inline."
       installCommand="npx pdfx-cli add signature"
       componentName="signature"
       preview={
@@ -82,9 +82,9 @@ export default function SignatureComponentPage() {
           downloadFilename="signature-preview.pdf"
           variants={{
             options: variantOptions,
-            defaultValue: 'single',
+            defaultValue: DEFAULT_VARIANT,
             label: 'Variant',
-            onChange: (value) => setVariant(value as SignatureVariant),
+            onChange: setVariant,
           }}
           toolbarContent={
             variant === 'double' && (
@@ -95,7 +95,7 @@ export default function SignatureComponentPage() {
             )
           }
         >
-          {(selectedVariant) => renderPreviewDocument(selectedVariant as SignatureVariant, count)}
+          {renderPreview}
         </PDFPreview>
       }
       usageCode={signatureUsageCode}

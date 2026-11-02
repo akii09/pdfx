@@ -28,10 +28,11 @@ interface PDFPreviewProps<T = string> {
     label?: string;
     onChange?: (value: T) => void;
   };
+  /** Extra controls rendered between the variant selector and zoom controls. */
   toolbarContent?: ReactNode;
 }
 
-export const PDFPreview = memo(function PDFPreview<T = string>({
+const PDFPreviewComponent = <T = string>({
   children,
   title = 'Preview',
   downloadFilename = 'preview.pdf',
@@ -40,7 +41,7 @@ export const PDFPreview = memo(function PDFPreview<T = string>({
   className,
   variants,
   toolbarContent,
-}: PDFPreviewProps<T>) {
+}: PDFPreviewProps<T>) => {
   const [selectedVariant, setSelectedVariant] = useState<T>(variants?.defaultValue as T);
   const [zoom, setZoom] = useState(getStoredZoom);
   const [isMobile, setIsMobile] = useState(false);
@@ -262,4 +263,6 @@ export const PDFPreview = memo(function PDFPreview<T = string>({
       </div>
     </div>
   );
-});
+};
+
+export const PDFPreview = memo(PDFPreviewComponent) as typeof PDFPreviewComponent;
